@@ -19,14 +19,14 @@ dev-shell:
 	docker-compose run web sh
 
 dev-migrate:
-	docker-compose run web python manage.py migrate
+	docker-compose run --rm web python manage.py migrate
 
 dev-makemigrations:
-	docker-compose run web python manage.py makemigrations
+	docker-compose run --rm web python manage.py makemigrations
 
 dev-clean:
 	docker-compose down -v --remove-orphans
 	docker system prune -f
 
 dev-test:
-	docker-compose run web python manage.py test
+	docker-compose run --rm web python manage.py test
