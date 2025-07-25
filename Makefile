@@ -2,6 +2,7 @@
 # the project as automated steps to be executed on locally and in the CD pipeline.
 
 include scripts/init.mk
+include makefiles/dev.mk
 
 # ==============================================================================
 
