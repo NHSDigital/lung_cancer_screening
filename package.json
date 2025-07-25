@@ -1,0 +1,29 @@
+{
+  "type": "module",
+  "files": [
+    "lung_cancer_screening",
+    "!**/*.test.*"
+  ],
+  "scripts": {
+    "compile": "concurrently npm:compile:js npm:compile:css --group --prefix none",
+    "compile:css": "sass --color --quiet-deps --silence-deprecation=import --load-path=.  --load-path=node_modules lung_cancer_screening/assets/sass:lung_cancer_screening/assets/compiled/css",
+    "compile:css:watch": "npm run compile:css -- --watch",
+    "compile:js": "rollup -c rollup.config.js --sourcemap",
+    "compile:js:watch": "npm run compile:js -- --watch",
+    "watch": "concurrently npm:*:watch --prefix none"
+  },
+  "dependencies": {
+    "nhsuk-frontend": "^9.3.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-terser": "^0.4.4",
+    "concurrently": "^9.2.0",
+    "rollup": "^4.45.1",
+    "sass-embedded": "^1.89.2"
+  },
+  "engines": {
+    "node": "^20.9.0 || ^22.11.0"
+  }
+}

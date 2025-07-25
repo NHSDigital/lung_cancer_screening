@@ -1,3 +1,12 @@
+FROM node:24.4.1-alpine3.21 AS asset_builder
+
+WORKDIR /app
+
+COPY package.json package-lock.json rollup.config.js  ./
+COPY lung_cancer_screening ./lung_cancer_screening
+RUN npm ci
+RUN npm run compile
+
 FROM python:3.12-alpine3.19 AS builder
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -39,6 +48,8 @@ RUN mkdir -p /app && chown -R app:app /app
 WORKDIR /app
 
 COPY --chown=app:app . .
+
+COPY --from=asset_builder --chown=app:app /app/lung_cancer_screening/assets/compiled /app/lung_cancer_screening/assets/compiled
 
 USER app
 
