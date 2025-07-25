@@ -32,10 +32,6 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PATH="/app/.venv/bin:$PATH" \
     USER=app
 
-RUN apk add --no-cache \
-    postgresql-libs \
-    curl
-
 RUN addgroup --gid 1000 --system ${USER} \
     && adduser --uid 1000 --system ${USER} --ingroup ${USER}
 
