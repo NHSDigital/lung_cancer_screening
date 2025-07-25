@@ -1,4 +1,4 @@
-.PHONY: dev-run dev-up dev-down dev-logs dev-shell dev-migrate dev-makemigrations dev-clean
+.PHONY: dev-run dev-up dev-down dev-logs dev-shell dev-migrate dev-makemigrations dev-clean dev-test
 
 dev-run:
 	docker-compose up --build
@@ -24,3 +24,6 @@ dev-makemigrations:
 dev-clean:
 	docker-compose down -v --remove-orphans
 	docker system prune -f
+
+dev-test:
+	docker-compose run web python manage.py test
