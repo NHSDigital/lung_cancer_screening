@@ -8,7 +8,7 @@ RUN npm ci
 RUN npm run compile
 
 
-FROM python:3.12-alpine3.19 AS builder
+FROM python:3.13.5-alpine3.21 AS builder
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -30,7 +30,7 @@ COPY lung_cancer_screening ./lung_cancer_screening
 RUN pip install --no-cache-dir -r requirements.txt
 
 
-FROM python:3.12-alpine3.19
+FROM python:3.13.5-alpine3.21
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
