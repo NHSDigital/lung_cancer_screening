@@ -1,4 +1,4 @@
-.PHONY: run up down logs shell dev-clean
+.PHONY: dev-run dev-up dev-down dev-logs dev-shell dev-migrate dev-makemigrations dev-clean
 
 dev-run:
 	docker-compose up --build
@@ -14,6 +14,12 @@ dev-logs:
 
 dev-shell:
 	docker-compose run web sh
+
+dev-migrate:
+	docker-compose run web python manage.py migrate
+
+dev-makemigrations:
+	docker-compose run web python manage.py makemigrations
 
 dev-clean:
 	docker-compose down -v --remove-orphans
