@@ -10,49 +10,42 @@ RUN npm run compile
 
 FROM python:3.13.5-alpine3.21 AS builder
 
+WORKDIR /app
+
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1
+    POETRY_NO_INTERACTION=1 \
+    POETRY_VIRTUALENVS_IN_PROJECT=1 \
+    POETRY_VIRTUALENVS_CREATE=1 \
+    POETRY_CACHE_DIR=/tmp/poetry_cache
 
-RUN apk add --no-cache \
-    build-base \
-    postgresql-dev \
-    gcc \
-    musl-dev \
-    linux-headers
-
-RUN python -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
-
-COPY requirements.txt .
-COPY lung_cancer_screening ./lung_cancer_screening
-RUN pip install --no-cache-dir -r requirements.txt
+COPY pyproject.toml poetry.lock ./
+RUN pip install poetry
+RUN poetry install --no-root && rm -rf $POETRY_CACHE_DIR
 
 
 FROM python:3.13.5-alpine3.21
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PATH="/opt/venv/bin:$PATH"
+    VIRTUAL_ENV=/app/.venv \
+    PATH="/app/.venv/bin:$PATH" \
+    USER=app
 
 RUN apk add --no-cache \
     postgresql-libs \
     curl
 
-RUN addgroup -g 1000 app && adduser -D -s /bin/sh -u 1000 -G app app
+RUN addgroup --gid 1000 --system ${USER} \
+    && adduser --uid 1000 --system ${USER} --ingroup ${USER}
 
-COPY --from=builder /opt/venv /opt/venv
-
-RUN mkdir -p /app && chown -R app:app /app
-
+USER ${USER}
 WORKDIR /app
 
-COPY --chown=app:app . .
-
-COPY --from=asset_builder --chown=app:app /app/lung_cancer_screening/assets/compiled /app/lung_cancer_screening/assets/compiled
-
-USER app
+COPY --from=builder --chown=${USER}:${USER} ${VIRTUAL_ENV} ${VIRTUAL_ENV}
+COPY --chown=${USER}:${USER} ./lung_cancer_screening /app/lung_cancer_screening
+COPY --from=asset_builder --chown=${USER}:${USER} /app/lung_cancer_screening/assets/compiled /app/lung_cancer_screening/assets/compiled
+COPY --chown=${USER}:${USER} manage.py ./
 
 EXPOSE 8000
 
