@@ -1,5 +1,8 @@
 .PHONY: dev-run dev-up dev-down dev-logs dev-shell dev-migrate dev-makemigrations dev-clean dev-test
 
+dev-build:
+	docker-compose build
+
 dev-run:
 	docker-compose up --build
 

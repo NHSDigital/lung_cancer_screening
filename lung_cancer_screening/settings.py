@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from os import environ
 from pathlib import Path
 
+from jinja2 import ChainableUndefined
 
 def boolean_env(key, default=None):
     value = environ.get(key)
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'lung_cancer_screening.core'
 ]
 
 MIDDLEWARE = [
@@ -59,6 +61,15 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'lung_cancer_screening.urls'
 
 TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.jinja2.Jinja2",
+        "DIRS": [BASE_DIR / "jinja2"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "environment": "lung_cancer_screening.jinja2_env.environment",
+            "undefined": ChainableUndefined,
+        },
+    },
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],

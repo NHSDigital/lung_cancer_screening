@@ -1,5 +1,7 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 
 def home(request):
-    """Homepage view that displays hello world."""
-    return HttpResponse("hello world")
+    return render(
+        request,
+        "home/index.jinja"
+    )
