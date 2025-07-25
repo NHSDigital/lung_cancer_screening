@@ -7,6 +7,7 @@ COPY lung_cancer_screening ./lung_cancer_screening
 RUN npm ci
 RUN npm run compile
 
+
 FROM python:3.12-alpine3.19 AS builder
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -55,4 +56,4 @@ USER app
 
 EXPOSE 8000
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["/app/.venv/bin/gunicorn", "--bind", "0.0.0.0:8000", "lung_cancer_screening.wsgi"]
