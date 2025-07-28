@@ -24,7 +24,7 @@ ENV POETRY_NO_INTERACTION=1 \
 
 COPY pyproject.toml poetry.lock ./
 RUN pip install poetry
-RUN poetry install --no-root && rm -rf $POETRY_CACHE_DIR
+RUN poetry install --without dev --no-root && rm -rf $POETRY_CACHE_DIR
 
 
 FROM python_base
