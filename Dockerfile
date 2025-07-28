@@ -11,7 +11,13 @@ RUN npm run compile
 FROM python:3.13.5-alpine3.21 AS python_base
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    VIRTUAL_ENV=/app/.venv \
+    PATH="/app/.venv/bin:$PATH" \
+    USER=app
+
+RUN addgroup --gid 1000 --system ${USER} \
+    && adduser --uid 1000 --system ${USER} --ingroup ${USER}
 
 FROM python_base AS builder
 
@@ -26,15 +32,21 @@ COPY pyproject.toml poetry.lock ./
 RUN pip install poetry
 RUN poetry install --without dev --no-root && rm -rf $POETRY_CACHE_DIR
 
+FROM builder AS development
+
+USER ${USER}
+WORKDIR /app
+
+COPY --chown=${USER}:${USER} . .
+
+USER root
+
+RUN chown ${USER}:${USER} .
+RUN poetry install
+
+USER ${USER}
 
 FROM python_base
-
-ENV VIRTUAL_ENV=/app/.venv \
-    PATH="/app/.venv/bin:$PATH" \
-    USER=app
-
-RUN addgroup --gid 1000 --system ${USER} \
-    && adduser --uid 1000 --system ${USER} --ingroup ${USER}
 
 USER ${USER}
 WORKDIR /app
