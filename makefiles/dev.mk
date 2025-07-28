@@ -1,32 +1,34 @@
 .PHONY: dev-run dev-up dev-down dev-logs dev-shell dev-migrate dev-makemigrations dev-clean dev-test
 
+DOCKER_COMPOSE_CMD = docker compose
+
 dev-build:
-	docker-compose build
+	$(DOCKER_COMPOSE_CMD) build
 
 dev-run:
-	docker-compose up --build
+	$(DOCKER_COMPOSE_CMD) up --build
 
 dev-up:
-	docker-compose up -d --build
+	$(DOCKER_COMPOSE_CMD) up -d --build
 
 dev-down:
-	docker-compose down
+	$(DOCKER_COMPOSE_CMD) down
 
 dev-logs:
-	docker-compose logs -f
+	$(DOCKER_COMPOSE_CMD) logs -f
 
 dev-shell:
-	docker-compose run web sh
+	$(DOCKER_COMPOSE_CMD) run web sh
 
 dev-migrate:
-	docker-compose run --rm web python manage.py migrate
+	$(DOCKER_COMPOSE_CMD) run --rm web python manage.py migrate
 
 dev-makemigrations:
-	docker-compose run --rm web python manage.py makemigrations
+	$(DOCKER_COMPOSE_CMD) run --rm web python manage.py makemigrations
 
 dev-clean:
-	docker-compose down -v --remove-orphans
-	docker system prune -f
+	$(DOCKER_COMPOSE_CMD) down -v --remove-orphans
+	$(DOCKER_COMPOSE_CMD) system prune -f
 
 dev-test:
-	docker-compose run --rm web python manage.py test
+	$(DOCKER_COMPOSE_CMD) run --rm web python manage.py test

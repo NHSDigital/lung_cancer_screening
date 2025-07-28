@@ -9,12 +9,12 @@ cd "$(git rev-parse --show-toplevel)"
 
 # Replace the following line with something like:
 #
-#   rails test:unit
-#   python manage.py test
-#   npm run test
+#   rubocop
+#   python manage.py lint
+#   npm run lint
 #
 # or whatever is appropriate to your project. You should *only* run your fast
 # tests from here. If you want to run other test suites, see the predefined
-# tasks in scripts/test.mk.
+# tasks in scripts/lint.mk.
 
-docker compose run web poetry run python manage.py test
+docker compose run --rm web poetry run ruff check lung_cancer_screening
