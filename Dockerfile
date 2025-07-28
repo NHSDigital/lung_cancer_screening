@@ -8,13 +8,16 @@ RUN npm ci
 RUN npm run compile
 
 
-FROM python:3.13.5-alpine3.21 AS builder
+FROM python:3.13.5-alpine3.21 AS python_base
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+FROM python_base AS builder
 
 WORKDIR /app
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    POETRY_NO_INTERACTION=1 \
+ENV POETRY_NO_INTERACTION=1 \
     POETRY_VIRTUALENVS_IN_PROJECT=1 \
     POETRY_VIRTUALENVS_CREATE=1 \
     POETRY_CACHE_DIR=/tmp/poetry_cache
@@ -24,11 +27,9 @@ RUN pip install poetry
 RUN poetry install --no-root && rm -rf $POETRY_CACHE_DIR
 
 
-FROM python:3.13.5-alpine3.21
+FROM python_base
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    VIRTUAL_ENV=/app/.venv \
+ENV VIRTUAL_ENV=/app/.venv \
     PATH="/app/.venv/bin:$PATH" \
     USER=app
 
