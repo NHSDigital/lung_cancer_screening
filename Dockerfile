@@ -8,7 +8,7 @@ RUN npm ci
 RUN npm run compile
 
 
-FROM python:3.13.5-alpine3.21 AS python_base
+FROM python:3.13.7-alpine3.21 AS python_base
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
