@@ -1,0 +1,81 @@
+@startuml
+actor "NHSE pilot admin staff actor" as NHSE_Admin
+actor "e2e partner staff actor" as E2E_Staff
+entity "e2e partner system" as E2E_System
+entity "e2e partner Identifiable database" as E2E_ID_DB
+entity "e2e partner Pilot Lookup database" as E2E_Pilot_Lookup_DB
+actor "participant actor" as Participant
+actor "NHSE analysis staff actor" as NHSE_Analysis
+entity "NHS digital pilot app" as NHS_App
+database "NHSE Lung Anonymised database" as Lung_Anon_DB
+
+' Step 1
+NHSE_Admin -> NHSE_Admin: Identify required cohort size (e.g. 50 participants)
+' Step 2
+NHSE_Admin -> E2E_Staff: Advise required cohort size
+' Step 3
+E2E_Staff -> Participant: Ask for consent to join pilot
+
+alt Participant provides consent
+    ' ALT path one i
+    Participant -> E2E_Staff: Provide consent
+    ' ALT path one ii
+    E2E_Staff -> E2E_System: Record consent
+    ' ALT path one iii
+    E2E_System -> E2E_System: Generate unique Pilot ID for NHS Number
+    ' ALT path one iv
+    E2E_System -> E2E_Pilot_Lookup_DB: Record NHS Number, Pilot ID and consent
+    ' Step 5
+    E2E_Staff -> NHSE_Admin: Send consented Pilot ID participant list
+    ' Step 6
+    NHSE_Admin -> Lung_Anon_DB: Upload consented Pilot ID participant list
+    ' Step 7
+    E2E_Staff -> Participant: Provide access details for NHS digital pilot app
+    ' Step 8
+    Participant -> NHS_App: Enter Pilot ID
+    ' Step 9
+    NHS_App -> NHS_App: Verify participant is consented user
+    ' Step 10
+    Participant -> NHS_App: Answer digital risk assessment questions
+    ' Step 11
+    NHS_App -> Lung_Anon_DB: Store Pilot ID and digital risk assessment answers
+    ' Step 11a
+    NHSE_Admin -> Lung_Anon_DB: Request Pilot IDs who have completed digital risk assessment questions
+    Lung_Anon_DB --> NHSE_Admin: Response for Pilot IDs who have completed digital risk assessment questions
+    ' Step 12
+    NHSE_Admin -> E2E_Staff: Advise of completed digital risk assessment Pilot IDs
+    ' Step 12a
+    E2E_Staff -> E2E_Pilot_Lookup_DB: Request NHS Number for Pilot ID
+    E2E_Pilot_Lookup_DB --> E2E_Staff: Response NHS Number for Pilot ID
+    ' Step 13
+    E2E_Staff -> Participant: Contact participant for BAU telephone journey risk assessment
+    ' Step 14
+    Participant -> E2E_Staff: Complete BAU telephone journey risk assessment
+    ' Step 15
+    E2E_Staff -> E2E_System: Capture BAU telephone journey risk assessment
+    ' Step 15a
+    E2E_System -> E2E_ID_DB: Capture BAU telephone journey risk assessment
+    ' Step 16
+    E2E_System -> E2E_System: Anonymise BAU telephone journey answers
+    ' Step 17
+    E2E_System -> NHSE_Admin: Provide anonymised BAU telephone journey answers
+    ' Step 18
+    NHSE_Admin -> Lung_Anon_DB: Upload anonymised BAU telephone journey answers
+
+    ' Step 19
+    NHS_App -> Lung_Anon_DB: Access identifiable online digital risk assessment answers
+    NHS_App -> NHS_App: Create anonymised online digital risk assessment answers
+    ' Step 20
+    NHS_App -> Lung_Anon_DB: Upload anonymised online digital risk assessment answers
+
+    ' Step 21
+    NHSE_Analysis -> Lung_Anon_DB: Analyse anonymised data
+else Participant does NOT provide consent
+    ' ALT path two i
+    Participant -> E2E_Staff: Do not provide consent
+    ' ALT path two ii
+    E2E_Staff -> E2E_System: Record non-consent
+    ' ALT path two iii
+    note over E2E_System: End of sequence — no further actions
+end
+@enduml
