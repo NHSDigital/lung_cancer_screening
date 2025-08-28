@@ -7,13 +7,25 @@ class Plco:
     AGE_CENTRED_OR_REFERENT_REF_GROUP = Decimal('62')
     BMI_COEFFICIENT = Decimal('-0.0274194')
     BMI_CENTRED_OR_REFERENT_REF_GROUP = Decimal('27')
+    COPD_ENPHYSEMA_OR_CHRONIC_BRONCHITIS_COEFFICIENT = Decimal('0.3553063')
 
-    def __init__(self, age=None, bmi=None):
+    def __init__(self, age=None, bmi=None, copd_enphysema_or_chronic_bronchitis=None):
         self.age = Decimal(str(age or 0))
         self.bmi = Decimal(str(bmi or 0))
+        self.copd_enphysema_or_chronic_bronchitis = copd_enphysema_or_chronic_bronchitis
 
     def age_in_years_contribution_to_estimate(self):
         return (self.age - self.AGE_CENTRED_OR_REFERENT_REF_GROUP) * self.AGE_COEFFICIENT
 
     def bmi_contribution_to_estimate(self):
         return (self.bmi - self.BMI_CENTRED_OR_REFERENT_REF_GROUP) * self.BMI_COEFFICIENT
+
+    def copd_enphysema_or_chronic_bronchitis_contribution_to_estimate(self):
+        if self.copd_enphysema_or_chronic_bronchitis is None:
+            raise self.InvalidValueError(
+                "copd_enphysema_or_chronic_bronchitis must be true or false")
+
+        return self.copd_enphysema_or_chronic_bronchitis * self.COPD_ENPHYSEMA_OR_CHRONIC_BRONCHITIS_COEFFICIENT
+
+    class InvalidValueError(Exception):
+        pass
