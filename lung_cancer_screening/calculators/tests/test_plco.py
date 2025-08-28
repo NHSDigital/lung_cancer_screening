@@ -83,3 +83,26 @@ class TestPlco(TestCase):
         result = calculator.personal_history_of_cancer_contribution_to_estimate()
 
         self.assertEqual(result, Decimal('0'))
+
+    def test_family_history_of_cancer_contribution_to_estimate_when_none(self):
+        calculator = Plco(family_history_of_cancer=None)
+
+        self.assertRaises(
+            Plco.InvalidValueError,
+            calculator.family_history_of_cancer_contribution_to_estimate
+        )
+
+    def test_family_history_of_cancer_contribution_to_estimate_when_true(self):
+        calculator = Plco(family_history_of_cancer=True)
+
+        result = calculator.family_history_of_cancer_contribution_to_estimate()
+
+        self.assertEqual(result, Decimal('0.587185'))
+
+    def test_family_history_of_cancer_contribution_to_estimate_when_false(self):
+        calculator = Plco(family_history_of_cancer=False)
+
+        result = calculator.family_history_of_cancer_contribution_to_estimate()
+
+        self.assertEqual(result, Decimal('0'))
+
