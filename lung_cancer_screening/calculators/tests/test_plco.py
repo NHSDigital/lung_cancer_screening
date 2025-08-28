@@ -4,44 +4,53 @@ from decimal import Decimal
 from lung_cancer_screening.calculators.plco import Plco
 
 class TestPlco(TestCase):
+    def setUp(self):
+        self.defaultArgs = {
+            "age": 62,
+            "bmi": 27,
+            "copd_enphysema_or_chronic_bronchitis": False,
+            "personal_history_of_cancer": False,
+            "family_history_of_cancer": False
+        }
+
     def test_age_in_years_contribution_to_estimate_when_age_is_none(self):
-        calculator = Plco(age=None)
+        calculator = Plco(**dict(self.defaultArgs, age=None))
         result = calculator.age_in_years_contribution_to_estimate()
 
         self.assertEqual(result, Decimal('-4.8289816'))
 
     def test_age_in_years_contribution_to_estimate_at_74(self):
-        calculator = Plco(age=74)
+        calculator = Plco(**dict(self.defaultArgs, age=74))
         result = calculator.age_in_years_contribution_to_estimate()
 
         self.assertEqual(result, Decimal('0.9346416'))
 
     def test_age_in_years_contribution_to_estimate_at_62(self):
-        calculator = Plco(age=58)
+        calculator = Plco(**dict(self.defaultArgs, age=58))
         result = calculator.age_in_years_contribution_to_estimate()
 
         self.assertEqual(result, Decimal('-0.3115472'))
 
     def test_bmi_contribution_to_estimate_when_bmi_is_none(self):
-        calculator = Plco(bmi=None)
+        calculator = Plco(**dict(self.defaultArgs, bmi=None))
         result = calculator.bmi_contribution_to_estimate()
 
         self.assertEqual(result, Decimal('0.7403238'))
 
     def test_bmi_contribution_to_estimate_when_bmi_is_23_point_5(self):
-        calculator = Plco(bmi=23.5)
+        calculator = Plco(**dict(self.defaultArgs, bmi=23.5))
         result = calculator.bmi_contribution_to_estimate()
 
         self.assertEqual(result, Decimal('0.0959679'))
 
     def test_bmi_contribution_to_estimate_when_bmi_is_a_long_decimal(self):
-        calculator = Plco(bmi="26.4749212")
+        calculator = Plco(**dict(self.defaultArgs, bmi="26.4749212"))
         result = calculator.bmi_contribution_to_estimate()
 
         self.assertEqual(result, Decimal('0.01439734564872'))
 
     def test_copd_enphysema_or_chronic_bronchitiscontribution_to_estimate_when_none(self):
-        calculator = Plco(copd_enphysema_or_chronic_bronchitis=None)
+        calculator = Plco(**dict(self.defaultArgs, copd_enphysema_or_chronic_bronchitis=None))
 
         self.assertRaises(
             Plco.InvalidValueError,
@@ -49,21 +58,21 @@ class TestPlco(TestCase):
         )
 
     def test_copd_enphysema_or_chronic_bronchitiscontribution_to_estimate_when_true(self):
-        calculator = Plco(copd_enphysema_or_chronic_bronchitis=True)
+        calculator = Plco(**dict(self.defaultArgs, copd_enphysema_or_chronic_bronchitis=True))
 
         result = calculator.copd_enphysema_or_chronic_bronchitis_contribution_to_estimate()
 
         self.assertEqual(result, Decimal('0.3553063'))
 
     def test_copd_enphysema_or_chronic_bronchitiscontribution_to_estimate_when_false(self):
-        calculator = Plco(copd_enphysema_or_chronic_bronchitis=False)
+        calculator = Plco(**dict(self.defaultArgs, copd_enphysema_or_chronic_bronchitis=False))
 
         result = calculator.copd_enphysema_or_chronic_bronchitis_contribution_to_estimate()
 
         self.assertEqual(result, Decimal('0'))
 
     def test_personal_history_of_cancer_contribution_to_estimate_when_none(self):
-        calculator = Plco(personal_history_of_cancer=None)
+        calculator = Plco(**dict(self.defaultArgs, personal_history_of_cancer=None))
 
         self.assertRaises(
             Plco.InvalidValueError,
@@ -71,21 +80,21 @@ class TestPlco(TestCase):
         )
 
     def test_personal_history_of_cancer_contribution_to_estimate_when_true(self):
-        calculator = Plco(personal_history_of_cancer=True)
+        calculator = Plco(**dict(self.defaultArgs, personal_history_of_cancer=True))
 
         result = calculator.personal_history_of_cancer_contribution_to_estimate()
 
         self.assertEqual(result, Decimal('0.4589971'))
 
     def test_personal_history_of_cancer_contribution_to_estimate_when_false(self):
-        calculator = Plco(personal_history_of_cancer=False)
+        calculator = Plco(**dict(self.defaultArgs, personal_history_of_cancer=False))
 
         result = calculator.personal_history_of_cancer_contribution_to_estimate()
 
         self.assertEqual(result, Decimal('0'))
 
     def test_family_history_of_cancer_contribution_to_estimate_when_none(self):
-        calculator = Plco(family_history_of_cancer=None)
+        calculator = Plco(**dict(self.defaultArgs, family_history_of_cancer=None))
 
         self.assertRaises(
             Plco.InvalidValueError,
@@ -93,14 +102,14 @@ class TestPlco(TestCase):
         )
 
     def test_family_history_of_cancer_contribution_to_estimate_when_true(self):
-        calculator = Plco(family_history_of_cancer=True)
+        calculator = Plco(**dict(self.defaultArgs, family_history_of_cancer=True))
 
         result = calculator.family_history_of_cancer_contribution_to_estimate()
 
         self.assertEqual(result, Decimal('0.587185'))
 
     def test_family_history_of_cancer_contribution_to_estimate_when_false(self):
-        calculator = Plco(family_history_of_cancer=False)
+        calculator = Plco(**dict(self.defaultArgs, family_history_of_cancer=False))
 
         result = calculator.family_history_of_cancer_contribution_to_estimate()
 
