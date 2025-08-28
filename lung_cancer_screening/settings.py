@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'lung_cancer_screening.core',
     'lung_cancer_screening.questions'
+    'lung_cancer_screening.calculators',
 ]
 
 MIDDLEWARE = [
