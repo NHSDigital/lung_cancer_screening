@@ -13,7 +13,10 @@ services:
       - .env
     depends_on:
       - db
+    volumes:
+      - ./lung_cancer_screening:/app/lung_cancer_screening
     restart: unless-stopped
+
 
   asset_builder:
     build:
