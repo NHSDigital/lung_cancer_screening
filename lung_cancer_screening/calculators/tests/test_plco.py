@@ -61,3 +61,25 @@ class TestPlco(TestCase):
         result = calculator.copd_enphysema_or_chronic_bronchitis_contribution_to_estimate()
 
         self.assertEqual(result, Decimal('0'))
+
+    def test_personal_history_of_cancer_contribution_to_estimate_when_none(self):
+        calculator = Plco(personal_history_of_cancer=None)
+
+        self.assertRaises(
+            Plco.InvalidValueError,
+            calculator.personal_history_of_cancer_contribution_to_estimate
+        )
+
+    def test_personal_history_of_cancer_contribution_to_estimate_when_true(self):
+        calculator = Plco(personal_history_of_cancer=True)
+
+        result = calculator.personal_history_of_cancer_contribution_to_estimate()
+
+        self.assertEqual(result, Decimal('0.4589971'))
+
+    def test_personal_history_of_cancer_contribution_to_estimate_when_false(self):
+        calculator = Plco(personal_history_of_cancer=False)
+
+        result = calculator.personal_history_of_cancer_contribution_to_estimate()
+
+        self.assertEqual(result, Decimal('0'))
