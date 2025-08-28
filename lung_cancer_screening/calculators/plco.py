@@ -9,12 +9,18 @@ class Plco:
     BMI_CENTRED_OR_REFERENT_REF_GROUP = Decimal('27')
     COPD_ENPHYSEMA_OR_CHRONIC_BRONCHITIS_COEFFICIENT = Decimal('0.3553063')
     PERSONAL_HISTORY_OF_CANCER_COEFFICIENT = Decimal('0.4589971')
+    FAMILY_HISTORY_OF_CANCER_COEFFICIENT = Decimal('0.587185')
 
-    def __init__(self, age=None, bmi=None, copd_enphysema_or_chronic_bronchitis=None, personal_history_of_cancer=None):
+    def __init__(self,
+                 age=None,
+                 bmi=None,
+                 copd_enphysema_or_chronic_bronchitis=None,
+                 personal_history_of_cancer=None, family_history_of_cancer=None):
         self.age = Decimal(str(age or 0))
         self.bmi = Decimal(str(bmi or 0))
         self.copd_enphysema_or_chronic_bronchitis = copd_enphysema_or_chronic_bronchitis
         self.personal_history_of_cancer = personal_history_of_cancer
+        self.family_history_of_cancer = family_history_of_cancer
 
     def age_in_years_contribution_to_estimate(self):
         return (self.age - self.AGE_CENTRED_OR_REFERENT_REF_GROUP) * self.AGE_COEFFICIENT
@@ -36,6 +42,13 @@ class Plco:
                 "personal_history_of_cancer must be true or false")
 
         return self.personal_history_of_cancer * self.PERSONAL_HISTORY_OF_CANCER_COEFFICIENT
+
+    def family_history_of_cancer_contribution_to_estimate(self):
+        if self.family_history_of_cancer is None:
+            raise self.InvalidValueError(
+                "family_history_of_cancer must be true or false")
+
+        return self.family_history_of_cancer * self.FAMILY_HISTORY_OF_CANCER_COEFFICIENT
 
     class InvalidValueError(Exception):
         pass
