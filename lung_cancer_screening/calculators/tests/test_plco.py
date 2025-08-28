@@ -39,3 +39,25 @@ class TestPlco(TestCase):
         result = calculator.bmi_contribution_to_estimate()
 
         self.assertEqual(result, Decimal('0.01439734564872'))
+
+    def test_copd_enphysema_or_chronic_bronchitiscontribution_to_estimate_when_none(self):
+        calculator = Plco(copd_enphysema_or_chronic_bronchitis=None)
+
+        self.assertRaises(
+            Plco.InvalidValueError,
+            calculator.copd_enphysema_or_chronic_bronchitis_contribution_to_estimate
+        )
+
+    def test_copd_enphysema_or_chronic_bronchitiscontribution_to_estimate_when_true(self):
+        calculator = Plco(copd_enphysema_or_chronic_bronchitis=True)
+
+        result = calculator.copd_enphysema_or_chronic_bronchitis_contribution_to_estimate()
+
+        self.assertEqual(result, Decimal('0.3553063'))
+
+    def test_copd_enphysema_or_chronic_bronchitiscontribution_to_estimate_when_false(self):
+        calculator = Plco(copd_enphysema_or_chronic_bronchitis=False)
+
+        result = calculator.copd_enphysema_or_chronic_bronchitis_contribution_to_estimate()
+
+        self.assertEqual(result, Decimal('0'))
