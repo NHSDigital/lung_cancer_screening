@@ -17,4 +17,4 @@ cd "$(git rev-parse --show-toplevel)"
 # tests from here. If you want to run other test suites, see the predefined
 # tasks in scripts/lint.mk.
 
-docker compose run --rm web poetry run ruff check lung_cancer_screening
+docker compose run --rm web poetry run ruff check --no-cache lung_cancer_screening
