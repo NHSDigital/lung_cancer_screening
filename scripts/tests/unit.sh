@@ -17,4 +17,4 @@ cd "$(git rev-parse --show-toplevel)"
 # tests from here. If you want to run other test suites, see the predefined
 # tasks in scripts/test.mk.
 
-docker compose run web poetry run python manage.py test
+docker compose run --rm web poetry run python manage.py test
