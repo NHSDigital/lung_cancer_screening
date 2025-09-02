@@ -32,19 +32,62 @@ COPY pyproject.toml poetry.lock ./
 RUN pip install poetry
 RUN poetry install --without dev --no-root && rm -rf $POETRY_CACHE_DIR
 
-FROM builder AS development
+# Alpine doesn't support playwright
+FROM python:3.13.5-slim AS development
 
-USER ${USER}
-WORKDIR /app
+# Set up user like python_base does
+ENV USER=app
+RUN addgroup --gid 1000 --system ${USER} \
+    && adduser --uid 1000 --system ${USER} --ingroup ${USER} --home /home/${USER} \
+    && mkdir -p /home/${USER} \
+    && chown ${USER}:${USER} /home/${USER}
 
-COPY --chown=${USER}:${USER} . .
+ENV HOME=/home/${USER}
+
+ENV VIRTUAL_ENV=/app/.venv
+ENV PATH="/app/.venv/bin:$PATH"
 
 USER root
+WORKDIR /app
 
-RUN chown ${USER}:${USER} .
-RUN poetry install
+# Install system dependencies needed for Playwright
+RUN apt-get update && apt-get install -y \
+    fonts-liberation \
+    libasound2 \
+    libatk-bridge2.0-0 \
+    libatk1.0-0 \
+    libatspi2.0-0 \
+    libcups2 \
+    libdbus-1-3 \
+    libdrm2 \
+    libexpat1 \
+    libgbm1 \
+    libglib2.0-0 \
+    libgtk-3-0 \
+    libnspr4 \
+    libnss3 \
+    libx11-6 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxext6 \
+    libxfixes3 \
+    libxrandr2 \
+    libxss1 \
+    libxtst6 \
+    xdg-utils \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV POETRY_NO_INTERACTION=1 \
+    POETRY_VIRTUALENVS_IN_PROJECT=1 \
+    POETRY_VIRTUALENVS_CREATE=1
+
+COPY pyproject.toml poetry.lock ./
+RUN pip install poetry
+RUN poetry install --no-root
+RUN poetry run playwright install
 
 USER ${USER}
+COPY --chown=${USER}:${USER} . .
 
 FROM python_base
 

@@ -18,7 +18,7 @@ dev-logs:
 	$(DOCKER_COMPOSE_CMD) logs -f
 
 dev-shell:
-	$(DOCKER_COMPOSE_CMD) run web sh
+	$(DOCKER_COMPOSE_CMD) run web bash
 
 dev-migrate:
 	$(DOCKER_COMPOSE_CMD) run --rm web python manage.py migrate
