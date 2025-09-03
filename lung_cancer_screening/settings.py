@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'lung_cancer_screening.core'
+    'lung_cancer_screening.core',
+    'lung_cancer_screening.questions'
 ]
 
 MIDDLEWARE = [

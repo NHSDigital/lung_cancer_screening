@@ -1,0 +1,21 @@
+.app-button--link {
+  @include nhsuk-link-style-default;
+
+  & {
+    display: inline;
+    align-items: normal;
+    text-align: left;
+    font-size: inherit;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+  }
+}
+
+.nhsuk-form-group .app-button--link {
+  display: block;
+}
