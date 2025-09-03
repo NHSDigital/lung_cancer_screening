@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from datetime import date
+from dateutil.relativedelta import relativedelta
 
 from lung_cancer_screening.questions.models.participant import Participant
 from lung_cancer_screening.questions.models.questionnaire_response import QuestionnaireResponse
@@ -8,6 +9,19 @@ from lung_cancer_screening.questions.models.questionnaire_response import Questi
 class TestPostDateOfBirth(TestCase):
     def setUp(self):
         self.participant = Participant.objects.create(unique_id="12345")
+        self.valid_age = date.today() - relativedelta(years=55)
+        self.valid_params = {
+            "day": self.valid_age.day,
+            "month": self.valid_age.month,
+            "year": self.valid_age.year
+        }
+
+        self.invalid_age = date.today() - relativedelta(years=20)
+        self.invalid_params = {
+            "day": self.invalid_age.day,
+            "month": self.invalid_age.month,
+            "year": self.invalid_age.year
+        }
 
         session = self.client.session
         session['participant_id'] = self.participant.unique_id
@@ -44,7 +58,7 @@ class TestPostDateOfBirth(TestCase):
 
         response = self.client.post(
             reverse("questions:date_of_birth"),
-            {"day": "8", "month": "9", "year": "2000"}
+            self.valid_params
         )
 
         self.assertRedirects(response, reverse("questions:start"))
@@ -52,17 +66,17 @@ class TestPostDateOfBirth(TestCase):
     def test_post_stores_a_valid_questionnaire_response_for_the_participant(self):
         self.client.post(
             reverse("questions:date_of_birth"),
-            {"day": "8", "month": "9", "year": "2000"}
+            self.valid_params
         )
 
         questionnaire_response = QuestionnaireResponse.objects.first()
-        self.assertEqual(questionnaire_response.value, date(2000, 9, 8))
+        self.assertEqual(questionnaire_response.value, self.valid_age)
         self.assertEqual(questionnaire_response.participant, self.participant)
 
     def test_post_sets_the_participant_id_in_session(self):
         self.client.post(
             reverse("questions:date_of_birth"),
-            {"day": "8", "month": "9", "year": "2000"}
+            self.valid_params
         )
 
         self.assertEqual(self.client.session["participant_id"], "12345")
@@ -70,7 +84,7 @@ class TestPostDateOfBirth(TestCase):
     def test_post_redirects_to_responses_path(self):
         response = self.client.post(
             reverse("questions:date_of_birth"),
-            {"day": "8", "month": "9", "year": "2000"}
+            self.valid_params
         )
 
         self.assertRedirects(response, reverse("questions:responses"))
@@ -82,3 +96,19 @@ class TestPostDateOfBirth(TestCase):
         )
 
         self.assertEqual(response.status_code, 422)
+
+    def test_post_does_not_create_a_questionnaire_response_if_the_user_is_not_in_the_correct_age_range(self):
+        response = self.client.post(
+            reverse("questions:date_of_birth"),
+            self.invalid_params
+        )
+
+        self.assertEqual(QuestionnaireResponse.objects.count(), 0)
+
+    def test_post_redirects_if_the_user_is_not_in_the_correct_age_range(self):
+        response = self.client.post(
+            reverse("questions:date_of_birth"),
+            self.invalid_params
+        )
+
+        self.assertRedirects(response, reverse("questions:age_range_exit"))
