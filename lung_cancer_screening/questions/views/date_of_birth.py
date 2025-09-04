@@ -4,17 +4,12 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from django.core.exceptions import ValidationError
 
-from ..models.participant import Participant
+from .decorators.participant_decorators import require_participant
+
 from ..models.date_response import DateResponse
 
-
+@require_participant
 def date_of_birth(request):
-    try:
-        participant = Participant.objects.get(
-            unique_id=request.session['participant_id'])
-    except Participant.DoesNotExist:
-        return redirect(reverse("questions:start"))
-
     if request.method == "POST":
         try:
             value = date(
@@ -28,7 +23,7 @@ def date_of_birth(request):
 
             if value in (fifty_five_years_ago, seventy_five_years_ago):
                 DateResponse.objects.create(
-                    participant=participant,
+                    participant=request.participant,
                     value=value,
                     question="What is your date of birth?"
                 )
@@ -41,12 +36,10 @@ def date_of_birth(request):
             return render(
                 request,
                 "date_of_birth.jinja",
-                {"participant_id": participant.unique_id},
                 status=422
             )
 
     return render(
         request,
-        "date_of_birth.jinja",
-        { "participant_id": participant.unique_id }
+        "date_of_birth.jinja"
     )

@@ -43,14 +43,6 @@ class TestPostDateOfBirth(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    def test_get_contains_the_participant_id_in_the_form(self):
-        response = self.client.get(reverse("questions:date_of_birth"))
-
-        self.assertContains(
-            response,
-            f"<input type=\"hidden\" name=\"participant_id\" value=\"{self.participant.unique_id}\">"
-        )
-
     def test_post_redirects_if_the_particpant_does_not_exist(self):
         session = self.client.session
         session['participant_id'] = "somebody none existant participant"
