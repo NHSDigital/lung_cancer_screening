@@ -4,24 +4,12 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from lung_cancer_screening.questions.models.participant import Participant
-from lung_cancer_screening.questions.models.date_response import DateResponse
+from lung_cancer_screening.questions.models.boolean_response import BooleanResponse
 
-class TestPostDateOfBirth(TestCase):
+class TestHaveYouEverSmoked(TestCase):
     def setUp(self):
         self.participant = Participant.objects.create(unique_id="12345")
-        self.valid_age = date.today() - relativedelta(years=55)
-        self.valid_params = {
-            "day": self.valid_age.day,
-            "month": self.valid_age.month,
-            "year": self.valid_age.year
-        }
-
-        self.invalid_age = date.today() - relativedelta(years=20)
-        self.invalid_params = {
-            "day": self.invalid_age.day,
-            "month": self.invalid_age.month,
-            "year": self.invalid_age.year
-        }
+        self.valid_params = { "value": 1 }
 
         session = self.client.session
         session['participant_id'] = self.participant.unique_id
@@ -33,18 +21,18 @@ class TestPostDateOfBirth(TestCase):
         session.save()
 
         response = self.client.get(
-            reverse("questions:date_of_birth")
+            reverse("questions:have_you_ever_smoked")
         )
 
         self.assertRedirects(response, reverse("questions:start"))
 
     def test_get_responds_successfully(self):
-        response = self.client.get(reverse("questions:date_of_birth"))
+        response = self.client.get(reverse("questions:have_you_ever_smoked"))
 
         self.assertEqual(response.status_code, 200)
 
     def test_get_contains_the_participant_id_in_the_form(self):
-        response = self.client.get(reverse("questions:date_of_birth"))
+        response = self.client.get(reverse("questions:have_you_ever_smoked"))
 
         self.assertContains(
             response,
@@ -57,7 +45,7 @@ class TestPostDateOfBirth(TestCase):
         session.save()
 
         response = self.client.post(
-            reverse("questions:date_of_birth"),
+            reverse("questions:have_you_ever_smoked"),
             self.valid_params
         )
 
@@ -65,51 +53,51 @@ class TestPostDateOfBirth(TestCase):
 
     def test_post_stores_a_valid_date_response_for_the_participant(self):
         self.client.post(
-            reverse("questions:date_of_birth"),
+            reverse("questions:have_you_ever_smoked"),
             self.valid_params
         )
 
-        date_response = DateResponse.objects.first()
-        self.assertEqual(date_response.value, self.valid_age)
+        date_response = BooleanResponse.objects.first()
+        self.assertEqual(date_response.value, self.valid_params["value"])
         self.assertEqual(date_response.participant, self.participant)
-        self.assertEqual(date_response.question, "What is your date of birth?")
+        self.assertEqual(date_response.question, "Have you ever smoked?")
 
     def test_post_sets_the_participant_id_in_session(self):
         self.client.post(
-            reverse("questions:date_of_birth"),
+            reverse("questions:have_you_ever_smoked"),
             self.valid_params
         )
 
         self.assertEqual(self.client.session["participant_id"], "12345")
 
-    def test_post_redirects_to_responses_path(self):
+    def test_post_redirects_to_the_date_of_birth_path(self):
         response = self.client.post(
-            reverse("questions:date_of_birth"),
+            reverse("questions:have_you_ever_smoked"),
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:responses"))
+        self.assertRedirects(response, reverse("questions:date_of_birth"))
 
     def test_post_responds_with_422_if_the_date_response_fails_to_create(self):
         response = self.client.post(
-            reverse("questions:date_of_birth"),
-            {"day": "80000", "month": "90000", "year": "20000000"}
+            reverse("questions:have_you_ever_smoked"),
+            {"value": "something not a boolean"}
         )
 
         self.assertEqual(response.status_code, 422)
 
-    def test_post_does_not_create_a_date_response_if_the_user_is_not_in_the_correct_age_range(self):
+    def test_post_does_not_create_a_date_response_if_the_user_is_not_a_smoker(self):
         response = self.client.post(
-            reverse("questions:date_of_birth"),
-            self.invalid_params
+            reverse("questions:have_you_ever_smoked"),
+            { "value": False }
         )
 
-        self.assertEqual(DateResponse.objects.count(), 0)
+        self.assertEqual(BooleanResponse.objects.count(), 0)
 
-    def test_post_redirects_if_the_user_is_not_in_the_correct_age_range(self):
+    def test_post_redirects_if_the_user_not_a_smoker(self):
         response = self.client.post(
-            reverse("questions:date_of_birth"),
-            self.invalid_params
+            reverse("questions:have_you_ever_smoked"),
+            {"value": 0}
         )
 
-        self.assertRedirects(response, reverse("questions:age_range_exit"))
+        self.assertRedirects(response, reverse("questions:non_smoker_exit"))

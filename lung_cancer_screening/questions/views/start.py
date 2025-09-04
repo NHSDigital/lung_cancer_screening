@@ -13,7 +13,7 @@ def start(request):
 
             request.session['participant_id'] = participant.unique_id
 
-            return redirect(reverse("questions:date_of_birth"))
+            return redirect(reverse("questions:have_you_ever_smoked"))
         except ValidationError as e:
             return render(
                 request,

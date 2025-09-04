@@ -4,7 +4,8 @@ from playwright.sync_api import sync_playwright, expect
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-class TestQuestionnaire(StaticLiveServerTestCase):
+
+class TestParticipantOutOfAgeRange(StaticLiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -19,7 +20,7 @@ class TestQuestionnaire(StaticLiveServerTestCase):
         cls.browser.close()
         cls.playwright.stop()
 
-    def test_full_questionaire_user_journey(self):
+    def test_participant_out_of_age_range(self):
         participant_id = '123'
 
         page = self.browser.new_page()
@@ -44,7 +45,7 @@ class TestQuestionnaire(StaticLiveServerTestCase):
         expect(page.locator("legend")).to_have_text(
             "What is your date of birth?")
 
-        age = datetime.now() - relativedelta(years=55)
+        age = datetime.now() - relativedelta(years=20)
 
         page.fill("input[name='day']", str(age.day))
         page.fill("input[name='month']", str(age.month))
@@ -52,8 +53,7 @@ class TestQuestionnaire(StaticLiveServerTestCase):
 
         page.click("text=Continue")
 
-        expect(page).to_have_url(f"{self.live_server_url}/responses")
+        expect(page).to_have_url(f"{self.live_server_url}/age-range-exit")
 
-        expect(page.locator(".responses")).to_contain_text(
-            age.strftime("Have you ever smoked? True"))
-        expect(page.locator(".responses")).to_contain_text(age.strftime("What is your date of birth? %Y-%m-%d"))
+        expect(page.locator(".title")).to_have_text(
+            "You do not need an NHS lung health check")
