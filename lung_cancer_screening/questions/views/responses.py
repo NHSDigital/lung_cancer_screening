@@ -1,16 +1,11 @@
-from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.shortcuts import render
 
-from ..models.participant import Participant
+from .decorators.participant_decorators import require_participant
 
+@require_participant
 def responses(request):
-    try:
-        participant = Participant.objects.get(unique_id=request.session['participant_id'])
-    except Participant.DoesNotExist:
-        return redirect(reverse("questions:start"))
-
     return render(
         request,
         "responses.jinja",
-        {"responses": participant.responses()}
+        {"responses": request.participant.responses()}
     )
