@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
-def age_range_exit(request):
+def non_smoker_exit(request):
     return render(
         request,
-        "age_range_exit.jinja"
+        "non_smoker_exit.jinja"
     )

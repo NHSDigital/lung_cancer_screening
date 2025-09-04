@@ -1,6 +1,5 @@
 from django.test import TestCase
 from django.urls import reverse
-from datetime import date
 
 from lung_cancer_screening.questions.models.participant import Participant
 
@@ -33,7 +32,7 @@ class TestStart(TestCase):
             {"participant_id": "12345"}
         )
 
-        self.assertRedirects(response, reverse("questions:date_of_birth"))
+        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
 
     def test_post_responds_with_422_if_the_participant_fails_to_create(self):
         response = self.client.post(

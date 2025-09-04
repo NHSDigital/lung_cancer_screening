@@ -3,7 +3,8 @@ from django.urls import reverse
 from datetime import date
 
 from lung_cancer_screening.questions.models.participant import Participant
-from lung_cancer_screening.questions.models.questionnaire_response import QuestionnaireResponse
+from lung_cancer_screening.questions.models.date_response import DateResponse
+from lung_cancer_screening.questions.models.boolean_response import BooleanResponse
 
 class TestResponses(TestCase):
 
@@ -28,20 +29,29 @@ class TestResponses(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    def test_contains_the_participants_questionnaire_response(self):
-        questionnaire_response = QuestionnaireResponse.objects.create(
+    def test_contains_the_participants_responses(self):
+        date_response = DateResponse.objects.create(
             value=date(2000, 9, 8),
-            participant=self.participant
+            participant=self.participant,
+            question="Asking something generic?"
+        )
+        boolean_response = BooleanResponse.objects.create(
+            value=True,
+            participant=self.participant,
+            question="Asking something else generic?"
         )
 
         response = self.client.get(reverse("questions:responses"))
 
-        self.assertContains(response, questionnaire_response.value)
+        self.assertContains(response, date_response.question)
+        self.assertContains(response, date_response.value)
+        self.assertContains(response, boolean_response.question)
+        self.assertContains(response, boolean_response.value)
 
     def test_does_not_contain_responses_for_other_participants(self):
         other_participant = Participant.objects.create(unique_id='67890')
-        other_questionnaire_response = QuestionnaireResponse.objects.create(value=date(1990, 1, 1), participant=other_participant)
+        other_date_response = DateResponse.objects.create(value=date(1990, 1, 1), participant=other_participant, question="Asking something generic?")
 
         response = self.client.get(reverse("questions:responses"))
 
-        self.assertNotContains(response, other_questionnaire_response.value)
+        self.assertNotContains(response, other_date_response.value)
