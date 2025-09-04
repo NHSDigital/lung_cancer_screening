@@ -16,13 +16,17 @@ Including another URLconf
 """
 from django.urls import path
 from .views.start import start
+from .views.have_you_ever_smoked import have_you_ever_smoked
 from .views.date_of_birth import date_of_birth
 from .views.responses import responses
 from .views.age_range_exit import age_range_exit
+from .views.non_smoker_exit import non_smoker_exit
 
 urlpatterns = [
     path('start', start, name='start'),
+    path('have-you-ever-smoked', have_you_ever_smoked, name='have_you_ever_smoked'),
     path('date-of-birth', date_of_birth, name='date_of_birth'),
     path('responses', responses, name='responses'),
     path('age-range-exit', age_range_exit, name='age_range_exit'),
+    path('non-smoker-exit', non_smoker_exit, name='non_smoker_exit'),
 ]

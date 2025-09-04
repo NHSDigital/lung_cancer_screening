@@ -1,11 +1,9 @@
 import os
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from playwright.sync_api import sync_playwright, expect
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
 
 
-class TestQuestionnaire(StaticLiveServerTestCase):
+class TestParticipantNotSmoker(StaticLiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -20,7 +18,7 @@ class TestQuestionnaire(StaticLiveServerTestCase):
         cls.browser.close()
         cls.playwright.stop()
 
-    def test_participant_out_of_age_range(self):
+    def test_participant_not_smoker(self):
         participant_id = '123'
 
         page = self.browser.new_page()
@@ -30,20 +28,16 @@ class TestQuestionnaire(StaticLiveServerTestCase):
 
         page.click('text=Start now')
 
-        expect(page).to_have_url(f"{self.live_server_url}/date-of-birth")
+        expect(page).to_have_url(f"{self.live_server_url}/have-you-ever-smoked")
 
         expect(page.locator("legend")).to_have_text(
-            "What is your date of birth?")
+            "Have you ever smoked?")
 
-        age = datetime.now() - relativedelta(years=20)
-
-        page.fill("input[name='day']", str(age.day))
-        page.fill("input[name='month']", str(age.month))
-        page.fill("input[name='year']", str(age.year))
+        page.get_by_label('No').check()
 
         page.click("text=Continue")
 
-        expect(page).to_have_url(f"{self.live_server_url}/age-range-exit")
+        expect(page).to_have_url(f"{self.live_server_url}/non-smoker-exit")
 
         expect(page.locator(".title")).to_have_text(
             "You do not need an NHS lung health check")

@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from datetime import date
 from dateutil.relativedelta import relativedelta
+from django.core.exceptions import ValidationError
 
 from ..models.participant import Participant
-from ..models.questionnaire_response import QuestionnaireResponse
+from ..models.date_response import DateResponse
 
 
 def date_of_birth(request):
@@ -26,19 +27,17 @@ def date_of_birth(request):
             seventy_five_years_ago = date.today() - relativedelta(years=75)
 
             if value in (fifty_five_years_ago, seventy_five_years_ago):
-                QuestionnaireResponse.objects.create(
+                DateResponse.objects.create(
                     participant=participant,
-                    value=value
+                    value=value,
+                    question="What is your date of birth?"
                 )
 
                 return redirect(reverse("questions:responses"))
             else:
                 return redirect(reverse("questions:age_range_exit"))
 
-        # TODO: Understand how to do validation for dates - either model
-        # or Form validator
-        # except ValidationError as e:
-        except Exception as e:
+        except (ValueError, ValidationError):
             return render(
                 request,
                 "date_of_birth.jinja",
