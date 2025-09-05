@@ -49,16 +49,16 @@ class TestHaveYouEverSmoked(TestCase):
 
         self.assertRedirects(response, reverse("questions:start"))
 
-    def test_post_stores_a_valid_date_response_for_the_participant(self):
+    def test_post_stores_a_valid_boolean_response_for_the_participant(self):
         self.client.post(
             reverse("questions:have_you_ever_smoked"),
             self.valid_params
         )
 
-        date_response = BooleanResponse.objects.first()
-        self.assertEqual(date_response.value, self.valid_params["value"])
-        self.assertEqual(date_response.participant, self.participant)
-        self.assertEqual(date_response.question, "Have you ever smoked?")
+        boolean_response = BooleanResponse.objects.first()
+        self.assertEqual(boolean_response.value, self.valid_params["value"])
+        self.assertEqual(boolean_response.participant, self.participant)
+        self.assertEqual(boolean_response.question, "Have you ever smoked?")
 
     def test_post_sets_the_participant_id_in_session(self):
         self.client.post(
