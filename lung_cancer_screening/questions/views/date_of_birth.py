@@ -26,7 +26,7 @@ def date_of_birth(request):
             fifty_five_years_ago = date.today() - relativedelta(years=55)
             seventy_five_years_ago = date.today() - relativedelta(years=75)
 
-            if value in (fifty_five_years_ago, seventy_five_years_ago):
+            if (seventy_five_years_ago < value <= fifty_five_years_ago):
                 DateResponse.objects.create(
                     participant=participant,
                     value=value,
