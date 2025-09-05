@@ -33,7 +33,7 @@ RUN pip install poetry
 RUN poetry install --without dev --no-root && rm -rf $POETRY_CACHE_DIR
 
 # Alpine doesn't support playwright
-FROM python:3.13.5-slim AS development
+FROM python:3.13.7-slim AS development
 
 # Set up user like python_base does
 ENV USER=app
