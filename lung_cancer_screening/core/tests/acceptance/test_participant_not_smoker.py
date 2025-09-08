@@ -3,6 +3,12 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from playwright.sync_api import sync_playwright, expect
 
 
+from .helpers.user_interaction_helpers import (
+    fill_in_and_submit_participant_id,
+    fill_in_and_submit_smoking_elligibility
+)
+
+
 class TestParticipantNotSmoker(StaticLiveServerTestCase):
 
     @classmethod
@@ -24,18 +30,8 @@ class TestParticipantNotSmoker(StaticLiveServerTestCase):
         page = self.browser.new_page()
         page.goto(f"{self.live_server_url}/start")
 
-        page.fill("input[name='participant_id']", participant_id)
-
-        page.click('text=Start now')
-
-        expect(page).to_have_url(f"{self.live_server_url}/have-you-ever-smoked")
-
-        expect(page.locator("legend")).to_have_text(
-            "Have you ever smoked?")
-
-        page.get_by_label('No, I have never smoked').check()
-
-        page.click("text=Continue")
+        fill_in_and_submit_participant_id(page, participant_id)
+        fill_in_and_submit_smoking_elligibility(page, 'No, I have never smoked')
 
         expect(page).to_have_url(f"{self.live_server_url}/non-smoker-exit")
 
