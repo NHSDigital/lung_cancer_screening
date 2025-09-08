@@ -11,16 +11,16 @@ class TestPostDateOfBirth(TestCase):
         self.participant = Participant.objects.create(unique_id="12345")
         self.valid_age = date.today() - relativedelta(years=55)
         self.valid_params = {
-            "day": self.valid_age.day,
-            "month": self.valid_age.month,
-            "year": self.valid_age.year
+            "value_0": self.valid_age.day,
+            "value_1": self.valid_age.month,
+            "value_2": self.valid_age.year
         }
 
         self.invalid_age = date.today() - relativedelta(years=20)
         self.invalid_params = {
-            "day": self.invalid_age.day,
-            "month": self.invalid_age.month,
-            "year": self.invalid_age.year
+            "value_0": self.invalid_age.day,
+            "value_1": self.invalid_age.month,
+            "value_2": self.invalid_age.year
         }
 
         session = self.client.session
@@ -82,10 +82,10 @@ class TestPostDateOfBirth(TestCase):
 
         self.assertRedirects(response, reverse("questions:responses"))
 
-    def test_post_responds_with_422_if_the_date_response_fails_to_create(self):
+    def test_post_responds_with_422_if_the_resource_is_invalid(self):
         response = self.client.post(
             reverse("questions:date_of_birth"),
-            {"day": "80000", "month": "90000", "year": "20000000"}
+            {"value_0": "80000", "value_1": "90000", "value_2": "20000000"}
         )
 
         self.assertEqual(response.status_code, 422)

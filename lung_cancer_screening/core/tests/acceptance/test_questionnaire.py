@@ -46,9 +46,9 @@ class TestQuestionnaire(StaticLiveServerTestCase):
 
         age = datetime.now() - relativedelta(years=55)
 
-        page.fill("input[name='day']", str(age.day))
-        page.fill("input[name='month']", str(age.month))
-        page.fill("input[name='year']", str(age.year))
+        page.get_by_label("Day").fill(str(age.day))
+        page.get_by_label("Month").fill(str(age.month))
+        page.get_by_label("Year").fill(str(age.year))
 
         page.click("text=Continue")
 
