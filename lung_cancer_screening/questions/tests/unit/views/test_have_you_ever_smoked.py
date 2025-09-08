@@ -7,7 +7,7 @@ from lung_cancer_screening.questions.models.boolean_response import BooleanRespo
 class TestHaveYouEverSmoked(TestCase):
     def setUp(self):
         self.participant = Participant.objects.create(unique_id="12345")
-        self.valid_params = { "value": 1 }
+        self.valid_params = { "value": True }
 
         session = self.client.session
         session['participant_id'] = self.participant.unique_id
@@ -87,7 +87,7 @@ class TestHaveYouEverSmoked(TestCase):
     def test_post_redirects_if_the_user_not_a_smoker(self):
         response = self.client.post(
             reverse("questions:have_you_ever_smoked"),
-            {"value": 0}
+            {"value": False }
         )
 
         self.assertRedirects(response, reverse("questions:non_smoker_exit"))

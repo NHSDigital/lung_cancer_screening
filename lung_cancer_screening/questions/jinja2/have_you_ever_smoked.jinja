@@ -8,26 +8,8 @@
       <form action="{{ request.path }}" method="POST">
         {{ csrf_input }}
 
-        {{ radios({
-          "name": "value",
-          "fieldset": {
-            "legend": {
-              "text": "Have you ever smoked?",
-              "classes": "nhsuk-fieldset__legend--l",
-              "isPageHeading": true
-            }
-          },
-          "items": [
-            {
-              "value": "1",
-              "text": "Yes"
-            },
-            {
-              "value": "0",
-              "text": "No"
-            }
-          ]
-        }) }}
+        {{ form.value.as_field_group() }}
+
 
         {{ button({
             "text": "Continue"
