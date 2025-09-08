@@ -10,13 +10,15 @@ class TestStart(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    def test_post_creates_a_new_participant(self):
+    def test_post_creates_a_new_participant_and_response_set(self):
         self.client.post(
             reverse("questions:start"),
             {"participant_id": "12345"}
         )
 
-        self.assertEqual(Participant.objects.all().last().unique_id, "12345")
+        participant = Participant.objects.all().last()
+        self.assertEqual(participant.unique_id, "12345")
+        self.assertEqual(participant.responseset_set.count(), 1)
 
     def test_post_sets_the_participant_id_in_session(self):
         self.client.post(

@@ -35,7 +35,7 @@ class TestQuestionnaire(StaticLiveServerTestCase):
         expect(page.locator("legend")).to_have_text(
             "Have you ever smoked?")
 
-        page.get_by_label('Yes').check()
+        page.get_by_label('Yes, I used to smoke regularly').check()
 
         page.click("text=Continue")
 
@@ -55,5 +55,5 @@ class TestQuestionnaire(StaticLiveServerTestCase):
         expect(page).to_have_url(f"{self.live_server_url}/responses")
 
         expect(page.locator(".responses")).to_contain_text(
-            age.strftime("Have you ever smoked? True"))
+            age.strftime("Have you ever smoked? Yes, I used to smoke regularly"))
         expect(page.locator(".responses")).to_contain_text(age.strftime("What is your date of birth? %Y-%m-%d"))

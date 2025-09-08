@@ -32,3 +32,6 @@ dev-clean:
 
 dev-test:
 	$(DOCKER_COMPOSE_CMD) run --rm web python manage.py test
+
+dev-lint-fix:
+	$(DOCKER_COMPOSE_CMD) run --rm web poetry run ruff check --no-cache lung_cancer_screening --fix
