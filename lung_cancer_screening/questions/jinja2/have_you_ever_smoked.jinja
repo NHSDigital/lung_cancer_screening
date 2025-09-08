@@ -8,7 +8,7 @@
       <form action="{{ request.path }}" method="POST">
         {{ csrf_input }}
 
-        {{ form.value.as_field_group() }}
+        {{ form.have_you_ever_smoked.as_field_group() }}
 
 
         {{ button({

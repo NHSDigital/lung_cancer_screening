@@ -4,23 +4,23 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from lung_cancer_screening.questions.models.participant import Participant
-from lung_cancer_screening.questions.models.date_response import DateResponse
 
 class TestPostDateOfBirth(TestCase):
     def setUp(self):
         self.participant = Participant.objects.create(unique_id="12345")
+        self.participant.responseset_set.create()
         self.valid_age = date.today() - relativedelta(years=55)
         self.valid_params = {
-            "value_0": self.valid_age.day,
-            "value_1": self.valid_age.month,
-            "value_2": self.valid_age.year
+            "date_of_birth_0": self.valid_age.day,
+            "date_of_birth_1": self.valid_age.month,
+            "date_of_birth_2": self.valid_age.year
         }
 
         self.invalid_age = date.today() - relativedelta(years=20)
         self.invalid_params = {
-            "value_0": self.invalid_age.day,
-            "value_1": self.invalid_age.month,
-            "value_2": self.invalid_age.year
+            "date_of_birth_0": self.invalid_age.day,
+            "date_of_birth_1": self.invalid_age.month,
+            "date_of_birth_2": self.invalid_age.year
         }
 
         session = self.client.session
@@ -55,16 +55,15 @@ class TestPostDateOfBirth(TestCase):
 
         self.assertRedirects(response, reverse("questions:start"))
 
-    def test_post_stores_a_valid_date_response_for_the_participant(self):
+    def test_post_stores_a_valid_response_set_for_the_participant(self):
         self.client.post(
             reverse("questions:date_of_birth"),
             self.valid_params
         )
 
-        date_response = DateResponse.objects.first()
-        self.assertEqual(date_response.value, self.valid_age)
-        self.assertEqual(date_response.participant, self.participant)
-        self.assertEqual(date_response.question, "What is your date of birth?")
+        response_set = self.participant.responseset_set.first()
+        self.assertEqual(response_set.date_of_birth, self.valid_age)
+        self.assertEqual(response_set.participant, self.participant)
 
     def test_post_sets_the_participant_id_in_session(self):
         self.client.post(
@@ -85,18 +84,18 @@ class TestPostDateOfBirth(TestCase):
     def test_post_responds_with_422_if_the_resource_is_invalid(self):
         response = self.client.post(
             reverse("questions:date_of_birth"),
-            {"value_0": "80000", "value_1": "90000", "value_2": "20000000"}
+            {"date_of_birth_0": "80000", "date_of_birth_1": "90000", "date_of_birth_2": "20000000"}
         )
 
         self.assertEqual(response.status_code, 422)
 
-    def test_post_does_not_create_a_date_response_if_the_user_is_not_in_the_correct_age_range(self):
+    def test_post_does_not_create_a_response_set_if_the_user_is_not_in_the_correct_age_range(self):
         self.client.post(
             reverse("questions:date_of_birth"),
             self.invalid_params
         )
 
-        self.assertEqual(DateResponse.objects.count(), 0)
+        self.assertEqual(self.participant.responseset_set.first().date_of_birth, None)
 
     def test_post_redirects_if_the_user_is_not_in_the_correct_age_range(self):
         response = self.client.post(

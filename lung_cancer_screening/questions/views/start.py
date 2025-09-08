@@ -10,6 +10,7 @@ def start(request):
             participant = Participant.objects.create(
                 unique_id=request.POST['participant_id']
             )
+            participant.responseset_set.create()
 
             request.session['participant_id'] = participant.unique_id
 

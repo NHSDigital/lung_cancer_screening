@@ -1,14 +1,14 @@
 from django import forms
 from datetime import date
 
-from ..models.date_response import DateResponse
+from ..models.response_set import ResponseSet
 from lung_cancer_screening.core.form_fields import SplitDateField
 
-class DateResponseForm(forms.ModelForm):
+class DateOfBirthForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["value"] = SplitDateField(
+        self.fields["date_of_birth"] = SplitDateField(
             max_value=date.today(),
             required=False,
             hint="For example, 15 3 2025",
@@ -16,5 +16,5 @@ class DateResponseForm(forms.ModelForm):
         )
 
     class Meta:
-        model = DateResponse
-        fields = ['value']
+        model = ResponseSet
+        fields = ['date_of_birth']

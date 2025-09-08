@@ -2,12 +2,13 @@ from django.test import TestCase
 from django.urls import reverse
 
 from lung_cancer_screening.questions.models.participant import Participant
-from lung_cancer_screening.questions.models.boolean_response import BooleanResponse
+from lung_cancer_screening.questions.models.response_set import HaveYouEverSmokedValues
 
 class TestHaveYouEverSmoked(TestCase):
     def setUp(self):
         self.participant = Participant.objects.create(unique_id="12345")
-        self.valid_params = { "value": True }
+        self.participant.responseset_set.create()
+        self.valid_params = { "have_you_ever_smoked": HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY }
 
         session = self.client.session
         session['participant_id'] = self.participant.unique_id
@@ -41,16 +42,15 @@ class TestHaveYouEverSmoked(TestCase):
 
         self.assertRedirects(response, reverse("questions:start"))
 
-    def test_post_stores_a_valid_boolean_response_for_the_participant(self):
+    def test_post_stores_a_valid_response_for_the_participant(self):
         self.client.post(
             reverse("questions:have_you_ever_smoked"),
             self.valid_params
         )
 
-        boolean_response = BooleanResponse.objects.first()
-        self.assertEqual(boolean_response.value, self.valid_params["value"])
-        self.assertEqual(boolean_response.participant, self.participant)
-        self.assertEqual(boolean_response.question, "Have you ever smoked?")
+        response_set = self.participant.responseset_set.first()
+        self.assertEqual(response_set.have_you_ever_smoked, self.valid_params["have_you_ever_smoked"])
+        self.assertEqual(response_set.participant, self.participant)
 
     def test_post_sets_the_participant_id_in_session(self):
         self.client.post(
@@ -71,23 +71,23 @@ class TestHaveYouEverSmoked(TestCase):
     def test_post_responds_with_422_if_the_date_response_fails_to_create(self):
         response = self.client.post(
             reverse("questions:have_you_ever_smoked"),
-            {"value": "something not a boolean"}
+            {"have_you_ever_smoked": "something not in list"}
         )
 
         self.assertEqual(response.status_code, 422)
 
-    def test_post_does_not_create_a_date_response_if_the_user_is_not_a_smoker(self):
+    def test_post_does_not_update_the_response_set_if_the_user_is_not_a_smoker(self):
         self.client.post(
             reverse("questions:have_you_ever_smoked"),
-            { "value": False }
+            { "have_you_ever_smoked": HaveYouEverSmokedValues.NO_I_HAVE_NEVER_SMOKED.value }
         )
 
-        self.assertEqual(BooleanResponse.objects.count(), 0)
+        self.assertEqual(self.participant.responseset_set.first().have_you_ever_smoked, None)
 
     def test_post_redirects_if_the_user_not_a_smoker(self):
         response = self.client.post(
             reverse("questions:have_you_ever_smoked"),
-            {"value": False }
+            {"have_you_ever_smoked": HaveYouEverSmokedValues.NO_I_HAVE_NEVER_SMOKED.value }
         )
 
         self.assertRedirects(response, reverse("questions:non_smoker_exit"))

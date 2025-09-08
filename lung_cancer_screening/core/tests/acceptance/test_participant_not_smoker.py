@@ -33,7 +33,7 @@ class TestParticipantNotSmoker(StaticLiveServerTestCase):
         expect(page.locator("legend")).to_have_text(
             "Have you ever smoked?")
 
-        page.get_by_label('No').check()
+        page.get_by_label('No, I have never smoked').check()
 
         page.click("text=Continue")
 

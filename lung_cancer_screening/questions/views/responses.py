@@ -7,5 +7,5 @@ def responses(request):
     return render(
         request,
         "responses.jinja",
-        {"responses": request.participant.responses()}
+        {"response_set": request.participant.responseset_set.last()}
     )

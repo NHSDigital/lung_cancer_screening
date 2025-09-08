@@ -36,7 +36,7 @@ class TestParticipantOutOfAgeRange(StaticLiveServerTestCase):
         expect(page.locator("legend")).to_have_text(
             "Have you ever smoked?")
 
-        page.get_by_label('Yes').check()
+        page.get_by_label('Yes, I used to smoke regularly').check()
 
         page.click("text=Continue")
 
