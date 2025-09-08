@@ -1,21 +1,21 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.core.exceptions import ValidationError
 
 from .decorators.participant_decorators import require_participant
 
 from ..models.boolean_response import BooleanResponse
+from ..forms.boolean_response_form import BooleanResponseForm
 
 @require_participant
 def have_you_ever_smoked(request):
     if request.method == "POST":
-        try:
-            value = int(request.POST['value'])
+        form = BooleanResponseForm(request.POST)
 
-            if value:
+        if form.is_valid():
+            if form.cleaned_data["value"]:
                 BooleanResponse.objects.create(
                     participant=request.participant,
-                    value=value,
+                    value=form.cleaned_data["value"],
                     question="Have you ever smoked?"
                 )
 
@@ -23,14 +23,16 @@ def have_you_ever_smoked(request):
             else:
                 return redirect(reverse("questions:non_smoker_exit"))
 
-        except (ValueError, ValidationError):
+        else:
             return render(
                 request,
                 "have_you_ever_smoked.jinja",
+                { "form": form },
                 status=422
             )
 
     return render(
         request,
-        "have_you_ever_smoked.jinja"
+        "have_you_ever_smoked.jinja",
+        { "form": BooleanResponseForm() }
     )
