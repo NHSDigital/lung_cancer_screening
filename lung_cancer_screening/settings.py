@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    "django.forms",
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -86,7 +87,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'lung_cancer_screening.wsgi.application'
-
+FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
