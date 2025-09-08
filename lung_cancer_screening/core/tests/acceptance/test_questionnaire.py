@@ -4,6 +4,12 @@ from playwright.sync_api import sync_playwright, expect
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+from .helpers.user_interaction_helpers import (
+    fill_in_and_submit_participant_id,
+    fill_in_and_submit_smoking_elligibility,
+    fill_in_and_submit_date_of_birth
+)
+
 class TestQuestionnaire(StaticLiveServerTestCase):
 
     @classmethod
@@ -21,36 +27,22 @@ class TestQuestionnaire(StaticLiveServerTestCase):
 
     def test_full_questionaire_user_journey(self):
         participant_id = '123'
+        smoking_status = 'Yes, I used to smoke regularly'
+        age = datetime.now() - relativedelta(years=55)
 
         page = self.browser.new_page()
         page.goto(f"{self.live_server_url}/start")
 
-        page.fill("input[name='participant_id']", participant_id)
-
-        page.click('text=Start now')
+        fill_in_and_submit_participant_id(page, participant_id)
 
         expect(page).to_have_url(
             f"{self.live_server_url}/have-you-ever-smoked")
 
-        expect(page.locator("legend")).to_have_text(
-            "Have you ever smoked?")
-
-        page.get_by_label('Yes, I used to smoke regularly').check()
-
-        page.click("text=Continue")
+        fill_in_and_submit_smoking_elligibility(page, smoking_status)
 
         expect(page).to_have_url(f"{self.live_server_url}/date-of-birth")
 
-        expect(page.locator("legend")).to_have_text(
-            "What is your date of birth?")
-
-        age = datetime.now() - relativedelta(years=55)
-
-        page.get_by_label("Day").fill(str(age.day))
-        page.get_by_label("Month").fill(str(age.month))
-        page.get_by_label("Year").fill(str(age.year))
-
-        page.click("text=Continue")
+        fill_in_and_submit_date_of_birth(page, age)
 
         expect(page).to_have_url(f"{self.live_server_url}/responses")
 

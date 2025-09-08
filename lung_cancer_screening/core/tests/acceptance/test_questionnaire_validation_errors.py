@@ -2,6 +2,12 @@ import os
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from playwright.sync_api import sync_playwright, expect
 
+from .helpers.user_interaction_helpers import (
+    fill_in_and_submit_participant_id,
+    fill_in_and_submit_smoking_elligibility,
+    fill_in_and_submit_date_of_birth
+)
+
 class TestQuestionnaireValidationErrors(StaticLiveServerTestCase):
 
     @classmethod
@@ -23,21 +29,8 @@ class TestQuestionnaireValidationErrors(StaticLiveServerTestCase):
         page = self.browser.new_page()
         page.goto(f"{self.live_server_url}/start")
 
-        page.fill("input[name='participant_id']", participant_id)
-
-        page.click('text=Start now')
-
-        expect(page).to_have_url(
-            f"{self.live_server_url}/have-you-ever-smoked")
-
-        expect(page.locator("legend")).to_have_text(
-            "Have you ever smoked?")
-
-        page.get_by_label('Yes, I currently smoke').check()
-
-        page.click("text=Continue")
-
-        expect(page).to_have_url(f"{self.live_server_url}/date-of-birth")
+        fill_in_and_submit_participant_id(page, participant_id)
+        fill_in_and_submit_smoking_elligibility(page, 'Yes, I currently smoke')
 
         expect(page.locator("legend")).to_have_text(
             "What is your date of birth?")
