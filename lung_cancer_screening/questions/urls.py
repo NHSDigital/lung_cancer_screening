@@ -21,6 +21,7 @@ from .views.date_of_birth import date_of_birth
 from .views.responses import responses
 from .views.age_range_exit import age_range_exit
 from .views.non_smoker_exit import non_smoker_exit
+from .views.your_results import your_results
 
 urlpatterns = [
     path('start', start, name='start'),
@@ -29,4 +30,5 @@ urlpatterns = [
     path('responses', responses, name='responses'),
     path('age-range-exit', age_range_exit, name='age_range_exit'),
     path('non-smoker-exit', non_smoker_exit, name='non_smoker_exit'),
+    path('your-results', your_results, name='your_results'),
 ]

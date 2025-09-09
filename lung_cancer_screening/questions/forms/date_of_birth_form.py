@@ -6,7 +6,9 @@ from lung_cancer_screening.core.form_fields import SplitDateField
 
 class DateOfBirthForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
+        self.participant = kwargs.pop('participant')
         super().__init__(*args, **kwargs)
+        self.instance.participant = self.participant
 
         self.fields["date_of_birth"] = SplitDateField(
             max_value=date.today(),

@@ -9,7 +9,10 @@ from ..forms.date_of_birth_form import DateOfBirthForm
 @require_participant
 def date_of_birth(request):
     if request.method == "POST":
-        form = DateOfBirthForm(request.POST)
+        form = DateOfBirthForm(
+            participant=request.participant,
+            data=request.POST
+        )
 
         if form.is_valid():
             fifty_five_years_ago = date.today() - relativedelta(years=55)
@@ -36,5 +39,5 @@ def date_of_birth(request):
     return render(
         request,
         "date_of_birth.jinja",
-        { "form": DateOfBirthForm() }
+        { "form": DateOfBirthForm(participant=request.participant) }
     )

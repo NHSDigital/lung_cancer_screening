@@ -8,7 +8,9 @@ from ..models.response_set import HaveYouEverSmokedValues
 @require_participant
 def have_you_ever_smoked(request):
     if request.method == "POST":
-        form = HaveYouEverSmokedForm(request.POST)
+        form = HaveYouEverSmokedForm(
+            data=request.POST, participant=request.participant
+        )
 
         if form.is_valid():
             has_smoked_values = (HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY.value, HaveYouEverSmokedValues.YES_I_CURRENTLY_SMOKE.value)
@@ -34,5 +36,5 @@ def have_you_ever_smoked(request):
     return render(
         request,
         "have_you_ever_smoked.jinja",
-        {"form": HaveYouEverSmokedForm()}
+        {"form": HaveYouEverSmokedForm(participant=request.participant)}
     )

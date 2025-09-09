@@ -3,7 +3,7 @@ from django.urls import reverse
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
-from lung_cancer_screening.questions.models.participant import Participant
+from ....models.participant import Participant
 
 class TestPostDateOfBirth(TestCase):
     def setUp(self):
