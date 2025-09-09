@@ -1,7 +1,7 @@
 {% extends 'layout.jinja' %}
 
-{% from 'date-input/macro.jinja' import dateInput %}
-{% from 'button/macro.jinja' import button %}
+{% from 'nhsuk/components/date-input/macro.jinja' import dateInput %}
+{% from 'nhsuk/components/button/macro.jinja' import button %}
 
 {% if error %}
   {% set error_message = { "text": error } %}
