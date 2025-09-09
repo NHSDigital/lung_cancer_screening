@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'lung_cancer_screening.core',
-    'lung_cancer_screening.questions'
+    'lung_cancer_screening.questions',
     'lung_cancer_screening.calculators',
 ]
 
