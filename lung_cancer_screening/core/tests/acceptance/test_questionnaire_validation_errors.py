@@ -4,8 +4,7 @@ from playwright.sync_api import sync_playwright, expect
 
 from .helpers.user_interaction_helpers import (
     fill_in_and_submit_participant_id,
-    fill_in_and_submit_smoking_elligibility,
-    fill_in_and_submit_date_of_birth
+    fill_in_and_submit_smoking_elligibility
 )
 
 class TestQuestionnaireValidationErrors(StaticLiveServerTestCase):

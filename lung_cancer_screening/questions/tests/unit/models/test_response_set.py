@@ -1,5 +1,9 @@
 from django.test import TestCase
 from datetime import datetime, date
+from dateutil.relativedelta import relativedelta
+from django.utils import timezone
+
+from django.core.exceptions import ValidationError
 
 from ....models.participant import Participant
 from ....models.response_set import HaveYouEverSmokedValues
@@ -44,3 +48,43 @@ class TestResponseSet(TestCase):
             self.response_set.updated_at,
             datetime
         )
+
+    def test_has_submitted_at_as_null_by_default(self):
+        self.assertIsNone(
+            self.response_set.submitted_at
+        )
+
+    def test_has_submitted_at_as_a_datetime(self):
+        self.response_set.submitted_at = datetime.now()
+
+        self.assertIsInstance(
+            self.response_set.submitted_at,
+            datetime
+        )
+
+    def  test_is_invalid_if_another_unsubmitted_response_set_exists(self):
+        participant = Participant.objects.create(unique_id="56789")
+        participant.responseset_set.create(submitted_at = None)
+
+        with self.assertRaises(ValidationError) as context:
+            participant.responseset_set.create(submitted_at = None)
+
+        self.assertEqual(
+            context.exception.messages[0],
+            "An unsubmitted response set already exists for this participant"
+        )
+
+    def test_is_invalid_if_another_response_set_was_submitted_within_the_last_year(self):
+        participant = Participant.objects.create(unique_id="56789")
+        participant.responseset_set.create(
+            submitted_at=timezone.now() - relativedelta(days=364)
+        )
+
+        with self.assertRaises(ValidationError) as context:
+            participant.responseset_set.create()
+
+        self.assertEqual(
+            context.exception.messages[0],
+            "Responses have already been submitted for this participant"
+        )
+

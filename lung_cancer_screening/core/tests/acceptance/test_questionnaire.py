@@ -49,3 +49,7 @@ class TestQuestionnaire(StaticLiveServerTestCase):
         expect(page.locator(".responses")).to_contain_text(
             age.strftime("Have you ever smoked? Yes, I used to smoke regularly"))
         expect(page.locator(".responses")).to_contain_text(age.strftime("What is your date of birth? %Y-%m-%d"))
+
+        page.click("text=Submit")
+
+        expect(page).to_have_url(f"{self.live_server_url}/your-results")

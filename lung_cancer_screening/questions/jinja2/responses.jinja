@@ -1,5 +1,5 @@
 {% extends 'layout.jinja' %}
-
+{% from 'button/macro.jinja' import button %}
 
 {% block content %}
   <div class="nhsuk-grid-row">
@@ -9,6 +9,14 @@
         <li>Have you ever smoked? {{ response_set.get_have_you_ever_smoked_display() }}</li>
         <li>What is your date of birth? {{ response_set.date_of_birth }}</li>
       </ul>
+
+      <form action="{{ request.path }}" method="post">
+        {{ csrf_input }}
+
+        {{ button({
+          "text": "Submit"
+        }) }}
+      </form>
     </div>
   </div>
 {% endblock %}

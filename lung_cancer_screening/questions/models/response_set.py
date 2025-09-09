@@ -1,4 +1,8 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+from dateutil.relativedelta import relativedelta
+from django.utils import timezone
+
 from .base import BaseModel
 from .participant import Participant
 
@@ -11,5 +15,32 @@ class HaveYouEverSmokedValues(models.IntegerChoices):
 class ResponseSet(BaseModel):
     participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
 
-    have_you_ever_smoked = models.IntegerField(choices=HaveYouEverSmokedValues.choices, null=True, blank=True)
+    have_you_ever_smoked = models.IntegerField(
+        choices=HaveYouEverSmokedValues.choices,
+        null=True,
+        blank=True
+    )
     date_of_birth = models.DateField(null=True, blank=True)
+
+    submitted_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["participant"],
+                condition=models.Q(submitted_at__isnull=True),
+                name="unique_unsubmitted_response_per_participant",
+                violation_error_message="An unsubmitted response set already exists for this participant"
+            )
+        ]
+
+    def clean(self):
+        super().clean()
+
+        one_year_ago = timezone.now() - relativedelta(years=1)
+        submitted_response_sets_in_last_year = self.participant.responseset_set.filter(submitted_at__gte=one_year_ago)
+
+        if submitted_response_sets_in_last_year:
+            raise ValidationError(
+                "Responses have already been submitted for this participant"
+            )
