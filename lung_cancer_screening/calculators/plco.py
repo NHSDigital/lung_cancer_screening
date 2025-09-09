@@ -12,11 +12,11 @@ class Plco:
     FAMILY_HISTORY_OF_CANCER_COEFFICIENT = Decimal('0.587185')
 
     def __init__(self,
-                 age,
-                 bmi,
-                 copd_enphysema_or_chronic_bronchitis,
-                 personal_history_of_cancer,
-                 family_history_of_cancer):
+                age,
+                bmi,
+                copd_enphysema_or_chronic_bronchitis,
+                personal_history_of_cancer,
+                family_history_of_cancer):
         self.age = Decimal(str(age or 0))
         self.bmi = Decimal(str(bmi or 0))
         self.copd_enphysema_or_chronic_bronchitis = copd_enphysema_or_chronic_bronchitis
