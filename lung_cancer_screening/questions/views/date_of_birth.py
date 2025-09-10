@@ -3,10 +3,11 @@ from django.urls import reverse
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
-from .decorators.participant_decorators import require_participant
+from .decorators.participant_decorators import require_participant, require_unsubmitted_response_set
 from ..forms.date_of_birth_form import DateOfBirthForm
 
 @require_participant
+@require_unsubmitted_response_set
 def date_of_birth(request):
     if request.method == "POST":
         form = DateOfBirthForm(
@@ -20,7 +21,7 @@ def date_of_birth(request):
             date_of_birth = form.cleaned_data["date_of_birth"]
 
             if (seventy_five_years_ago < date_of_birth <= fifty_five_years_ago):
-                response_set = request.participant.responseset_set.last()
+                response_set = request.participant.unsubmitted_response_sets().last()
                 response_set.date_of_birth = date_of_birth
                 response_set.save()
 

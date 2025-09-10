@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from .decorators.participant_decorators import require_participant
+from .decorators.participant_decorators import require_participant, require_unsubmitted_response_set
 from ..forms.have_you_ever_smoked_form import HaveYouEverSmokedForm
 from ..models.response_set import HaveYouEverSmokedValues
 
 @require_participant
+@require_unsubmitted_response_set
 def have_you_ever_smoked(request):
     if request.method == "POST":
         form = HaveYouEverSmokedForm(
@@ -17,7 +18,7 @@ def have_you_ever_smoked(request):
             have_you_ever_smoked = form.cleaned_data["have_you_ever_smoked"]
 
             if have_you_ever_smoked in has_smoked_values:
-                response_set = request.participant.responseset_set.last()
+                response_set = request.participant.unsubmitted_response_sets().last()
                 response_set.have_you_ever_smoked = have_you_ever_smoked
                 response_set.save()
 

@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 from datetime import date
 
 from lung_cancer_screening.questions.models.participant import Participant
@@ -26,6 +27,15 @@ class TestResponses(TestCase):
 
         self.assertRedirects(response, reverse("questions:start"))
 
+    def test_get_redirects_if_the_particpant_has_no_unsubmitted_response_set(self):
+        self.participant.responseset_set.all().update(submitted_at=timezone.now())
+
+        response = self.client.get(
+            reverse("questions:responses")
+        )
+
+        self.assertRedirects(response, reverse("questions:start"))
+
     def test_get_responds_successfully(self):
         response = self.client.get(reverse("questions:responses"))
 
@@ -46,6 +56,36 @@ class TestResponses(TestCase):
         self.assertNotContains(
             response, other_date_response.get_have_you_ever_smoked_display())
         self.assertNotContains(response, other_date_response.date_of_birth)
+
+    def test_get_does_not_contain_responses_which_have_already_been_submitted(self):
+        submitted = self.participant.responseset_set.create(
+            have_you_ever_smoked=False,
+            date_of_birth=date(1966, 1, 1),
+            submitted_at=timezone.now()
+        )
+
+        response = self.client.get(reverse("questions:responses"))
+
+        self.assertNotContains(response, submitted.get_have_you_ever_smoked_display())
+        self.assertNotContains(response, submitted.date_of_birth)
+
+    def test_post_redirects_if_the_participant_does_not_exist(self):
+        session = self.client.session
+        session['participant_id'] = "somebody none existant participant"
+        session.save()
+
+        response = self.client.post(reverse("questions:responses"))
+
+        self.assertRedirects(response, reverse("questions:start"))
+
+    def test_post_redirects_if_the_particpant_has_no_unsubmitted_response_set(self):
+        self.participant.responseset_set.all().update(submitted_at=timezone.now())
+
+        response = self.client.get(
+            reverse("questions:responses")
+        )
+
+        self.assertRedirects(response, reverse("questions:start"))
 
     def test_post_redirects_to_your_results(self):
         response = self.client.post(reverse("questions:responses"))

@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 
 from lung_cancer_screening.questions.models.participant import Participant
 from lung_cancer_screening.questions.models.response_set import HaveYouEverSmokedValues
@@ -25,6 +26,15 @@ class TestHaveYouEverSmoked(TestCase):
 
         self.assertRedirects(response, reverse("questions:start"))
 
+    def test_get_redirects_if_the_particpant_has_no_unsubmitted_response_set(self):
+        self.participant.responseset_set.all().update(submitted_at=timezone.now())
+
+        response = self.client.get(
+            reverse("questions:have_you_ever_smoked")
+        )
+
+        self.assertRedirects(response, reverse("questions:start"))
+
     def test_get_responds_successfully(self):
         response = self.client.get(reverse("questions:have_you_ever_smoked"))
 
@@ -34,6 +44,16 @@ class TestHaveYouEverSmoked(TestCase):
         session = self.client.session
         session['participant_id'] = "somebody none existant participant"
         session.save()
+
+        response = self.client.post(
+            reverse("questions:have_you_ever_smoked"),
+            self.valid_params
+        )
+
+        self.assertRedirects(response, reverse("questions:start"))
+
+    def test_post_redirects_if_the_participant_has_no_unsubmitted_response_set(self):
+        self.participant.responseset_set.all().update(submitted_at=timezone.now())
 
         response = self.client.post(
             reverse("questions:have_you_ever_smoked"),

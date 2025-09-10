@@ -15,3 +15,12 @@ def require_participant(function):
 
         return function(request, *args, **kwargs)
     return wrap
+
+def require_unsubmitted_response_set(function):
+    @wraps(function)
+    def wrap(request, *args, **kwargs):
+        if not request.participant.has_unsubmitted_response_set():
+            return redirect(reverse("questions:start"))
+
+        return function(request, *args, **kwargs)
+    return wrap

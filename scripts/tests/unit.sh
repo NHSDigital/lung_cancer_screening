@@ -18,4 +18,3 @@ cd "$(git rev-parse --show-toplevel)"
 # tasks in scripts/test.mk.
 
 docker compose run --rm --remove-orphans web poetry run python manage.py test
-
