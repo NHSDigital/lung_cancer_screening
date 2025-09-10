@@ -1,2 +1,6 @@
 *.bkp
 *.dtmp
+
+/structurizr/.structurizr/
+/structurizr/current/.structurizr/
+/structurizr/pilot/.structurizr/
