@@ -48,4 +48,4 @@ cd pilot
 docker run -it --rm -p 8080:8080 -v %cd%:/usr/local/structurizr structurizr/lite
 ```
 
-Once running, access the live view at http://localhost:8080
+Once running, access the live view at [http://localhost:8080](http://localhost:8080)
