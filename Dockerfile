@@ -1,4 +1,4 @@
-FROM node:24.7.0-alpine3.21 AS asset_builder
+FROM node:24.8.0-alpine3.21 AS asset_builder
 
 WORKDIR /app
 
