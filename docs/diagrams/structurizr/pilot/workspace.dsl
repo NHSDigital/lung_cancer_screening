@@ -19,10 +19,11 @@ workspace {
 
         localNotificationSystem = softwareSystem "Local Notification System" "Delivers communications (letters only) to participants" "External System"
 
-        digitalLungCancerRiskSystem = softwareSystem "Pilot Digital Lung Cancer Risk System" "Software System" {
-                digitalLungCancerRiskApp = container "Pilot Digital Lung Cancer Risk App" "Software System"
-                digitalLungCancerRiskGUI = container "Pilot Digital Lung Cancer Risk GUI" "Software System"
-                digitalLungCancerRiskDB = container "Pilot Digital Lung Cancer Risk Anonymous Database" "Anonymous digital app & telephone journey lung cancer risk scores & ratings" "Pilot Digital Lung Cancer Risk Anonymous Database" "Database"
+        digitalLungCancerRiskSystem = softwareSystem "Pilot Digital Lung Cancer Risk Check System" "Software System" {
+                url "https://nhsarchitecture.horizzon.cloud/sites/4b53edd4-70ee-451c-af34-7d70040b4d2c/views/75e82512-f992-f011-a3f8-9c2976524fd0"
+                digitalLungCancerRiskApp = container "Pilot Digital Lung Cancer Risk Check App" "Software System"
+                digitalLungCancerRiskGUI = container "Pilot Digital Lung Cancer Risk Check GUI" "Software System"
+                digitalLungCancerRiskDB = container "Pilot Digital Lung Cancer Risk Check Anonymous Database" "Anonymous digital app & telephone journey lung cancer risk scores & ratings" "Pilot Digital Lung Cancer Risk Anonymous Database" "Database"
         }
 
 
@@ -37,7 +38,7 @@ workspace {
         st -> participant "Runs Pilot digital app consent journey & telephone lung risk check journey with"
 
         localPreAssessmentSystem -> digitalLungCancerRiskSystem "Provides Pilot ID (LUNGDF200) and telephone lung cancer risk check info (LUNGDF400) to"
-        participant -> digitalLungCancerRiskSystem "Completes Pilot Digital Lung Cancer Risk journey with"
+        participant -> digitalLungCancerRiskSystem "Completes Pilot Digital Lung Cancer Risk Check journey with"
         digitalLungCancerRiskSystem -> localPreAssessmentSystem "Provides Pilot ID digital journey completion info (LUNGDF300) to"
 
         digitalLungCancerRiskGUI -> digitalLungCancerRiskApp "Provides Participant facing GUI interface to"

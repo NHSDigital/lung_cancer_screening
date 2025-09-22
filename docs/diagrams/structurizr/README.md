@@ -1,11 +1,11 @@
 # Introduction
 
-Just a README file ...
+This README describes use of Structurizr DSL for creating C4 model diagrams
 
 ## Repository Structure
 
-- `/structurizr/current`: Contains DSL for current (as-is) Lung Cancer Health Check state
-- `/structurizr/pilot`: Contains DSL for Pilot (interim to-be) Lung Cancer Health Check state
+- `/structurizr/current`: Contains DSL for current (as-is) Lung Cancer Risk Check state
+- `/structurizr/pilot`: Contains DSL for Pilot (interim to-be) Lung Cancer Risk Check state
 
 ## Getting Started
 
@@ -37,14 +37,14 @@ docker run -it --rm -p 8080:8080 -v ./:/usr/local/structurizr structurizr/lite
 Note: For MacOS Sequoia 15.2 and later, use this command instead to avoid sigterm exceptions:
 
 ```bash
-cd pilot
+cd structurizr/pilot
 docker run --rm -e JAVA_TOOL_OPTIONS="-XX:UseSVE=0" -p 8080:8080 -v ./:/usr/local/structurizr structurizr/lite
 ```
 
 ##### Windows
 
 ```bash
-cd pilot
+cd structurizr\pilot
 docker run -it --rm -p 8080:8080 -v %cd%:/usr/local/structurizr structurizr/lite
 ```
 
