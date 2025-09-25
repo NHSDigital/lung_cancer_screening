@@ -1,3 +1,13 @@
 # SEE: https://github.com/gitleaks/gitleaks/blob/master/README.md#gitleaksignore
 
 cd9c0efec38c5d63053dd865e5d4e207c0760d91:docs/guides/Perform_static_analysis.md:generic-api-key:37
+infrastructure/terraform/resource_group_init/core.bicep:generic-api-key:10
+infrastructure/terraform/resource_group_init/core.bicep:generic-api-key:11
+infrastructure/terraform/resource_group_init/core.bicep:generic-api-key:12
+infrastructure/terraform/resource_group_init/main.bicep:generic-api-key:29
+infrastructure/terraform/resource_group_init/main.bicep:generic-api-key:30
+infrastructure/terraform/resource_group_init/main.bicep:generic-api-key:31
+infrastructure/terraform/resource_group_init/main.bicep:generic-api-key:32
+infrastructure/terraform/resource_group_init/main.bicep:generic-api-key:33
+infrastructure/terraform/resource_group_init/storage.bicep:generic-api-key:59
+infrastructure/terraform/resource_group_init/keyVault.bicep:generic-api-key:10
