@@ -1,4 +1,4 @@
-name: test
+name: Test-deploy
 
 on:
   workflow_dispatch:
@@ -9,6 +9,9 @@ on:
         type: choice
         options:
           - poc
+
+env:
+  TARGET_ENV: ${{ inputs.target_env }}
 
 jobs:
   deploy:
@@ -36,7 +39,7 @@ jobs:
           terraform_version: 1.11.4
 
       - name: Terraform init
-        env:
-          TARGET_ENV: ${{ inputs.target_env }}
-        run: |
-          make ${TARGET_ENV} terraform-init
+        run: make ${TARGET_ENV} terraform-init
+
+      - name: Terraform plan
+        run: make ${TARGET_ENV} terraform-plan 
