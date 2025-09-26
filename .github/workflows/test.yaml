@@ -2,9 +2,13 @@ name: test
 
 on:
   workflow_dispatch:
-
-env:
-  TARGET_ENV: poc
+    inputs:
+      target_env:
+        description: "Target environment"
+        required: true
+        type: choice
+        options:
+          - poc
 
 jobs:
   deploy:
@@ -12,8 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
-    environment: ${{ env.TARGET_ENV }}
-    concurrency: deploy-${{ env.TARGET_ENV }}-${{ github.ref }}
+    environment: ${{ inputs.target_env }}
+    concurrency: deploy-${{ inputs.target_env }}-${{ github.ref }}
 
     steps:
       - name: Checkout code
@@ -32,5 +36,7 @@ jobs:
           terraform_version: 1.11.4
 
       - name: Terraform init
+        env:
+          TARGET_ENV: ${{ inputs.target_env }}
         run: |
           make ${TARGET_ENV} terraform-init
