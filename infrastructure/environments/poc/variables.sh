@@ -1,4 +1,5 @@
 ENVIRONMENT=poc
+ENV_CONFIG=poc
 AZURE_SUBSCRIPTION="Lung Cancer Screening - Dev"
 HUB_SUBSCRIPTION="Lung Cancer Screening - Dev"
 STORAGE_ACCOUNT_RG=rg-tfstate-poc-uks
