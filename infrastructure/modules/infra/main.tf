@@ -46,9 +46,10 @@ module "container-app-environment" {
     azurerm.dns = azurerm.hub
   }
 
-  name                       = "cae-${var.environment}-uks-${var.app_short_name}"
-  resource_group_name        = azurerm_resource_group.main.name
-  log_analytics_workspace_id = module.log_analytics_workspace_audit.id
-  vnet_integration_subnet_id = module.container_app_subnet.id
-  private_dns_zone_rg_name   = var.features.private_networking ? "rg-hub-${var.hub}-uks-private-dns-zones" : null
+  name                           = "cae-${var.environment}-uks-${var.app_short_name}"
+  resource_group_name            = azurerm_resource_group.main.name
+  internal_load_balancer_enabled = var.features.private_networking
+  log_analytics_workspace_id     = module.log_analytics_workspace_audit.id
+  vnet_integration_subnet_id     = module.container_app_subnet.id
+  private_dns_zone_rg_name       = var.features.private_networking ? "rg-hub-${var.hub}-uks-private-dns-zones" : null
 }

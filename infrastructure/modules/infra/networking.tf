@@ -73,11 +73,11 @@ module "peering_spoke_hub" {
 module "peering_hub_spoke" {
   count = var.features.hub_and_spoke ? 1 : 0
 
+  source = "../dtos-devops-templates/infrastructure/modules/vnet-peering"
+
   providers = {
     azurerm = azurerm.hub
   }
-
-  source = "../dtos-devops-templates/infrastructure/modules/vnet-peering"
 
   name                = "hub-to-${module.main_vnet.name}-peering"
   resource_group_name = local.hub_vnet_rg_name
@@ -125,7 +125,7 @@ module "main_subnet" {
 
 data "azurerm_private_dns_zone" "key-vault" {
   count = var.features.private_networking ? 1 : 0
-  
+
   provider = azurerm.hub
 
   name                = "privatelink.vaultcore.azure.net"
