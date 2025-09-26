@@ -1,4 +1,3 @@
-DOCKER_IMAGE=
 REGION=UK South
 APP_SHORT_NAME=lungcs
 

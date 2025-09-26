@@ -97,12 +97,6 @@ variable "postgres_storage_tier" {
   type        = string
 }
 
-variable "private_networking" {
-  description = "The region to deploy in"
-  type        = string
-  default     = true
-}
-
 variable "enable_auth" {
   description = "Enable authentication for the container app. If true, the app will use Azure AD authentication."
   type        = bool
@@ -118,7 +112,7 @@ variable "use_apex_domain" {
 variable "dns_zone_name" {
   description = "Value of the DNS zone name to use for the Front Door endpoint"
   type        = string
-  default     = null
+  default     = ""
 }
 
 variable "features" {
@@ -143,6 +137,6 @@ variable "seed_demo_data" {
 }
 
 locals {
-  region = "uksouth"
+  region              = "uksouth"
   resource_group_name = "rg-${var.app_short_name}-${var.env_config}-uks"
 }
