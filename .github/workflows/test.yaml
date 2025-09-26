@@ -28,7 +28,7 @@ jobs:
           terraform_wrapper: false
           terraform_version: 1.11.4
 
-      - name: Terraform Init
+      - name: Terraform init
         env: 
-          GITHUB_ENV: ${{ github.environment }}
-        run: make ${GITHUB_ENV} terraform-init
+          TARGET_ENV: ${{ github.environment }}
+        run: make ${TARGET_ENV} terraform-init
