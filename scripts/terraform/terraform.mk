@@ -1,6 +1,6 @@
 DOCKER_IMAGE=
 REGION=UK South
-APP_SHORT_NAME=luncs
+APP_SHORT_NAME=lungcs
 
 poc: # Target the poc environment - make poc <action>
 	$(eval include infrastructure/environments/poc/variables.sh)
