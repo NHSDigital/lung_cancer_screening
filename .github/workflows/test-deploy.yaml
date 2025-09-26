@@ -38,8 +38,5 @@ jobs:
           terraform_wrapper: false
           terraform_version: 1.11.4
 
-      - name: Terraform init
-        run: make ${TARGET_ENV} terraform-init
-
       - name: Terraform plan
         run: make ${TARGET_ENV} terraform-plan 
