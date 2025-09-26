@@ -29,4 +29,6 @@ jobs:
           terraform_version: 1.11.4
 
       - name: Terraform Init
-        run: make terraform-init
+        env: 
+          GITHUB_ENV: ${{ github.environment }}
+        run: make ${GITHUB_ENV} terraform-init
