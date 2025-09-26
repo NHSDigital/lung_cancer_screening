@@ -14,7 +14,6 @@ module "infra" {
   environment         = var.env_config
   features            = var.features
   hub                 = var.hub
-  private_networking  = var.private_networking
   protect_keyvault    = var.protect_keyvault
   vnet_address_space  = var.vnet_address_space
 }
