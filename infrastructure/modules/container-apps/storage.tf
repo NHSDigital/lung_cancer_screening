@@ -20,7 +20,7 @@ module "storage" {
   log_analytics_workspace_id = var.log_analytics_workspace_audit_id
 
   monitor_diagnostic_setting_storage_account_enabled_logs = ["StorageWrite", "StorageRead", "StorageDelete"]
-  monitor_diagnostic_setting_storage_account_metrics      = ["AllMetrics"]
+  monitor_diagnostic_setting_storage_account_metrics      = ["Capacity", "Transaction"]
 
   name = replace(lower(local.storage_account_name), "-", "")
 
