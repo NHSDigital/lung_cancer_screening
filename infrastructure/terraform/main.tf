@@ -47,12 +47,11 @@ module "container-apps" {
   postgres_backup_retention_days        = var.postgres_backup_retention_days
   postgres_geo_redundant_backup_enabled = var.postgres_geo_redundant_backup_enabled
   postgres_sku_name                     = var.postgres_sku_name
-  #  postgres_sql_admin_group              = "postgres_${var.app_short_name}_${var.env_config}_uks_admin"
-  postgres_sql_admin_group = "Azure-Lung-Cancer-Screening---Dev-Owner"
-  postgres_storage_mb      = var.postgres_storage_mb
-  postgres_storage_tier    = var.postgres_storage_tier
-  postgres_subnet_id       = var.deploy_infra ? module.infra[0].postgres_subnet_id : data.azurerm_subnet.postgres[0].id
-  main_subnet_id           = var.deploy_infra ? module.infra[0].main_subnet_id : data.azurerm_subnet.main[0].id
-  seed_demo_data           = var.seed_demo_data
-  use_apex_domain          = var.use_apex_domain
+  postgres_sql_admin_group              = "postgres_${var.app_short_name}_${var.env_config}_uks_admin"
+  postgres_storage_mb                   = var.postgres_storage_mb
+  postgres_storage_tier                 = var.postgres_storage_tier
+  postgres_subnet_id                    = var.deploy_infra ? module.infra[0].postgres_subnet_id : data.azurerm_subnet.postgres[0].id
+  main_subnet_id                        = var.deploy_infra ? module.infra[0].main_subnet_id : data.azurerm_subnet.main[0].id
+  seed_demo_data                        = var.seed_demo_data
+  use_apex_domain                       = var.use_apex_domain
 }

@@ -1,4 +1,4 @@
-deploy_database_as_container = true
+deploy_database_as_container = false
 features = {
   front_door         = false
   hub_and_spoke      = false
