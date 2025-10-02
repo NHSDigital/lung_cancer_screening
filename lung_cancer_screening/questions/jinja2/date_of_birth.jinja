@@ -2,12 +2,22 @@
 
 {% from 'nhsuk/components/date-input/macro.jinja' import dateInput %}
 {% from 'nhsuk/components/button/macro.jinja' import button %}
+{% from 'nhsuk/components/back-link/macro.jinja' import backLink %}
 
 {% if error %}
   {% set error_message = { "text": error } %}
 {% endif %}
 
-{% block content %}
+{% block beforeContent %}
+  {{
+    backLink({
+      "href": url("questions:have_you_ever_smoked"),
+      "text": "Back"
+    })
+  }}
+{% endblock beforeContent %}
+
+{% block page_content %}
   <div class="nhsuk-grid-row">
     <div class="nhsuk-grid-column-two-thirds">
       <form action="{{ request.path }}" method="POST">
