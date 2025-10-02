@@ -13,8 +13,8 @@ class DateOfBirthForm(forms.ModelForm):
         self.fields["date_of_birth"] = SplitDateField(
             max_value=date.today(),
             required=False,
-            hint="For example, 15 3 2025",
-            label="What is your date of birth?"
+            label="What is your date of birth?",
+            hint="For example, 15 3 1965"
         )
 
     class Meta:
