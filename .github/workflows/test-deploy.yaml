@@ -39,4 +39,4 @@ jobs:
           terraform_version: 1.11.4
 
       - name: Terraform plan
-        run: make ${TARGET_ENV} terraform-apply
+        run: make ${TARGET_ENV} ci terraform-apply
