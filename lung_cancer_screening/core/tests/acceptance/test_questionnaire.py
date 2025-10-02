@@ -10,6 +10,8 @@ from .helpers.user_interaction_helpers import (
     fill_in_and_submit_date_of_birth
 )
 
+from .helpers.assertion_helpers import expect_back_link_to_have_url
+
 class TestQuestionnaire(StaticLiveServerTestCase):
 
     @classmethod
@@ -41,6 +43,7 @@ class TestQuestionnaire(StaticLiveServerTestCase):
         fill_in_and_submit_smoking_elligibility(page, smoking_status)
 
         expect(page).to_have_url(f"{self.live_server_url}/date-of-birth")
+        expect_back_link_to_have_url(page, "/have-you-ever-smoked")
 
         fill_in_and_submit_date_of_birth(page, age)
 
