@@ -79,7 +79,7 @@ class TestPostDateOfBirth(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:responses"))
+        self.assertRedirects(response, reverse("questions:height"))
 
     def test_post_responds_with_422_if_the_resource_is_invalid(self):
         response = self.client.post(
