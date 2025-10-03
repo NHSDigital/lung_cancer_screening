@@ -18,7 +18,7 @@ dependencies = [
 package-mode = false
 
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.13.0"
+ruff = "^0.13.3"
 playwright = "^1.55.0"
 
 [build-system]
