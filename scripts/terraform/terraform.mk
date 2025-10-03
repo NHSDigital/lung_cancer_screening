@@ -71,3 +71,6 @@ terraform-destroy: terraform-init # Destroy Terraform resources - make <env> ter
 
 terraform-validate: terraform-init-no-backend # Validate Terraform changes - make <env> terraform-validate
 	terraform -chdir=infrastructure/terraform validate
+
+terraform-fmt:
+	terraform -chdir=infrastructure/terraform fmt
