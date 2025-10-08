@@ -99,6 +99,8 @@ COPY --chown=${USER}:${USER} ./lung_cancer_screening /app/lung_cancer_screening
 COPY --from=asset_builder --chown=${USER}:${USER} /app/lung_cancer_screening/assets/compiled /app/lung_cancer_screening/assets/compiled
 COPY --chown=${USER}:${USER} manage.py ./
 
+RUN python ./manage.py collectstatic --noinput
+
 EXPOSE 8000
 
 CMD ["/app/.venv/bin/gunicorn", "--bind", "0.0.0.0:8000", "lung_cancer_screening.wsgi"]
