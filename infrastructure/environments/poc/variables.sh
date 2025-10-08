@@ -5,5 +5,5 @@ HUB_SUBSCRIPTION="Lung Cancer Screening - Dev"
 STORAGE_ACCOUNT_RG=rg-tfstate-poc-uks
 TERRAFORM_MODULES_REF=main
 ENABLE_SOFT_DELETE=false
-DOCKER_IMAGE=docker.io/nginxdemos/hello
-DOCKER_IMAGE_TAG=latest
+DOCKER_IMAGE=ghcr.io/nhsdigital/lung_cancer_screening
+DOCKER_IMAGE_TAG=PPHA-369-build-and-push-doker-image-to-gchr
