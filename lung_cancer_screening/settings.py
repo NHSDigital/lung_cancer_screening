@@ -96,12 +96,12 @@ FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": environ.get("POSTGRES_DB", ""),
-        "USER": environ.get("POSTGRES_USER", ""),
-        "PASSWORD": environ.get("POSTGRES_PASSWORD", ""),
-        "HOST": environ.get("POSTGRES_HOST", ""),
-        "PORT": "5432",
-        # "OPTIONS": {"sslmode": environ.get("DATABASE_SSLMODE", "prefer")},
+        "NAME": environ.get("DATABASE_NAME", ""),
+        "USER": environ.get("DATABASE_USER", ""),
+        "PASSWORD": environ.get("DATABASE_PASSWORD", ""),
+        "HOST": environ.get("DATABASE_HOST", ""),
+        "PORT": environ.get("DATABASE_PORT", "5432"),
+        "OPTIONS": {"sslmode": environ.get("DATABASE_SSLMODE", "prefer")},
     }
 }
 
