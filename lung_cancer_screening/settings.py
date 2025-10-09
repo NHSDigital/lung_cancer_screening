@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+import sys
 from os import environ
 from pathlib import Path
 
@@ -157,3 +157,50 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOG_QUERIES = boolean_env("LOG_QUERIES")
+LOGGING = {
+    "version": 1,  # the dictConfig format version
+    "disable_existing_loggers": False,  # retain the default loggers
+    "formatters": {
+        "verbose": {
+            "format": "%(asctime)s [%(process)d] [%(levelname)s] [%(module)s] %(message)s",
+            "datefmt": "[%Y-%m-%d %H:%M:%S %z]",
+            "class": "logging.Formatter",
+        }
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+            "stream": sys.stdout,
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "DEBUG",
+    },
+    "loggers": {
+        "django": {
+            "level": "INFO",
+            "handlers": ["console"],
+            "propagate": False,
+        },
+        "django.db.backends": {
+            "level": "DEBUG" if LOG_QUERIES else "INFO",
+            "handlers": ["console"],
+            "propagate": False,
+        },
+        "django.server": {
+            "level": "INFO",
+            "handlers": ["console"],
+            "propagate": False,
+        },
+        "django.utils.autoreload": {
+            "level": "INFO",
+            "handlers": ["console"],
+            "propagate": False,
+        },
+        "faker": {"level": "INFO"},
+    },
+}
