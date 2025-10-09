@@ -32,8 +32,10 @@ module "storage" {
     private_endpoint_resource_group_name = azurerm_resource_group.main.name
     private_service_connection_is_manual = false
   } : null
-  queues              = local.storage_queues
-  resource_group_name = azurerm_resource_group.main.name
+
+  public_network_access_enabled = !var.features.private_networking
+  queues                        = local.storage_queues
+  resource_group_name           = azurerm_resource_group.main.name
 }
 
 module "blob_storage_role_assignment" {
