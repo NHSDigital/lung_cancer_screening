@@ -20,7 +20,8 @@ module "app-key-vault" {
     private_endpoint_resource_group_name = azurerm_resource_group.main.name
     private_service_connection_is_manual = false
   } : null
-  purge_protection_enabled = var.protect_keyvault
+  public_network_access_enabled = !var.features.private_networking
+  purge_protection_enabled      = var.protect_keyvault
 }
 
 module "log_analytics_workspace_audit" {
