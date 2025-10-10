@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
@@ -21,6 +22,13 @@ class ResponseSet(BaseModel):
         blank=True
     )
     date_of_birth = models.DateField(null=True, blank=True)
+
+    height = models.PositiveIntegerField(null=True, blank=True, validators=[
+        MinValueValidator(1397, message="Height must be between 139.7cm and 243.8 cm"),
+        MaxValueValidator(2438, message="Height must be between 139.7cm and 243.8 cm"),
+    ])
+
+    #height_type
 
     submitted_at = models.DateTimeField(null=True, blank=True)
 

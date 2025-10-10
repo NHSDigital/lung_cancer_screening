@@ -22,3 +22,10 @@ def fill_in_and_submit_date_of_birth(page, age):
     page.get_by_label("Year").fill(str(age.year))
 
     page.click("text=Continue")
+
+def fill_in_and_submit_height(page, height):
+    expect(page.locator("h1")).to_have_text("What is your height?")
+
+    page.get_by_label("Centimeter").fill(str(height))
+
+    page.click("text=Continue")
