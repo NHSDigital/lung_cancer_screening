@@ -17,5 +17,5 @@ cd "$(git rev-parse --show-toplevel)"
 # tests from here. If you want to run other test suites, see the predefined
 # tasks in scripts/test.mk.
 
-docker compose run --rm --remove-orphans web poetry run python manage.py test lung_cancer_screening.questions.tests.unit
+docker compose run --rm --remove-orphans web poetry run python manage.py test lung_cancer_screening.core.tests.acceptance
 

@@ -5,6 +5,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from .helpers.user_interaction_helpers import (
+    fill_in_and_submit_height,
     fill_in_and_submit_participant_id,
     fill_in_and_submit_smoking_elligibility,
     fill_in_and_submit_date_of_birth
@@ -31,6 +32,7 @@ class TestQuestionnaire(StaticLiveServerTestCase):
         participant_id = '123'
         smoking_status = 'Yes, I used to smoke regularly'
         age = datetime.now() - relativedelta(years=55)
+        height = "170"
 
         page = self.browser.new_page()
         page.goto(f"{self.live_server_url}/start")
@@ -47,12 +49,20 @@ class TestQuestionnaire(StaticLiveServerTestCase):
 
         fill_in_and_submit_date_of_birth(page, age)
 
+        expect(page).to_have_url(f"{self.live_server_url}/height")
+
+        fill_in_and_submit_height(page, height)
+
         expect(page).to_have_url(f"{self.live_server_url}/responses")
 
-        expect(page.locator(".responses")).to_contain_text(
-            age.strftime("Have you ever smoked? Yes, I used to smoke regularly"))
-        expect(page.locator(".responses")).to_contain_text(age.strftime("What is your date of birth? %Y-%m-%d"))
+        response = page.locator(".responses")
+        expect(responses).to_contain_text("Have you ever smoked? Yes, I used to smoke regularly")
+        expect(responses).to_contain_text(
+            age.strftime("What is your date of birth? %Y-%m-%d"))
+        expect(responses).to_contain_text(f"Height: {height}")
 
         page.click("text=Submit")
+
+
 
         expect(page).to_have_url(f"{self.live_server_url}/your-results")

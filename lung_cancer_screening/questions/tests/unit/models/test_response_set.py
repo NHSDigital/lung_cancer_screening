@@ -8,6 +8,7 @@ from django.core.exceptions import ValidationError
 from ....models.participant import Participant
 from ....models.response_set import HaveYouEverSmokedValues
 
+
 class TestResponseSet(TestCase):
     def setUp(self):
         participant = Participant.objects.create(unique_id="12345")
@@ -29,6 +30,15 @@ class TestResponseSet(TestCase):
         self.assertIsInstance(
             self.response_set.date_of_birth,
             date
+        )
+
+    def test_has_height_as_a_int(self):
+        self.response_set.height = 1700
+        self.response_set.save()
+
+        self.assertIsInstance(
+            self.response_set.height,
+            int
         )
 
     def test_has_a_participant_as_a_foreign_key(self):
@@ -62,12 +72,12 @@ class TestResponseSet(TestCase):
             datetime
         )
 
-    def  test_is_invalid_if_another_unsubmitted_response_set_exists(self):
+    def test_is_invalid_if_another_unsubmitted_response_set_exists(self):
         participant = Participant.objects.create(unique_id="56789")
-        participant.responseset_set.create(submitted_at = None)
+        participant.responseset_set.create(submitted_at=None)
 
         with self.assertRaises(ValidationError) as context:
-            participant.responseset_set.create(submitted_at = None)
+            participant.responseset_set.create(submitted_at=None)
 
         self.assertEqual(
             context.exception.messages[0],
@@ -88,3 +98,24 @@ class TestResponseSet(TestCase):
             "Responses have already been submitted for this participant"
         )
 
+    def test_is_invalid_if_height_is_below_lower_bound(self):
+        self.response_set.height = 1396
+
+        with self.assertRaises(ValidationError) as context:
+            self.response_set.full_clean()
+
+        self.assertIn(
+            "Height must be between 139.7cm and 243.8 cm",
+            context.exception.messages
+        )
+
+    def test_is_invalid_if_height_is_above_upper_bound(self):
+        self.response_set.height = 2439
+
+        with self.assertRaises(ValidationError) as context:
+            self.response_set.full_clean()
+
+        self.assertIn(
+            "Height must be between 139.7cm and 243.8 cm",
+            context.exception.messages
+        )
