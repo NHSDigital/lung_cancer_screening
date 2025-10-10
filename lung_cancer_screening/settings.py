@@ -95,7 +95,7 @@ FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
+        "ENGINE": "lung_cancer_screening.config.postgresql",
         "NAME": environ.get("DATABASE_NAME", ""),
         "USER": environ.get("DATABASE_USER", ""),
         "PASSWORD": environ.get("DATABASE_PASSWORD", ""),
