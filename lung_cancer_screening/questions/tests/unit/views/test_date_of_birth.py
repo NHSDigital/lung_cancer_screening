@@ -73,13 +73,13 @@ class TestPostDateOfBirth(TestCase):
 
         self.assertEqual(self.client.session["participant_id"], "12345")
 
-    def test_post_redirects_to_responses_path(self):
+    def test_post_redirects_to_height_path(self):
         response = self.client.post(
             reverse("questions:date_of_birth"),
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:responses"))
+        self.assertRedirects(response, reverse("questions:height"))
 
     def test_post_responds_with_422_if_the_resource_is_invalid(self):
         response = self.client.post(
