@@ -97,7 +97,7 @@ variable "postgres_storage_tier" {
   type        = string
 }
 
-variable "enable_auth" {
+variable "enable_entra_id_authentication" {
   description = "Enable authentication for the container app. If true, the app will use Azure AD authentication."
   type        = bool
   default     = false

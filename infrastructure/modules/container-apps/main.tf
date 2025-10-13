@@ -17,7 +17,7 @@ module "webapp" {
   fetch_secrets_from_app_key_vault = var.fetch_secrets_from_app_key_vault
   infra_key_vault_name             = "kv-${var.app_short_name}-${var.env_config}-inf"
   infra_key_vault_rg               = "rg-${var.app_short_name}-${var.env_config}-infra"
-  enable_auth                      = var.enable_auth
+  enable_entra_id_authentication   = var.enable_entra_id_authentication
   app_key_vault_id                 = var.app_key_vault_id
   docker_image                     = var.docker_image
   user_assigned_identity_ids       = var.deploy_database_as_container ? [] : [module.db_connect_identity[0].id]
