@@ -17,6 +17,16 @@ variable "features" {
   })
 }
 
+variable "github_mi_name" {
+  description = "Name of the GitHub Managed Identity."
+  type        = string
+}
+
+variable "key_vault_secrets_officer_groups" {
+  description = "List of Entra ID group names which will have Key Vault Secrets Officer RBAC role."
+  type        = list(string)
+}
+
 variable "resource_group_name" {
   description = "Infra resource group name"
   type        = string

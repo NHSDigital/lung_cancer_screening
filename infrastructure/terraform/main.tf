@@ -8,14 +8,16 @@ module "infra" {
     azurerm.hub = azurerm.hub
   }
 
-  region              = local.region
-  resource_group_name = local.resource_group_name
-  app_short_name      = var.app_short_name
-  environment         = var.env_config
-  features            = var.features
-  hub                 = var.hub
-  protect_keyvault    = var.protect_keyvault
-  vnet_address_space  = var.vnet_address_space
+  region                           = local.region
+  resource_group_name              = local.resource_group_name
+  app_short_name                   = var.app_short_name
+  environment                      = var.env_config
+  features                         = var.features
+  github_mi_name                   = var.github_mi_name
+  hub                              = var.hub
+  key_vault_secrets_officer_groups = var.key_vault_secrets_officer_groups
+  protect_keyvault                 = var.protect_keyvault
+  vnet_address_space               = var.vnet_address_space
 }
 
 module "container-apps" {

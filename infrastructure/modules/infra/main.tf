@@ -31,21 +31,21 @@ module "app-key-vault" {
   purge_protection_enabled      = var.protect_keyvault
 }
 
-data "azuread_service_principal" "identity" {
-  for_each = local.key_vault_secrets_officers
-
-  display_name = each.value
-}
-
 module "key_vault_rbac_assignments" {
-  for_each = data.azuread_service_principal.identity
-
   source = "../dtos-devops-templates/infrastructure/modules/rbac-assignment"
+
+  for_each = merge(
+    {
+      (var.github_mi_name) = data.azuread_service_principal.github-mi
+    },
+    data.azuread_group.kv_officers
+  )
 
   principal_id         = each.value.object_id
   role_definition_name = "Key Vault Secrets Officer"
   scope                = module.app-key-vault.key_vault_id
 }
+
 
 module "log_analytics_workspace_audit" {
   source = "../dtos-devops-templates/infrastructure/modules/log-analytics-workspace"

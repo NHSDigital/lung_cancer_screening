@@ -1,7 +1,6 @@
-variable "deploy_infra" {
-  description = "The foundational layer of infrastructure for the application to run on"
-  type        = bool
-  default     = true
+variable "app_short_name" {
+  description = "Application short name (6 characters)"
+  type        = string
 }
 
 variable "deploy_container_apps" {
@@ -10,9 +9,33 @@ variable "deploy_container_apps" {
   default     = true
 }
 
-variable "app_short_name" {
-  description = "Application short name (6 characters)"
+variable "deploy_database_as_container" {
+  description = "Whether to deploy the database as a container or as an Azure postgres flexible server."
+  type        = bool
+  default     = false
+}
+
+variable "deploy_infra" {
+  description = "The foundational layer of infrastructure for the application to run on"
+  type        = bool
+  default     = true
+}
+
+variable "docker_image" {
+  description = "Docker image full path including registry, repository and tag"
   type        = string
+}
+
+variable "dns_zone_name" {
+  description = "Value of the DNS zone name to use for the Front Door endpoint"
+  type        = string
+  default     = ""
+}
+
+variable "enable_entra_id_authentication" {
+  description = "Enable authentication for the container app. If true, the app will use Azure AD authentication."
+  type        = bool
+  default     = false
 }
 
 variable "environment" {
@@ -25,24 +48,13 @@ variable "env_config" {
   type        = string
 }
 
-variable "hub" {
-  description = "Hub name (dev or prod)"
-  type        = string
-}
-
-variable "docker_image" {
-  description = "Docker image full path including registry, repository and tag"
-  type        = string
-}
-
-variable "hub_subscription_id" {
-  description = "ID of the hub Azure subscription"
-  type        = string
-}
-
-variable "vnet_address_space" {
-  description = "VNET address space. Must be unique across the hub."
-  type        = string
+variable "features" {
+  description = "Feature flags for the deployment"
+  type = object({
+    front_door         = optional(bool, true)
+    hub_and_spoke      = optional(bool, true)
+    private_networking = optional(bool, true)
+  })
 }
 
 variable "fetch_secrets_from_app_key_vault" {
@@ -53,6 +65,32 @@ variable "fetch_secrets_from_app_key_vault" {
     EOT
   default     = false
   type        = bool
+}
+
+variable "front_door_profile" {
+  description = "Name of the front door profile created for this application in the hub subscription"
+  type        = string
+  default     = null
+}
+
+variable "github_mi_name" {
+  description = "Name of the GitHub Managed Identity."
+  type        = string
+}
+
+variable "hub" {
+  description = "Hub name (dev or prod)"
+  type        = string
+}
+
+variable "hub_subscription_id" {
+  description = "ID of the hub Azure subscription"
+  type        = string
+}
+
+variable "key_vault_secrets_officer_groups" {
+  description = "List of Entra ID group names which will have Key Vault Secrets Officer RBAC role."
+  type        = list(string)
 }
 
 variable "protect_keyvault" {
@@ -73,12 +111,6 @@ variable "postgres_geo_redundant_backup_enabled" {
   default     = true
 }
 
-variable "deploy_database_as_container" {
-  description = "Whether to deploy the database as a container or as an Azure postgres flexible server."
-  type        = bool
-  default     = false
-}
-
 variable "postgres_sku_name" {
   description = "Value of the PostgreSQL Flexible Server SKU name"
   default     = "B_Standard_B1ms"
@@ -97,8 +129,8 @@ variable "postgres_storage_tier" {
   type        = string
 }
 
-variable "enable_entra_id_authentication" {
-  description = "Enable authentication for the container app. If true, the app will use Azure AD authentication."
+variable "seed_demo_data" {
+  description = "Whether or not to seed the demo data in the database."
   type        = bool
   default     = false
 }
@@ -109,32 +141,11 @@ variable "use_apex_domain" {
   default     = false
 }
 
-variable "dns_zone_name" {
-  description = "Value of the DNS zone name to use for the Front Door endpoint"
+variable "vnet_address_space" {
+  description = "VNET address space. Must be unique across the hub."
   type        = string
-  default     = ""
 }
 
-variable "features" {
-  description = "Feature flags for the deployment"
-  type = object({
-    front_door         = optional(bool, true)
-    hub_and_spoke      = optional(bool, true)
-    private_networking = optional(bool, true)
-  })
-}
-
-variable "front_door_profile" {
-  description = "Name of the front door profile created for this application in the hub subscription"
-  type        = string
-  default     = null
-}
-
-variable "seed_demo_data" {
-  description = "Whether or not to seed the demo data in the database."
-  type        = bool
-  default     = false
-}
 
 locals {
   region              = "uksouth"
