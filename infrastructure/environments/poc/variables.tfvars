@@ -4,7 +4,7 @@ features = {
   hub_and_spoke      = false
   private_networking = false
 }
-fetch_secrets_from_app_key_vault      = true
+fetch_secrets_from_app_key_vault      = false
 github_mi_name                        = "mi-lungcs-poc-ghtoaz-uks"
 key_vault_secrets_officer_groups      = ["Azure-Lung-Cancer-Screening---Dev-Owner"]
 postgres_backup_retention_days        = 7
