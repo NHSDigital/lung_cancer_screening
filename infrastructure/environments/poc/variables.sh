@@ -6,4 +6,3 @@ STORAGE_ACCOUNT_RG=rg-tfstate-poc-uks
 TERRAFORM_MODULES_REF=main
 ENABLE_SOFT_DELETE=false
 DOCKER_IMAGE=ghcr.io/nhsdigital/lung_cancer_screening
-DOCKER_IMAGE_TAG=PPHA-369-configure-db-with-common-var-names-for-terraform
