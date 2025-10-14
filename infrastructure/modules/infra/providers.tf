@@ -4,5 +4,10 @@ terraform {
       source                = "hashicorp/azurerm"
       configuration_aliases = [azurerm.hub]
     }
+
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = "3.6.0"
+    }
   }
 }
