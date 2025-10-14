@@ -1,3 +1,10 @@
+locals {
+  key_vault_secrets_officers = [
+    "mi-lungcs-poc-ghtoaz-uks",
+    "Azure-Lung-Cancer-Screening---Dev-Owner"
+  ]
+}
+
 resource "azurerm_resource_group" "main" {
   name     = var.resource_group_name
   location = var.region
@@ -22,6 +29,22 @@ module "app-key-vault" {
   } : null
   public_network_access_enabled = !var.features.private_networking
   purge_protection_enabled      = var.protect_keyvault
+}
+
+data "azuread_service_principal" "identity" {
+  for_each = local.key_vault_secrets_officers
+
+  display_name = each.value
+}
+
+module "key_vault_rbac_assignments" {
+  for_each = data.azuread_service_principal.identity
+
+  source = "../dtos-devops-templates/infrastructure/modules/rbac-assignment"
+
+  principal_id         = each.value.object_id
+  role_definition_name = "Key Vault Secrets Officer"
+  scope                = module.app-key-vault.key_vault_id
 }
 
 module "log_analytics_workspace_audit" {
