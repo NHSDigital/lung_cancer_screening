@@ -39,7 +39,6 @@ module "key_vault_rbac_assignments" {
   scope                = module.app-key-vault.key_vault_id
 }
 
-
 module "log_analytics_workspace_audit" {
   source = "../dtos-devops-templates/infrastructure/modules/log-analytics-workspace"
 
