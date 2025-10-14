@@ -1,10 +1,3 @@
-locals {
-  key_vault_secrets_officers = toset([
-    "mi-lungcs-poc-ghtoaz-uks",
-    "Azure-Lung-Cancer-Screening---Dev-Owner"
-  ])
-}
-
 resource "azurerm_resource_group" "main" {
   name     = var.resource_group_name
   location = var.region
