@@ -84,7 +84,7 @@ ENV POETRY_NO_INTERACTION=1 \
 COPY pyproject.toml poetry.lock ./
 RUN pip install poetry
 RUN poetry install --no-root
-RUN poetry run playwright install
+RUN poetry run playwright install --with-deps chromium
 
 USER ${USER}
 COPY --chown=${USER}:${USER} . .
