@@ -19,6 +19,11 @@ def boolean_env(key, default=None):
     value = environ.get(key)
     return default if value is None else value in ("True", "true", "1")
 
+def list_env(key):
+    value = environ.get(key)
+    return value.split(",") if value else []
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -32,9 +37,8 @@ SECRET_KEY = environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = boolean_env("DEBUG", default=False)
 
-allowed_hosts = environ.get("ALLOWED_HOSTS")
-ALLOWED_HOSTS = allowed_hosts.split(",") if allowed_hosts else []
-
+ALLOWED_HOSTS = list_env("ALLOWED_HOSTS")
+CSRF_TRUSTED_ORIGINS = list_env("CSRF_TRUSTED_ORIGINS")
 
 # Application definition
 
