@@ -1,6 +1,7 @@
 .PHONY: dev-run dev-up dev-down dev-logs dev-shell dev-migrate dev-makemigrations dev-clean dev-test
 
-DOCKER_COMPOSE_CMD = docker compose
+UID=$(shell id -u)
+DOCKER_COMPOSE_CMD = env UID=$(UID) docker compose
 
 dev-build:
 	$(DOCKER_COMPOSE_CMD) build
