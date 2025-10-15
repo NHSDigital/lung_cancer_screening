@@ -35,20 +35,19 @@ RUN poetry install --without dev --no-root && rm -rf $POETRY_CACHE_DIR
 # Alpine doesn't support playwright
 FROM python:3.13.7-slim AS development
 
-# Set up user like python_base does
+ENV UID=1000
 ENV USER=app
-RUN addgroup --gid 1000 --system ${USER} \
-    && adduser --uid 1000 --system ${USER} --ingroup ${USER} --home /home/${USER} \
-    && mkdir -p /home/${USER} \
-    && chown ${USER}:${USER} /home/${USER}
+ENV APP_DIR=/app
+RUN addgroup --gid $UID --system ${USER} \
+    && adduser --uid $UID --system ${USER} --ingroup ${USER} \
+    && mkdir -p ${APP_DIR} \
+    && chown ${USER}:${USER} ${APP_DIR}
 
-ENV HOME=/home/${USER}
-
-ENV VIRTUAL_ENV=/app/.venv
-ENV PATH="/app/.venv/bin:$PATH"
+ENV VIRTUAL_ENV=${APP_DIR}/.venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 USER root
-WORKDIR /app
+WORKDIR ${APP_DIR}
 
 # Install system dependencies needed for Playwright
 RUN apt-get update && apt-get install -y \
@@ -79,11 +78,12 @@ RUN apt-get update && apt-get install -y \
 
 ENV POETRY_NO_INTERACTION=1 \
     POETRY_VIRTUALENVS_IN_PROJECT=1 \
-    POETRY_VIRTUALENVS_CREATE=1
+    POETRY_VIRTUALENVS_CREATE=1 \
+    POETRY_CACHE_DIR=/tmp/poetry_cache
 
 COPY pyproject.toml poetry.lock ./
 RUN pip install poetry
-RUN poetry install --no-root
+RUN poetry install --no-root && rm -rf $POETRY_CACHE_DIR
 RUN poetry run playwright install --with-deps chromium
 
 USER ${USER}
