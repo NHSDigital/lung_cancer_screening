@@ -1,0 +1,14 @@
+# Python
+**/__pycache__
+.venv
+
+# Django
+**/.env
+**/*.sqlite3
+**/staticfiles/
+
+# Terraform
+infrastructure
+
+# Docs
+docs
