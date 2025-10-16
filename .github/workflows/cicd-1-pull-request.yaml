@@ -7,7 +7,7 @@ on:
     branches:
       - "**"
   pull_request:
-    types: [opened, reopened, merged]
+    types: [opened, reopened, closed]
 
 jobs:
   metadata:
@@ -96,7 +96,7 @@ jobs:
     name: "Build stage"
     needs: [metadata, test-stage]
     uses: ./.github/workflows/stage-3-build.yaml
-    if: needs.metadata.outputs.does_pull_request_exist == 'true' || (github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'reopened' || github.event.action == 'merged'))
+    if: needs.metadata.outputs.does_pull_request_exist == 'true' || (github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'reopened' || (github.event.action == 'closed' && github.event.pull_request.merged == true)))
     with:
       build_datetime: "${{ needs.metadata.outputs.build_datetime }}"
       build_timestamp: "${{ needs.metadata.outputs.build_timestamp }}"
