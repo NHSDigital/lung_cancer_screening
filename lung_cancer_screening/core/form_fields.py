@@ -252,7 +252,7 @@ class BoundChoiceField(forms.BoundField):
     def add_conditional_html(self, value, html):
         if isinstance(self.field.widget, widgets.Select):
             raise ValueError(
-                "select comonent does not support conditional fields")
+                "select component does not support conditional fields")
 
         self._conditional_html[value] = html
 

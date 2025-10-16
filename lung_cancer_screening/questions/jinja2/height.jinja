@@ -1,7 +1,6 @@
 {% extends 'layout.jinja' %}
 {% from 'nhsuk/components/button/macro.jinja' import button %}
 {% from 'nhsuk/components/back-link/macro.jinja' import backLink %}
-{% from 'nhsuk/components/input/macro.jinja' import input %}
 {% from 'nhsuk/components/fieldset/macro.jinja' import fieldset %}
 
 {% block beforeContent %}
@@ -16,7 +15,7 @@
 {% block page_content %}
   <div class="nhsuk-grid-row">
     <div class="nhsuk-grid-column-two-thirds">
-      <form action="{{ request.path }}" method="POST">
+      <form action="{{ request.path }}" method="POST" novalidate>
         {{ csrf_input }}
         <h1 class="nhsuk-heading-l">What is your height?</h1>
         <p>An accurate measurement is important.
@@ -28,7 +27,7 @@
             "classes": "nhsuk-label--m"
           }
         }) %}
-         {{ form }}
+        {{ form.height.as_field_group() }}
         {% endcall %}
 
         {{ button({

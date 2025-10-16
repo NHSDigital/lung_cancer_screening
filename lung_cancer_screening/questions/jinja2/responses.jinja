@@ -8,6 +8,7 @@
       <ul class="responses">
         <li>Have you ever smoked? {{ response_set.get_have_you_ever_smoked_display() }}</li>
         <li>What is your date of birth? {{ response_set.date_of_birth }}</li>
+        <li>What is your height? {{ response_set.height // 10 if response_set.height else ""}}</li>
       </ul>
 
       <form action="{{ request.path }}" method="post">

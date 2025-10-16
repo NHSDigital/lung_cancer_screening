@@ -17,3 +17,4 @@ __pycache__
 lung_cancer_screening/assets/compiled/*
 !lung_cancer_screening/assets/compiled/.gitkeep
 .DS_Store
+.venv
