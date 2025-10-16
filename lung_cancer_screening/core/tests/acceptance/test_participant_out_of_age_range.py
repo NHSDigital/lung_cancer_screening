@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from .helpers.user_interaction_helpers import (
     fill_in_and_submit_participant_id,
-    fill_in_and_submit_smoking_elligibility,
+    fill_in_and_submit_smoking_eligibility,
     fill_in_and_submit_date_of_birth
 )
 
@@ -33,7 +33,7 @@ class TestParticipantOutOfAgeRange(StaticLiveServerTestCase):
         page.goto(f"{self.live_server_url}/start")
 
         fill_in_and_submit_participant_id(page, participant_id)
-        fill_in_and_submit_smoking_elligibility(page, 'Yes, I used to smoke regularly')
+        fill_in_and_submit_smoking_eligibility(page, 'Yes, I used to smoke regularly')
 
         age = datetime.now() - relativedelta(years=20)
         fill_in_and_submit_date_of_birth(page, age)

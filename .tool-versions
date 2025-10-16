@@ -1,5 +1,6 @@
 # This file is for you! Please, updated to the versions agreed by your team.
 
+python 3.13.8
 terraform 1.7.0
 pre-commit 4.3.0
 vale 3.6.0

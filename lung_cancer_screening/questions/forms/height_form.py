@@ -11,15 +11,13 @@ class HeightForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.instance.participant = self.participant
 
-        self.fields["height_in_cm"] = DecimalField(
+        self.fields["height"] = DecimalField(
              label="Centimetres",
              classes="nhsuk-input--width-4",
         )
 
-
-
-    def clean_height_in_cm(self):
-      data = self.cleaned_data['height_in_cm']
+    def clean_height(self):
+      data = self.cleaned_data['height']
       return data*10
 
     class Meta:
