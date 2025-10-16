@@ -1,32 +1,34 @@
 from django.shortcuts import render, redirect
 from django.core.exceptions import ValidationError
-#from django.urls import reverse
+
+from lung_cancer_screening.questions.forms.height_form import HeightForm
+from lung_cancer_screening.questions.models import participant
 
 from .decorators.participant_decorators import require_participant
 
 @require_participant
 def height(request): 
   if request.method == "POST":
-    response_set = request.participant.responseset_set.last()
-    
-    height = request.POST.get("height")
+    form = HeightForm(
+      instance = request.participant.responseset_set.last(),
+      data=request.POST, 
+      participant=request.participant
+    )
 
-    if height.isdigit() and int(height) > 0 :
-      height = int(height)*10
-    response_set.height = height
-    #response_set.height_type = request.POST.get("height_type")
-    try:
-      response_set.save()
+    if form.is_valid() :
+      form.save()
+
       return redirect("questions:responses")
-    except ValidationError:
+    else :
       return render(
         request,
         "height.jinja",
+        { "form" : form },
         status=422
       )
 
   return render(
         request,
         "height.jinja",
-        {}
+        { "form" : HeightForm(participant=request.participant) }
     )

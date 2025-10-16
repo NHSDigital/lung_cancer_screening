@@ -5,7 +5,7 @@ def fill_in_and_submit_participant_id(page, participant_id):
     page.click('text=Start now')
 
 
-def fill_in_and_submit_smoking_elligibility(page, smoking_status):
+def fill_in_and_submit_smoking_eligibility(page, smoking_status):
     expect(page.locator("legend")).to_have_text(
         "Have you ever smoked?")
 
@@ -26,6 +26,6 @@ def fill_in_and_submit_date_of_birth(page, age):
 def fill_in_and_submit_height(page, height):
     expect(page.locator("h1")).to_have_text("What is your height?")
 
-    page.get_by_label("Centimeter").fill(str(height))
+    page.get_by_label("Centimetre").fill(str(height))
 
     page.click("text=Continue")

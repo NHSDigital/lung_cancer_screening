@@ -5,7 +5,7 @@ from playwright.sync_api import sync_playwright, expect
 
 from .helpers.user_interaction_helpers import (
     fill_in_and_submit_participant_id,
-    fill_in_and_submit_smoking_elligibility
+    fill_in_and_submit_smoking_eligibility
 )
 
 
@@ -31,7 +31,7 @@ class TestParticipantNotSmoker(StaticLiveServerTestCase):
         page.goto(f"{self.live_server_url}/start")
 
         fill_in_and_submit_participant_id(page, participant_id)
-        fill_in_and_submit_smoking_elligibility(page, 'No, I have never smoked')
+        fill_in_and_submit_smoking_eligibility(page, 'No, I have never smoked')
 
         expect(page).to_have_url(f"{self.live_server_url}/non-smoker-exit")
 

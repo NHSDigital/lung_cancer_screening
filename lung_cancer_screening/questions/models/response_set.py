@@ -52,13 +52,3 @@ class ResponseSet(BaseModel):
             raise ValidationError(
                 "Responses have already been submitted for this participant"
             )
-        
-    @property
-    def height(self):
-        return self.height
-
-    @height.setter
-    def _height(self, value):
-        if value > 0 :
-            print("The date chosen was in the future.")
-        self._height = value
