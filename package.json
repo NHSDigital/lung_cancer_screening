@@ -16,7 +16,7 @@
     "nhsuk-frontend": "^10.0.0"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^28.0.7",
+    "@rollup/plugin-commonjs": "^28.0.8",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^0.4.4",
     "concurrently": "^9.2.1",
