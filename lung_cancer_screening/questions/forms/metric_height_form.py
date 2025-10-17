@@ -1,4 +1,3 @@
-import decimal
 from django import forms
 
 from lung_cancer_screening.core.form_fields import DecimalField
@@ -14,11 +13,17 @@ class MetricHeightForm(forms.ModelForm):
         self.fields["height"] = DecimalField(
             label="Centimetres",
             classes="nhsuk-input--width-4",
+            error_messages={
+                'required': 'Enter your height.',
+            }
         )
 
     def clean_height(self):
         return self.cleaned_data['height'] * 10
 
+    def clean_height_imperial(self):
+        return None
+
     class Meta:
         model = ResponseSet
-        fields = ['height']
+        fields = ['height', 'height_imperial']

@@ -70,7 +70,7 @@ class TestQuestionnaire(StaticLiveServerTestCase):
         expect(responses).to_contain_text("Have you ever smoked? Yes, I used to smoke regularly")
         expect(responses).to_contain_text(
             age.strftime("What is your date of birth? %Y-%m-%d"))
-        expect(responses).to_contain_text(f"What is your height? {height}")
+        expect(responses).to_contain_text(f"What is your height? {feet} feet {inches} inches")
 
         page.click("text=Submit")
 

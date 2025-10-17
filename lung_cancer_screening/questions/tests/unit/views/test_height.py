@@ -1,12 +1,10 @@
 from django.test import TestCase
 from django.urls import reverse
-from datetime import date
-from dateutil.relativedelta import relativedelta
 
 from ....models.participant import Participant
 
 
-class TestPostDateOfBirth(TestCase):
+class TestHeight(TestCase):
     def setUp(self):
         self.participant = Participant.objects.create(unique_id="12345")
         self.participant.responseset_set.create()
@@ -35,6 +33,17 @@ class TestPostDateOfBirth(TestCase):
         response = self.client.get(reverse("questions:height"))
 
         self.assertEqual(response.status_code, 200)
+
+    def test_get_renders_the_metric_form_by_default(self):
+        response = self.client.get(reverse("questions:height"))
+
+        self.assertContains(response, "Centimetres")
+
+    def test_get_renders_the_imperial_form_if_specified(self):
+        response = self.client.get(reverse("questions:height"), {"unit": "imperial"})
+
+        self.assertContains(response, "Feet")
+        self.assertContains(response, "Inches")
 
     def test_post_redirects_if_the_participant_does_not_exist(self):
         session = self.client.session
