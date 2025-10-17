@@ -24,7 +24,7 @@ def date_of_birth(request):
                 response_set.date_of_birth = date_of_birth
                 response_set.save()
 
-                return redirect(reverse("questions:responses"))
+                return redirect(reverse("questions:height"))
             else:
                 return redirect(reverse("questions:age_range_exit"))
 
