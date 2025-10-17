@@ -206,7 +206,7 @@ class IntegerField(forms.IntegerField):
         attrs.pop("step", None)
 
         return attrs
-    
+
 class DecimalField(forms.DecimalField):
     def __init__(
         self,

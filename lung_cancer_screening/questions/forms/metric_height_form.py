@@ -12,13 +12,12 @@ class MetricHeightForm(forms.ModelForm):
         self.instance.participant = self.participant
 
         self.fields["height"] = DecimalField(
-             label="Centimetres",
-             classes="nhsuk-input--width-4",
+            label="Centimetres",
+            classes="nhsuk-input--width-4",
         )
 
     def clean_height(self):
-      data = self.cleaned_data['height']
-      return data*10
+        return self.cleaned_data['height'] * 10
 
     class Meta:
         model = ResponseSet
