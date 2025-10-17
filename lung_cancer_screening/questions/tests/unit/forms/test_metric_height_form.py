@@ -1,16 +1,16 @@
 from django.test import TestCase
 
 from ....models.participant import Participant
-from ....forms.height_form import HeightForm
+from ....forms.metric_height_form import MetricHeightForm
 
 
-class TestHeightForm(TestCase):
+class TestMetricHeightForm(TestCase):
     def setUp(self):
         self.participant = Participant.objects.create(unique_id="1234567890")
 
     def test_cm_to_mm(self):
         height = "170.4"
-        form = HeightForm(
+        form = MetricHeightForm(
             participant=self.participant,
             data={
                 "height": height
@@ -22,7 +22,7 @@ class TestHeightForm(TestCase):
         self.assertEqual(form.cleaned_data["height"], 1704)
 
     def test_is_invalid(self):
-        form = HeightForm(
+        form = MetricHeightForm(
             participant=self.participant,
             data={
                 "height": "invalid"
