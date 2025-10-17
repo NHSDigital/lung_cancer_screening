@@ -7,7 +7,7 @@ dev-build:
 	$(DOCKER_COMPOSE_CMD) build
 
 dev-run:
-	$(DOCKER_COMPOSE_CMD) up --build
+	$(DOCKER_COMPOSE_CMD) up
 
 dev-up:
 	$(DOCKER_COMPOSE_CMD) up -d --build
