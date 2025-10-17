@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
+from decimal import Decimal
 
 from .base import BaseModel
 from .participant import Participant
@@ -23,12 +24,20 @@ class ResponseSet(BaseModel):
     )
     date_of_birth = models.DateField(null=True, blank=True)
 
+    MAX_HEIGHT_METRIC = 2438
+    MIN_HEIGHT_METRIC = 1397
+    MAX_HEIGHT_IMPERIAL = 96
+    MIN_HEIGHT_IMPERIAL = 55
     height = models.PositiveIntegerField(null=True, blank=True, validators=[
-        MinValueValidator(1397, message="Height must be between 139.7cm and 243.8 cm"),
-        MaxValueValidator(2438, message="Height must be between 139.7cm and 243.8 cm"),
+        MinValueValidator(MIN_HEIGHT_METRIC, message="Height must be between 139.7cm and 243.8 cm"),
+        MaxValueValidator(MAX_HEIGHT_METRIC, message="Height must be between 139.7cm and 243.8 cm"),
     ])
-
-    #height_type
+    height_imperial = models.PositiveIntegerField(null=True, blank=True, validators=[
+        MinValueValidator(
+            MIN_HEIGHT_IMPERIAL, message="Height must be between 4 feet 7 inches and 8 feet"),
+        MaxValueValidator(
+            MAX_HEIGHT_IMPERIAL, message="Height must be between 4 feet 7 inches and 8 feet"),
+    ])
 
     submitted_at = models.DateTimeField(null=True, blank=True)
 
@@ -52,3 +61,12 @@ class ResponseSet(BaseModel):
             raise ValidationError(
                 "Responses have already been submitted for this participant"
             )
+
+    @property
+    def formatted_height(self):
+        if self.height:
+            return f"{Decimal(self.height) / 10}cm"
+        elif self.height_imperial:
+            value = Decimal(self.height_imperial)
+            return f"{value // 12} feet {value % 12} inches"
+

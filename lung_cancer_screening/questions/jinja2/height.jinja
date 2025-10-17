@@ -15,7 +15,12 @@
 {% block page_content %}
   <div class="nhsuk-grid-row">
     <div class="nhsuk-grid-column-two-thirds">
-      <form action="{{ request.path }}" method="POST" novalidate>
+      {% if unit %}
+        {% set action_url = request.path + '?unit=' + unit %}
+      {% else %}
+        {% set action_url = request.path %}
+      {% endif %}
+      <form action="{{ action_url }}" method="POST" novalidate>
         {{ csrf_input }}
         <h1 class="nhsuk-heading-l">What is your height?</h1>
         <p>An accurate measurement is important.
@@ -28,9 +33,13 @@
           }
         }) %}
 
-        {{ form.height.as_field_group() }}
-        
-        <a href="?unit={{ switch_to_unit }}">Switch to {{ switch_to_unit }}</a>
+          {% if unit == "imperial" %}
+            {{ form.height_imperial.as_field_group() }}
+          {% else %}
+            {{ form.height.as_field_group() }}
+          {% endif %}
+
+          <a href="?unit={{ switch_to_unit }}">Switch to {{ switch_to_unit }}</a>
 
         {% endcall %}
 

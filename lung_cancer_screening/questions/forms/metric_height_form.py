@@ -19,6 +19,9 @@ class MetricHeightForm(forms.ModelForm):
     def clean_height(self):
         return self.cleaned_data['height'] * 10
 
+    def clean_height_imperial(self):
+        return None
+
     class Meta:
         model = ResponseSet
-        fields = ['height']
+        fields = ['height', 'height_imperial']
