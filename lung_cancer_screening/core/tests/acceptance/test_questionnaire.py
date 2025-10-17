@@ -5,7 +5,8 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from .helpers.user_interaction_helpers import (
-    fill_in_and_submit_height,
+    fill_in_and_submit_height_imperial,
+    fill_in_and_submit_height_metric,
     fill_in_and_submit_participant_id,
     fill_in_and_submit_smoking_eligibility,
     fill_in_and_submit_date_of_birth
@@ -33,6 +34,8 @@ class TestQuestionnaire(StaticLiveServerTestCase):
         smoking_status = 'Yes, I used to smoke regularly'
         age = datetime.now() - relativedelta(years=55)
         height = "170"
+        feet = 5
+        inches = 7
 
         page = self.browser.new_page()
         page.goto(f"{self.live_server_url}/start")
@@ -51,9 +54,17 @@ class TestQuestionnaire(StaticLiveServerTestCase):
 
         expect(page).to_have_url(f"{self.live_server_url}/height")
 
-        fill_in_and_submit_height(page, height)
+        fill_in_and_submit_height_metric(page, height)
 
         expect(page).to_have_url(f"{self.live_server_url}/responses")
+
+        page.click("text=Back")
+
+        expect(page).to_have_url(f"{self.live_server_url}/height")
+
+        page.click("text=Switch to imperial")
+
+        fill_in_and_submit_height_imperial(page, feet, inches)
 
         responses = page.locator(".responses")
         expect(responses).to_contain_text("Have you ever smoked? Yes, I used to smoke regularly")

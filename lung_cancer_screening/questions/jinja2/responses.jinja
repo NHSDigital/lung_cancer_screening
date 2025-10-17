@@ -1,7 +1,17 @@
 {% extends 'layout.jinja' %}
 {% from 'nhsuk/components/button/macro.jinja' import button %}
+{% from 'nhsuk/components/back-link/macro.jinja' import backLink %}
 
-{% block content %}
+{% block beforeContent %}
+  {{
+    backLink({
+      "href": url("questions:height"),
+      "text": "Back"
+    })
+  }}
+{% endblock beforeContent %}
+
+{% block page_content %}
   <div class="nhsuk-grid-row">
     <div class="nhsuk-grid-column-two-thirds">
       <h1 class="nhsuk-heading-l">Responses</h1>

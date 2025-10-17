@@ -27,7 +27,11 @@
             "classes": "nhsuk-label--m"
           }
         }) %}
+
         {{ form.height.as_field_group() }}
+        
+        <a href="?unit={{ switch_to_unit }}">Switch to {{ switch_to_unit }}</a>
+
         {% endcall %}
 
         {{ button({

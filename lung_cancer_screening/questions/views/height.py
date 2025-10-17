@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.exceptions import ValidationError
 
-from lung_cancer_screening.questions.forms.height_form import HeightForm
+from lung_cancer_screening.questions.forms.metric_height_form import MetricHeightForm
 from lung_cancer_screening.questions.models import participant
 
 from .decorators.participant_decorators import require_participant
@@ -9,7 +9,7 @@ from .decorators.participant_decorators import require_participant
 @require_participant
 def height(request): 
   if request.method == "POST":
-    form = HeightForm(
+    form = MetricHeightForm(
       instance = request.participant.responseset_set.last(),
       data=request.POST, 
       participant=request.participant
@@ -26,9 +26,13 @@ def height(request):
         { "form" : form },
         status=422
       )
-
+  unit = request.GET.get('unit')
   return render(
         request,
         "height.jinja",
-        { "form" : HeightForm(participant=request.participant) }
+        { 
+          "form" : MetricHeightForm(participant=request.participant),
+          "unit" : unit,
+          "switch_to_unit" : "metric" if unit == "imperial" else "imperial"
+        }
     )

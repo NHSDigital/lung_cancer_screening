@@ -4,7 +4,7 @@ from django import forms
 from lung_cancer_screening.core.form_fields import DecimalField
 from ..models.response_set import ResponseSet
 
-class HeightForm(forms.ModelForm):
+class MetricHeightForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.participant = kwargs.pop('participant')
