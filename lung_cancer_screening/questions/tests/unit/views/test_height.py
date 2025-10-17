@@ -74,12 +74,3 @@ class TestPostDateOfBirth(TestCase):
         )
 
         self.assertEqual(response.status_code, 422)
-
-
-# If nothing is entered - Enter your height
-# User enters a height that is outside the accepted range (cms) - Height must be between 139.7cm and 243.8 cm
-# User enters a height that is outside the accepted range (feet and inches) - Height must be between 4 feet 7 inches and 8 feet
-# User enters a reading for feet that is outside the accepted range - Feet must be between 4 and 8
-# User enters a reading for inches that is outside the accepted range - Inches must be between 0 and 11
-# User enters a reading for feet using a decimal point - Feet must be in whole numbers
-# User enters a reading for inches using a decimal point - I
