@@ -25,24 +25,24 @@ The following software packages, or their equivalents, are expected to be instal
 
 1. Copy the environment file:
 
-```shell
-cp .env.example .env
-```
+   ```shell
+   cp .env.example .env
+   ```
 
-2. Setup the pre-commit hooks and install dependencies:
+1. Setup the pre-commit hooks and install dependencies:
 
-```shell
-make config
-```
+   ```shell
+   make config
+   ```
 
-Note: If you encounter Python installation issues on macOS, you may need to install Python with SSL flags:
+   Note: If you encounter Python installation issues on macOS, you may need to install Python with SSL flags:
 
-```shell
-CFLAGS="-I$(brew --prefix openssl@3)/include" \
-LDFLAGS="-L$(brew --prefix openssl@3)/lib" \
-PKG_CONFIG_PATH="$(brew --prefix openssl@3)/lib/pkgconfig" \
-asdf install python 3.13.7
-```
+   ```shell
+   CFLAGS="-I$(brew --prefix openssl@3)/include" \
+   LDFLAGS="-L$(brew --prefix openssl@3)/lib" \
+   PKG_CONFIG_PATH="$(brew --prefix openssl@3)/lib/pkgconfig" \
+   asdf install python 3.13.7
+   ```
 
 ## Running the app locally
 
