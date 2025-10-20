@@ -58,3 +58,22 @@ class TestImperialHeightForm(TestCase):
             }
         )
         self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["height_imperial"],
+            ["Enter your height."]
+        )
+
+    def test_is_invalid_when_given_a_decimal_feet_value(self):
+        form = ImperialHeightForm(
+            participant=self.participant,
+            instance=self.response_set,
+            data={
+                "height_imperial_0": "5.2",
+                "height_imperial_1": "0"
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["height_imperial"],
+            ["Feet must be in whole numbers."]
+        )

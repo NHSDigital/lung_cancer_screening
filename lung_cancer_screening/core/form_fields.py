@@ -410,9 +410,23 @@ class ImperialHeightField(forms.MultiValueField):
     widget = ImperialHeightWidget
 
     def __init__(self, *args, **kwargs):
+        error_messages = kwargs.get("error_messages", {})
+
+        feet_kwargs = {
+            "error_messages": {
+                'invalid': 'Feet must be in whole numbers.',
+                **error_messages,
+            },
+        }
+        inches_kwargs = {
+            "error_messages": {
+                'invalid': 'Inches must be in whole numbers.',
+                **error_messages,
+            },
+        }
         fields = (
-            IntegerField(label="Feet"),
-            IntegerField(label="Inches"),
+            IntegerField(**feet_kwargs),
+            IntegerField(**inches_kwargs),
         )
         kwargs["template_name"] = "forms/imperial-height-input.jinja"
 
