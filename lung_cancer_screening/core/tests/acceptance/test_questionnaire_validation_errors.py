@@ -47,16 +47,39 @@ class TestQuestionnaireValidationErrors(StaticLiveServerTestCase):
         page.goto(f"{self.live_server_url}/height")
 
         page.click("text=Continue")
-
         expect(page.locator(".nhsuk-error-message")).to_contain_text(
             "Enter your height."
+        )
+
+        page.get_by_label("Centimetre").fill('139.6')
+        page.click('text=Continue')
+        expect(page.locator(".nhsuk-error-message")).to_contain_text(
+            "Height must be between 139.7cm and 243.8 cm"
+        )
+
+        page.get_by_label("Centimetre").fill('243.9')
+        page.click('text=Continue')
+        expect(page.locator(".nhsuk-error-message")).to_contain_text(
+            "Height must be between 139.7cm and 243.8 cm"
         )
 
         page.click("text=Switch to imperial")
 
         page.click("text=Continue")
+        expect(page.locator(".nhsuk-error-message")).to_contain_text(
+            "Enter your height."
+        )
 
-        for error in page.locator(".nhsuk-error-message").all():
-            expect(error).to_contain_text(
-                "Enter your height."
-            )
+        page.get_by_label("Feet").fill('5.2')
+        page.get_by_label("Inches").fill('2')
+        page.click('text=Continue')
+        expect(page.locator(".nhsuk-error-message")).to_contain_text(
+            "Feet must be in whole numbers"
+        )
+
+        page.get_by_label("Feet").fill('5')
+        page.get_by_label("Inches").fill('2.2')
+        page.click('text=Continue')
+        expect(page.locator(".nhsuk-error-message")).to_contain_text(
+            "Inches must be in whole numbers"
+        )
