@@ -13,6 +13,7 @@ services:
       - .env
     depends_on:
       - db
+      - asset_builder
     volumes:
       - ./:/app
       - venv:/app/.venv
@@ -26,7 +27,8 @@ services:
       target: asset_builder
     command: npm run watch
     volumes:
-      - ./lung_cancer_screening/assets/compiled:/app/lung_cancer_screening/assets/compiled
+      - ./:/app
+      - node_modules:/app/node_modules
 
   db:
     image: postgres:15-alpine
@@ -48,3 +50,4 @@ volumes:
   redis_data:
   venv:
   playwright_browsers:
+  node_modules:
