@@ -19,13 +19,29 @@ The following software packages, or their equivalents, are expected to be instal
 
 - [Docker](https://www.docker.com/) container runtime or a compatible tool, e.g. [Podman](https://podman.io/),
 - [GNU make](https://www.gnu.org/software/make/) 3.82 or later
+- [asdf](https://asdf-vm.com/) version manager for managing tool versions (ensure asdf is configured in your shell)
 
 ## Setup
 
-To setup the pre commit hooks run
+1. Copy the environment file:
+
+```shell
+cp .env.example .env
+```
+
+2. Setup the pre-commit hooks and install dependencies:
 
 ```shell
 make config
+```
+
+Note: If you encounter Python installation issues on macOS, you may need to install Python with SSL flags:
+
+```shell
+CFLAGS="-I$(brew --prefix openssl@3)/include" \
+LDFLAGS="-L$(brew --prefix openssl@3)/lib" \
+PKG_CONFIG_PATH="$(brew --prefix openssl@3)/lib/pkgconfig" \
+asdf install python 3.13.7
 ```
 
 ## Running the app locally
@@ -36,6 +52,12 @@ You can run the application by running:
 
 ```shell
 make dev-run
+```
+
+After starting the application, apply the database migrations:
+
+```shell
+make dev-migrate
 ```
 
 ## Testing
