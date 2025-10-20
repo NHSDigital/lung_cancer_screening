@@ -2,4 +2,4 @@
 @forward "nhsuk-frontend/dist/nhsuk";
 
 // Components that are not in the NHS.UK frontend library
-// @import "components/button";
+@forward "components/multi_field_input";

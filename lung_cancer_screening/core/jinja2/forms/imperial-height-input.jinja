@@ -6,34 +6,39 @@
 {% set unbound_field = field.field %}
 {% set hint = unbound_field.hint %}
 
+<div id="{{ field.html_name }}" class="multi-field-input">
+  <div class="multi-field-input__item">
+    {{ input({
+      "label": {
+        "text": "Feet",
+        "classes": "nhsuk-fieldset__legend--m",
+        "isPageHeading": false
+      },
+      "hint": {
+        "text": unbound_field.hint
+      } if unbound_field.hint,
+      "errorMessage": error_message,
+      "id": field.auto_id,
+      "name": field.html_name + "_0",
+      "value": field.subwidgets.0.data.value,
+      "classes": "nhsuk-input--width-2",
+      "type": "number"
+    }) }}
+  </div>
 
-{{ input({
-  "label": {
-    "text": "Feet",
-    "classes": "nhsuk-fieldset__legend--m",
-    "isPageHeading": false
-  },
-  "hint": {
-    "text": unbound_field.hint
-  } if unbound_field.hint,
-  "errorMessage": error_message,
-  "id": field.auto_id,
-  "name": field.html_name + "_0",
-  "value": field.subwidgets.0.data.value,
-  "classes": "nhsuk-input--width-2",
-  "type": "number"
-}) }}
-
-{{ input({
-  "label": {
-    "text": "Inches",
-    "classes": "nhsuk-fieldset__legend--m",
-    "isPageHeading": false
-  },
-  "errorMessage": error_message,
-  "id": field.auto_id + "_1",
-  "name": field.html_name + "_1",
-  "value": field.subwidgets.1.data.value,
-  "classes": "nhsuk-input--width-2",
-  "type": "number"
-}) }}
+  <div class="multi-field-input__item">
+    {{ input({
+      "label": {
+        "text": "Inches",
+        "classes": "nhsuk-fieldset__legend--m",
+        "isPageHeading": false
+      },
+      "errorMessage": error_message,
+      "id": field.auto_id + "_1",
+      "name": field.html_name + "_1",
+      "value": field.subwidgets.1.data.value,
+      "classes": "nhsuk-input--width-2",
+      "type": "number"
+    }) }}
+  </div>
+</div>
