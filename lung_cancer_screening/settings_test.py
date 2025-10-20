@@ -1,4 +1,6 @@
 # ruff: noqa: F403, F405
+import logging
+
 from .settings import *
 
 STORAGES = {
@@ -10,3 +12,5 @@ STORAGES = {
 MIDDLEWARE.remove(
     "whitenoise.middleware.WhiteNoiseMiddleware",
 )
+
+logging.disable(logging.CRITICAL)
