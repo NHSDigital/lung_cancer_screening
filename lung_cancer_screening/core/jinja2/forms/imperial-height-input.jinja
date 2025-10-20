@@ -1,12 +1,22 @@
 {% from 'nhsuk/components/input/macro.jinja' import input %}
+{% from 'nhsuk/components/error-message/macro.jinja' import errorMessage %}
 
-{% if field.errors %}
-  {% set error_message = {"text": field.errors | first} %}
+{% if field.errors | length > 0 %}
+  {% set error_message = field.errors | first %}
 {% endif %}
 {% set unbound_field = field.field %}
 {% set hint = unbound_field.hint %}
+{% set form_group_error_classes = ' nhsuk-form-group--error' if error_message else '' %}
+{% set field_error_classes = ' nhsuk-input--error' if error_message else '' %}
 
-<div id="{{ field.html_name }}" class="multi-field-input">
+<div id="{{ field.html_name }}" class="multi-field-input nhsuk-form-group{{ form_group_error_classes }}">
+  {% if error_message %}
+    {{ errorMessage({
+      "id": field.auto_id,
+      "text": error_message
+    }) }}
+  {% endif %}
+
   <div class="multi-field-input__item">
     {{ input({
       "label": {
@@ -17,11 +27,10 @@
       "hint": {
         "text": unbound_field.hint
       } if unbound_field.hint,
-      "errorMessage": error_message,
       "id": field.auto_id,
       "name": field.html_name + "_0",
       "value": field.subwidgets.0.data.value,
-      "classes": "nhsuk-input--width-2",
+      "classes": "nhsuk-input--width-2" + field_error_classes,
       "type": "number"
     }) }}
   </div>
@@ -33,11 +42,10 @@
         "classes": "nhsuk-fieldset__legend--m",
         "isPageHeading": false
       },
-      "errorMessage": error_message,
       "id": field.auto_id + "_1",
       "name": field.html_name + "_1",
       "value": field.subwidgets.1.data.value,
-      "classes": "nhsuk-input--width-2",
+      "classes": "nhsuk-input--width-2" + field_error_classes,
       "type": "number"
     }) }}
   </div>
