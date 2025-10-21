@@ -48,16 +48,16 @@ The following software packages, or their equivalents, are expected to be instal
 
 The project runs locally inside docker. Please ensure you have docker installed.
 
-You can run the application by running:
-
-```shell
-make dev-run
-```
-
-After starting the application, apply the database migrations:
+Apply the database migrations:
 
 ```shell
 make dev-migrate
+```
+
+Run the application:
+
+```shell
+make dev-run
 ```
 
 ## Testing
