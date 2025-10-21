@@ -35,7 +35,7 @@ alt Participant opts in to Pilot
     NHSE_Admin -> NHSE_Admin: Prepare list of completed digital risk assessment unique participant numbers
     NHSE_Admin -> E2E_Staff: (LUNGDF300) Advise of completed digital risk assessment unique participant numbers
     E2E_Staff -> E2E_System: Upload completed digital risk assessment unique participant numbers
- ' Step 4 BAU telephone user journey
+' Step 4 BAU telephone user journey
     E2E_Staff -> Participant: Contact participant for BAU telephone journey risk assessment
     Participant -> E2E_Staff: Complete BAU telephone journey risk assessment
     E2E_Staff -> E2E_System: Store BAU telephone journey risk assessment
