@@ -51,6 +51,15 @@ class TestResponseSet(TestCase):
             int
         )
 
+    def test_has_an_metric_weight_as_a_int(self):
+        self.response_set.weight_metric = 680
+        self.response_set.save()
+
+        self.assertIsInstance(
+            self.response_set.weight_metric,
+            int
+        )
+
     def test_has_a_participant_as_a_foreign_key(self):
         self.assertIsInstance(
             self.response_set.participant,
@@ -168,4 +177,26 @@ class TestResponseSet(TestCase):
         self.assertEqual(
             self.response_set.formatted_height,
             "5 feet 8 inches"
+        )
+
+    def test_is_invalid_if_weight_metric_is_below_lower_bound(self):
+        self.response_set.weight_metric = ResponseSet.MIN_WEIGHT_METRIC - 1
+
+        with self.assertRaises(ValidationError) as context:
+            self.response_set.full_clean()
+
+        self.assertIn(
+            "Weight must be between 25.4kg and 317.5kg",
+            context.exception.messages
+        )
+
+    def test_is_invalid_if_weight_metric_is_above_upper_bound(self):
+        self.response_set.weight_metric = ResponseSet.MAX_WEIGHT_METRIC + 1
+
+        with self.assertRaises(ValidationError) as context:
+            self.response_set.full_clean()
+
+        self.assertIn(
+            "Weight must be between 25.4kg and 317.5kg",
+            context.exception.messages
         )

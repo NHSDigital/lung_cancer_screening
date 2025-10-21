@@ -19,7 +19,7 @@ def height(request):
         if form.is_valid():
             form.save()
 
-            return redirect("questions:responses")
+            return redirect("questions:weight")
         else:
             return render(
                 request,

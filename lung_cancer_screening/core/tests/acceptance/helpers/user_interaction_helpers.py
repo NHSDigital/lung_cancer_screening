@@ -37,3 +37,10 @@ def fill_in_and_submit_height_imperial(page, feet, inches):
     page.get_by_label("Inches").fill(str(inches))
 
     page.click("text=Continue")
+
+def fill_in_and_submit_weight_metric(page, kilograms):
+    expect(page.locator("h1")).to_have_text("Enter your weight")
+
+    page.get_by_label("Kilograms").fill(str(kilograms))
+
+    page.click("text=Continue")
