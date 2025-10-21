@@ -3,5 +3,23 @@
     "MD013": false,
     "MD024": { "siblings_only": true },
     "MD033": false
-  }
+  },
+  "cSpell.words": [
+    "dateutil",
+    "endcall",
+    "endset",
+    "fieldset",
+    "gunicorn",
+    "jinja",
+    "makemigrations",
+    "nhsuk",
+    "novalidate",
+    "psycopg",
+    "relativedelta",
+    "responseset",
+    "stylesheet",
+    "toplevel",
+    "unsubmitted",
+    "whitenoise"
+  ]
 }

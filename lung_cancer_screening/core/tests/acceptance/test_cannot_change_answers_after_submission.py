@@ -5,8 +5,9 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from .helpers.user_interaction_helpers import (
+    fill_in_and_submit_height_metric,
     fill_in_and_submit_participant_id,
-    fill_in_and_submit_smoking_elligibility,
+    fill_in_and_submit_smoking_eligibility,
     fill_in_and_submit_date_of_birth
 )
 
@@ -35,8 +36,9 @@ class TestQuestionnaire(StaticLiveServerTestCase):
         page.goto(f"{self.live_server_url}/start")
 
         fill_in_and_submit_participant_id(page, participant_id)
-        fill_in_and_submit_smoking_elligibility(page, smoking_status)
+        fill_in_and_submit_smoking_eligibility(page, smoking_status)
         fill_in_and_submit_date_of_birth(page, age)
+        fill_in_and_submit_height_metric(page, "170")
 
         page.click("text=Submit")
 

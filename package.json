@@ -6,7 +6,7 @@
   ],
   "scripts": {
     "compile": "concurrently npm:compile:js npm:compile:css --group --prefix none",
-    "compile:css": "sass --color --quiet-deps --silence-deprecation=import --load-path=.  --load-path=node_modules lung_cancer_screening/assets/sass:lung_cancer_screening/assets/compiled/css",
+    "compile:css": "sass --color --quiet-deps --load-path=node_modules lung_cancer_screening/assets/sass:lung_cancer_screening/assets/compiled/css",
     "compile:css:watch": "npm run compile:css -- --watch",
     "compile:js": "rollup -c rollup.config.js --sourcemap",
     "compile:js:watch": "npm run compile:js -- --watch",
@@ -16,7 +16,7 @@
     "nhsuk-frontend": "^10.0.0"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^28.0.7",
+    "@rollup/plugin-commonjs": "^28.0.8",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^0.4.4",
     "concurrently": "^9.2.1",
