@@ -43,11 +43,11 @@ githooks-run: # Run git hooks configured in this repository @Operations
 _install-dependency: # Install asdf dependency - mandatory: name=[listed in the '.tool-versions' file]; optional: version=[if not listed]
 	echo ${name}
 	asdf plugin add ${name} ||:
-	asdf install ${name} $(or ${version},)
+	asdf install ${name} ${version}
 
 _install-dependencies: # Install all the dependencies listed in .tool-versions
-	for plugin in $$(grep ^[a-z] .tool-versions | sed 's/[[:space:]].*//'); do
-		make _install-dependency name="$${plugin}"
+	for plugin in $$(grep ^[a-z] .tool-versions | sed 's/[[:space:]].*//'); do \
+		make _install-dependency name="$${plugin}"; \
 	done
 
 clean:: # Remove all generated and temporary files (common) @Operations
