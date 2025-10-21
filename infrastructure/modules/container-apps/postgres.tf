@@ -46,6 +46,8 @@ module "postgres" {
     private_service_connection_is_manual = false
   } : null
 
+  public_network_access_enabled = !var.features.private_networking
+
   databases = {
     db1 = {
       collation   = "en_US.utf8"
