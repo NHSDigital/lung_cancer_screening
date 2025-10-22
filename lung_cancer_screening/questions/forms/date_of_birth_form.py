@@ -2,7 +2,7 @@ from django import forms
 from datetime import date
 
 from ..models.response_set import ResponseSet
-from lung_cancer_screening.core.form_fields import SplitDateField
+from ...nhsuk_forms.split_date_field import SplitDateField
 
 class DateOfBirthForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
