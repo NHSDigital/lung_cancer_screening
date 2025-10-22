@@ -2,7 +2,7 @@ from django import forms
 from django.forms import widgets
 from django.utils.translation import gettext_lazy as _
 
-from lung_cancer_screening.core.form_fields import BoundChoiceField
+from .bound_choice_field import BoundChoiceField
 
 class ChoiceField(forms.ChoiceField):
     """
