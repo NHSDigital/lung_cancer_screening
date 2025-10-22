@@ -1,8 +1,6 @@
 from django import forms
 from django.forms import widgets
-from django.utils.translation import gettext_lazy as _
 
-from lung_cancer_screening.nhsuk_forms.utils.date_formatting import format_date
 from lung_cancer_screening.nhsuk_forms.integer_field import IntegerField
 
 class DecimalField(forms.DecimalField):
