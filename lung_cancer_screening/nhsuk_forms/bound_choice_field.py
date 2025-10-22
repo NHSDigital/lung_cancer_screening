@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import widgets
-from django.utils.translation import gettext_lazy as _
 
+from lung_cancer_screening.nhsuk_forms import choice_field
 
 class BoundChoiceField(forms.BoundField):
     """
@@ -11,7 +11,7 @@ class BoundChoiceField(forms.BoundField):
     more details.
     """
 
-    def __init__(self, form: forms.Form, field: "ChoiceField", name: str):
+    def __init__(self, form: forms.Form, field: "choice_field", name: str):
         super().__init__(form, field, name)
 
         self._conditional_html = {}
