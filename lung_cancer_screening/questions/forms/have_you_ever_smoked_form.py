@@ -1,6 +1,6 @@
 from django import forms
 
-from lung_cancer_screening.core.form_fields import TypedChoiceField
+from ...nhsuk_forms.typed_choice_field import TypedChoiceField
 from ..models.response_set import ResponseSet, HaveYouEverSmokedValues
 
 class HaveYouEverSmokedForm(forms.ModelForm):
