@@ -6,8 +6,8 @@ from django.forms import Textarea, ValidationError, widgets
 from django.utils.translation import gettext
 from django.utils.translation import gettext_lazy as _
 
-from .utils.date_formatting import format_date
-
+from lung_cancer_screening.nhsuk_forms.utils.date_formatting import format_date
+from lung_cancer_screening.nhsuk_forms.integer_field import IntegerField
 
 class SplitDateWidget(widgets.MultiWidget):
     """
@@ -144,67 +144,6 @@ class SplitDateField(forms.MultiValueField):
                 subwidget.attrs["min"] = subfield.min_value
             if subfield.max_value is not None:
                 subwidget.attrs["max"] = subfield.max_value
-        return attrs
-
-
-class CharField(forms.CharField):
-    def __init__(
-        self,
-        *args,
-        hint=None,
-        label_classes=None,
-        classes=None,
-        **kwargs,
-    ):
-        widget = kwargs.get("widget")
-        if (isinstance(widget, type) and widget is Textarea) or isinstance(
-            widget, Textarea
-        ):
-            kwargs["template_name"] = "forms/textarea.jinja"
-        else:
-            kwargs["template_name"] = "forms/input.jinja"
-
-        self.hint = hint
-        self.classes = classes
-        self.label_classes = label_classes
-
-        super().__init__(*args, **kwargs)
-
-    def widget_attrs(self, widget):
-        attrs = super().widget_attrs(widget)
-
-        # Don't use maxlength even if there is a max length validator.
-        # This attribute prevents the user from seeing errors, so we don't use it
-        attrs.pop("maxlength", None)
-
-        return attrs
-
-
-class IntegerField(forms.IntegerField):
-    def __init__(
-        self,
-        *args,
-        hint=None,
-        label_classes=None,
-        classes=None,
-        **kwargs,
-    ):
-        kwargs["template_name"] = "forms/input.jinja"
-
-        self.hint = hint
-        self.classes = classes
-        self.label_classes = label_classes
-
-        super().__init__(*args, **kwargs)
-
-    def widget_attrs(self, widget):
-        attrs = super().widget_attrs(widget)
-
-        # Don't use min/max/step attributes.
-        attrs.pop("min", None)
-        attrs.pop("max", None)
-        attrs.pop("step", None)
-
         return attrs
 
 class DecimalField(forms.DecimalField):
