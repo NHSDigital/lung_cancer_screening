@@ -1,13 +1,12 @@
-
 from django import forms
 from django.forms import widgets
 from django.utils.translation import gettext_lazy as _
 
 from lung_cancer_screening.core.form_fields import BoundChoiceField
 
-class TypedChoiceField(forms.TypedChoiceField):
+class ChoiceField(forms.ChoiceField):
     """
-    A TypedChoiceField that renders using NHS.UK design system radios/select
+    A ChoiceField that renders using NHS.UK design system radios/select
     components.
     """
 
@@ -22,7 +21,7 @@ class TypedChoiceField(forms.TypedChoiceField):
         classes=None,
         **kwargs,
     ):
-        kwargs["template_name"] = TypedChoiceField._template_name(
+        kwargs["template_name"] = ChoiceField._template_name(
             kwargs.get("widget", self.widget)
         )
 
