@@ -13,14 +13,14 @@
     "watch": "concurrently npm:*:watch --prefix none"
   },
   "dependencies": {
-    "nhsuk-frontend": "^10.0.0"
+    "nhsuk-frontend": "^10.1.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.8",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^0.4.4",
     "concurrently": "^9.2.1",
-    "rollup": "^4.52.4",
+    "rollup": "^4.52.5",
     "sass-embedded": "^1.93.2"
   },
   "engines": {
