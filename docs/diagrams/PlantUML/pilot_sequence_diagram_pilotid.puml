@@ -1,0 +1,55 @@
+@startuml
+actor "Participant actor" as Participant
+entity "NHSE LCRC App" as NHSE_LCRC_App
+database "NHSE LCRC Pseudonymised Database" as NHSE_LCRC_Pseud_DB
+actor "NHSE Pilot admin staff actor" as NHSE_Admin
+actor "NHSE analysis staff actor" as NHSE_Analysis
+actor "GP staff actor" as GP_Staff
+entity "GP system" as GP_System
+database "GP System Identifiable Database" as GP_ID_DB
+actor "e2e partner staff actor" as E2E_Staff
+entity "e2e partner system" as E2E_System
+
+' Step 1 BAU lung cohorting
+GP_Staff -> GP_System: Request BAU Lung Screening Cohort extract
+GP_System -> GP_ID_DB: Request BAU Lung Screening Cohort information
+GP_ID_DB --> GP_System: Provide BAU Lung Screening Cohort information
+GP_System -> GP_System: Create BAU Lung Screening Cohort extract
+GP_System --> GP_Staff: Provide BAU Lung Screening Cohort extract
+GP_Staff -> E2E_Staff: (LUNGDF100) Provide BAU Lung Screening Cohort extract
+E2E_Staff -> E2E_System: Upload BAU Lung Screening Cohort extract
+
+' Step 2 Pilot digital app cohorting
+E2E_System -> E2E_System: Generate unique identifiers for participants
+E2E_Staff -> E2E_System: Identify eligible candidate Pilot participants in participating GP practices
+E2E_System -> Participant: Invite eligible candidates to participate in Pilot
+
+' Step 3 participant completion of Pilot digital app journey
+Participant -> NHSE_LCRC_App: Arrive on LCRC App with unique participant number
+alt Participant opts in to Pilot
+    Participant -> NHSE_LCRC_App: Opts in to participate in Pilot
+    Participant -> NHSE_LCRC_App: Answer digital risk assessment questions
+    NHSE_LCRC_App -> NHSE_LCRC_Pseud_DB: Store unique participant number with opt in and digital risk assessment answers
+    NHSE_Admin -> NHSE_LCRC_Pseud_DB: Request unique participant numbers who have completed digital risk assessment questions
+    NHSE_LCRC_Pseud_DB --> NHSE_Admin: Response for unique participant numbers who have completed digital risk assessment questions
+    NHSE_Admin -> NHSE_Admin: Prepare list of completed digital risk assessment unique participant numbers
+    NHSE_Admin -> E2E_Staff: (LUNGDF300) Advise of completed digital risk assessment unique participant numbers
+    E2E_Staff -> E2E_System: Upload completed digital risk assessment unique participant numbers
+' Step 4 BAU telephone user journey
+    E2E_Staff -> Participant: Contact participant for BAU telephone journey risk assessment
+    Participant -> E2E_Staff: Complete BAU telephone journey risk assessment
+    E2E_Staff -> E2E_System: Store BAU telephone journey risk assessment
+' Step 5 prepare data and analyse
+    E2E_Staff -> E2E_System: Retrieve BAU telephone journey risk assessment completed digital risk assessment unique participant numbers
+    E2E_System --> E2E_Staff: BAU telephone journey risk assessment completed digital risk assessment unique participant numbers
+    E2E_Staff -> E2E_Staff: Prepare BAU telephone journey answers for Pilot LCRC participants
+    E2E_Staff -> NHSE_Admin: (LUNGDF400) Provide BAU telephone journey answers for Pilot LCRC participants
+    NHSE_Admin -> NHSE_LCRC_Pseud_DB: upload BAU telephone journey answers for Pilot LCRC participants
+    NHSE_Analysis -> NHSE_LCRC_Pseud_DB: Analyse Pilot LCRC participants digital and BAU telephone journey answers
+else Participant does NOT opt in to Pilot
+    E2E_Staff -> Participant: Contact participant for BAU telephone journey risk assessment
+    Participant -> E2E_Staff: Complete BAU telephone journey risk assessment
+    E2E_Staff -> E2E_System: Store BAU telephone journey risk assessment
+    note over E2E_System: End of sequence — no further actions
+end
+@enduml
