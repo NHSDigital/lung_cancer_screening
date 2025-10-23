@@ -22,7 +22,7 @@ E2E_Staff -> E2E_System: Upload BAU Lung Screening Cohort extract
 ' Step 2 Pilot digital app cohorting
 E2E_System -> E2E_System: Generate unique identifiers for participants
 E2E_Staff -> E2E_System: Identify eligible candidate Pilot participants in participating GP practices
-E2E_System -> Participant: Invite eligible candidate Pilot participants to participate in Pilot
+E2E_System -> Participant: Invite eligible candidates to participate in Pilot
 
 ' Step 3 participant completion of Pilot digital app journey
 Participant -> NHSE_LCRC_App: Arrive on LCRC App with unique participant number
