@@ -3,6 +3,11 @@
 {% from 'nhsuk/components/back-link/macro.jinja' import backLink %}
 {% from 'nhsuk/components/fieldset/macro.jinja' import fieldset %}
 
+{% set WEIGHT_UNIT = {
+    'imperial': 'stone and pounds',
+    'metric': 'kilograms'
+} %}
+
 {% block beforeContent %}
   {{
     backLink({
@@ -31,7 +36,7 @@
         }) %}
 
           {{form.weight_metric.as_field_group()}}
-
+          <p><a href="?unit={{ switch_to_unit }}">Switch to {{ WEIGHT_UNIT[switch_to_unit] }}</a></p>
         {% endcall %}
 
         {{ button({
