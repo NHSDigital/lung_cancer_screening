@@ -5,6 +5,7 @@ from .decorators.participant_decorators import require_participant
 
 @require_participant
 def weight(request):
+    unit = request.GET.get('unit')
     if request.method == "POST":
         form=MetricWeightForm(
             instance=request.participant.responseset_set.last(),
@@ -19,7 +20,9 @@ def weight(request):
                 request,
                 "weight.jinja",
                 {
-                    "form": form
+                    "form": form,
+                    "unit": unit,
+                    "switch_to_unit": "metric" if unit == "imperial" else "imperial"
                 },
                 status=422
             )
@@ -27,6 +30,8 @@ def weight(request):
         request,
         "weight.jinja",
         {
-            "form": MetricWeightForm(participant=request.participant)
+            "form": MetricWeightForm(participant=request.participant),
+            "unit": unit,
+            "switch_to_unit": "metric" if unit == "imperial" else "imperial"
         }
     )
