@@ -68,13 +68,13 @@ class TestHeight(TestCase):
         self.assertEqual(response_set.height, self.valid_height*10)
         self.assertEqual(response_set.participant, self.participant)
 
-    def test_post_redirects_to_responses_path(self):
+    def test_post_redirects_to_weight_path(self):
         response = self.client.post(
             reverse("questions:height"),
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:responses"))
+        self.assertRedirects(response, reverse("questions:weight"))
 
     def test_post_responds_with_422_if_the_resource_is_invalid(self):
         response = self.client.post(

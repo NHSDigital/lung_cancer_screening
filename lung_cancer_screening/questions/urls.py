@@ -23,12 +23,14 @@ from .views.age_range_exit import age_range_exit
 from .views.non_smoker_exit import non_smoker_exit
 from .views.your_results import your_results
 from .views.height import height
+from .views.weight import weight
 
 urlpatterns = [
     path('start', start, name='start'),
     path('have-you-ever-smoked', have_you_ever_smoked, name='have_you_ever_smoked'),
     path('date-of-birth', date_of_birth, name='date_of_birth'),
     path('height', height, name='height'),
+    path('weight', weight, name='weight'),
     path('responses', responses, name='responses'),
     path('age-range-exit', age_range_exit, name='age_range_exit'),
     path('non-smoker-exit', non_smoker_exit, name='non_smoker_exit'),

@@ -9,7 +9,8 @@ def require_participant(function):
     def wrap(request, *args, **kwargs):
         try:
             request.participant = Participant.objects.get(
-                unique_id=request.session['participant_id'])
+                unique_id=request.session.get('participant_id',None)
+            )
         except Participant.DoesNotExist:
             return redirect(reverse("questions:start"))
 

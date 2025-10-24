@@ -39,6 +39,14 @@ class ResponseSet(BaseModel):
             MAX_HEIGHT_IMPERIAL, message="Height must be between 4 feet 7 inches and 8 feet"),
     ])
 
+    MIN_WEIGHT_METRIC = 254
+    MAX_WEIGHT_METRIC = 3175
+
+    weight_metric = models.PositiveIntegerField(null=True, blank=True, validators=[
+        MinValueValidator(MIN_WEIGHT_METRIC, message="Weight must be between 25.4kg and 317.5kg"),
+        MaxValueValidator(MAX_WEIGHT_METRIC, message="Weight must be between 25.4kg and 317.5kg"),
+    ])
+
     submitted_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
@@ -69,4 +77,13 @@ class ResponseSet(BaseModel):
         elif self.height_imperial:
             value = Decimal(self.height_imperial)
             return f"{value // 12} feet {value % 12} inches"
+
+    @property
+    def formatted_weight(self):
+        if self.weight_metric:
+            return f"{Decimal(self.weight_metric) / 10}kg"
+        # elif self.height_imperial:
+        #     value = Decimal(self.weight_imperial)
+        #     return f"{value // 12} feet {value % 12} inches"
+
 

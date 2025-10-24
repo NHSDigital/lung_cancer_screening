@@ -83,3 +83,22 @@ class TestQuestionnaireValidationErrors(StaticLiveServerTestCase):
         expect(page.locator(".nhsuk-error-message")).to_contain_text(
             "Inches must be in whole numbers"
         )
+
+    def test_weight_validation_errors(self):
+        participant_id = '123'
+
+        page = self.browser.new_page()
+        page.goto(f"{self.live_server_url}/start")
+        fill_in_and_submit_participant_id(page, participant_id)
+        page.goto(f"{self.live_server_url}/weight")
+
+        page.click("text=Continue")
+        expect(page.locator(".nhsuk-error-message")).to_contain_text(
+            "Enter your weight."
+        )
+        # Test weight below minimum
+        page.get_by_label("Kilograms").fill('25.3')
+        page.click('text=Continue')
+        expect(page.locator(".nhsuk-error-message")).to_contain_text(
+            "Weight must be between 25.4kg and 317.5kg"
+        )
