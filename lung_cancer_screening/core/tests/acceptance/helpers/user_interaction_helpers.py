@@ -44,3 +44,11 @@ def fill_in_and_submit_weight_metric(page, kilograms):
     page.get_by_label("Kilograms").fill(str(kilograms))
 
     page.click("text=Continue")
+
+def fill_in_and_submit_weight_imperial(page, stone, pounds):
+    expect(page.locator("h1")).to_have_text("Enter your weight")
+
+    page.get_by_label("Stone").fill(str(stone))
+    page.get_by_label("Pounds").fill(str(pounds))
+
+    page.click("text=Continue")

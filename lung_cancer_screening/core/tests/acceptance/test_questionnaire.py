@@ -10,7 +10,8 @@ from .helpers.user_interaction_helpers import (
     fill_in_and_submit_participant_id,
     fill_in_and_submit_smoking_eligibility,
     fill_in_and_submit_date_of_birth,
-    fill_in_and_submit_weight_metric
+    fill_in_and_submit_weight_metric,
+    fill_in_and_submit_weight_imperial
 )
 
 from .helpers.assertion_helpers import expect_back_link_to_have_url
@@ -38,8 +39,8 @@ class TestQuestionnaire(StaticLiveServerTestCase):
         feet = 5
         inches = 7
         weight_metric = 70
-        # weight_stone = 5
-        # weight_pound = 10
+        weight_stone = 5
+        weight_pound = 10
 
         page = self.browser.new_page()
         page.goto(f"{self.live_server_url}/start")
@@ -75,16 +76,16 @@ class TestQuestionnaire(StaticLiveServerTestCase):
         fill_in_and_submit_weight_metric(page, weight_metric)
 
         expect(page).to_have_url(f"{self.live_server_url}/responses")
-        # page.click("text=Back")
-        # page.click("text=Switch to imperial")
-        # fill_in_and_submit_weight_imperial(page, weight_stone, weight_pound)
+        page.click("text=Back")
+        page.get_by_role("link", name="Switch to stone and pounds").click()
+        fill_in_and_submit_weight_imperial(page, weight_stone, weight_pound)
+        expect(page).to_have_url(f"{self.live_server_url}/responses")
         responses = page.locator(".responses")
         expect(responses).to_contain_text("Have you ever smoked? Yes, I used to smoke regularly")
         expect(responses).to_contain_text(
             age.strftime("What is your date of birth? %Y-%m-%d"))
         expect(responses).to_contain_text(f"What is your height? {feet} feet {inches} inches")
-        expect(responses).to_contain_text(f"What is your weight? {weight_metric}kg")
-        # expect(responses).to_contain_text(f"What is your weight? {weight_stone} stone {weight_pound} pound")
+        expect(responses).to_contain_text(f"What is your weight? {weight_stone} stone {weight_pound} pound")
 
         page.click("text=Submit")
 
