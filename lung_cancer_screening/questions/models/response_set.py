@@ -41,12 +41,19 @@ class ResponseSet(BaseModel):
 
     MIN_WEIGHT_METRIC = 254
     MAX_WEIGHT_METRIC = 3175
+    MAX_WEIGHT_IMPERIAL = 700
+    MIN_WEIGHT_IMPERIAL = 56
 
     weight_metric = models.PositiveIntegerField(null=True, blank=True, validators=[
         MinValueValidator(MIN_WEIGHT_METRIC, message="Weight must be between 25.4kg and 317.5kg"),
         MaxValueValidator(MAX_WEIGHT_METRIC, message="Weight must be between 25.4kg and 317.5kg"),
     ])
-
+    weight_imperial = models.PositiveIntegerField(null=True, blank=True, validators=[
+        MinValueValidator(
+            MIN_WEIGHT_IMPERIAL, message="Weight must be between 4 stone and 50 stone"),
+        MaxValueValidator(
+            MAX_WEIGHT_IMPERIAL, message="Weight must be between 4 stone and 50 stone"),
+    ])
     submitted_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
@@ -82,8 +89,8 @@ class ResponseSet(BaseModel):
     def formatted_weight(self):
         if self.weight_metric:
             return f"{Decimal(self.weight_metric) / 10}kg"
-        # elif self.height_imperial:
-        #     value = Decimal(self.weight_imperial)
-        #     return f"{value // 12} feet {value % 12} inches"
+        elif self.weight_imperial:
+            value = Decimal(self.weight_imperial)
+            return f"{value // 14} stone {value % 14} pounds"
 
 

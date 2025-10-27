@@ -20,7 +20,12 @@
 {% block page_content %}
   <div class="nhsuk-grid-row">
     <div class="nhsuk-grid-column-two-thirds">
-      <form action="{{request.path}}" method="POST" novalidate>
+      {% if unit %}
+        {% set action_url = request.path + '?unit=' + unit %}
+      {% else %}
+        {% set action_url = request.path %}
+      {% endif %}
+      <form action="{{ action_url }}" method="POST" novalidate>
         {{ csrf_input }}
         <h1 class="nhsuk-heading-l">Enter your weight</h1>
 
@@ -35,7 +40,12 @@
           }
         }) %}
 
-          {{form.weight_metric.as_field_group()}}
+        {% if unit == "imperial" %}
+          {{ form.weight_imperial.as_field_group() }}
+        {% else %}
+          {{ form.weight_metric.as_field_group() }}
+        {% endif %}
+
           <p><a href="?unit={{ switch_to_unit }}">Switch to {{ WEIGHT_UNIT[switch_to_unit] }}</a></p>
         {% endcall %}
 

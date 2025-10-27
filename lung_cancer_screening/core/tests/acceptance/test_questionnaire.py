@@ -79,6 +79,7 @@ class TestQuestionnaire(StaticLiveServerTestCase):
         page.click("text=Back")
         page.get_by_role("link", name="Switch to stone and pounds").click()
         fill_in_and_submit_weight_imperial(page, weight_stone, weight_pound)
+        expect(page).to_have_url(f"{self.live_server_url}/responses")
         responses = page.locator(".responses")
         expect(responses).to_contain_text("Have you ever smoked? Yes, I used to smoke regularly")
         expect(responses).to_contain_text(
