@@ -1,6 +1,6 @@
 from django import forms
 
-from lung_cancer_screening.core.form_fields import ImperialWeightField
+from ...nhsuk_forms.imperial_weight_form import ImperialWeightField
 from ..models.response_set import ResponseSet
 
 class ImperialWeightForm(forms.ModelForm):
