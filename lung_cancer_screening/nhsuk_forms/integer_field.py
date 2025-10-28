@@ -10,7 +10,7 @@ class IntegerField(forms.IntegerField):
         classes=None,
         **kwargs,
     ):
-        kwargs["template_name"] = "forms/input.jinja"
+        kwargs["template_name"] = "input.jinja"
 
         self.hint = hint
         self.classes = classes

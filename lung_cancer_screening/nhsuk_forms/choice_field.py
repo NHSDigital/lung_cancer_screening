@@ -32,4 +32,4 @@ class ChoiceField(forms.ChoiceField):
 
     @staticmethod
     def _template_name(widget):
-        return "forms/radios.jinja"
+        return "radios.jinja"

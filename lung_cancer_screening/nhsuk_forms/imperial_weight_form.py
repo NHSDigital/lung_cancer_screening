@@ -68,7 +68,7 @@ class ImperialWeightField(forms.MultiValueField):
             IntegerField(**stone_kwargs),
             IntegerField(**pounds_kwargs),
         )
-        kwargs["template_name"] = "forms/imperial-weight-input.jinja"
+        kwargs["template_name"] = "imperial-weight-input.jinja"
 
         super().__init__(fields, *args, **kwargs)
 

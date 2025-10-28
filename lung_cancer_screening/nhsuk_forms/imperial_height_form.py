@@ -61,7 +61,7 @@ class ImperialHeightField(forms.MultiValueField):
             IntegerField(**feet_kwargs),
             IntegerField(**inches_kwargs),
         )
-        kwargs["template_name"] = "forms/imperial-height-input.jinja"
+        kwargs["template_name"] = "imperial-height-input.jinja"
 
         super().__init__(fields, *args, **kwargs)
 
