@@ -5,7 +5,7 @@
 {% block beforeContent %}
   {{
     backLink({
-      "href": url("questions:weight"),
+      "href": url("questions:sex_at_birth"),
       "text": "Back"
     })
   }}
@@ -20,6 +20,7 @@
         <li>What is your date of birth? {{ response_set.date_of_birth }}</li>
         <li>What is your height? {{ response_set.formatted_height }}</li>
         <li>What is your weight? {{ response_set.formatted_weight }}</li>
+        <li>What was your sex at birth? {{ response_set.get_sex_at_birth_display() }}</li>
       </ul>
 
       <form action="{{ request.path }}" method="post">

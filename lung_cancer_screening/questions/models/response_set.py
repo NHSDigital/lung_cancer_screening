@@ -14,6 +14,10 @@ class HaveYouEverSmokedValues(models.IntegerChoices):
     YES_BUT_ONLY_A_FEW_TIMES = 2, 'Yes, but only a few times'
     NO_I_HAVE_NEVER_SMOKED = 3, 'No, I have never smoked'
 
+class SexAtBirthValues(models.TextChoices):
+    FEMALE = "F", 'Female'
+    MALE = "M", 'Male'
+
 class ResponseSet(BaseModel):
     participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
 
@@ -54,6 +58,14 @@ class ResponseSet(BaseModel):
         MaxValueValidator(
             MAX_WEIGHT_IMPERIAL, message="Weight must be between 4 stone and 50 stone"),
     ])
+
+    sex_at_birth = models.CharField(
+        max_length=1,
+        choices=SexAtBirthValues.choices,
+        null=True,
+        blank=True
+    )
+
     submitted_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:

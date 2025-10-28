@@ -17,7 +17,7 @@ def weight(request):
         )
         if form.is_valid():
             form.save()
-            return redirect("questions:responses")
+            return redirect("questions:sex_at_birth")
         else:
             return render(
                 request,

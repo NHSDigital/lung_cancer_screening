@@ -1,28 +1,26 @@
 {% extends 'layout.jinja' %}
 {% from 'nhsuk/components/button/macro.jinja' import button %}
-{% from 'nhsuk/components/radios/macro.jinja' import radios %}
 {% from 'nhsuk/components/back-link/macro.jinja' import backLink %}
 
 {% block beforeContent %}
   {{
     backLink({
-      "href": url("questions:start"),
+      "href": url("questions:weight"),
       "text": "Back"
     })
   }}
 {% endblock beforeContent %}
 
-{% block content %}
+{% block page_content %}
   <div class="nhsuk-grid-row">
     <div class="nhsuk-grid-column-two-thirds">
       <form action="{{ request.path }}" method="POST">
         {{ csrf_input }}
 
-        {{ form.have_you_ever_smoked.as_field_group() }}
-
+        {{ form }}
 
         {{ button({
-            "text": "Continue"
+          "text": "Continue"
         }) }}
       </form>
     </div>

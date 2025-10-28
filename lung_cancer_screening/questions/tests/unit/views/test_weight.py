@@ -72,7 +72,7 @@ class TestWeight(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:responses"))
+        self.assertRedirects(response, reverse("questions:sex_at_birth"))
 
     def test_post_valid_weight_added_to_response_set(self):
         self.client.post(
