@@ -1,6 +1,6 @@
 from django import forms
 
-from lung_cancer_screening.core.form_fields import DecimalField
+from ...nhsuk_forms.decimal_field import DecimalField
 from ..models.response_set import ResponseSet
 
 class MetricWeightForm(forms.ModelForm):

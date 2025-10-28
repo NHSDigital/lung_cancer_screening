@@ -1,6 +1,6 @@
 from django import forms
 
-from lung_cancer_screening.core.form_fields import ImperialHeightField
+from ...nhsuk_forms.imperial_height_form import ImperialHeightField
 from ..models.response_set import ResponseSet
 
 class ImperialHeightForm(forms.ModelForm):
