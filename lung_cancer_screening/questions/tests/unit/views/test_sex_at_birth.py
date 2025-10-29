@@ -14,7 +14,7 @@ class TestSexAtBirth(TestCase):
         session['participant_id'] = self.participant.unique_id
         session.save()
 
-    def test_get_redirects_if_the_particpant_does_not_exist(self):
+    def test_get_redirects_if_the_participant_does_not_exist(self):
         session = self.client.session
         session['participant_id'] = "somebody none existant participant"
         session.save()
@@ -35,7 +35,7 @@ class TestSexAtBirth(TestCase):
 
         self.assertContains(response, "What was your sex at birth?")
 
-    def test_post_redirects_if_the_particpant_does_not_exist(self):
+    def test_post_redirects_if_the_participant_does_not_exist(self):
         session = self.client.session
         session['participant_id'] = "somebody none existant participant"
         session.save()
