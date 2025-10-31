@@ -9,7 +9,8 @@ from .helpers.user_interaction_helpers import (
     fill_in_and_submit_weight_metric,
     fill_in_and_submit_participant_id,
     fill_in_and_submit_smoking_eligibility,
-    fill_in_and_submit_date_of_birth
+    fill_in_and_submit_date_of_birth,
+    fill_in_and_submit_sex_at_birth
 )
 
 class TestQuestionnaire(StaticLiveServerTestCase):
@@ -40,6 +41,7 @@ class TestQuestionnaire(StaticLiveServerTestCase):
         fill_in_and_submit_date_of_birth(page, age)
         fill_in_and_submit_height_metric(page, "170")
         fill_in_and_submit_weight_metric(page, "25.4")
+        fill_in_and_submit_sex_at_birth(page, "Male")
 
         page.click("text=Submit")
 

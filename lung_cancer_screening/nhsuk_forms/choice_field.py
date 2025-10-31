@@ -1,8 +1,6 @@
 from django import forms
 from django.forms import widgets
 
-from .bound_choice_field import BoundChoiceField
-
 class ChoiceField(forms.ChoiceField):
     """
     A ChoiceField that renders using NHS.UK design system radios/select
@@ -10,7 +8,6 @@ class ChoiceField(forms.ChoiceField):
     """
 
     widget = widgets.RadioSelect
-    bound_field_class = BoundChoiceField
 
     def __init__(
         self,

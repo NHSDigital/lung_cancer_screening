@@ -5,20 +5,12 @@
 {% endif %}
 {% set ns = namespace(items=[]) %}
 {% for value, text in unbound_field.choices %}
-  {% set conditional_html = field.conditional_html(value) %}
   {% set ns.items = ns.items + [{
     "id": field.auto_id if loop.first,
     "value": value,
     "text": text,
-    "checked": field.value() == value,
-    "conditional": {
-      "html": conditional_html
-    } if conditional_html else undefined
+    "checked": field.value() == value
   }] %}
-  {% set divider = field.get_divider_after(value) %}
-  {% if divider %}
-    {% set ns.items = ns.items + [{"divider": divider}] %}
-  {% endif %}
 {% endfor %}
 {{ radios({
   "name": field.html_name,

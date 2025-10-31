@@ -52,3 +52,11 @@ def fill_in_and_submit_weight_imperial(page, stone, pounds):
     page.get_by_label("Pounds").fill(str(pounds))
 
     page.click("text=Continue")
+
+def fill_in_and_submit_sex_at_birth(page, sex):
+    expect(page.locator("legend")).to_have_text(
+        "What was your sex at birth?")
+
+    page.get_by_label(sex, exact=True).check()
+
+    page.click("text=Continue")

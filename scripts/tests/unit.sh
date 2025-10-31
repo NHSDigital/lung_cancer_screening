@@ -18,6 +18,11 @@ cd "$(git rev-parse --show-toplevel)"
 # tasks in scripts/test.mk.
 
 if [[ -n "${TEST_MODULE:-}" ]]; then
+  if [[ "$TEST_MODULE" == *\/* ]]; then
+    # Modify paths to point to modules
+    TEST_MODULE="${TEST_MODULE%.py}"
+    TEST_MODULE=${TEST_MODULE//\//\.}
+  fi
   docker compose run --rm --remove-orphans web poetry run python manage.py test $TEST_MODULE --settings=lung_cancer_screening.settings_test
 else
   docker compose run --rm --remove-orphans web poetry run python manage.py test --settings=lung_cancer_screening.settings_test

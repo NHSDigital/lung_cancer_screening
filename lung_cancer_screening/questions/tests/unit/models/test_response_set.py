@@ -5,15 +5,15 @@ from django.utils import timezone
 
 from django.core.exceptions import ValidationError
 
-from ....models.response_set import ResponseSet
+from ....models.response_set import ResponseSet, HaveYouEverSmokedValues, SexAtBirthValues
 from ....models.participant import Participant
-from ....models.response_set import HaveYouEverSmokedValues
-
 
 class TestResponseSet(TestCase):
     def setUp(self):
         participant = Participant.objects.create(unique_id="12345")
         self.response_set = participant.responseset_set.create()
+
+    # FIELDS
 
     def test_has_have_you_ever_smoked_as_an_enum(self):
         self.response_set.have_you_ever_smoked = HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY
@@ -90,6 +90,17 @@ class TestResponseSet(TestCase):
             self.response_set.submitted_at,
             datetime
         )
+
+    def test_has_sex_at_birth_as_string(self):
+        self.response_set.sex_at_birth = SexAtBirthValues.MALE
+        self.response_set.save()
+
+        self.assertIsInstance(
+            self.response_set.sex_at_birth,
+            str
+        )
+
+    # VALIDATIONS
 
     def test_is_invalid_if_another_unsubmitted_response_set_exists(self):
         participant = Participant.objects.create(unique_id="56789")
@@ -199,4 +210,24 @@ class TestResponseSet(TestCase):
         self.assertIn(
             "Weight must be between 25.4kg and 317.5kg",
             context.exception.messages
+        )
+
+    def test_is_valid_if_sex_at_birth_is_null(self):
+        self.response_set.sex_at_birth = None
+        self.response_set.save()
+
+        self.assertIsNone(
+            self.response_set.sex_at_birth
+        )
+
+
+    def test_is_invalid_if_sex_at_birth_is_not_an_accepted_value(self):
+        self.response_set.sex_at_birth = "X"
+
+        with self.assertRaises(ValidationError) as context:
+            self.response_set.full_clean()
+
+        self.assertEqual(
+            context.exception.messages[0],
+            "Value 'X' is not a valid choice."
         )
