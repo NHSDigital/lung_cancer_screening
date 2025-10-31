@@ -2,31 +2,31 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from .decorators.participant_decorators import require_participant
-from ..forms.sex_at_birth_form import SexAtBirthForm
+from ..forms.gender_form import GenderForm
 
 @require_participant
-def sex_at_birth(request):
+def gender(request):
     if request.method == "POST":
-        form = SexAtBirthForm(
+        form = GenderForm(
             participant=request.participant,
             data=request.POST
         )
 
         if form.is_valid():
                 response_set = request.participant.responseset_set.last()
-                response_set.sex_at_birth = form.cleaned_data["sex_at_birth"]
+                response_set.gender = form.cleaned_data["gender"]
                 response_set.save()
-                return redirect(reverse("questions:gender"))
+                return redirect(reverse("questions:responses"))
         else:
             return render(
                 request,
-                "sex_at_birth.jinja",
+                "gender.jinja",
                 { "form": form },
                 status=422
             )
 
     return render(
         request,
-        "sex_at_birth.jinja",
-        { "form": SexAtBirthForm(participant=request.participant) }
+        "gender.jinja",
+        { "form": GenderForm(participant=request.participant) }
     )

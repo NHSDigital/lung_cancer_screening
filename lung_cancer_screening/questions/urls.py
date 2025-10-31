@@ -25,6 +25,7 @@ from .views.your_results import your_results
 from .views.height import height
 from .views.weight import weight
 from .views.sex_at_birth import sex_at_birth
+from .views.gender import gender
 
 urlpatterns = [
     path('start', start, name='start'),
@@ -33,6 +34,7 @@ urlpatterns = [
     path('height', height, name='height'),
     path('weight', weight, name='weight'),
     path('sex-at-birth', sex_at_birth, name='sex_at_birth'),
+    path('gender', gender, name='gender'),
     path('responses', responses, name='responses'),
     path('age-range-exit', age_range_exit, name='age_range_exit'),
     path('non-smoker-exit', non_smoker_exit, name='non_smoker_exit'),

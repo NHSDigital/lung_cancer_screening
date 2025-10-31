@@ -2,13 +2,14 @@ from django.test import TestCase
 from django.urls import reverse
 
 from lung_cancer_screening.questions.models.participant import Participant
-from lung_cancer_screening.questions.models.response_set import SexAtBirthValues
+from lung_cancer_screening.questions.models.response_set import GenderValues
 
-class TestSexAtBirth(TestCase):
+
+class TestGender(TestCase):
     def setUp(self):
         self.participant = Participant.objects.create(unique_id="12345")
         self.participant.responseset_set.create()
-        self.valid_params = { "sex_at_birth": SexAtBirthValues.FEMALE }
+        self.valid_params = { "gender": GenderValues.MALE }
 
         session = self.client.session
         session['participant_id'] = self.participant.unique_id
@@ -20,20 +21,20 @@ class TestSexAtBirth(TestCase):
         session.save()
 
         response = self.client.get(
-            reverse("questions:sex_at_birth")
+            reverse("questions:gender")
         )
 
         self.assertRedirects(response, reverse("questions:start"))
 
     def test_get_responds_successfully(self):
-        response = self.client.get(reverse("questions:sex_at_birth"))
+        response = self.client.get(reverse("questions:gender"))
 
         self.assertEqual(response.status_code, 200)
 
     def test_get_contains_the_correct_form_fields(self):
-        response = self.client.get(reverse("questions:sex_at_birth"))
+        response = self.client.get(reverse("questions:gender"))
 
-        self.assertContains(response, "What was your sex at birth?")
+        self.assertContains(response, "Which of these best describes you?")
 
     def test_post_redirects_if_the_participant_does_not_exist(self):
         session = self.client.session
@@ -41,7 +42,7 @@ class TestSexAtBirth(TestCase):
         session.save()
 
         response = self.client.post(
-            reverse("questions:sex_at_birth"),
+            reverse("questions:gender"),
             self.valid_params
         )
 
@@ -49,17 +50,17 @@ class TestSexAtBirth(TestCase):
 
     def test_post_stores_a_valid_response_for_the_participant(self):
         self.client.post(
-            reverse("questions:sex_at_birth"),
+            reverse("questions:gender"),
             self.valid_params
         )
 
         response_set = self.participant.responseset_set.first()
-        self.assertEqual(response_set.sex_at_birth, self.valid_params["sex_at_birth"])
+        self.assertEqual(response_set.gender, self.valid_params["gender"])
         self.assertEqual(response_set.participant, self.participant)
 
     def test_post_sets_the_participant_id_in_session(self):
         self.client.post(
-            reverse("questions:sex_at_birth"),
+            reverse("questions:gender"),
             self.valid_params
         )
 
@@ -67,25 +68,25 @@ class TestSexAtBirth(TestCase):
 
     def test_post_redirects_to_the_responses_path(self):
         response = self.client.post(
-            reverse("questions:sex_at_birth"),
+            reverse("questions:gender"),
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:gender"))
+        self.assertRedirects(response, reverse("questions:responses"))
 
     def test_post_responds_with_422_if_the_date_response_fails_to_create(self):
         response = self.client.post(
-            reverse("questions:sex_at_birth"),
-            {"sex_at_birth": "something not in list"}
+            reverse("questions:gender"),
+            {"gender": "something not in list"}
         )
 
         self.assertEqual(response.status_code, 422)
 
-    def test_post_renders_the_sex_at_birth_page_with_an_error_if_the_form_is_invalid(self):
+    def test_post_renders_the_gender_page_with_an_error_if_the_form_is_invalid(self):
         response = self.client.post(
-            reverse("questions:sex_at_birth"),
-            {"sex_at_birth": "something not in list"}
+            reverse("questions:gender"),
+            {"gender": "something not in list"}
         )
 
-        self.assertContains(response, "What was your sex at birth?", status_code=422)
+        self.assertContains(response, "Which of these best describes you?", status_code=422)
         self.assertContains(response, "nhsuk-error-message", status_code=422)

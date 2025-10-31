@@ -60,3 +60,11 @@ def fill_in_and_submit_sex_at_birth(page, sex):
     page.get_by_label(sex, exact=True).check()
 
     page.click("text=Continue")
+
+def fill_in_and_submit_gender(page, gender):
+    expect(page.locator("legend")).to_have_text(
+        "Which of these best describes you?")
+
+    page.get_by_label(gender, exact=True).check()
+
+    page.click("text=Continue")
