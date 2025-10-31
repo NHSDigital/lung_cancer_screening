@@ -18,6 +18,13 @@ class SexAtBirthValues(models.TextChoices):
     FEMALE = "F", 'Female'
     MALE = "M", 'Male'
 
+class GenderValues(models.TextChoices):
+    FEMALE = "F", 'Female'
+    MALE = "M", 'Male'
+    NON_BINARY = "N", 'Non-binary'
+    PREFER_NOT_TO_SAY = "P", 'Prefer not to say'
+    GP = "G", 'How I describe myself may not match my GP record'
+
 class ResponseSet(BaseModel):
     participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
 
@@ -62,6 +69,13 @@ class ResponseSet(BaseModel):
     sex_at_birth = models.CharField(
         max_length=1,
         choices=SexAtBirthValues.choices,
+        null=True,
+        blank=True
+    )
+
+    gender = models.CharField(
+        max_length=1,
+        choices=GenderValues.choices,
         null=True,
         blank=True
     )

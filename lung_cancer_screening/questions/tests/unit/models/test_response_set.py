@@ -5,7 +5,7 @@ from django.utils import timezone
 
 from django.core.exceptions import ValidationError
 
-from ....models.response_set import ResponseSet, HaveYouEverSmokedValues, SexAtBirthValues
+from ....models.response_set import ResponseSet, HaveYouEverSmokedValues, SexAtBirthValues, GenderValues
 from ....models.participant import Participant
 
 class TestResponseSet(TestCase):
@@ -97,6 +97,15 @@ class TestResponseSet(TestCase):
 
         self.assertIsInstance(
             self.response_set.sex_at_birth,
+            str
+        )
+
+    def test_has_gender_as_string(self):
+        self.response_set.gender = GenderValues.MALE
+        self.response_set.save()
+
+        self.assertIsInstance(
+            self.response_set.gender,
             str
         )
 
@@ -223,6 +232,25 @@ class TestResponseSet(TestCase):
 
     def test_is_invalid_if_sex_at_birth_is_not_an_accepted_value(self):
         self.response_set.sex_at_birth = "X"
+
+        with self.assertRaises(ValidationError) as context:
+            self.response_set.full_clean()
+
+        self.assertEqual(
+            context.exception.messages[0],
+            "Value 'X' is not a valid choice."
+        )
+
+    def test_is_valid_if_gender_is_null(self):
+        self.response_set.gender = None
+        self.response_set.save()
+
+        self.assertIsNone(
+            self.response_set.gender
+        )
+
+    def test_is_invalid_if_gender_is_not_an_accepted_value(self):
+        self.response_set.gender = "X"
 
         with self.assertRaises(ValidationError) as context:
             self.response_set.full_clean()
