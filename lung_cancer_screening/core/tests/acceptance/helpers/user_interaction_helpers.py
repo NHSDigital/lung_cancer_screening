@@ -68,3 +68,11 @@ def fill_in_and_submit_gender(page, gender):
     page.get_by_label(gender, exact=True).check()
 
     page.click("text=Continue")
+
+def fill_in_and_submit_ethnicity(page, ethnicity):
+    expect(page.locator("legend")).to_have_text(
+        "What is your ethnic background?")
+
+    page.get_by_label(ethnicity, exact=True).check()
+
+    page.click("text=Continue")
