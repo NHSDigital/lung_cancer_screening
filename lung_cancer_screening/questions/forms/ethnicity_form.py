@@ -1,6 +1,6 @@
 from django import forms
 
-from ...nhsuk_forms.typed_choice_field import TypedChoiceField
+from ...nhsuk_forms.choice_field import ChoiceField, BoundChoiceField
 from ..models.response_set import ResponseSet, EthnicityValues
 
 class EthnicityForm(forms.ModelForm):
@@ -10,7 +10,7 @@ class EthnicityForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.instance.participant = self.participant
 
-        self.fields["ethnicity"] = TypedChoiceField(
+        choices = ChoiceField(
             choices=EthnicityValues.choices,
             label="What is your ethnic background?",
             widget=forms.RadioSelect,
@@ -18,8 +18,14 @@ class EthnicityForm(forms.ModelForm):
             hint="Your ethnicity may impact your chances of developing lung cancer.",
             error_messages={
                 'required': 'Select your ethnic background.'
-            }
-        )
+            },
+        ),
+
+
+
+
+        self.fields["ethnicity"] = choices
+
 
     class Meta:
         model = ResponseSet

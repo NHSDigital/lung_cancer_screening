@@ -2,7 +2,7 @@
 from django import forms
 from django.forms import widgets
 
-from .bound_choice_field import BoundChoiceField
+from .choice_field import BoundChoiceField
 
 class TypedChoiceField(forms.TypedChoiceField):
     """
