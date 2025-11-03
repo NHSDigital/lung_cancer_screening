@@ -17,10 +17,10 @@ class TestEthnicityForm(TestCase):
         )
         self.assertTrue(form.is_valid())
         self.assertEqual(
-          form.cleaned_data['ethnicity'],
-          EthnicityValues.WHITE
+            form.cleaned_data['ethnicity'],
+            EthnicityValues.WHITE
         )
-    
+
     def test_is_invalid_with_an_invalid_value(self):
         form = EthnicityForm(
             participant=self.participant,
