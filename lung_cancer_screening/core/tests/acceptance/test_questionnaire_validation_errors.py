@@ -102,3 +102,16 @@ class TestQuestionnaireValidationErrors(StaticLiveServerTestCase):
         expect(page.locator(".nhsuk-error-message")).to_contain_text(
             "Weight must be between 25.4kg and 317.5kg"
         )
+
+    def test_ethnicity_validation_errors(self):
+        participant_id = '123'
+
+        page = self.browser.new_page()
+        page.goto(f"{self.live_server_url}/start")
+        fill_in_and_submit_participant_id(page, participant_id)
+        page.goto(f"{self.live_server_url}/ethnicity")
+
+        page.click("text=Continue")
+        expect(page.locator(".nhsuk-error-message")).to_contain_text(
+            "Select your ethnic background."
+        )
