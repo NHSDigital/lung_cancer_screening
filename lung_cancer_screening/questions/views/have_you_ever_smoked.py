@@ -28,15 +28,25 @@ def have_you_ever_smoked(request):
                 return redirect(reverse("questions:non_smoker_exit"))
 
         else:
-            return render(
+            return render_template(
                 request,
-                "have_you_ever_smoked.jinja",
-                { "form": form },
+                HaveYouEverSmokedForm(participant=request.participant),
                 status=422
             )
 
+    return render_template(
+        request,
+        HaveYouEverSmokedForm(participant=request.participant)
+    )
+
+
+def render_template(request, form, status=200):
     return render(
         request,
-        "have_you_ever_smoked.jinja",
-        {"form": HaveYouEverSmokedForm(participant=request.participant)}
+        "question_form.jinja",
+        {
+            "form": form,
+            "back_link_url": reverse("questions:start")
+        },
+        status=status
     )

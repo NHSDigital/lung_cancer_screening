@@ -1,0 +1,5 @@
+FROM mcr.microsoft.com/devcontainers/base:noble
+
+COPY *.crt /usr/local/share/ca-certificates/
+
+RUN update-ca-certificates

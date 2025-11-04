@@ -47,8 +47,11 @@ class TestQuestionnaire(StaticLiveServerTestCase):
         fill_in_and_submit_sex_at_birth(page, "Male")
         fill_in_and_submit_gender(page, "Male")
         fill_in_and_submit_ethnicity(page, "White")
+        page.click("text=Continue") # education
+        page.click("text=Continue") # respiratory conditions
         fill_in_and_submit_asbestos_exposure(page, "No")
-
+        page.click("text=Continue") # cancer diagnosis
+        page.click("text=Continue") # family history
         page.click("text=Submit")
 
         page.goto(f"{self.live_server_url}/start")

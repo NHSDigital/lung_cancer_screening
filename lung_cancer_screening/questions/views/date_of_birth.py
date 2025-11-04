@@ -31,15 +31,24 @@ def date_of_birth(request):
                 return redirect(reverse("questions:age_range_exit"))
 
         else:
-            return render(
+            return render_template(
                 request,
-                "date_of_birth.jinja",
-                { "form": form },
+                form,
                 status=422
             )
 
+    return render_template(
+        request,
+        DateOfBirthForm(participant=request.participant)
+    )
+
+def render_template(request, form, status=200):
     return render(
         request,
-        "date_of_birth.jinja",
-        { "form": DateOfBirthForm(participant=request.participant) }
+        "question_form.jinja",
+        {
+            "form": form,
+            "back_link_url": reverse("questions:have_you_ever_smoked")
+        },
+        status=status
     )
