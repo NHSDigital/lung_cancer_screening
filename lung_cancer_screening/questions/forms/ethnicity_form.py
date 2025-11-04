@@ -10,7 +10,7 @@ class EthnicityForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.instance.participant = self.participant
 
-        choices = ChoiceField(
+        self.fields["ethnicity"] = ChoiceField(
             choices=EthnicityValues.choices,
             label="What is your ethnic background?",
             widget=forms.RadioSelect,
@@ -18,14 +18,10 @@ class EthnicityForm(forms.ModelForm):
             hint="Your ethnicity may impact your chances of developing lung cancer.",
             error_messages={
                 'required': 'Select your ethnic background.'
-            },
-        ),
+            }
+        )
 
-
-
-
-        self.fields["ethnicity"] = choices
-
+        self["ethnicity"].add_divider_after(EthnicityValues.OTHER.value, "or")
 
     class Meta:
         model = ResponseSet
