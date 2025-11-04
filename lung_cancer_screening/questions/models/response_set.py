@@ -25,6 +25,14 @@ class GenderValues(models.TextChoices):
     PREFER_NOT_TO_SAY = "P", 'Prefer not to say'
     GP = "G", 'How I describe myself may not match my GP record'
 
+class EthnicityValues(models.TextChoices):
+    ASIAN = "A", "Asian or Asian British"
+    BLACK = "B", "Black, African, Caribbean or Black British"
+    MIXED = "M", "Mixed or multiple ethnic groups"
+    WHITE = "W", "White"
+    OTHER = "O", "Other ethnic group"
+    PREFER_NOT_TO_SAY = "N", "I'd prefer not to say"
+
 class ResponseSet(BaseModel):
     participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
 
@@ -76,6 +84,13 @@ class ResponseSet(BaseModel):
     gender = models.CharField(
         max_length=1,
         choices=GenderValues.choices,
+        null=True,
+        blank=True
+    )
+
+    ethnicity = models.CharField(
+        max_length=1,
+        choices=EthnicityValues.choices,
         null=True,
         blank=True
     )

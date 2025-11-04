@@ -12,6 +12,7 @@ from .helpers.user_interaction_helpers import (
     fill_in_and_submit_date_of_birth,
     fill_in_and_submit_sex_at_birth,
     fill_in_and_submit_gender,
+    fill_in_and_submit_ethnicity
 )
 
 class TestQuestionnaire(StaticLiveServerTestCase):
@@ -44,6 +45,7 @@ class TestQuestionnaire(StaticLiveServerTestCase):
         fill_in_and_submit_weight_metric(page, "25.4")
         fill_in_and_submit_sex_at_birth(page, "Male")
         fill_in_and_submit_gender(page, "Male")
+        fill_in_and_submit_ethnicity(page, "White")
 
         page.click("text=Submit")
 
