@@ -1,6 +1,6 @@
 from django import forms
 
-from ...nhsuk_forms.choice_field import ChoiceField, BoundChoiceField
+from ...nhsuk_forms.choice_field import ChoiceField
 from ..models.response_set import ResponseSet, EthnicityValues
 
 class EthnicityForm(forms.ModelForm):
