@@ -1,4 +1,3 @@
-<!-- markdownlint-disable-next-line first-line-heading -->
 # What is the change?
 
 <!-- Describe the intended changes. -->
