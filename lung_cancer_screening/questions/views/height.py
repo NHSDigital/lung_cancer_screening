@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
+from django.views.decorators.http import require_http_methods
 
 from lung_cancer_screening.questions.forms.metric_height_form import MetricHeightForm
 from lung_cancer_screening.questions.forms.imperial_height_form import ImperialHeightForm
 from .decorators.participant_decorators import require_participant
 
+@require_http_methods(["GET", "POST"])
 @require_participant
 def height(request):
     unit = request.GET.get('unit')
