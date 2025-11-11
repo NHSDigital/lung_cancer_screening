@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.core.exceptions import ValidationError
+from django.views.decorators.http import require_http_methods
 
 from lung_cancer_screening.questions.models.participant import Participant
 
+@require_http_methods(["GET", "POST"])
 def start(request):
     if request.method == "POST":
         try:

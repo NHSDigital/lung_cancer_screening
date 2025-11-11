@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils import timezone
+from django.views.decorators.http import require_http_methods
 
 from .decorators.participant_decorators import require_participant
 
+@require_http_methods(["GET", "POST"])
 @require_participant
 def responses(request):
     response_set = request.participant.responseset_set.last()

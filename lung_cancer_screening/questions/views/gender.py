@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.views.decorators.http import require_http_methods
 
 from .decorators.participant_decorators import require_participant
 from ..forms.gender_form import GenderForm
 
+@require_http_methods(["GET", "POST"])
 @require_participant
 def gender(request):
     if request.method == "POST":

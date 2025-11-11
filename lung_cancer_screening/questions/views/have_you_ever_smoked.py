@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.views.decorators.http import require_http_methods
 
 from .decorators.participant_decorators import require_participant
 from ..forms.have_you_ever_smoked_form import HaveYouEverSmokedForm
 from ..models.response_set import HaveYouEverSmokedValues
 
+@require_http_methods(["GET", "POST"])
 @require_participant
 def have_you_ever_smoked(request):
     if request.method == "POST":
