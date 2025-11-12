@@ -3,33 +3,33 @@ from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 
 from .decorators.participant_decorators import require_participant
-from ..forms.ethnicity_form import EthnicityForm
+from ..forms.asbestos_exposure_form import AsbestosExposureForm
+
 
 @require_http_methods(["GET", "POST"])
 @require_participant
-def ethnicity(request):
-
+def asbestos_exposure(request):
     if request.method == "POST":
-        form = EthnicityForm(
+        form = AsbestosExposureForm(
             participant=request.participant,
             data=request.POST
         )
 
         if form.is_valid():
             response_set = request.participant.responseset_set.last()
-            response_set.ethnicity = form.cleaned_data["ethnicity"]
+            response_set.asbestos_exposure = form.cleaned_data["asbestos_exposure"]
             response_set.save()
-            return redirect(reverse("questions:asbestos_exposure"))
+            return redirect(reverse("questions:responses"))
         else:
             return render(
                 request,
-                "ethnicity.jinja",
-                { "form": form },
+                "asbestos_exposure.jinja",
+                {"form": form},
                 status=422
             )
 
     return render(
         request,
-        "ethnicity.jinja",
-        { "form": EthnicityForm(participant=request.participant) }
+        "asbestos_exposure.jinja",
+        {"form": AsbestosExposureForm(participant=request.participant)}
     )

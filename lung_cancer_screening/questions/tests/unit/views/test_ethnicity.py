@@ -70,13 +70,13 @@ class TestEthnicity(TestCase):
 
         self.assertEqual(self.client.session["participant_id"], "12345")
 
-    def test_post_redirects_to_the_responses_path(self):
+    def test_post_redirects_to_the_asbestos_exposure_path(self):
         response = self.client.post(
             reverse("questions:ethnicity"),
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:responses"))
+        self.assertRedirects(response, reverse("questions:asbestos_exposure"))
 
     def test_post_responds_with_422_if_the_date_response_fails_to_create(self):
         response = self.client.post(
