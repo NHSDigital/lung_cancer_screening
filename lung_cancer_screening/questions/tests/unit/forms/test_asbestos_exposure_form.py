@@ -1,6 +1,5 @@
 from django.test import TestCase
 
-from ....models.response_set import AsbestosExposureValues
 from ....models.participant import Participant
 from ....forms.asbestos_exposure_form import AsbestosExposureForm
 
@@ -13,26 +12,26 @@ class TestAsbestosExposureForm(TestCase):
         form = AsbestosExposureForm(
             participant=self.participant,
             data={
-                "asbestos_exposure": AsbestosExposureValues.YES
+                "asbestos_exposure": True
             }
         )
         self.assertTrue(form.is_valid())
         self.assertEqual(
             form.cleaned_data["asbestos_exposure"],
-            AsbestosExposureValues.YES.value
+            True
         )
 
     def test_is_valid_with_no(self):
         form = AsbestosExposureForm(
             participant=self.participant,
             data={
-                "asbestos_exposure": AsbestosExposureValues.NO
+                "asbestos_exposure": False
             }
         )
         self.assertTrue(form.is_valid())
         self.assertEqual(
             form.cleaned_data["asbestos_exposure"],
-            AsbestosExposureValues.NO.value
+            False
         )
 
     def test_is_invalid_with_an_invalid_value(self):

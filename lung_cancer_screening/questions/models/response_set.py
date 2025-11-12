@@ -33,10 +33,6 @@ class EthnicityValues(models.TextChoices):
     OTHER = "O", "Other ethnic group"
     PREFER_NOT_TO_SAY = "N", "I'd prefer not to say"
 
-class AsbestosExposureValues(models.TextChoices):
-    YES = "Y", "Yes"
-    NO = "N", "No"
-
 class ResponseSet(BaseModel):
     participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
 
@@ -99,9 +95,7 @@ class ResponseSet(BaseModel):
         blank=True
     )
 
-    asbestos_exposure = models.CharField(
-        max_length=1,
-        choices=AsbestosExposureValues.choices,
+    asbestos_exposure = models.BooleanField(
         null=True,
         blank=True
     )

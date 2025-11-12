@@ -2,14 +2,13 @@ from django.test import TestCase
 from django.urls import reverse
 
 from lung_cancer_screening.questions.models.participant import Participant
-from lung_cancer_screening.questions.models.response_set import AsbestosExposureValues
 
 
 class TestAsbestosExposure(TestCase):
     def setUp(self):
         self.participant = Participant.objects.create(unique_id="12345")
         self.participant.responseset_set.create()
-        self.valid_params = {"asbestos_exposure": AsbestosExposureValues.YES}
+        self.valid_params = {"asbestos_exposure": True}
 
         session = self.client.session
         session['participant_id'] = self.participant.unique_id

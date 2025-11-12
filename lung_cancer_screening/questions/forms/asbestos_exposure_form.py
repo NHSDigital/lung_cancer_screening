@@ -1,6 +1,6 @@
 from django import forms
-from ...nhsuk_forms.choice_field import ChoiceField
-from ..models.response_set import ResponseSet, AsbestosExposureValues
+from ...nhsuk_forms.typed_choice_field import TypedChoiceField
+from ..models.response_set import ResponseSet
 
 
 class AsbestosExposureForm(forms.ModelForm):
@@ -9,11 +9,12 @@ class AsbestosExposureForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.instance.participant = self.participant
 
-        self.fields["asbestos_exposure"] = ChoiceField(
-            choices=AsbestosExposureValues.choices,
+        self.fields["asbestos_exposure"] = TypedChoiceField(
+            choices=[(True, 'Yes'), (False, 'No')],
             widget=forms.RadioSelect,
             label="Have you ever worked in a job where you might have been exposed to asbestos?",
             label_classes="nhsuk-fieldset__legend--m",
+            coerce=lambda x: x == 'True',
             error_messages={
                 'required': 'Select if you have been exposed to asbestos.'
             }
