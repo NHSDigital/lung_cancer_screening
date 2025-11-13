@@ -1,15 +1,22 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.views.decorators.http import require_http_methods
+from django.views import View
+from django.utils.decorators import method_decorator
+
 
 from .decorators.participant_decorators import require_participant
 from ..forms.asbestos_exposure_form import AsbestosExposureForm
 
+@method_decorator(require_participant, name="dispatch")
+class AsbestosExposureView(View):
+    def get(self, request):
+        return render(
+            request,
+            "asbestos_exposure.jinja",
+            {"form": AsbestosExposureForm(participant=request.participant)}
+        )
 
-@require_http_methods(["GET", "POST"])
-@require_participant
-def asbestos_exposure(request):
-    if request.method == "POST":
+    def post(self, request):
         form = AsbestosExposureForm(
             participant=request.participant,
             data=request.POST
@@ -27,9 +34,3 @@ def asbestos_exposure(request):
                 {"form": form},
                 status=422
             )
-
-    return render(
-        request,
-        "asbestos_exposure.jinja",
-        {"form": AsbestosExposureForm(participant=request.participant)}
-    )

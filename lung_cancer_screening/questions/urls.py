@@ -27,7 +27,7 @@ from .views.weight import weight
 from .views.sex_at_birth import sex_at_birth
 from .views.gender import gender
 from .views.ethnicity import ethnicity
-from .views.asbestos_exposure import asbestos_exposure
+from .views.asbestos_exposure import AsbestosExposureView
 
 urlpatterns = [
     path('start', start, name='start'),
@@ -38,7 +38,7 @@ urlpatterns = [
     path('sex-at-birth', sex_at_birth, name='sex_at_birth'),
     path('gender', gender, name='gender'),
     path('ethnicity', ethnicity, name='ethnicity'),
-    path('asbestos-exposure', asbestos_exposure, name='asbestos_exposure'),
+    path('asbestos-exposure', AsbestosExposureView.as_view(), name='asbestos_exposure'),
     path('responses', responses, name='responses'),
     path('age-range-exit', age_range_exit, name='age_range_exit'),
     path('non-smoker-exit', non_smoker_exit, name='non_smoker_exit'),
