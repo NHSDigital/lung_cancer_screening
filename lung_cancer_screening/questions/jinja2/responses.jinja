@@ -5,7 +5,7 @@
 {% block beforeContent %}
   {{
     backLink({
-      "href": url("questions:ethnicity"),
+      "href": url("questions:asbestos_exposure"),
       "text": "Back"
     })
   }}
@@ -23,6 +23,7 @@
         <li>What was your sex at birth? {{ response_set.get_sex_at_birth_display() }}</li>
         <li>Which of these best describes you? {{ response_set.get_gender_display() }}</li>
         <li>What is your ethnic background? {{ response_set.get_ethnicity_display() }}</li>
+        <li>Have you ever worked in a job where you might have been exposed to asbestos? {{ "Yes" if response_set.asbestos_exposure else "No" }}</li>
       </ul>
 
       <form action="{{ request.path }}" method="post">

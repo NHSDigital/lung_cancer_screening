@@ -19,7 +19,7 @@ def ethnicity(request):
             response_set = request.participant.responseset_set.last()
             response_set.ethnicity = form.cleaned_data["ethnicity"]
             response_set.save()
-            return redirect(reverse("questions:responses"))
+            return redirect(reverse("questions:asbestos_exposure"))
         else:
             return render(
                 request,

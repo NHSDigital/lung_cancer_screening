@@ -76,3 +76,11 @@ def fill_in_and_submit_ethnicity(page, ethnicity):
     page.get_by_label(ethnicity, exact=True).check()
 
     page.click("text=Continue")
+
+def fill_in_and_submit_asbestos_exposure(page, answer):
+    expect(page.locator("legend")).to_have_text(
+        "Have you ever worked in a job where you might have been exposed to asbestos?")
+
+    page.get_by_label(answer, exact=True).check()
+
+    page.click("text=Continue")

@@ -95,6 +95,11 @@ class ResponseSet(BaseModel):
         blank=True
     )
 
+    asbestos_exposure = models.BooleanField(
+        null=True,
+        blank=True
+    )
+
     submitted_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:

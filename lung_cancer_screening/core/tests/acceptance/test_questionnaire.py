@@ -14,7 +14,8 @@ from .helpers.user_interaction_helpers import (
     fill_in_and_submit_weight_imperial,
     fill_in_and_submit_sex_at_birth,
     fill_in_and_submit_gender,
-    fill_in_and_submit_ethnicity
+    fill_in_and_submit_ethnicity,
+    fill_in_and_submit_asbestos_exposure
 )
 
 from .helpers.assertion_helpers import expect_back_link_to_have_url
@@ -90,8 +91,13 @@ class TestQuestionnaire(StaticLiveServerTestCase):
 
         fill_in_and_submit_ethnicity(page, "White")
 
-        expect(page).to_have_url(f"{self.live_server_url}/responses")
+        expect(page).to_have_url(f"{self.live_server_url}/asbestos-exposure")
         expect_back_link_to_have_url(page, "/ethnicity")
+
+        fill_in_and_submit_asbestos_exposure(page, "No")
+
+        expect(page).to_have_url(f"{self.live_server_url}/responses")
+        expect_back_link_to_have_url(page, "/asbestos-exposure")
 
         responses = page.locator(".responses")
         expect(responses).to_contain_text("Have you ever smoked? Yes, I used to smoke regularly")
@@ -102,6 +108,7 @@ class TestQuestionnaire(StaticLiveServerTestCase):
         expect(responses).to_contain_text("What was your sex at birth? Male")
         expect(responses).to_contain_text("Which of these best describes you? Male")
         expect(responses).to_contain_text("What is your ethnic background? White")
+        expect(responses).to_contain_text("Have you ever worked in a job where you might have been exposed to asbestos? No")
 
         page.click("text=Submit")
 

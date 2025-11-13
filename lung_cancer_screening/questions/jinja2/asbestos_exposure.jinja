@@ -1,0 +1,61 @@
+{% extends 'layout.jinja' %}
+{% from 'nhsuk/components/button/macro.jinja' import button %}
+{% from 'nhsuk/components/back-link/macro.jinja' import backLink %}
+{% from 'nhsuk/components/details/macro.jinja' import details %}
+
+{% block beforeContent %}
+  {{
+    backLink({
+      "href": url("questions:ethnicity"),
+      "text": "Back"
+    })
+  }}
+{% endblock beforeContent %}
+
+{% block page_content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      <h1 class="nhsuk-heading-l">Tell us if you might have been exposed to asbestos at work</h1>
+
+      <p>You may have been exposed to asbestos if you worked in an industry such as building or construction, particularly from the 1950s to the 1990s.</p>
+
+      <p>You could be exposed to asbestos today if your job involves working in certain roles in old buildings.</p>
+
+      <p>Examples include:</p>
+      <ul>
+        <li>heating and ventilation engineers</li>
+        <li>demolition workers</li>
+        <li>plumbers</li>
+        <li>construction workers</li>
+        <li>electricians</li>
+      </ul>
+
+      <p>You may have come into contact with asbestos from existing asbestos-containing materials in buildings and products. If they are intact or undamaged, they pose very little risk.</p>
+
+      {{
+        details({
+          "summaryText": "What is asbestos?",
+          "html": "<p>Asbestos was used in a number of building materials and products. For example:</p>
+<ul>
+<li>boilers and pipes</li>
+<li>car brakes</li>
+<li>cement for roofing sheets</li>
+<li>floor tiles</li>
+<li>insulating board to protect buildings and ships against fire</li>
+</ul>
+<p>If you worked in an industry such as building or construction you are more likely to have come into contact with damaged asbestos materials and products.</p>"
+        })
+      }}
+
+      <form action="{{ request.path }}" method="POST">
+        {{ csrf_input }}
+
+        {{ form }}
+
+        {{ button({
+          "text": "Continue"
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
