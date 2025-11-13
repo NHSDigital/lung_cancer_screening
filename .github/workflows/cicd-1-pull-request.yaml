@@ -25,11 +25,14 @@ jobs:
       terraform_version: ${{ steps.variables.outputs.terraform_version }}
       version: ${{ steps.variables.outputs.version }}
       does_pull_request_exist: ${{ steps.pr_exists.outputs.does_pull_request_exist }}
+      branch_name: ${{ steps.variables.outputs.branch_name }}
     steps:
       - name: "Checkout code"
         uses: actions/checkout@v5
       - name: "Set CI/CD variables"
         id: variables
+        env:
+          BRANCH_NAME: ${{ github.head_ref }}
         run: |
           datetime=$(date -u +'%Y-%m-%dT%H:%M:%S%z')
           BUILD_DATETIME=$datetime make version-create-effective-file
@@ -41,6 +44,7 @@ jobs:
           echo "python_version=$(grep "^python\s" .tool-versions | cut -f2 -d' ')" >> $GITHUB_OUTPUT
           echo "terraform_version=$(grep "^terraform\s" .tool-versions | cut -f2 -d' ')" >> $GITHUB_OUTPUT
           echo "version=$(head -n 1 .version 2> /dev/null || echo unknown)" >> $GITHUB_OUTPUT
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
       - name: "Check if pull request exists for this branch"
         id: pr_exists
         env:
@@ -66,7 +70,7 @@ jobs:
           export TERRAFORM_VERSION="${{ steps.variables.outputs.terraform_version }}"
           export VERSION="${{ steps.variables.outputs.version }}"
           export DOES_PULL_REQUEST_EXIST="${{ steps.pr_exists.outputs.does_pull_request_exist }}"
-          export BRANCH_NAME="${{ github.head_ref }}"
+          export BRANCH_NAME="${{ steps.variables.outputs.branch_name }}"
           make list-variables
   commit-stage: # Recommended maximum execution time is 2 minutes
     name: "Commit stage"

@@ -21,6 +21,7 @@ jobs:
       python_version: ${{ steps.variables.outputs.python_version }}
       terraform_version: ${{ steps.variables.outputs.terraform_version }}
       version: ${{ steps.variables.outputs.version }}
+      branch_name: ${{ steps.variables.outputs.branch_name }}
     steps:
       - name: "Checkout code"
         uses: actions/checkout@v5
@@ -37,6 +38,7 @@ jobs:
           echo "python_version=$(grep "^python\s" .tool-versions | cut -f2 -d' ')" >> $GITHUB_OUTPUT
           echo "terraform_version=$(grep "^terraform\s" .tool-versions | cut -f2 -d' ')" >> $GITHUB_OUTPUT
           echo "version=$(head -n 1 .version 2> /dev/null || echo unknown)" >> $GITHUB_OUTPUT
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
       - name: "List variables"
         run: |
           export BUILD_DATETIME_LONDON="${{ steps.variables.outputs.build_datetime_london }}"
@@ -47,7 +49,7 @@ jobs:
           export PYTHON_VERSION="${{ steps.variables.outputs.python_version }}"
           export TERRAFORM_VERSION="${{ steps.variables.outputs.terraform_version }}"
           export VERSION="${{ steps.variables.outputs.version }}"
-          export BRANCH_NAME="${{ github.head_ref }}"
+          export BRANCH_NAME="${{ steps.variables.outputs.branch_name }}"
           make list-variables
   commit-stage: # Recommended maximum execution time is 2 minutes
     name: "Commit stage"
