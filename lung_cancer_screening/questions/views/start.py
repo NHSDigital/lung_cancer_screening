@@ -1,13 +1,18 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.core.exceptions import ValidationError
-from django.views.decorators.http import require_http_methods
+from django.views import View
 
 from lung_cancer_screening.questions.models.participant import Participant
 
-@require_http_methods(["GET", "POST"])
-def start(request):
-    if request.method == "POST":
+class StartView(View):
+    def get(self, request):
+        return render(
+            request,
+            "start.jinja"
+        )
+
+    def post(self, request):
         try:
             participant, _ = Participant.objects.get_or_create(
                 unique_id=request.POST['participant_id']
@@ -24,9 +29,3 @@ def start(request):
                 {"error_messages": [{ "text": message } for message in e.messages ]},
                 status=422
             )
-
-    else:
-        return render(
-            request,
-            "start.jinja"
-        )
