@@ -4,50 +4,47 @@
 {% from 'nhsuk/components/fieldset/macro.jinja' import fieldset %}
 
 {% block beforeContent %}
-  {{
-    backLink({
-      "href": url("questions:date_of_birth"),
-      "text": "Back"
-    })
-  }}
+{{
+backLink({
+"href": url("questions:date_of_birth"),
+"text": "Back"
+})
+}}
 {% endblock beforeContent %}
 
 {% block page_content %}
-  <div class="nhsuk-grid-row">
-    <div class="nhsuk-grid-column-two-thirds">
-      {% if unit %}
-        {% set action_url = request.path + '?unit=' + unit %}
-      {% else %}
-        {% set action_url = request.path %}
-      {% endif %}
-      <form action="{{ action_url }}" method="POST" novalidate>
-        {{ csrf_input }}
-        <h1 class="nhsuk-heading-l">What is your height?</h1>
-        <p>An accurate measurement is important.
+<div class="nhsuk-grid-row">
+  <div class="nhsuk-grid-column-two-thirds">
+    <form action="{{ request.get_full_path() }}" method="POST" novalidate>
+      {{ csrf_input }}
+      <h1 class="nhsuk-heading-l">What is your height?</h1>
+      <p>An accurate measurement is important.
 
-        <p>You can measure your height at home with a measuring tape. Some pharmacies and gyms have machines to measure your height.
+      <p>You can measure your height at home with a measuring tape. Some pharmacies and gyms have machines to measure
+        your height.
         {% call fieldset({
           "legend": {
             "text": "Enter your height",
             "classes": "nhsuk-label--m"
           }
-        }) %}
+        })
+        %}
 
-          {% if unit == "imperial" %}
-            {{ form.height_imperial.as_field_group() }}
-          {% else %}
-            {{ form.height.as_field_group() }}
-          {% endif %}
+        {% if unit == "imperial" %}
+          {{ form.height_imperial.as_field_group() }}
+        {% else %}
+          {{ form.height.as_field_group() }}
+        {% endif %}
 
 
-          <p><a href="?unit={{ switch_to_unit }}">Switch to {{ switch_to_unit }}</a></p>
+      <p><a href="?unit={{ switch_to_unit }}">Switch to {{ switch_to_unit }}</a></p>
 
-        {% endcall %}
+      {% endcall %}
 
-        {{ button({
-            "text": "Continue"
-        }) }}
-      </form>
-    </div>
+      {{ button({
+      "text": "Continue"
+      }) }}
+    </form>
   </div>
+</div>
 {% endblock %}

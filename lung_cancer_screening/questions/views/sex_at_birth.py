@@ -20,15 +20,24 @@ def sex_at_birth(request):
                 response_set.save()
                 return redirect(reverse("questions:gender"))
         else:
-            return render(
+            return render_template(
                 request,
-                "sex_at_birth.jinja",
-                { "form": form },
+                form,
                 status=422
             )
 
+    return render_template(
+        request,
+        SexAtBirthForm(participant=request.participant)
+    )
+
+def render_template(request, form, status=200):
     return render(
         request,
-        "sex_at_birth.jinja",
-        { "form": SexAtBirthForm(participant=request.participant) }
+        "question_form.jinja",
+        {
+            "form": form,
+            "back_link_url": reverse("questions:weight")
+        },
+        status=status
     )

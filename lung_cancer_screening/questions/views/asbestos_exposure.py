@@ -26,7 +26,7 @@ class AsbestosExposureView(View):
             response_set = request.participant.responseset_set.last()
             response_set.asbestos_exposure = form.cleaned_data["asbestos_exposure"]
             response_set.save()
-            return redirect(reverse("questions:responses"))
+            return redirect(reverse("questions:cancer_diagnosis"))
         else:
             return render(
                 request,

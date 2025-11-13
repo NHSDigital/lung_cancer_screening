@@ -1,6 +1,5 @@
 {% extends 'layout.jinja' %}
 
-{% from 'nhsuk/components/date-input/macro.jinja' import dateInput %}
 {% from 'nhsuk/components/button/macro.jinja' import button %}
 {% from 'nhsuk/components/back-link/macro.jinja' import backLink %}
 
@@ -11,7 +10,7 @@
 {% block beforeContent %}
   {{
     backLink({
-      "href": url("questions:have_you_ever_smoked"),
+      "href": back_link_url,
       "text": "Back"
     })
   }}

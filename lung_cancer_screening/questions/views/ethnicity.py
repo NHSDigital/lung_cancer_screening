@@ -19,17 +19,26 @@ def ethnicity(request):
             response_set = request.participant.responseset_set.last()
             response_set.ethnicity = form.cleaned_data["ethnicity"]
             response_set.save()
-            return redirect(reverse("questions:asbestos_exposure"))
+            return redirect(reverse("questions:education"))
         else:
-            return render(
+            return render_template(
                 request,
-                "ethnicity.jinja",
-                { "form": form },
+                form,
                 status=422
             )
 
+    return render_template(
+        request,
+        EthnicityForm(participant=request.participant)
+    )
+
+def render_template(request, form, status=200):
     return render(
         request,
-        "ethnicity.jinja",
-        { "form": EthnicityForm(participant=request.participant) }
+        "question_form.jinja",
+        {
+            "form": form,
+            "back_link_url": reverse("questions:gender")
+        },
+        status=status
     )

@@ -20,15 +20,24 @@ def gender(request):
                 response_set.save()
                 return redirect(reverse("questions:ethnicity"))
         else:
-            return render(
+            return render_template(
                 request,
-                "gender.jinja",
-                { "form": form },
+                form,
                 status=422
             )
 
+    return render_template(
+        request,
+        GenderForm(participant=request.participant),
+    )
+
+def render_template(request, form, status=200):
     return render(
         request,
-        "gender.jinja",
-        { "form": GenderForm(participant=request.participant) }
+        "question_form.jinja",
+        {
+            "form": form,
+            "back_link_url": reverse("questions:sex_at_birth")
+        },
+        status=status
     )
