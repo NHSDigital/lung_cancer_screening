@@ -1,14 +1,20 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.views.decorators.http import require_http_methods
+from django.views import View
+from django.utils.decorators import method_decorator
 
 from .decorators.participant_decorators import require_participant
 from ..forms.gender_form import GenderForm
 
-@require_http_methods(["GET", "POST"])
-@require_participant
-def gender(request):
-    if request.method == "POST":
+@method_decorator(require_participant, name="dispatch")
+class GenderView(View):
+    def get(self, request):
+        return render_template(
+            request,
+            GenderForm(participant=request.participant),
+        )
+
+    def post(self, request):
         form = GenderForm(
             participant=request.participant,
             data=request.POST
@@ -25,11 +31,6 @@ def gender(request):
                 form,
                 status=422
             )
-
-    return render_template(
-        request,
-        GenderForm(participant=request.participant),
-    )
 
 def render_template(request, form, status=200):
     return render(

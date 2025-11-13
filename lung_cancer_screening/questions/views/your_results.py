@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from django.views.decorators.http import require_http_methods
+from django.views.decorators.http import require_GET
 
-@require_http_methods(["GET"])
+@require_GET
 def your_results(request):
     return render(
         request,

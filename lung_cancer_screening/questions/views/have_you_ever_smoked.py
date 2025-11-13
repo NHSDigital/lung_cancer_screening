@@ -1,15 +1,21 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.views.decorators.http import require_http_methods
+from django.views import View
+from django.utils.decorators import method_decorator
 
 from .decorators.participant_decorators import require_participant
 from ..forms.have_you_ever_smoked_form import HaveYouEverSmokedForm
 from ..models.response_set import HaveYouEverSmokedValues
 
-@require_http_methods(["GET", "POST"])
-@require_participant
-def have_you_ever_smoked(request):
-    if request.method == "POST":
+@method_decorator(require_participant, name="dispatch")
+class HaveYouEverSmokedView(View):
+    def get(self, request):
+        return render_template(
+            request,
+            HaveYouEverSmokedForm(participant=request.participant)
+        )
+
+    def post(self, request):
         form = HaveYouEverSmokedForm(
             data=request.POST, participant=request.participant
         )
@@ -30,14 +36,9 @@ def have_you_ever_smoked(request):
         else:
             return render_template(
                 request,
-                HaveYouEverSmokedForm(participant=request.participant),
+                form,
                 status=422
             )
-
-    return render_template(
-        request,
-        HaveYouEverSmokedForm(participant=request.participant)
-    )
 
 
 def render_template(request, form, status=200):
