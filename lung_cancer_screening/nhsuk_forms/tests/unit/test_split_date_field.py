@@ -181,6 +181,54 @@ class TestSplitDateField(TestCase):
             """,
         )
 
+    def test_render_labels_as_headers_when_true(self):
+        class TestForm(Form):
+            date = SplitDateField(
+                max_value=datetime.date(2026, 12, 31),
+                label_is_page_heading=True,
+            )
+
+        f = TestForm()
+
+        self.assertHTMLEqual(
+            str(f),
+            """<div>
+            <div class="nhsuk-form-group">
+                <fieldset class="nhsuk-fieldset" role="group">
+                    <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--m">
+                        <h1 class="nhsuk-fieldset__heading">Date</h1>
+                    </legend>
+                    <div class="nhsuk-date-input">
+                        <div class="nhsuk-date-input__item">
+                            <div class="nhsuk-form-group">
+                                <label class="nhsuk-label nhsuk-date-input__label" for="id_date">
+                                Day
+                                </label>
+                                <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2" id="id_date" name="date_0" type="text" inputmode="numeric">
+                            </div>
+                        </div>
+                        <div class="nhsuk-date-input__item">
+                            <div class="nhsuk-form-group">
+                                <label class="nhsuk-label nhsuk-date-input__label" for="id_date_1">
+                                Month
+                                </label>
+                                <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2" id="id_date_1" name="date_1" type="text" inputmode="numeric">
+                            </div>
+                        </div>
+                        <div class="nhsuk-date-input__item">
+                            <div class="nhsuk-form-group">
+                                <label class="nhsuk-label nhsuk-date-input__label" for="id_date_2">
+                                Year
+                                </label>
+                                <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4" id="id_date_2" name="date_2" type="text" inputmode="numeric">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div></div>
+            """,
+        )
+
     def test_form_cleaned_data(self):
         class TestForm(Form):
             date = SplitDateField(max_value=datetime.date(2026, 12, 31))

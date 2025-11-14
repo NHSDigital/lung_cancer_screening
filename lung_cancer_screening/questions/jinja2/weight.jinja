@@ -9,12 +9,14 @@
 } %}
 
 {% block beforeContent %}
+<nav>
   {{
     backLink({
       "href": url("questions:height"),
       "text": "Back"
     })
   }}
+</nav>
 {% endblock beforeContent %}
 
 {% block page_content %}

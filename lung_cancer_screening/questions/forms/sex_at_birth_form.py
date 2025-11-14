@@ -15,6 +15,7 @@ class SexAtBirthForm(forms.ModelForm):
             widget=forms.RadioSelect,
             label="What was your sex at birth?",
             label_classes="nhsuk-fieldset__legend--m",
+            label_is_page_heading=True,
             hint="Your sex may impact your chances of developing lung cancer.",
             error_messages={
                 'required': 'Select your sex at birth.'

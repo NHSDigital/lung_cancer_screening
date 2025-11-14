@@ -8,12 +8,14 @@
 {% endif %}
 
 {% block beforeContent %}
-  {{
-    backLink({
-      "href": back_link_url,
-      "text": "Back"
-    })
-  }}
+  <nav>
+    {{
+      backLink({
+        "href": back_link_url,
+        "text": "Back"
+      })
+    }}
+  </nav>
 {% endblock beforeContent %}
 
 {% block page_content %}

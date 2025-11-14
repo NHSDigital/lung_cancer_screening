@@ -4,12 +4,12 @@
 {% from 'nhsuk/components/back-link/macro.jinja' import backLink %}
 
 {% block beforeContent %}
-  {{
-    backLink({
-      "href": url("questions:start"),
-      "text": "Back"
-    })
-  }}
+    {{
+      backLink({
+        "href": url("questions:start"),
+        "text": "Back"
+      })
+    }}
 {% endblock beforeContent %}
 
 {% block content %}
@@ -19,7 +19,6 @@
         {{ csrf_input }}
 
         {{ form.have_you_ever_smoked.as_field_group() }}
-
 
         {{ button({
             "text": "Continue"

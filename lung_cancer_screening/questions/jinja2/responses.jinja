@@ -3,12 +3,14 @@
 {% from 'nhsuk/components/back-link/macro.jinja' import backLink %}
 
 {% block beforeContent %}
-  {{
-    backLink({
-      "href": url("questions:family_history_lung_cancer"),
-      "text": "Back"
-    })
-  }}
+  <nav>
+    {{
+      backLink({
+        "href": url("questions:family_history_lung_cancer"),
+        "text": "Back"
+      })
+    }}
+  </nav>
 {% endblock beforeContent %}
 
 {% block page_content %}

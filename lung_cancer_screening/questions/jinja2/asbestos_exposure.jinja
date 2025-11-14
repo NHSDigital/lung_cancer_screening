@@ -4,12 +4,14 @@
 {% from 'nhsuk/components/details/macro.jinja' import details %}
 
 {% block beforeContent %}
-  {{
-    backLink({
-      "href": url("questions:respiratory_conditions"),
-      "text": "Back"
-    })
-  }}
+  <nav>
+    {{
+      backLink({
+        "href": url("questions:respiratory_conditions"),
+        "text": "Back"
+      })
+    }}
+  </nav>
 {% endblock beforeContent %}
 
 {% block page_content %}
