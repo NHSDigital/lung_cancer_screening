@@ -15,7 +15,8 @@ from .helpers.user_interaction_helpers import (
     fill_in_and_submit_sex_at_birth,
     fill_in_and_submit_gender,
     fill_in_and_submit_ethnicity,
-    fill_in_and_submit_asbestos_exposure
+    fill_in_and_submit_asbestos_exposure,
+    fill_in_and_submit_respiratory_conditions
 )
 
 from .helpers.assertion_helpers import expect_back_link_to_have_url
@@ -96,7 +97,7 @@ class TestQuestionnaire(StaticLiveServerTestCase):
 
         expect(page).to_have_url(f"{self.live_server_url}/respiratory-conditions")
         expect_back_link_to_have_url(page, "/education")
-        page.click("text=Continue")
+        fill_in_and_submit_respiratory_conditions(page, "None of the above")
 
         expect(page).to_have_url(f"{self.live_server_url}/asbestos-exposure")
         expect_back_link_to_have_url(page, "/respiratory-conditions")
