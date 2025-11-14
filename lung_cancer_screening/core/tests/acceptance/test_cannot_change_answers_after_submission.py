@@ -13,7 +13,8 @@ from .helpers.user_interaction_helpers import (
     fill_in_and_submit_sex_at_birth,
     fill_in_and_submit_gender,
     fill_in_and_submit_ethnicity,
-    fill_in_and_submit_asbestos_exposure
+    fill_in_and_submit_asbestos_exposure,
+    fill_in_and_submit_respiratory_conditions
 )
 
 class TestQuestionnaire(StaticLiveServerTestCase):
@@ -48,7 +49,7 @@ class TestQuestionnaire(StaticLiveServerTestCase):
         fill_in_and_submit_gender(page, "Male")
         fill_in_and_submit_ethnicity(page, "White")
         page.click("text=Continue") # education
-        page.click("text=Continue") # respiratory conditions
+        fill_in_and_submit_respiratory_conditions(page, "None of the above")
         fill_in_and_submit_asbestos_exposure(page, "No")
         page.click("text=Continue") # cancer diagnosis
         page.click("text=Continue") # family history

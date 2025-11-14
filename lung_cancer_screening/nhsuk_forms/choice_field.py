@@ -20,6 +20,7 @@ class BoundChoiceField(forms.BoundField):
 
         self._conditional_html = {}
         self.dividers = {}
+        self.choice_hints = {}
 
     def add_conditional_html(self, value, html):
         if isinstance(self.field.widget, widgets.Select):
@@ -35,6 +36,12 @@ class BoundChoiceField(forms.BoundField):
 
     def get_divider_after(self, previous):
         return self.dividers.get(previous)
+
+    def add_hint_for_choice(self, value, hint):
+        self.choice_hints[value] = hint
+
+    def get_hint_for_choice(self, value):
+        return self.choice_hints.get(value)
 
 
 class ChoiceField(forms.ChoiceField):
