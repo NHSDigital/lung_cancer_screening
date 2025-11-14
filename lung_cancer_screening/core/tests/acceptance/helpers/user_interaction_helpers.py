@@ -1,4 +1,5 @@
 from playwright.sync_api import expect
+from .test_helpers import check_labels
 
 def fill_in_and_submit_participant_id(page, participant_id):
     page.fill("input[name='participant_id']", participant_id)
@@ -84,3 +85,12 @@ def fill_in_and_submit_asbestos_exposure(page, answer):
     page.get_by_label(answer, exact=True).check()
 
     page.click("text=Continue")
+
+def fill_in_and_submit_respiratory_conditions(page, answer):
+    expect(page.locator("legend")).to_have_text(
+        "Have you ever been diagnosed with any of the following respiratory conditions?")
+
+    check_labels(page, answer)
+
+    page.click("text=Continue")
+

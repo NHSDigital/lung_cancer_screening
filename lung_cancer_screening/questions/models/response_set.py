@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from dateutil.relativedelta import relativedelta
@@ -32,6 +33,14 @@ class EthnicityValues(models.TextChoices):
     WHITE = "W", "White"
     OTHER = "O", "Other ethnic group"
     PREFER_NOT_TO_SAY = "N", "I'd prefer not to say"
+
+class RespiratoryConditionValues(models.TextChoices):
+    PNEUMONIA = "P", "Pneumonia"
+    EMPHYSEMA = "E", "Emphysema"
+    BRONCHITIS = "B", "Chronic bronchitis"
+    TUBERCULOSIS = "T", "Tuberculosis (TB)"
+    COPD = "C", "Chronic obstructive pulmonary disease (COPD)"
+    NONE = "N", "None of the above"
 
 class ResponseSet(BaseModel):
     participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
@@ -91,6 +100,12 @@ class ResponseSet(BaseModel):
     ethnicity = models.CharField(
         max_length=1,
         choices=EthnicityValues.choices,
+        null=True,
+        blank=True
+    )
+
+    respiratory_conditions = ArrayField(
+        models.CharField(max_length=1, choices=RespiratoryConditionValues.choices),
         null=True,
         blank=True
     )
