@@ -15,6 +15,7 @@ class EthnicityForm(forms.ModelForm):
             label="What is your ethnic background?",
             widget=forms.RadioSelect,
             label_classes="nhsuk-fieldset__legend--m",
+            label_is_page_heading=True,
             hint="Your ethnicity may impact your chances of developing lung cancer.",
             error_messages={
                 'required': 'Select your ethnic background.'

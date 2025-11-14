@@ -55,6 +55,7 @@ class ChoiceField(forms.ChoiceField):
         *args,
         hint=None,
         label_classes="nhsuk-fieldset__legend--m",
+        label_is_page_heading=False,
         classes=None,
         **kwargs,
     ):
@@ -65,6 +66,7 @@ class ChoiceField(forms.ChoiceField):
         self.hint = hint
         self.classes = classes
         self.label_classes = label_classes
+        self.label_is_page_heading = label_is_page_heading
 
         super().__init__(*args, **kwargs)
 
@@ -97,6 +99,7 @@ class MultipleChoiceField(forms.MultipleChoiceField):
         *args,
         hint=None,
         label_classes="nhsuk-fieldset__legend--m",
+        label_is_page_heading=False,
         classes=None,
         **kwargs,
     ):
@@ -105,5 +108,6 @@ class MultipleChoiceField(forms.MultipleChoiceField):
         self.hint = hint
         self.classes = classes
         self.label_classes = label_classes
+        self.label_is_page_heading = label_is_page_heading
 
         super().__init__(*args, **kwargs)

@@ -4,12 +4,14 @@
 {% from 'nhsuk/components/fieldset/macro.jinja' import fieldset %}
 
 {% block beforeContent %}
-{{
-backLink({
-"href": url("questions:date_of_birth"),
-"text": "Back"
-})
-}}
+<nav>
+  {{
+    backLink({
+    "href": url("questions:date_of_birth"),
+    "text": "Back"
+    })
+  }}
+</nav>
 {% endblock beforeContent %}
 
 {% block page_content %}

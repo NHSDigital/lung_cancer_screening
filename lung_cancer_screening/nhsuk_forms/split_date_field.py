@@ -68,6 +68,7 @@ class SplitDateField(forms.MultiValueField):
     def __init__(self, *args, **kwargs):
         max_value = kwargs.pop("max_value", datetime.date.today())
         min_value = kwargs.pop("min_value", datetime.date(1900, 1, 1))
+        self.label_is_page_heading = kwargs.pop("label_is_page_heading", False)
         self.hint = kwargs.pop("hint", None)
 
         day_bounds_error = gettext("Day should be between 1 and 31.")
