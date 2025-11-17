@@ -19,3 +19,4 @@ lung_cancer_screening/assets/compiled/*
 .DS_Store
 .venv
 .devcontainer/ca.crt
+tests/TEST-*.xml

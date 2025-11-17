@@ -49,10 +49,10 @@ def after_all(context):
         LiveServer.tearDownClass()
 
 
-def before_scenario(_context, _scenario):
+def before_scenario(context, _scenario):
     """Set up before each scenario."""
     # behave-django automatically handles database transactions per scenario
-    pass
+    context.page = context.browser.new_page()
 
 
 def after_scenario(context, _scenario):
