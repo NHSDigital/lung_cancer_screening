@@ -13,4 +13,6 @@ MIDDLEWARE.remove(
     "whitenoise.middleware.WhiteNoiseMiddleware",
 )
 
+INSTALLED_APPS += ["behave_django"]
+
 logging.disable(logging.CRITICAL)
