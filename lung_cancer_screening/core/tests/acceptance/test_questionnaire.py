@@ -97,7 +97,7 @@ class TestQuestionnaire(StaticLiveServerTestCase):
 
         expect(page).to_have_url(f"{self.live_server_url}/respiratory-conditions")
         expect_back_link_to_have_url(page, "/education")
-        fill_in_and_submit_respiratory_conditions(page, "None of the above")
+        fill_in_and_submit_respiratory_conditions(page, "No, I have not had any of these respiratory conditions")
 
         expect(page).to_have_url(f"{self.live_server_url}/asbestos-exposure")
         expect_back_link_to_have_url(page, "/respiratory-conditions")
@@ -123,6 +123,7 @@ class TestQuestionnaire(StaticLiveServerTestCase):
         expect(responses).to_contain_text("Which of these best describes you? Male")
         expect(responses).to_contain_text("What is your ethnic background? White")
         expect(responses).to_contain_text("Have you ever worked in a job where you might have been exposed to asbestos? No")
+        expect(responses).to_contain_text("Have you ever been diagnosed with any of the following respiratory conditions?" ['N'])
 
         page.click("text=Submit")
 

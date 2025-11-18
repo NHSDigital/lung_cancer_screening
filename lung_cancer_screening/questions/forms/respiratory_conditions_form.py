@@ -18,7 +18,8 @@ class RespiratoryConditionsForm(forms.ModelForm):
             label_classes="nhsuk-fieldset__legend--l",
             hint="Select all that apply",
             error_messages={
-                'required': 'Select if you have had any respiratory conditions'
+                'required': 'Select if you have had any respiratory conditions',
+                'singleton_option': 'Select if you have had any respiratory conditions, or select \'No, I have not had any of these respiratory conditions\''
             }
         )
 

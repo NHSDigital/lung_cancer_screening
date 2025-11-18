@@ -74,17 +74,16 @@ class TestRespiratoryConditionsForm(TestCase):
         )
 
     # TODO: Add test for when none of the above is selected and other options are selected
-    # def test_is_invalid_with_none_of_the_above_selected_and_other_options_selected(self):
-    #     form = RespiratoryConditionsForm(
-    #         participant=self.participant,
-    #         data={
-    #             "respiratory_conditions": ["N", "P", "E", "C"]
-    #         }
-    #     )
-    #     self.assertFalse(form.is_valid())
-    #     self.assertEqual(
-    #         form.errors["respiratory_conditions"],
-    #         ["Select if you have had any respiratory conditions"]
-    #     )
-
-
+    def test_is_invalid_with_none_of_the_above_selected_and_other_options_selected(self):
+        form = RespiratoryConditionsForm(
+            participant=self.participant,
+            data={
+                "respiratory_conditions": ["N", "P", "E", "C"]
+            }
+        )
+        self.assertFalse(form.is_valid())
+        print(form.errors.as_json())
+        self.assertEqual(
+            form.errors["respiratory_conditions"][0],
+            "Select if you have had any respiratory conditions, or select 'No, I have not had any of these respiratory conditions'"
+        )

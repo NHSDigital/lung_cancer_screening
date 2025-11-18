@@ -115,3 +115,37 @@ class TestQuestionnaireValidationErrors(StaticLiveServerTestCase):
         expect(page.locator(".nhsuk-error-message")).to_contain_text(
             "Select your ethnic background."
         )
+
+    def test_respiratory_conditions_validation_errors(self):
+        participant_id = '123'
+
+        page = self.browser.new_page()
+        page.goto(f"{self.live_server_url}/start")
+        fill_in_and_submit_participant_id(page, participant_id)
+        page.goto(f"{self.live_server_url}/respiratory-conditions")
+
+        page.click("text=Continue")
+        expect(page.locator(".nhsuk-error-message")).to_contain_text(
+            "Select if you have had any respiratory conditions"
+        )
+
+        # Select one respiratory condition
+        page.get_by_label("Bronchitis").click()
+
+        # Select None option
+        page.get_by_label("No, I have not had any of these respiratory conditions").click()
+        expect(page.locator(".nhsuk-error-message")).to_contain_text(
+            "Select if you have had any respiratory conditions"
+        )
+
+        # Continue
+        page.click("text=Continue")
+
+        # Assert error is shown
+        expect(page.locator(".nhsuk-error-message")).to_contain_text(
+            "Select if you have had any respiratory conditions, or select 'No, I have not had any of these respiratory conditions'"
+        )
+
+        expect(page).to_have_url(f"{self.live_server_url}/respiratory-conditions")
+
+

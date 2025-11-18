@@ -40,7 +40,14 @@ class RespiratoryConditionValues(models.TextChoices):
     BRONCHITIS = "B", "Chronic bronchitis"
     TUBERCULOSIS = "T", "Tuberculosis (TB)"
     COPD = "C", "Chronic obstructive pulmonary disease (COPD)"
-    NONE = "N", "None of the above"
+    NONE = "N", "No, I have not had any of these respiratory conditions"
+
+def validate_singleton_option(value):
+    if value and "N" in value and len(value) > 1:
+        raise ValidationError(
+            "Cannot have singleton value and other values selected",
+            code="singleton_option",
+        )
 
 class ResponseSet(BaseModel):
     participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
@@ -104,10 +111,12 @@ class ResponseSet(BaseModel):
         blank=True
     )
 
+
     respiratory_conditions = ArrayField(
         models.CharField(max_length=1, choices=RespiratoryConditionValues.choices),
         null=True,
-        blank=True
+        blank=True,
+        validators=[validate_singleton_option]
     )
 
     asbestos_exposure = models.BooleanField(
@@ -153,5 +162,4 @@ class ResponseSet(BaseModel):
         elif self.weight_imperial:
             value = Decimal(self.weight_imperial)
             return f"{value // 14} stone {value % 14} pounds"
-
 
