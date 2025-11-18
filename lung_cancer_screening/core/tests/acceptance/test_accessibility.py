@@ -1,10 +1,13 @@
 import os
+
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.test import tag
 from playwright.sync_api import sync_playwright
 
-from .helpers.user_interaction_helpers import setup_participant
 from .helpers.assertion_helpers import expect_no_accessibility_violations
+from .helpers.user_interaction_helpers import setup_participant
 
+@tag('accessibility')
 class TestQuestionnaireAccessibility(StaticLiveServerTestCase):
 
     @classmethod

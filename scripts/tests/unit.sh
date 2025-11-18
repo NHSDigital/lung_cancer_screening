@@ -23,7 +23,7 @@ if [[ -n "${TEST_MODULE:-}" ]]; then
     TEST_MODULE="${TEST_MODULE%.py}"
     TEST_MODULE=${TEST_MODULE//\//\.}
   fi
-  docker compose run --rm --remove-orphans web poetry run python manage.py test $TEST_MODULE --settings=lung_cancer_screening.settings_test
+  docker compose run --rm --remove-orphans web poetry run python manage.py test $TEST_MODULE --settings=lung_cancer_screening.settings_test --exclude-tag=accessibility
 else
-  docker compose run --rm --remove-orphans web poetry run python manage.py test --settings=lung_cancer_screening.settings_test
+  docker compose run --rm --remove-orphans web poetry run python manage.py test --settings=lung_cancer_screening.settings_test --exclude-tag=accessibility
 fi
