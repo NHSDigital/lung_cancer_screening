@@ -4,4 +4,4 @@ Feature: Participants with submitted responses
     When I go to "/start"
     And I submit my participant id
     Then I am on "/start"
-    And I should see an error summary "Responses have already been submitted for this participant"
+    And I see an error summary "Responses have already been submitted for this participant"

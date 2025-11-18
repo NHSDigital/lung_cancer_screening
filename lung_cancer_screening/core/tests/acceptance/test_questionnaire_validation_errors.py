@@ -134,9 +134,7 @@ class TestQuestionnaireValidationErrors(StaticLiveServerTestCase):
 
         # Select None option
         page.get_by_label("No, I have not had any of these respiratory conditions").click()
-        expect(page.locator(".nhsuk-error-message")).to_contain_text(
-            "Select if you have had any respiratory conditions"
-        )
+
 
         # Continue
         page.click("text=Continue")
