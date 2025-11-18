@@ -6,7 +6,7 @@ def check_labels(page, answers):
         page.get_by_label(answers, exact=True).check()
         return
 
-    if isinstance(answers, list, tuple):
+    if isinstance(answers, (list, tuple)):
         for answer in answers:
             page.get_by_label(answer, exact=True).check()
         return
