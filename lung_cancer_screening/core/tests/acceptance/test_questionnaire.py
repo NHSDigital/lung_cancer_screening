@@ -123,7 +123,7 @@ class TestQuestionnaire(StaticLiveServerTestCase):
         expect(responses).to_contain_text("Which of these best describes you? Male")
         expect(responses).to_contain_text("What is your ethnic background? White")
         expect(responses).to_contain_text("Have you ever worked in a job where you might have been exposed to asbestos? No")
-        expect(responses).to_contain_text("Have you ever been diagnosed with any of the following respiratory conditions?" ['N'])
+        expect(responses).to_contain_text("Have you ever been diagnosed with any of the following respiratory conditions? No, I have not had any of these respiratory conditions")
 
         page.click("text=Submit")
 
