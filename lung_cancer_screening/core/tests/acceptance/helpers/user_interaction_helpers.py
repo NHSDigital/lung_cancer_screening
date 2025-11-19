@@ -1,5 +1,10 @@
 from playwright.sync_api import expect
 
+def setup_participant(page, live_server_url):
+    participant_id = 'abc123'
+    page.goto(f"{live_server_url}/start")
+    fill_in_and_submit_participant_id(page, participant_id)
+
 def fill_in_and_submit_participant_id(page, participant_id):
     page.fill("input[name='participant_id']", participant_id)
     page.click('text=Start now')

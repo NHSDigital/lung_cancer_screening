@@ -18,6 +18,7 @@ class TypedChoiceField(forms.TypedChoiceField):
         *args,
         hint=None,
         label_classes=None,
+        label_is_page_heading=False,
         classes=None,
         **kwargs,
     ):
@@ -28,7 +29,7 @@ class TypedChoiceField(forms.TypedChoiceField):
         self.hint = hint
         self.classes = classes
         self.label_classes = label_classes
-
+        self.label_is_page_heading = label_is_page_heading
         super().__init__(*args, **kwargs)
 
     @staticmethod
