@@ -6,11 +6,15 @@
 {% set ns = namespace(items=[]) %}
 {% for value, text in unbound_field.choices %}
   {% set conditional_html = field.conditional_html(value) %}
+  {% set hint_text = field.get_hint_for_choice(value) %}
   {% set ns.items = ns.items + [{
     "id": field.auto_id if loop.first,
     "value": value,
     "text": text,
     "checked": field.value() == value,
+    "hint": {
+      "text": hint_text
+    } if hint_text else undefined,
     "conditional": {
       "html": conditional_html
     } if conditional_html else undefined
