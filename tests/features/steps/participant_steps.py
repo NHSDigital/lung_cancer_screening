@@ -10,7 +10,7 @@ def given_a_participant_exists(context, participant_id):
 
 
 @given('I have already submitted my responses')
-def given_I_have_already_submitted_my_responses(context):
+def given_i_have_already_submitted_my_responses(context):
     context.participant_id = 'abc123'
     participant = Participant.objects.create(unique_id=context.participant_id)
     participant.responseset_set.create(
