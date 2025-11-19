@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from dateutil.relativedelta import relativedelta
@@ -32,6 +33,21 @@ class EthnicityValues(models.TextChoices):
     WHITE = "W", "White"
     OTHER = "O", "Other ethnic group"
     PREFER_NOT_TO_SAY = "N", "I'd prefer not to say"
+
+class RespiratoryConditionValues(models.TextChoices):
+    PNEUMONIA = "P", "Pneumonia"
+    EMPHYSEMA = "E", "Emphysema"
+    BRONCHITIS = "B", "Chronic bronchitis"
+    TUBERCULOSIS = "T", "Tuberculosis (TB)"
+    COPD = "C", "Chronic obstructive pulmonary disease (COPD)"
+    NONE = "N", "No, I have not had any of these respiratory conditions"
+
+def validate_singleton_option(value):
+    if value and "N" in value and len(value) > 1:
+        raise ValidationError(
+            "Cannot have singleton value and other values selected",
+            code="singleton_option",
+        )
 
 class ResponseSet(BaseModel):
     participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
@@ -95,6 +111,14 @@ class ResponseSet(BaseModel):
         blank=True
     )
 
+
+    respiratory_conditions = ArrayField(
+        models.CharField(max_length=1, choices=RespiratoryConditionValues.choices),
+        null=True,
+        blank=True,
+        validators=[validate_singleton_option]
+    )
+
     asbestos_exposure = models.BooleanField(
         null=True,
         blank=True
@@ -139,4 +163,14 @@ class ResponseSet(BaseModel):
             value = Decimal(self.weight_imperial)
             return f"{value // 14} stone {value % 14} pounds"
 
+    @property
+    def formatted_respiratory_conditions(self):
+        if not self.respiratory_conditions:
+            return None
+        # Get the display values for each code
+        display_values = [
+            RespiratoryConditionValues(code).label
+            for code in self.respiratory_conditions
+        ]
+        return ", ".join(display_values)
 
