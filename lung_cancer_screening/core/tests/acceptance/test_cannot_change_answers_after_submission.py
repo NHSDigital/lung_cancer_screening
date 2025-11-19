@@ -49,7 +49,7 @@ class TestQuestionnaire(StaticLiveServerTestCase):
         fill_in_and_submit_gender(page, "Male")
         fill_in_and_submit_ethnicity(page, "White")
         page.click("text=Continue") # education
-        fill_in_and_submit_respiratory_conditions(page, "None of the above")
+        fill_in_and_submit_respiratory_conditions(page, "No, I have not had any of these respiratory conditions")
         fill_in_and_submit_asbestos_exposure(page, "No")
         page.click("text=Continue") # cancer diagnosis
         page.click("text=Continue") # family history

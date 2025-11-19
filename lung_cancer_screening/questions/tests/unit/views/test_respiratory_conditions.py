@@ -37,7 +37,7 @@ class TestRespiratoryConditions(TestCase):
         self.assertContains(response, "Chronic bronchitis")
         self.assertContains(response, "Tuberculosis (TB)")
         self.assertContains(response, "Chronic obstructive pulmonary disease (COPD)")
-        self.assertContains(response, "None of the above")
+        self.assertContains(response, "No, I have not had any of these respiratory conditions")
 
     def test_post_redirects_if_the_participant_does_not_exist(self):
         session = self.client.session

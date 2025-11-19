@@ -163,3 +163,14 @@ class ResponseSet(BaseModel):
             value = Decimal(self.weight_imperial)
             return f"{value // 14} stone {value % 14} pounds"
 
+    @property
+    def formatted_respiratory_conditions(self):
+        if not self.respiratory_conditions:
+            return None
+        # Get the display values for each code
+        display_values = [
+            RespiratoryConditionValues(code).label
+            for code in self.respiratory_conditions
+        ]
+        return ", ".join(display_values)
+
