@@ -81,7 +81,6 @@ class TestRespiratoryConditionsForm(TestCase):
             }
         )
         self.assertFalse(form.is_valid())
-        print(form.errors.as_json())
         self.assertEqual(
             form.errors["respiratory_conditions"][0],
             "Select if you have had any respiratory conditions, or select 'No, I have not had any of these respiratory conditions'"
