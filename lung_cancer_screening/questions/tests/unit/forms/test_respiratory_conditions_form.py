@@ -73,7 +73,6 @@ class TestRespiratoryConditionsForm(TestCase):
             ["Select if you have had any respiratory conditions"]
         )
 
-    # TODO: Add test for when none of the above is selected and other options are selected
     def test_is_invalid_with_none_of_the_above_selected_and_other_options_selected(self):
         form = RespiratoryConditionsForm(
             participant=self.participant,
