@@ -128,3 +128,35 @@ class TestQuestionnaire(StaticLiveServerTestCase):
         page.click("text=Submit")
 
         expect(page).to_have_url(f"{self.live_server_url}/your-results")
+
+    def test_can_select_multiple_respiratory_conditions(self):
+        """Test that users can select multiple respiratory conditions in the UI"""
+        participant_id = '456'
+        smoking_status = 'Yes, I currently smoke'
+        age = datetime.now() - relativedelta(years=60)
+
+        page = self.browser.new_page()
+        page.goto(f"{self.live_server_url}/start")
+
+        fill_in_and_submit_participant_id(page, participant_id)
+        fill_in_and_submit_smoking_eligibility(page, smoking_status)
+        fill_in_and_submit_date_of_birth(page, age)
+        fill_in_and_submit_height_metric(page, "170")
+        fill_in_and_submit_weight_metric(page, "70")
+        fill_in_and_submit_sex_at_birth(page, "Female")
+        fill_in_and_submit_gender(page, "Female")
+        fill_in_and_submit_ethnicity(page, "White")
+        page.click("text=Continue")  # education
+
+        # Select multiple respiratory conditions
+        expect(page).to_have_url(f"{self.live_server_url}/respiratory-conditions")
+        fill_in_and_submit_respiratory_conditions(page, ["Pneumonia", "Emphysema"])
+
+        fill_in_and_submit_asbestos_exposure(page, "No")
+        page.click("text=Continue")  # cancer diagnosis
+        page.click("text=Continue")  # family history
+
+        # Verify both conditions appear on the responses page
+        expect(page).to_have_url(f"{self.live_server_url}/responses")
+        responses = page.locator(".responses")
+        expect(responses).to_contain_text("Have you ever been diagnosed with any of the following respiratory conditions? Pneumonia, Emphysema")
