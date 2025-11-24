@@ -5,7 +5,7 @@ description = ""
 authors = [{name = "Your Name",email = "you@example.com"}]
 license = { text = "MIT" }
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.13, <4.0"
 dependencies = [
     "azure-identity (>=1.23.0,<2.0.0)",
     "django (>=5.2.4,<6.0.0)",
@@ -23,8 +23,11 @@ package-mode = false
 ruff = "^0.14.5"
 playwright = "^1.56.0"
 axe-playwright-python = "^0.1.6"
-
+behave-django = "^1.8.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.behave]
+paths = ["tests/features"]
