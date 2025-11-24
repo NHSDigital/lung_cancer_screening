@@ -4,14 +4,14 @@ Feature: Validation errors
     When I go to "/date-of-birth"
     And I submit the form
     Then I am on "/date-of-birth"
-    And I see a form error "Enter your date of birth."
+    And I see a form error "Enter your date of birth"
 
   Scenario: Height form errors
     Given I have started the questionnaire
     When I go to "/height"
     And I submit the form
     Then I am on "/height"
-    And I see a form error "Enter your height."
+    And I see a form error "Enter your height"
     When I fill in and submit my height with "139.6"
     Then I am on "/height"
     And I see a form error "Height must be between 139.7cm and 243.8 cm"
@@ -24,7 +24,7 @@ Feature: Validation errors
     When I go to "/height?unit=imperial"
     And I submit the form
     Then I am on "/height?unit=imperial"
-    And I see a form error "Enter your height."
+    And I see a form error "Enter your height"
     When I fill in and submit my height with "5.2" feet and "2" inches
     Then I am on "/height?unit=imperial"
     And I see a form error "Feet must be in whole numbers"
@@ -40,7 +40,7 @@ Feature: Validation errors
     When I go to "/weight"
     And I submit the form
     Then I am on "/weight"
-    And I see a form error "Enter your weight."
+    And I see a form error "Enter your weight"
     When I fill in and submit my weight with "25.3"
     Then I am on "/weight"
     And I see a form error "Weight must be between 25.4kg and 317.5kg"
@@ -53,7 +53,7 @@ Feature: Validation errors
     When I go to "/weight?unit=imperial"
     And I submit the form
     Then I am on "/weight?unit=imperial"
-    And I see a form error "Enter your weight."
+    And I see a form error "Enter your weight"
     When I fill in and submit my weight with "5.2" stone and "2" pounds
     Then I am on "/weight?unit=imperial"
     And I see a form error "Stone must be in whole numbers"
@@ -72,21 +72,21 @@ Feature: Validation errors
     When I go to "/sex-at-birth"
     And I submit the form
     Then I am on "/sex-at-birth"
-    And I see a form error "Select your sex at birth."
+    And I see a form error "Select your sex at birth"
 
   Scenario: Gender form errors
     Given I have started the questionnaire
     When I go to "/gender"
     And I submit the form
     Then I am on "/gender"
-    And I see a form error "Select the option that best describes your gender."
+    And I see a form error "Select the option that best describes your gender"
 
   Scenario: Ethnicity form errors
     Given I have started the questionnaire
     When I go to "/ethnicity"
     And I submit the form
     Then I am on "/ethnicity"
-    And I see a form error "Select your ethnic background."
+    And I see a form error "Select your ethnic background"
 
   Scenario: Respiratory conditions form errors
     Given I have started the questionnaire

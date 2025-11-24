@@ -32,7 +32,7 @@ class TestDateOfBirthForm(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(
             form.errors["date_of_birth"],
-            ["Enter your date of birth."]
+            ["Enter your date of birth"]
         )
 
     def test_is_invalid_when_a_partial_date_is_provided(self):
@@ -48,7 +48,7 @@ class TestDateOfBirthForm(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(
             form.errors["date_of_birth"],
-            ["Enter your full date of birth."]
+            ["Enter your full date of birth"]
         )
 
     def test_is_invalid_when_an_invalid_date_is_provided(self):
@@ -64,7 +64,7 @@ class TestDateOfBirthForm(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(
             form.errors["date_of_birth"],
-            ["Date of birth must be a real date."]
+            ["Date of birth must be a real date"]
         )
 
     def test_returns_a_date_type(self):

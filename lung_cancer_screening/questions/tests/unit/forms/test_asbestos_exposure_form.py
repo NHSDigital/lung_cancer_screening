@@ -57,5 +57,5 @@ class TestAsbestosExposureForm(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(
             form.errors["asbestos_exposure"],
-            ["Select if you have been exposed to asbestos."]
+            ["Select if you have been exposed to asbestos"]
         )

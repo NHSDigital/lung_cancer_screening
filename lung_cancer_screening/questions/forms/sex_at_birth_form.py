@@ -18,7 +18,7 @@ class SexAtBirthForm(forms.ModelForm):
             label_is_page_heading=True,
             hint="Your sex may impact your chances of developing lung cancer.",
             error_messages={
-                'required': 'Select your sex at birth.'
+                'required': 'Select your sex at birth'
             }
         )
 

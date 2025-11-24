@@ -18,7 +18,7 @@ class EthnicityForm(forms.ModelForm):
             label_is_page_heading=True,
             hint="Your ethnicity may impact your chances of developing lung cancer.",
             error_messages={
-                'required': 'Select your ethnic background.'
+                'required': 'Select your ethnic background'
             }
         )
 

@@ -18,7 +18,7 @@ class GenderForm(forms.ModelForm):
             label_is_page_heading=True,
             hint="This information is used to find your NHS number and match with your GP record.",
             error_messages={
-                'required': 'Select the option that best describes your gender.'
+                'required': 'Select the option that best describes your gender'
             }
         )
 

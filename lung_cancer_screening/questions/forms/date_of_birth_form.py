@@ -18,9 +18,9 @@ class DateOfBirthForm(forms.ModelForm):
             label_is_page_heading=True,
             hint="For example, 15 3 1965",
             error_messages={
-                'required': 'Enter your date of birth.',
-                'incomplete': 'Enter your full date of birth.',
-                'invalid': 'Date of birth must be a real date.'
+                'required': 'Enter your date of birth',
+                'incomplete': 'Enter your full date of birth',
+                'invalid': 'Date of birth must be a real date'
             }
         )
 

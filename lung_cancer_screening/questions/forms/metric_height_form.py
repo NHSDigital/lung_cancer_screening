@@ -14,7 +14,7 @@ class MetricHeightForm(forms.ModelForm):
             label="Centimetres",
             classes="nhsuk-input--width-4",
             error_messages={
-                'required': 'Enter your height.',
+                'required': 'Enter your height',
             }
         )
 
