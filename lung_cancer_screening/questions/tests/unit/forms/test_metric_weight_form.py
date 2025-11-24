@@ -40,7 +40,7 @@ class TestMetricWeightForm(TestCase):
             }
         )
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors["weight_metric"], ["Enter your weight."])
+        self.assertEqual(form.errors["weight_metric"], ["Enter your weight"])
 
     def test_is_not_valid_without_any_weight_value_set(self):
         form = MetricWeightForm(
@@ -51,7 +51,7 @@ class TestMetricWeightForm(TestCase):
             }
         )
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors, {"weight_metric": ["Enter your weight."]})
+        self.assertEqual(form.errors, {"weight_metric": ["Enter your weight"]})
 
     # UAT: Error message for weight below minimum (25.4kg)
     def test_error_message_when_weight_below_minimum(self):

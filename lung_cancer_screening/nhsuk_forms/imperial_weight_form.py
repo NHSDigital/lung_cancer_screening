@@ -48,9 +48,9 @@ class ImperialWeightField(forms.MultiValueField):
             "min_value": 0,
             "max_value": 50,
             "error_messages": {
-                'invalid': 'Stone must be in whole numbers.',
-                'min_value': 'Weight must be between 4 stone and 50 stone.',
-                'max_value': 'Weight must be between 4 stone and 50 stone.',
+                'invalid': 'Stone must be in whole numbers',
+                'min_value': 'Weight must be between 4 stone and 50 stone',
+                'max_value': 'Weight must be between 4 stone and 50 stone',
                 **error_messages,
             },
         }
@@ -58,9 +58,9 @@ class ImperialWeightField(forms.MultiValueField):
             "min_value": 0,
             "max_value": 13,
             "error_messages": {
-                'invalid': 'Pounds must be in whole numbers.',
-                'min_value': 'Pounds must be between 0 and 13.',
-                'max_value': 'Pounds must be between 0 and 13.',
+                'invalid': 'Pounds must be in whole numbers',
+                'min_value': 'Pounds must be between 0 and 13',
+                'max_value': 'Pounds must be between 0 and 13',
                 **error_messages,
             },
         }

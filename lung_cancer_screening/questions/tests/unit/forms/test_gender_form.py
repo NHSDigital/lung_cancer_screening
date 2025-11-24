@@ -44,5 +44,5 @@ class TestGenderForm(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(
             form.errors["gender"],
-            ["Select the option that best describes your gender."]
+            ["Select the option that best describes your gender"]
         )

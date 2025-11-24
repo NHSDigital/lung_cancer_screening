@@ -59,7 +59,7 @@ class TestImperialWeightForm(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(
             form.errors["weight_imperial"],
-            ["Enter your weight."]
+            ["Enter your weight"]
         )
 
     def test_is_invalid_when_given_a_decimal_stone_value(self):
@@ -74,5 +74,5 @@ class TestImperialWeightForm(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(
             form.errors["weight_imperial"],
-            ["Stone must be in whole numbers."]
+            ["Stone must be in whole numbers"]
         )

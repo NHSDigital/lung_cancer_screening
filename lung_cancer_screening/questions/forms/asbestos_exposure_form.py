@@ -16,7 +16,7 @@ class AsbestosExposureForm(forms.ModelForm):
             label_classes="nhsuk-fieldset__legend--m",
             coerce=lambda x: x == 'True',
             error_messages={
-                'required': 'Select if you have been exposed to asbestos.'
+                'required': 'Select if you have been exposed to asbestos'
             }
         )
 

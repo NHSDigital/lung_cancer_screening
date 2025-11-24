@@ -15,8 +15,8 @@ class ImperialHeightForm(forms.ModelForm):
             required=True,
             require_all_fields=False,
             error_messages={
-                'required': 'Enter your height.',
-                'incomplete': 'Enter your height.'
+                'required': 'Enter your height',
+                'incomplete': 'Enter your height'
             }
         )
 

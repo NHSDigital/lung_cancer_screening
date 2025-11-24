@@ -44,5 +44,5 @@ class TestEthnicityForm(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(
             form.errors["ethnicity"],
-            ["Select your ethnic background."]
+            ["Select your ethnic background"]
         )

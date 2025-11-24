@@ -47,13 +47,13 @@ class ImperialHeightField(forms.MultiValueField):
 
         feet_kwargs = {
             "error_messages": {
-                'invalid': 'Feet must be in whole numbers.',
+                'invalid': 'Feet must be in whole numbers',
                 **error_messages,
             },
         }
         inches_kwargs = {
             "error_messages": {
-                'invalid': 'Inches must be in whole numbers.',
+                'invalid': 'Inches must be in whole numbers',
                 **error_messages,
             },
         }

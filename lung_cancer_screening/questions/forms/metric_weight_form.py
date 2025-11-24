@@ -15,7 +15,7 @@ class MetricWeightForm(forms.ModelForm):
             classes="nhsuk-input--width-4",
             required=True,
             error_messages={
-                'required': 'Enter your weight.',
+                'required': 'Enter your weight',
             }
         )
     def clean_weight_metric(self):

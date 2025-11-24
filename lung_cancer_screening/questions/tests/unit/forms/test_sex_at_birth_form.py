@@ -44,5 +44,5 @@ class TestSexAtBirthForm(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(
             form.errors["sex_at_birth"],
-            ["Select your sex at birth."]
+            ["Select your sex at birth"]
         )
