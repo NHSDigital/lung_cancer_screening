@@ -10,6 +10,7 @@ class DateOfBirthForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.instance.participant = self.participant
 
+        invalid_error_message = 'Date of birth must be a real date'
         self.fields["date_of_birth"] = SplitDateField(
             max_value=date.today(),
             required=True,
@@ -20,7 +21,9 @@ class DateOfBirthForm(forms.ModelForm):
             error_messages={
                 'required': 'Enter your date of birth',
                 'incomplete': 'Enter your full date of birth',
-                'invalid': 'Date of birth must be a real date'
+                'invalid': invalid_error_message,
+                'day_bounds': invalid_error_message,
+                'month_bounds': invalid_error_message
             }
         )
 

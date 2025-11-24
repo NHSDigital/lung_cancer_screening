@@ -5,6 +5,15 @@ Feature: Validation errors
     And I submit the form
     Then I am on "/date-of-birth"
     And I see a form error "Enter your date of birth"
+    When I fill in and submit my date of birth with "51-01-2001"
+    Then I am on "/date-of-birth"
+    And I see a form error "Date of birth must be a real date"
+    When I fill in and submit my date of birth with "01-13-2001"
+    Then I am on "/date-of-birth"
+    And I see a form error "Date of birth must be a real date"
+    When I fill in and submit my date of birth with "31-02-2001"
+    Then I am on "/date-of-birth"
+    And I see a form error "Date of birth must be a real date"
 
   Scenario: Height form errors
     Given I have started the questionnaire

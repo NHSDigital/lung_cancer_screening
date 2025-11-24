@@ -71,8 +71,8 @@ class SplitDateField(forms.MultiValueField):
         self.label_is_page_heading = kwargs.pop("label_is_page_heading", False)
         self.hint = kwargs.pop("hint", None)
 
-        day_bounds_error = gettext("Day should be between 1 and 31.")
-        month_bounds_error = gettext("Month should be between 1 and 12.")
+        day_bounds_error = kwargs.get("error_messages", {}).pop("day_bounds", gettext("Day should be between 1 and 31."))
+        month_bounds_error = kwargs.get("error_messages", {}).pop("month_bounds", gettext("Month should be between 1 and 12."))
         year_bounds_error = gettext(
             "Year should be between %(min_year)s and %(max_year)s."
         ) % {"min_year": min_value.year, "max_year": max_value.year}
