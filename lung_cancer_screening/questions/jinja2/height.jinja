@@ -3,6 +3,11 @@
 {% from 'nhsuk/components/back-link/macro.jinja' import backLink %}
 {% from 'nhsuk/components/fieldset/macro.jinja' import fieldset %}
 
+{% set HEIGHT_UNIT = {
+    'imperial': 'feet and inches',
+    'metric': 'centimetres'
+} %}
+
 {% block beforeContent %}
 <nav>
   {{
@@ -39,7 +44,7 @@
         {% endif %}
 
 
-      <p><a href="?unit={{ switch_to_unit }}">Switch to {{ switch_to_unit }}</a></p>
+      <p><a href="?unit={{ switch_to_unit }}">Switch to {{ HEIGHT_UNIT[switch_to_unit] }}</a></p>
 
       {% endcall %}
 
