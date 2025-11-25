@@ -56,3 +56,17 @@ class TestMetricHeightForm(TestCase):
             }
         )
         self.assertFalse(form.is_valid())
+
+    def test_is_invalid_with_multiple_decimal_places(self):
+        form = MetricHeightForm(
+            participant=self.participant,
+            instance=self.response_set,
+            data={
+                "height": "170.45"  # too many decimal places
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["height"],
+            ["Centimetres must be to 1 decimal place, for example 185.5cm"]
+        )
