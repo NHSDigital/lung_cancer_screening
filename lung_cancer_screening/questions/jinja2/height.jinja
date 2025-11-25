@@ -24,15 +24,15 @@
   <div class="nhsuk-grid-column-two-thirds">
     <form action="{{ request.get_full_path() }}" method="POST" novalidate>
       {{ csrf_input }}
-      <h1 class="nhsuk-heading-l">What is your height?</h1>
+      <h1 class="nhsuk-heading-l">Enter your height</h1>
       <p>An accurate measurement is important.
 
       <p>You can measure your height at home with a measuring tape. Some pharmacies and gyms have machines to measure
         your height.
         {% call fieldset({
           "legend": {
-            "text": "Enter your height",
-            "classes": "nhsuk-label--m"
+            "text": "What is your height?",
+            "classes": "nhsuk-fieldset__legend nhsuk-fieldset__legend--m"
           }
         })
         %}
