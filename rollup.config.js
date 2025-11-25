@@ -14,6 +14,7 @@ export default {
     compact: true,
     format: 'es',
     file: 'lung_cancer_screening/assets/compiled/js/bundle.js',
+    sourcemap: true,
 
     plugins: [
       // Minification using terser
