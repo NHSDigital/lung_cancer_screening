@@ -21,7 +21,6 @@
     {{ input({
       "label": {
         "text": "Feet",
-        "classes": "nhsuk-fieldset__legend--m",
         "isPageHeading": false
       },
       "hint": {
@@ -31,7 +30,8 @@
       "name": field.html_name + "_0",
       "value": field.subwidgets.0.data.value,
       "classes": "nhsuk-input--width-2" + field_error_classes,
-      "type": "number"
+      "type": "number",
+      "suffix": "ft"
     }) }}
   </div>
 
@@ -39,14 +39,14 @@
     {{ input({
       "label": {
         "text": "Inches",
-        "classes": "nhsuk-fieldset__legend--m",
         "isPageHeading": false
       },
       "id": field.auto_id + "_1",
       "name": field.html_name + "_1",
       "value": field.subwidgets.1.data.value,
       "classes": "nhsuk-input--width-2" + field_error_classes,
-      "type": "number"
+      "type": "number",
+      "suffix": "in"
     }) }}
   </div>
 </div>
