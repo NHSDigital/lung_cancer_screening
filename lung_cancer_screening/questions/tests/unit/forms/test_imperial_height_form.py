@@ -77,3 +77,63 @@ class TestImperialHeightForm(TestCase):
             form.errors["height_imperial"],
             ["Feet must be in whole numbers"]
         )
+
+    def test_is_invalid_when_inches_under_11(self):
+        form = ImperialHeightForm(
+            participant=self.participant,
+            instance=self.response_set,
+            data={
+                "height_imperial_0": "5",
+                "height_imperial_1": "12"
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["height_imperial"],
+            ["Inches must be between 0 and 11"]
+        )
+
+    def test_is_invalid_when_inches_over_0(self):
+        form = ImperialHeightForm(
+            participant=self.participant,
+            instance=self.response_set,
+            data={
+                "height_imperial_0": "5",
+                "height_imperial_1": "-1"
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["height_imperial"],
+            ["Inches must be between 0 and 11"]
+        )
+
+    def test_is_invalid_when_feet_over_4(self):
+        form = ImperialHeightForm(
+            participant=self.participant,
+            instance=self.response_set,
+            data={
+                "height_imperial_0": "3",
+                "height_imperial_1": "10"
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["height_imperial"],
+            ["Feet must be between 4 and 8"]
+        )
+
+    def test_is_invalid_when_feet_under_8(self):
+        form = ImperialHeightForm(
+            participant=self.participant,
+            instance=self.response_set,
+            data={
+                "height_imperial_0": "9",
+                "height_imperial_1": "0"
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["height_imperial"],
+            ["Feet must be between 4 and 8"]
+        )

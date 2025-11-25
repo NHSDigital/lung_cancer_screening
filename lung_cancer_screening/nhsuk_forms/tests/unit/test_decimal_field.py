@@ -21,7 +21,6 @@ class TestDecimalField(TestCase):
     def test_renders_nhs_input_with_suffix(self):
         class TestForm(Form):
             field = DecimalField(label="Abc", initial=1, max_value=10, suffix="cm")
-        print(TestForm()["field"].as_field_group())
         self.assertHTMLEqual(
             TestForm()["field"].as_field_group(),
             """
