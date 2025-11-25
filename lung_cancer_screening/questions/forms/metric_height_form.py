@@ -15,7 +15,8 @@ class MetricHeightForm(forms.ModelForm):
             classes="nhsuk-input--width-4",
             error_messages={
                 'required': 'Enter your height',
-            }
+            },
+            suffix="cm"
         )
 
     def clean_height(self):
