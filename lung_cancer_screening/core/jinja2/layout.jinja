@@ -9,6 +9,20 @@
 
 {% block pageTitle %}Lung Cancer Screening - NHS{% endblock %}
 
+{% block beforeContent %}
+  {% if back_link_url %}
+    <nav>
+      {{
+        backLink({
+          "href": back_link_url,
+          "text": "Back"
+        })
+      }}
+    </nav>
+  {% endif %}
+{% endblock beforeContent %}
+
+
 {% block content %}
   {% block page_content %}
   {% endblock page_content %}
