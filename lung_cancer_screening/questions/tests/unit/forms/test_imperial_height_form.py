@@ -53,7 +53,7 @@ class TestImperialHeightForm(TestCase):
             participant=self.participant,
             instance=self.response_set,
             data={
-                "height_imperial_0": "5",
+                # missing feet
                 # missing inches
             }
         )
@@ -61,6 +61,36 @@ class TestImperialHeightForm(TestCase):
         self.assertEqual(
             form.errors["height_imperial"],
             ["Enter your height"]
+        )
+
+    def test_is_invalid_with_missing_inches(self):
+        form = ImperialHeightForm(
+            participant=self.participant,
+            instance=self.response_set,
+            data={
+                "height_imperial_0": "5",
+                # missing inches
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["height_imperial"],
+            ["Inches must be between 0 and 11"]
+        )
+
+    def test_is_invalid_with_missing_feet(self):
+        form = ImperialHeightForm(
+            participant=self.participant,
+            instance=self.response_set,
+            data={
+                #"height_imperial_0": "5",
+                "height_imperial_1": "5"
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["height_imperial"],
+            ["Feet must be between 4 and 8"]
         )
 
     def test_is_invalid_when_given_a_decimal_feet_value(self):

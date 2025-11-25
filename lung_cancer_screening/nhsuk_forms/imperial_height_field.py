@@ -51,10 +51,11 @@ class ImperialHeightField(forms.MultiValueField):
             "min_value": 4,
             "max_value": 8,
             "error_messages": {
+                **error_messages,
                 'invalid': 'Feet must be in whole numbers',
                 'min_value': between_feet,
                 'max_value': between_feet,
-                **error_messages,
+                'incomplete': between_feet,
             },
         }
 
@@ -64,12 +65,14 @@ class ImperialHeightField(forms.MultiValueField):
             "min_value": 0,
             "max_value": 11,
             "error_messages": {
+                **error_messages,
                 'invalid': 'Inches must be in whole numbers',
                 'min_value': between_inches,
                 'max_value': between_inches,
-                **error_messages,
+                'incomplete': between_inches,
             },
         }
+
         fields = (
             IntegerField(**feet_kwargs),
             IntegerField(**inches_kwargs),
