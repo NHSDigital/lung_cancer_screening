@@ -44,24 +44,31 @@ class ImperialWeightField(forms.MultiValueField):
     def __init__(self, *args, **kwargs):
         error_messages = kwargs.get("error_messages", {})
 
+        bounds_stone_error = "Weight must be between 4 stone and 50 stone"
+
         stone_kwargs = {
             "min_value": 0,
             "max_value": 50,
             "error_messages": {
-                'invalid': 'Stone must be in whole numbers',
-                'min_value': 'Weight must be between 4 stone and 50 stone',
-                'max_value': 'Weight must be between 4 stone and 50 stone',
                 **error_messages,
+                'invalid': 'Stone must be in whole numbers',
+                'min_value': bounds_stone_error,
+                'max_value': bounds_stone_error,
+                'incomplete': "Stone must be between 4 and 50",
             },
         }
+
+        between_pounds = "Pounds must be between 0 and 13"
+
         pounds_kwargs = {
             "min_value": 0,
             "max_value": 13,
             "error_messages": {
-                'invalid': 'Pounds must be in whole numbers',
-                'min_value': 'Pounds must be between 0 and 13',
-                'max_value': 'Pounds must be between 0 and 13',
                 **error_messages,
+                'invalid': 'Pounds must be in whole numbers',
+                'min_value': between_pounds,
+                'max_value': between_pounds,
+                'incomplete': between_pounds,
             },
         }
         fields = (
