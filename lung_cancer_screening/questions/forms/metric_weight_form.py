@@ -16,7 +16,8 @@ class MetricWeightForm(forms.ModelForm):
             required=True,
             error_messages={
                 'required': 'Enter your weight',
-            }
+            },
+            suffix="kg"
         )
     def clean_weight_metric(self):
         return self.cleaned_data['weight_metric'] * 10
