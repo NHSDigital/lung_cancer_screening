@@ -1,6 +1,6 @@
 from django import forms
 
-from ...nhsuk_forms.imperial_weight_form import ImperialWeightField
+from ...nhsuk_forms.imperial_weight_field import ImperialWeightField
 from ..models.response_set import ResponseSet
 
 class ImperialWeightForm(forms.ModelForm):
