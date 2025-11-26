@@ -100,3 +100,17 @@ class TestMetricWeightForm(TestCase):
             }
         )
         self.assertTrue(form.is_valid())
+
+    def test_is_invalid_with_multiple_decimal_places(self):
+        form = MetricWeightForm(
+            participant=self.participant,
+            instance=self.response_set,
+            data={
+                "weight_metric": "100.01"  # too many decimal places
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["weight_metric"],
+            ["Kilograms must be to 1 decimal place, for example 90.2kgs"]
+        )
