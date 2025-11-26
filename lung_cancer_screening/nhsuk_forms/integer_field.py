@@ -12,6 +12,7 @@ class IntegerField(forms.IntegerField):
     ):
         kwargs["template_name"] = "input.jinja"
 
+        self.suffix = kwargs.pop("suffix", None)
         self.hint = hint
         self.classes = classes
         self.label_classes = label_classes

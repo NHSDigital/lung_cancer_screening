@@ -12,7 +12,7 @@ Feature: Questionnaire
     And I see a back link to "/date-of-birth"
     When I fill in and submit my height with "170"
     And I click "Back"
-    And I click "Switch to imperial"
+    And I click "Switch to feet and inches"
     When I fill in and submit my height with "5" feet and "7" inches
     Then I am on "/weight"
     And I see a back link to "/height"

@@ -45,18 +45,34 @@ class ImperialHeightField(forms.MultiValueField):
     def __init__(self, *args, **kwargs):
         error_messages = kwargs.get("error_messages", {})
 
+        between_feet="Feet must be between 4 and 8"
+
         feet_kwargs = {
+            "min_value": 4,
+            "max_value": 8,
             "error_messages": {
+                **error_messages,
                 'invalid': 'Feet must be in whole numbers',
-                **error_messages,
+                'min_value': between_feet,
+                'max_value': between_feet,
+                'incomplete': between_feet,
             },
         }
+
+        between_inches = "Inches must be between 0 and 11"
+
         inches_kwargs = {
+            "min_value": 0,
+            "max_value": 11,
             "error_messages": {
-                'invalid': 'Inches must be in whole numbers',
                 **error_messages,
+                'invalid': 'Inches must be in whole numbers',
+                'min_value': between_inches,
+                'max_value': between_inches,
+                'incomplete': between_inches,
             },
         }
+
         fields = (
             IntegerField(**feet_kwargs),
             IntegerField(**inches_kwargs),

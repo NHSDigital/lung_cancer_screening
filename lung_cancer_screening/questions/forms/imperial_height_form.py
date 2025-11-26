@@ -1,6 +1,6 @@
 from django import forms
 
-from ...nhsuk_forms.imperial_height_form import ImperialHeightField
+from ...nhsuk_forms.imperial_height_field import ImperialHeightField
 from ..models.response_set import ResponseSet
 
 class ImperialHeightForm(forms.ModelForm):
@@ -16,7 +16,6 @@ class ImperialHeightForm(forms.ModelForm):
             require_all_fields=False,
             error_messages={
                 'required': 'Enter your height',
-                'incomplete': 'Enter your height'
             }
         )
 
