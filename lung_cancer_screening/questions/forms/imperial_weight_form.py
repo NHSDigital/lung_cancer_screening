@@ -15,8 +15,7 @@ class ImperialWeightForm(forms.ModelForm):
             required=True,
             require_all_fields=False,
             error_messages={
-                'required': 'Enter your weight',
-                'incomplete': 'Enter your weight'
+                'required': 'Enter your weight'
             }
         )
 

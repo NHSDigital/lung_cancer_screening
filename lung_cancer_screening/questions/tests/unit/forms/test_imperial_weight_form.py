@@ -47,20 +47,18 @@ class TestImperialWeightForm(TestCase):
         form.save()
         self.assertEqual(self.response_set.weight_metric, None)
 
-    def test_is_invalid_with_missing_data(self):
+    def test_is_invalid_with_no_values_set(self):
         form = ImperialWeightForm(
             participant=self.participant,
             instance=self.response_set,
-            data={
-                "weight_imperial_0": "5",
-                # missing pounds
-            }
+            data={}
         )
         self.assertFalse(form.is_valid())
         self.assertEqual(
             form.errors["weight_imperial"],
             ["Enter your weight"]
         )
+
 
     def test_is_invalid_when_given_a_decimal_stone_value(self):
         form = ImperialWeightForm(
@@ -75,4 +73,94 @@ class TestImperialWeightForm(TestCase):
         self.assertEqual(
             form.errors["weight_imperial"],
             ["Stone must be in whole numbers"]
+        )
+
+    def test_is_invalid_with_missing_pounds(self):
+        form = ImperialWeightForm(
+            participant=self.participant,
+            instance=self.response_set,
+            data={
+                "weight_imperial_0": "5",
+                # missing pounds
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["weight_imperial"],
+            ["Pounds must be between 0 and 13"]
+        )
+
+    def test_is_invalid_with_missing_stone(self):
+        form = ImperialWeightForm(
+            participant=self.participant,
+            instance=self.response_set,
+            data={
+                # missing stone
+                "weight_imperial_1": "5"
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["weight_imperial"],
+            ["Stone must be between 4 and 50"]
+        )
+
+    def test_is_invalid_when_pounds_under_0(self):
+        form = ImperialWeightForm(
+            participant=self.participant,
+            instance=self.response_set,
+            data={
+                "weight_imperial_0": "5",
+                "weight_imperial_1": "-1"
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["weight_imperial"],
+            ["Pounds must be between 0 and 13"]
+        )
+
+    def test_is_invalid_when_pounds_over_13(self):
+        form = ImperialWeightForm(
+            participant=self.participant,
+            instance=self.response_set,
+            data={
+                "weight_imperial_0": "5",
+                "weight_imperial_1": "14"
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["weight_imperial"],
+            ["Pounds must be between 0 and 13"]
+        )
+
+    def test_is_invalid_when_stone_under_4(self):
+        form = ImperialWeightForm(
+            participant=self.participant,
+            instance=self.response_set,
+            data={
+                "weight_imperial_0": "3",
+                "weight_imperial_1": "10"
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["weight_imperial"],
+            ["Weight must be between 4 stone and 50 stone"]
+        )
+
+    def test_is_invalid_when_stone_over_50(self):
+        form = ImperialWeightForm(
+            participant=self.participant,
+            instance=self.response_set,
+            data={
+                "weight_imperial_0": "51",
+                "weight_imperial_1": "0"
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["weight_imperial"],
+            ["Weight must be between 4 stone and 50 stone"]
         )
