@@ -35,7 +35,7 @@ class RespiratoryConditionsForm(forms.ModelForm):
         )
         respiratory_conditions_field.add_hint_for_choice(
             RespiratoryConditionValues.BRONCHITIS,
-            "An ongoing inflammation of the airways in the lungs that is usually caused by an infection"
+            "An inflammation of the airways in the lungs that is usually caused by an infection"
         )
         respiratory_conditions_field.add_hint_for_choice(
             RespiratoryConditionValues.TUBERCULOSIS,
