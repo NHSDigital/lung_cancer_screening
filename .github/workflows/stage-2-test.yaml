@@ -46,7 +46,9 @@ jobs:
           make test-unit
       - name: "Save the result of fast test suite"
         run: |
-          echo "Nothing to save"
+          docker cp lung_cancer_screening-web:/tmp/coverage.xml ./coverage.xml
+
+
   test-lint:
     name: "Linting"
     runs-on: ubuntu-latest
