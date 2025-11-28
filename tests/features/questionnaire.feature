@@ -4,7 +4,7 @@ Feature: Questionnaire
     And I submit my participant id
     Then I am on "/have-you-ever-smoked"
     And I see a back link to "/start"
-    When I fill in and submit my smoking status with "Yes, I used to smoke regularly"
+    When I fill in and submit my smoking status with "Yes, I used to smoke"
     Then I am on "/date-of-birth"
     And I see a back link to "/have-you-ever-smoked"
     When I fill in and submit my date of birth as 55 years ago
@@ -46,7 +46,7 @@ Feature: Questionnaire
     When I click "Continue"
     Then I am on "/responses"
     And I see a back link to "/family-history-lung-cancer"
-    And I see responses "Have you ever smoked? Yes, I used to smoke regularly"
+    And I see responses "Have you ever smoked? Yes, I used to smoke"
     And I see responses "What is your date of birth?" with a date 55 years ago
     And I see responses "What is your height? 5 feet 7 inches"
     And I see responses "What is your weight? 5 stone 10 pounds"
