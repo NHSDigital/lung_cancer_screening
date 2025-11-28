@@ -34,7 +34,7 @@ class TestRespiratoryConditions(TestCase):
         self.assertContains(response, "Have you ever been diagnosed with any of the following respiratory conditions?")
         self.assertContains(response, "Pneumonia")
         self.assertContains(response, "Emphysema")
-        self.assertContains(response, "Chronic bronchitis")
+        self.assertContains(response, "Bronchitis")
         self.assertContains(response, "Tuberculosis (TB)")
         self.assertContains(response, "Chronic obstructive pulmonary disease (COPD)")
         self.assertContains(response, "No, I have not had any of these respiratory conditions")

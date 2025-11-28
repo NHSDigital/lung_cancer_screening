@@ -37,7 +37,7 @@ class EthnicityValues(models.TextChoices):
 class RespiratoryConditionValues(models.TextChoices):
     PNEUMONIA = "P", "Pneumonia"
     EMPHYSEMA = "E", "Emphysema"
-    BRONCHITIS = "B", "Chronic bronchitis"
+    BRONCHITIS = "B", "Bronchitis"
     TUBERCULOSIS = "T", "Tuberculosis (TB)"
     COPD = "C", "Chronic obstructive pulmonary disease (COPD)"
     NONE = "N", "No, I have not had any of these respiratory conditions"
