@@ -35,7 +35,7 @@ RUN poetry install --without dev --no-root && rm -rf $POETRY_CACHE_DIR
 # Alpine doesn't support playwright
 FROM python:3.13.7-slim AS development
 
-ENV UID=1000
+ARG UID=1000
 ENV USER=app
 ENV APP_DIR=/app
 RUN addgroup --gid $UID --system ${USER} \
