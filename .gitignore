@@ -21,3 +21,4 @@ lung_cancer_screening/assets/compiled/*
 .devcontainer/ca.crt
 tests/TEST-*.xml
 node_modules
+.coverage

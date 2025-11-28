@@ -33,5 +33,12 @@ else
   TEST_MODULE=""
 fi
 
-docker compose run --rm --remove-orphans web poetry run python manage.py test $TEST_MODULE $TAG --settings=lung_cancer_screening.settings_test --exclude-tag=accessibility
+docker compose run --rm --remove-orphans web sh -c \
+    "echo 'Running unit tests...' && \
+    poetry run coverage run manage.py test $TEST_MODULE $TAG \
+    --settings=lung_cancer_screening.settings_test \
+    --exclude-tag=accessibility && \
+    echo 'Generating coverage report...' && \
+    coverage xml && \
+    coverage report -m --skip-covered"
 
