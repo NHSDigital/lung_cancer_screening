@@ -1,29 +1,19 @@
-{% extends 'layout.jinja' %}
-{% from 'nhsuk/components/button/macro.jinja' import button %}
-{% from 'nhsuk/components/radios/macro.jinja' import radios %}
-{% from 'nhsuk/components/back-link/macro.jinja' import backLink %}
+{% extends 'question_form.jinja' %}
 
-{% block beforeContent %}
-    {{
-      backLink({
-        "href": url("questions:start"),
-        "text": "Back"
-      })
-    }}
-{% endblock beforeContent %}
+{% block prelude %}
 
-{% block content %}
-  <div class="nhsuk-grid-row">
-    <div class="nhsuk-grid-column-two-thirds">
-      <form action="{{ request.path }}" method="POST">
-        {{ csrf_input }}
+  <h1 class="nhsuk-heading-l">Tobacco smoking</h1>
 
-        {{ form.have_you_ever_smoked.as_field_group() }}
+  <p>We will ask you questions about your smoking habits. This includes different types of tobacco smoking such as:
 
-        {{ button({
-            "text": "Continue"
-        }) }}
-      </form>
-    </div>
-  </div>
-{% endblock %}
+  <ul>
+    <li>cigarettes from a packet</li>
+    <li>rolled cigarettes, or roll ups</li>
+    <li>a pipe</li>
+    <li>cigars</li>
+    <li>hookah or shisha</li>
+  </ul>
+
+  <p>It does not currently include vaping or e-cigarettes.
+
+{% endblock prelude %}
