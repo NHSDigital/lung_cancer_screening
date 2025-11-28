@@ -15,8 +15,11 @@ class HaveYouEverSmokedForm(forms.ModelForm):
             widget=forms.RadioSelect,
             label="Have you ever smoked?",
             label_classes="nhsuk-fieldset__legend--m",
-            label_is_page_heading=True,
-            coerce=int
+            hint="This includes social smoking",
+            coerce=int,
+            error_messages={
+                'required': 'Select if you have ever smoked'
+            }
         )
 
     class Meta:
