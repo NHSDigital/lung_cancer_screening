@@ -25,6 +25,23 @@ class TestHaveYouEverSmokedForm(TestCase):
             }
         )
         self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["have_you_ever_smoked"],
+            ["Select a valid choice. invalid is not one of the available choices."]
+        )
+
+    def test_is_invalid_when_no_option_is_selected(self):
+        form = HaveYouEverSmokedForm(
+            participant=self.participant,
+            data={
+                "have_you_ever_smoked": None
+            }
+        )
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["have_you_ever_smoked"],
+            ["Select if you have ever smoked"]
+        )
 
     def test_returns_a_boolean_type(self):
         form = HaveYouEverSmokedForm(
