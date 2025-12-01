@@ -40,11 +40,10 @@ class HaveYouEverSmokedView(View):
                 status=422
             )
 
-
 def render_template(request, form, status=200):
     return render(
         request,
-        "question_form.jinja",
+        "have_you_ever_smoked.jinja",
         {
             "form": form,
             "back_link_url": reverse("questions:start")

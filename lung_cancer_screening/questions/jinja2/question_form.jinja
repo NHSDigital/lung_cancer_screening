@@ -13,6 +13,9 @@
       <form action="{{ request.path }}" method="POST">
         {{ csrf_input }}
 
+        {% block prelude %}
+        {% endblock%}
+
         {{ form }}
 
         {{ button({
