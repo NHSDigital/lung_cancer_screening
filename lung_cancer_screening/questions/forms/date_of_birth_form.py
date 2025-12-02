@@ -17,6 +17,7 @@ class DateOfBirthForm(forms.ModelForm):
             require_all_fields=False,
             label="What is your date of birth?",
             label_is_page_heading=True,
+            label_classes="nhsuk-fieldset__legend--l",
             hint="For example, 15 3 1965",
             error_messages={
                 'required': 'Enter your date of birth',
