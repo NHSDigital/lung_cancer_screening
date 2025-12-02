@@ -17,14 +17,14 @@ tests = ["mypy (>=1.14.0)", "pytest", "pytest-asyncio"]
 
 [[package]]
 name = "axe-playwright-python"
-version = "0.1.6"
+version = "0.1.7"
 description = "Automated web accessibility testing using axe-core engine and Playwright."
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
 files = [
-    {file = "axe_playwright_python-0.1.6-py3-none-any.whl", hash = "sha256:0133432075837eb7d9b6caa5c1b3c9403fee98f10022911b655759ad33d233eb"},
-    {file = "axe_playwright_python-0.1.6.tar.gz", hash = "sha256:377d7f1420b43bba5c62c4e1b3d3e5f564032b284747ab3ac022693098bdec81"},
+    {file = "axe_playwright_python-0.1.7-py3-none-any.whl", hash = "sha256:8699e904466cc2206fa2fa414b4d59aab68e34ba8449c6d082896ca1950440e2"},
+    {file = "axe_playwright_python-0.1.7.tar.gz", hash = "sha256:f0f3d59061abbaee9990d0309f855210ec8fd6ca5bf076f39210289ac0961258"},
 ]
 
 [package.dependencies]
@@ -1155,4 +1155,4 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13, <4.0"
-content-hash = "2a16bc7fbae681377fc216d35859a039b734f638ab60d04aff54aa4f0299abaa"
+content-hash = "b36c5b906da9167a1f2a3c87a3db7083a52490aca80f0fa24339565c4ded4182"
