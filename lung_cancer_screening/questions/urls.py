@@ -15,6 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
+from django.views.generic import RedirectView
 from .views.start import StartView
 from .views.have_you_ever_smoked import HaveYouEverSmokedView
 from .views.date_of_birth import DateOfBirthView
@@ -35,6 +36,7 @@ from .views.family_history_lung_cancer import FamilyHistoryLungCancerView
 
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='/start'), name='root'),
     path('start', StartView.as_view(), name='start'),
     path('have-you-ever-smoked', HaveYouEverSmokedView.as_view(), name='have_you_ever_smoked'),
     path('date-of-birth', DateOfBirthView.as_view(), name='date_of_birth'),
