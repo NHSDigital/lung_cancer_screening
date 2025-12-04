@@ -16,7 +16,10 @@
     "ghcr.io/azutake/devcontainer-features/go-packages-install:0": {
       "PACKAGES": "github.com/asdf-vm/asdf/cmd/asdf@v0.18.0"
     },
-    "ghcr.io/devcontainers/features/python:1": {},
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.14",
+      "toolsToInstall": "flake8,autopep8,black,yapf,mypy,pydocstyle,pycodestyle,bandit,pipenv,virtualenv,pylint,poetry"
+    },
     "ghcr.io/devcontainers/features/common-utils": {
       "installZsh": true,
       "installOhMyZsh": true,
