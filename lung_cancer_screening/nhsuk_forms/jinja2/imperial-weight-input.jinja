@@ -21,7 +21,6 @@
     {{ input({
       "label": {
         "text": "Stone",
-        "classes": "nhsuk-fieldset__legend--m",
         "isPageHeading": false
       },
       "hint": {
@@ -30,7 +29,7 @@
       "id": field.auto_id + "_0",
       "name": field.html_name + "_0",
       "value": field.subwidgets.0.data.value,
-      "classes": "nhsuk-input--width-2" + field_error_classes,
+      "classes": "nhsuk-input--width-4" + field_error_classes,
       "type": "number",
       "suffix": "st"
     }) }}
@@ -40,13 +39,12 @@
     {{ input({
       "label": {
         "text": "Pounds",
-        "classes": "nhsuk-fieldset__legend--m",
         "isPageHeading": false
       },
       "id": field.auto_id + "_1",
       "name": field.html_name + "_1",
       "value": field.subwidgets.1.data.value,
-      "classes": "nhsuk-input--width-2" + field_error_classes,
+      "classes": "nhsuk-input--width-4" + field_error_classes,
       "type": "number",
       "suffix": "lb"
     }) }}
