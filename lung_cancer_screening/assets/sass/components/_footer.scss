@@ -1,0 +1,15 @@
+footer {
+    margin-top: auto;
+    border-top: 4px solid #005eb8;
+    padding: 1rem;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.nhsuk-width-container {
+    width: 100%;
+}

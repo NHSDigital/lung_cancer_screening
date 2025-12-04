@@ -20,3 +20,4 @@ lung_cancer_screening/assets/compiled/*
 .venv
 .devcontainer/ca.crt
 tests/TEST-*.xml
+node_modules
