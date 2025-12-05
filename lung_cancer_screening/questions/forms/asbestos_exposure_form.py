@@ -13,7 +13,7 @@ class AsbestosExposureForm(forms.ModelForm):
             choices=[(True, 'Yes'), (False, 'No')],
             widget=forms.RadioSelect,
             label="Have you ever worked in a job where you might have been exposed to asbestos?",
-            label_classes="nhsuk-fieldset__legend--m",
+            label_classes="nhsuk-fieldset__legend--l",
             coerce=lambda x: x == 'True',
             error_messages={
                 'required': 'Select if you have been exposed to asbestos'

@@ -14,7 +14,7 @@ class GenderForm(forms.ModelForm):
             choices=GenderValues.choices,
             widget=forms.RadioSelect,
             label="Which of these best describes you?",
-            label_classes="nhsuk-fieldset__legend--m",
+            label_classes="nhsuk-fieldset__legend--l",
             label_is_page_heading=True,
             hint="This information is used to find your NHS number and match with your GP record.",
             error_messages={
