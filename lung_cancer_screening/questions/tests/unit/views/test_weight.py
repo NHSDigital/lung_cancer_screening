@@ -2,10 +2,13 @@ from django.test import TestCase
 from django.urls import reverse
 
 from ....models.participant import Participant
+from .helpers.authentication import login_user
 
 
 class TestWeight(TestCase):
     def setUp(self):
+        login_user(self.client)
+
         self.participant = Participant.objects.create(unique_id="12345")
         self.participant.responseset_set.create()
 
@@ -16,6 +19,20 @@ class TestWeight(TestCase):
         self.session['participant_id'] = self.participant.unique_id
 
         self.session.save()
+
+    def test_get_redirects_if_the_user_is_not_logged_in(self):
+        participant = Participant.objects.create(unique_id="abcdef")
+        self.client.logout()
+        session = self.client.session
+        session['participant_id'] = participant.unique_id
+        session.save()
+
+        response = self.client.get(
+            reverse("questions:weight")
+        )
+
+        self.assertRedirects(response, "/oidc/authenticate/?next=/weight", fetch_redirect_response=False)
+
 
     def test_get_redirects_if_the_participant_does_not_exist(self):
         self.session['participant_id'] = "somebody none existent participant"
@@ -28,7 +45,8 @@ class TestWeight(TestCase):
         self.assertRedirects(response, reverse("questions:start"))
 
     def test_get_redirects_if_the_participant_is_none(self):
-        self.session.flush()
+        del self.session['participant_id']
+        self.session.save()
 
         response = self.client.get(
             reverse("questions:weight")
@@ -46,6 +64,19 @@ class TestWeight(TestCase):
 
         self.assertContains(response, "Kilograms")
 
+    def test_post_redirects_if_the_user_is_not_logged_in(self):
+        self.client.logout()
+        participant = Participant.objects.create(unique_id="abcdef")
+
+        session = self.client.session
+        session['participant_id'] = participant.unique_id
+        session.save()
+
+        response = self.client.post(
+            reverse("questions:weight"),
+            self.valid_params
+        )
+
     def test_post_redirects_if_the_participant_does_not_exist(self):
         self.session['participant_id'] = "somebody none existent participant"
         self.session.save()
@@ -57,7 +88,8 @@ class TestWeight(TestCase):
         self.assertRedirects(response, reverse("questions:start"))
 
     def test_post_redirects_if_the_participant_is_none(self):
-        self.session.flush()
+        del self.session['participant_id']
+        self.session.save()
 
         response = self.client.post(
             reverse("questions:weight")

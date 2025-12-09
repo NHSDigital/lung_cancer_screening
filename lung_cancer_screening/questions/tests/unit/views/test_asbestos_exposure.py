@@ -1,11 +1,15 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.conf import settings
 
+from .helpers.authentication import login_user
 from lung_cancer_screening.questions.models.participant import Participant
 
 
 class TestAsbestosExposure(TestCase):
     def setUp(self):
+        login_user(self.client)
+
         self.participant = Participant.objects.create(unique_id="12345")
         self.participant.responseset_set.create()
         self.valid_params = {"asbestos_exposure": True}
@@ -13,6 +17,19 @@ class TestAsbestosExposure(TestCase):
         session = self.client.session
         session['participant_id'] = self.participant.unique_id
         session.save()
+
+    def test_get_redirects_if_the_user_is_not_logged_in(self):
+        participant = Participant.objects.create(unique_id="abcdef")
+        self.client.logout()
+        session = self.client.session
+        session['participant_id'] = participant.unique_id
+        session.save()
+
+        response = self.client.get(
+            reverse("questions:asbestos_exposure")
+        )
+
+        self.assertRedirects(response, "/oidc/authenticate/?next=/asbestos-exposure", fetch_redirect_response=False)
 
     def test_get_redirects_if_the_participant_does_not_exist(self):
         session = self.client.session
@@ -32,6 +49,21 @@ class TestAsbestosExposure(TestCase):
     def test_get_contains_the_correct_form_fields(self):
         response = self.client.get(reverse("questions:asbestos_exposure"))
         self.assertContains(response, "Have you ever worked in a job where you might have been exposed to asbestos?")
+
+    def test_post_redirects_if_the_user_is_not_logged_in(self):
+        self.client.logout()
+        participant = Participant.objects.create(unique_id="abcdef")
+
+        session = self.client.session
+        session['participant_id'] = participant.unique_id
+        session.save()
+
+        response = self.client.post(
+            reverse("questions:asbestos_exposure"),
+            self.valid_params
+        )
+
+        self.assertRedirects(response, "/oidc/authenticate/?next=/asbestos-exposure", fetch_redirect_response=False)
 
     def test_post_redirects_if_the_participant_does_not_exist(self):
         session = self.client.session

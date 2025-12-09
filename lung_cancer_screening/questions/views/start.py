@@ -1,10 +1,14 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.core.exceptions import ValidationError
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.views import View
 
 from lung_cancer_screening.questions.models.participant import Participant
 
+
+@method_decorator(login_required, name='post')
 class StartView(View):
     def get(self, request):
         return render(

@@ -2,11 +2,14 @@ from django.test import TestCase
 from django.urls import reverse
 from datetime import date
 
+from .helpers.authentication import login_user
 from lung_cancer_screening.questions.models.participant import Participant
 
 class TestResponses(TestCase):
 
     def setUp(self):
+        login_user(self.client)
+
         self.participant = Participant.objects.create(unique_id='12345')
         self.response_set = self.participant.responseset_set.create(
             have_you_ever_smoked=True,
@@ -16,6 +19,17 @@ class TestResponses(TestCase):
         session = self.client.session
         session['participant_id'] = self.participant.unique_id
         session.save()
+
+    def test_get_redirects_if_the_user_is_not_logged_in(self):
+        participant = Participant.objects.create(unique_id="abcdef")
+        self.client.logout()
+        session = self.client.session
+        session['participant_id'] = participant.unique_id
+        session.save()
+
+        response = self.client.get(reverse("questions:responses"))
+
+        self.assertRedirects(response, "/oidc/authenticate/?next=/responses", fetch_redirect_response=False)
 
     def test_get_redirects_if_the_participant_does_not_exist(self):
         session = self.client.session
@@ -46,6 +60,19 @@ class TestResponses(TestCase):
         self.assertNotContains(
             response, other_date_response.get_have_you_ever_smoked_display())
         self.assertNotContains(response, other_date_response.date_of_birth)
+
+    def test_post_redirects_if_the_user_is_not_logged_in(self):
+        self.client.logout()
+        participant = Participant.objects.create(unique_id="abcdef")
+
+        session = self.client.session
+        session['participant_id'] = participant.unique_id
+        session.save()
+
+        response = self.client.post(reverse("questions:responses"))
+
+        self.assertRedirects(response, "/oidc/authenticate/?next=/responses", fetch_redirect_response=False)
+
 
     def test_post_redirects_to_your_results(self):
         response = self.client.post(reverse("questions:responses"))

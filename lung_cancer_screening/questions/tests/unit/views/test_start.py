@@ -3,14 +3,34 @@ from django.urls import reverse
 from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 
+from .helpers.authentication import login_user
 from lung_cancer_screening.questions.models.participant import Participant
 
-class TestStart(TestCase):
+class TestGetStart(TestCase):
 
     def test_get_responds_successfully(self):
         response = self.client.get(reverse("questions:start"))
 
         self.assertEqual(response.status_code, 200)
+
+class TestPostStart(TestCase):
+    def setUp(self):
+        login_user(self.client)
+
+    def test_post_redirects_if_the_user_is_not_logged_in(self):
+        self.client.logout()
+        participant = Participant.objects.create(unique_id="abcdef")
+
+        session = self.client.session
+        session['participant_id'] = participant.unique_id
+        session.save()
+
+        response = self.client.post(
+            reverse("questions:start"),
+            {"participant_id": "12345"}
+        )
+
+        self.assertRedirects(response, "/oidc/authenticate/?next=/start", fetch_redirect_response=False)
 
     def test_post_creates_a_new_participant_and_response_set(self):
         self.client.post(
@@ -61,7 +81,7 @@ class TestStart(TestCase):
 
         self.assertEqual(self.client.session["participant_id"], "12345")
 
-    def test_post_redirects_to_the_date_of_birth_path(self):
+    def test_post_redirects_to_the_have_you_ever_smoked_path(self):
         response = self.client.post(
             reverse("questions:start"),
             {"participant_id": "12345"}

@@ -2,9 +2,10 @@ from django.test import TestCase
 from django.urls import reverse
 
 from .helpers.authentication import login_user
+
 from lung_cancer_screening.questions.models.participant import Participant
 
-class TestPostNonSmokerExit(TestCase):
+class TestYourResults(TestCase):
     def setUp(self):
         login_user(self.client)
 
@@ -22,24 +23,12 @@ class TestPostNonSmokerExit(TestCase):
         session.save()
 
         response = self.client.get(
-            reverse("questions:non_smoker_exit")
+            reverse("questions:your_results")
         )
 
-        self.assertRedirects(response, "/oidc/authenticate/?next=/non-smoker-exit", fetch_redirect_response=False)
-
-
-    def test_get_redirects_if_the_particpant_does_not_exist(self):
-        session = self.client.session
-        session['participant_id'] = "somebody none existant participant"
-        session.save()
-
-        response = self.client.get(
-            reverse("questions:non_smoker_exit")
-        )
-
-        self.assertRedirects(response, reverse("questions:start"))
+        self.assertRedirects(response, "/oidc/authenticate/?next=/your-results", fetch_redirect_response=False)
 
     def test_get_responds_successfully(self):
-        response = self.client.get(reverse("questions:non_smoker_exit"))
+        response = self.client.get(reverse("questions:your_results"))
 
         self.assertEqual(response.status_code, 200)

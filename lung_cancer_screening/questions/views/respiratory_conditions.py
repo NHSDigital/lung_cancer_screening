@@ -1,16 +1,19 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.views import View
 from django.utils.decorators import method_decorator
+
+from .authenticated_view import AuthenticatedView
 from .decorators.participant_decorators import require_participant
 from ..forms.respiratory_conditions_form import RespiratoryConditionsForm
 
+
 @method_decorator(require_participant, name="dispatch")
-class RespiratoryConditionsView(View):
+class RespiratoryConditionsView(AuthenticatedView):
     def get(self, request):
         return render_template(
             request,
-            RespiratoryConditionsForm(participant=request.participant)        )
+            RespiratoryConditionsForm(participant=request.participant)
+        )
 
     def post(self, request):
         form = RespiratoryConditionsForm(

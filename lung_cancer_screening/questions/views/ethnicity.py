@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.views import View
 from django.utils.decorators import method_decorator
 
+from .authenticated_view import AuthenticatedView
 from .decorators.participant_decorators import require_participant
 from ..forms.ethnicity_form import EthnicityForm
 
 @method_decorator(require_participant, name="dispatch")
-class EthnicityView(View):
+class EthnicityView(AuthenticatedView):
     def get(self, request):
         return render_template(
             request,

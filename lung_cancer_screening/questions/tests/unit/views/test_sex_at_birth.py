@@ -1,11 +1,14 @@
 from django.test import TestCase
 from django.urls import reverse
 
+from .helpers.authentication import login_user
 from lung_cancer_screening.questions.models.participant import Participant
 from lung_cancer_screening.questions.models.response_set import SexAtBirthValues
 
 class TestSexAtBirth(TestCase):
     def setUp(self):
+        login_user(self.client)
+
         self.participant = Participant.objects.create(unique_id="12345")
         self.participant.responseset_set.create()
         self.valid_params = { "sex_at_birth": SexAtBirthValues.FEMALE }
@@ -13,6 +16,19 @@ class TestSexAtBirth(TestCase):
         session = self.client.session
         session['participant_id'] = self.participant.unique_id
         session.save()
+
+    def test_get_redirects_if_the_user_is_not_logged_in(self):
+        participant = Participant.objects.create(unique_id="abcdef")
+        self.client.logout()
+        session = self.client.session
+        session['participant_id'] = participant.unique_id
+        session.save()
+
+        response = self.client.get(
+            reverse("questions:sex_at_birth")
+        )
+
+        self.assertRedirects(response, "/oidc/authenticate/?next=/sex-at-birth", fetch_redirect_response=False)
 
     def test_get_redirects_if_the_participant_does_not_exist(self):
         session = self.client.session
@@ -34,6 +50,21 @@ class TestSexAtBirth(TestCase):
         response = self.client.get(reverse("questions:sex_at_birth"))
 
         self.assertContains(response, "What was your sex at birth?")
+
+    def test_post_redirects_if_the_user_is_not_logged_in(self):
+        self.client.logout()
+        participant = Participant.objects.create(unique_id="abcdef")
+
+        session = self.client.session
+        session['participant_id'] = participant.unique_id
+        session.save()
+
+        response = self.client.post(
+            reverse("questions:sex_at_birth"),
+            self.valid_params
+        )
+
+        self.assertRedirects(response, "/oidc/authenticate/?next=/sex-at-birth", fetch_redirect_response=False)
 
     def test_post_redirects_if_the_participant_does_not_exist(self):
         session = self.client.session

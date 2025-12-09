@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect
-from django.views import View
 from django.utils.decorators import method_decorator
 
+from .authenticated_view import AuthenticatedView
 from lung_cancer_screening.questions.forms.metric_height_form import MetricHeightForm
 from lung_cancer_screening.questions.forms.imperial_height_form import ImperialHeightForm
 from .decorators.participant_decorators import require_participant
 
 @method_decorator(require_participant, name="dispatch")
-class HeightView(View):
+class HeightView(AuthenticatedView):
     def get(self, request):
         unit = request.GET.get('unit')
         form_klass = ImperialHeightForm if unit == "imperial" else MetricHeightForm

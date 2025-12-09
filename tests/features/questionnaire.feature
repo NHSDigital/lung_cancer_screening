@@ -1,5 +1,6 @@
 Feature: Questionnaire
   Scenario: The user can complete the full questionnaire
+    Given I am logged in
     When I go to "/start"
     And I submit my participant id
     Then I am on "/have-you-ever-smoked"

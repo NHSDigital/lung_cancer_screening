@@ -28,6 +28,7 @@ class TestUser(TestCase):
             datetime
         )
 
+
     def test_nhs_number_has_a_max_length_of_10(self):
         with self.assertRaises(ValidationError) as context:
             User.objects.create_user("1"*11)
