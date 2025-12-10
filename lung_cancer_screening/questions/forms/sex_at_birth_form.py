@@ -6,9 +6,9 @@ from ..models.response_set import ResponseSet, SexAtBirthValues
 class SexAtBirthForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        self.participant = kwargs.pop('participant')
+        self.user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
-        self.instance.participant = self.participant
+        self.instance.user = self.user
 
         self.fields["sex_at_birth"] = ChoiceField(
             choices=SexAtBirthValues.choices,

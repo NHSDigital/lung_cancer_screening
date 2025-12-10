@@ -2,31 +2,21 @@ from django.test import TestCase
 from django.urls import reverse
 
 from .helpers.authentication import login_user
-from ....models.participant import Participant
 
 
 class TestHeight(TestCase):
     def setUp(self):
-        login_user(self.client)
+        self.user = login_user(self.client)
 
-        self.participant = Participant.objects.create(unique_id="12345")
-        self.participant.responseset_set.create()
+        self.user.responseset_set.create()
 
         self.valid_height = 170
         self.valid_params = {"height": self.valid_height}
         self.invalid_height = 80000
 
-        session = self.client.session
-        session['participant_id'] = self.participant.unique_id
-
-        session.save()
 
     def test_get_redirects_if_the_user_is_not_logged_in(self):
-        participant = Participant.objects.create(unique_id="abcdef")
         self.client.logout()
-        session = self.client.session
-        session['participant_id'] = participant.unique_id
-        session.save()
 
         response = self.client.get(
             reverse("questions:height")
@@ -34,16 +24,6 @@ class TestHeight(TestCase):
 
         self.assertRedirects(response, "/oidc/authenticate/?next=/height", fetch_redirect_response=False)
 
-    def test_get_redirects_if_the_participant_does_not_exist(self):
-        session = self.client.session
-        session['participant_id'] = "somebody none existent participant"
-        session.save()
-
-        response = self.client.get(
-            reverse("questions:height")
-        )
-
-        self.assertRedirects(response, reverse("questions:start"))
 
     def test_get_responds_successfully(self):
         response = self.client.get(reverse("questions:height"))
@@ -63,11 +43,6 @@ class TestHeight(TestCase):
 
     def test_post_redirects_if_the_user_is_not_logged_in(self):
         self.client.logout()
-        participant = Participant.objects.create(unique_id="abcdef")
-
-        session = self.client.session
-        session['participant_id'] = participant.unique_id
-        session.save()
 
         response = self.client.post(
             reverse("questions:height"),
@@ -76,28 +51,17 @@ class TestHeight(TestCase):
 
         self.assertRedirects(response, "/oidc/authenticate/?next=/height", fetch_redirect_response=False)
 
-    def test_post_redirects_if_the_participant_does_not_exist(self):
-        session = self.client.session
-        session['participant_id'] = "somebody none existent participant"
-        session.save()
 
-        response = self.client.post(
-            reverse("questions:height"),
-            self.valid_params
-        )
-
-        self.assertRedirects(response, reverse("questions:start"))
-
-    def test_post_stores_a_valid_response_set_for_the_participant(self):
+    def test_post_stores_a_valid_response_set_for_the_user(self):
         self.client.post(
             reverse("questions:height"),
             self.valid_params
         )
 
-        response_set = self.participant.responseset_set.first()
+        response_set = self.user.responseset_set.first()
 
         self.assertEqual(response_set.height, self.valid_height*10)
-        self.assertEqual(response_set.participant, self.participant)
+        self.assertEqual(response_set.user, self.user)
 
     def test_post_redirects_to_weight_path(self):
         response = self.client.post(

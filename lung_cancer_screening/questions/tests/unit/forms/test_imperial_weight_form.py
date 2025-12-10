@@ -1,18 +1,18 @@
 from django.test import TestCase
 
-from ....models.participant import Participant
+from ...factories.user_factory import UserFactory
 from ....forms.imperial_weight_form import ImperialWeightForm
 
 class TestImperialWeightForm(TestCase):
     def setUp(self):
-        self.participant = Participant.objects.create(unique_id="1234567890")
-        self.response_set = self.participant.responseset_set.create(
+        self.user = UserFactory()
+        self.response_set = self.user.responseset_set.create(
             weight_metric=1704
         )
 
     def test_is_valid_with_valid_input(self):
         form = ImperialWeightForm(
-            participant=self.participant,
+            user=self.user,
             instance=self.response_set,
             data={
                 "weight_imperial_0": "5",  # stone
@@ -24,7 +24,7 @@ class TestImperialWeightForm(TestCase):
 
     def test_converts_stone_and_pounds_to_kilograms_integer(self):
         form = ImperialWeightForm(
-            participant=self.participant,
+            user=self.user,
             instance=self.response_set,
             data={
                 "weight_imperial_0": "5",  # stone
@@ -38,7 +38,7 @@ class TestImperialWeightForm(TestCase):
     def test_setting_weight_imperial_clears_weight_metric(self):
         form = ImperialWeightForm(
             instance=self.response_set,
-            participant=self.participant,
+            user=self.user,
             data={
                 "weight_imperial_0": "5",  # stone
                 "weight_imperial_1": "9"   # pounds
@@ -49,7 +49,7 @@ class TestImperialWeightForm(TestCase):
 
     def test_is_invalid_with_no_values_set(self):
         form = ImperialWeightForm(
-            participant=self.participant,
+            user=self.user,
             instance=self.response_set,
             data={}
         )
@@ -62,7 +62,7 @@ class TestImperialWeightForm(TestCase):
 
     def test_is_invalid_when_given_a_decimal_stone_value(self):
         form = ImperialWeightForm(
-            participant=self.participant,
+            user=self.user,
             instance=self.response_set,
             data={
                 "weight_imperial_0": "5.2",
@@ -77,7 +77,7 @@ class TestImperialWeightForm(TestCase):
 
     def test_is_invalid_with_missing_pounds(self):
         form = ImperialWeightForm(
-            participant=self.participant,
+            user=self.user,
             instance=self.response_set,
             data={
                 "weight_imperial_0": "5",
@@ -92,7 +92,7 @@ class TestImperialWeightForm(TestCase):
 
     def test_is_invalid_with_missing_stone(self):
         form = ImperialWeightForm(
-            participant=self.participant,
+            user=self.user,
             instance=self.response_set,
             data={
                 # missing stone
@@ -107,7 +107,7 @@ class TestImperialWeightForm(TestCase):
 
     def test_is_invalid_when_pounds_under_0(self):
         form = ImperialWeightForm(
-            participant=self.participant,
+            user=self.user,
             instance=self.response_set,
             data={
                 "weight_imperial_0": "5",
@@ -122,7 +122,7 @@ class TestImperialWeightForm(TestCase):
 
     def test_is_invalid_when_pounds_over_13(self):
         form = ImperialWeightForm(
-            participant=self.participant,
+            user=self.user,
             instance=self.response_set,
             data={
                 "weight_imperial_0": "5",
@@ -137,7 +137,7 @@ class TestImperialWeightForm(TestCase):
 
     def test_is_invalid_when_stone_under_4(self):
         form = ImperialWeightForm(
-            participant=self.participant,
+            user=self.user,
             instance=self.response_set,
             data={
                 "weight_imperial_0": "3",
@@ -152,7 +152,7 @@ class TestImperialWeightForm(TestCase):
 
     def test_is_invalid_when_stone_over_50(self):
         form = ImperialWeightForm(
-            participant=self.participant,
+            user=self.user,
             instance=self.response_set,
             data={
                 "weight_imperial_0": "51",

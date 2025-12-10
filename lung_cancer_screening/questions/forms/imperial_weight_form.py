@@ -6,9 +6,9 @@ from ..models.response_set import ResponseSet
 class ImperialWeightForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        self.participant = kwargs.pop('participant')
+        self.user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
-        self.instance.participant = self.participant
+        self.instance.user = self.user
 
         self.fields["weight_imperial"] = ImperialWeightField(
             label="Weight",

@@ -1,27 +1,24 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.utils.decorators import method_decorator
 
 from .authenticated_view import AuthenticatedView
-from .decorators.participant_decorators import require_participant
 from ..forms.ethnicity_form import EthnicityForm
 
-@method_decorator(require_participant, name="dispatch")
 class EthnicityView(AuthenticatedView):
     def get(self, request):
         return render_template(
             request,
-            EthnicityForm(participant=request.participant)
+            EthnicityForm(user=request.user)
         )
 
     def post(self, request):
         form = EthnicityForm(
-            participant=request.participant,
+            user=request.user,
             data=request.POST
         )
 
         if form.is_valid():
-            response_set = request.participant.responseset_set.last()
+            response_set = request.user.responseset_set.last()
             response_set.ethnicity = form.cleaned_data["ethnicity"]
             response_set.save()
             return redirect(reverse("questions:education"))

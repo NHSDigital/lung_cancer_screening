@@ -1,13 +1,13 @@
 from playwright.sync_api import expect
 from .test_helpers import check_labels
 
-def setup_participant(page, live_server_url):
-    participant_id = 'abc123'
+def setup_user(page, live_server_url):
+    user_id = 'abc123'
     page.goto(f"{live_server_url}/start")
-    fill_in_and_submit_participant_id(page, participant_id)
+    fill_in_and_submit_user_id(page, user_id)
 
-def fill_in_and_submit_participant_id(page, participant_id):
-    page.fill("input[name='participant_id']", participant_id)
+def fill_in_and_submit_user_id(page, user_id):
+    page.fill("input[name='user_id']", user_id)
     page.click('text=Start now')
 
 

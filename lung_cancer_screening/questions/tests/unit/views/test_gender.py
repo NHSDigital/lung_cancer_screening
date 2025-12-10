@@ -1,29 +1,20 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from lung_cancer_screening.questions.models.participant import Participant
 from lung_cancer_screening.questions.models.response_set import GenderValues
 from .helpers.authentication import login_user
 
 
 class TestGender(TestCase):
     def setUp(self):
-        login_user(self.client)
+        self.user = login_user(self.client)
 
-        self.participant = Participant.objects.create(unique_id="12345")
-        self.participant.responseset_set.create()
+        self.user.responseset_set.create()
         self.valid_params = { "gender": GenderValues.MALE }
 
-        session = self.client.session
-        session['participant_id'] = self.participant.unique_id
-        session.save()
 
     def test_get_redirects_if_the_user_is_not_logged_in(self):
-        participant = Participant.objects.create(unique_id="abcdef")
         self.client.logout()
-        session = self.client.session
-        session['participant_id'] = participant.unique_id
-        session.save()
 
         response = self.client.get(
             reverse("questions:gender")
@@ -31,16 +22,6 @@ class TestGender(TestCase):
 
         self.assertRedirects(response, "/oidc/authenticate/?next=/gender", fetch_redirect_response=False)
 
-    def test_get_redirects_if_the_participant_does_not_exist(self):
-        session = self.client.session
-        session['participant_id'] = "somebody none existant participant"
-        session.save()
-
-        response = self.client.get(
-            reverse("questions:gender")
-        )
-
-        self.assertRedirects(response, reverse("questions:start"))
 
     def test_get_responds_successfully(self):
         response = self.client.get(reverse("questions:gender"))
@@ -54,11 +35,6 @@ class TestGender(TestCase):
 
     def test_post_redirects_if_the_user_is_not_logged_in(self):
         self.client.logout()
-        participant = Participant.objects.create(unique_id="abcdef")
-
-        session = self.client.session
-        session['participant_id'] = participant.unique_id
-        session.save()
 
         response = self.client.post(
             reverse("questions:gender"),
@@ -67,35 +43,17 @@ class TestGender(TestCase):
 
         self.assertRedirects(response, "/oidc/authenticate/?next=/gender", fetch_redirect_response=False)
 
-    def test_post_redirects_if_the_participant_does_not_exist(self):
-        session = self.client.session
-        session['participant_id'] = "somebody none existant participant"
-        session.save()
 
-        response = self.client.post(
-            reverse("questions:gender"),
-            self.valid_params
-        )
-
-        self.assertRedirects(response, reverse("questions:start"))
-
-    def test_post_stores_a_valid_response_for_the_participant(self):
+    def test_post_stores_a_valid_response_for_the_user(self):
         self.client.post(
             reverse("questions:gender"),
             self.valid_params
         )
 
-        response_set = self.participant.responseset_set.first()
+        response_set = self.user.responseset_set.first()
         self.assertEqual(response_set.gender, self.valid_params["gender"])
-        self.assertEqual(response_set.participant, self.participant)
+        self.assertEqual(response_set.user, self.user)
 
-    def test_post_sets_the_participant_id_in_session(self):
-        self.client.post(
-            reverse("questions:gender"),
-            self.valid_params
-        )
-
-        self.assertEqual(self.client.session["participant_id"], "12345")
 
     def test_post_redirects_to_the_ethnicity_path(self):
         response = self.client.post(

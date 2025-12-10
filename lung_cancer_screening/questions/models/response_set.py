@@ -7,7 +7,7 @@ from django.utils import timezone
 from decimal import Decimal
 
 from .base import BaseModel
-from .participant import Participant
+from .user import User
 
 class HaveYouEverSmokedValues(models.IntegerChoices):
     YES_I_CURRENTLY_SMOKE = 0, 'Yes, I currently smoke'
@@ -50,7 +50,7 @@ def validate_singleton_option(value):
         )
 
 class ResponseSet(BaseModel):
-    participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     have_you_ever_smoked = models.IntegerField(
         choices=HaveYouEverSmokedValues.choices,
@@ -129,10 +129,10 @@ class ResponseSet(BaseModel):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["participant"],
+                fields=["user"],
                 condition=models.Q(submitted_at__isnull=True),
-                name="unique_unsubmitted_response_per_participant",
-                violation_error_message="An unsubmitted response set already exists for this participant"
+                name="unique_unsubmitted_response_per_user",
+                violation_error_message="An unsubmitted response set already exists for this user"
             )
         ]
 
@@ -140,11 +140,11 @@ class ResponseSet(BaseModel):
         super().clean()
 
         one_year_ago = timezone.now() - relativedelta(years=1)
-        submitted_response_sets_in_last_year = self.participant.responseset_set.filter(submitted_at__gte=one_year_ago)
+        submitted_response_sets_in_last_year = self.user.responseset_set.filter(submitted_at__gte=one_year_ago)
 
         if submitted_response_sets_in_last_year:
             raise ValidationError(
-                "Responses have already been submitted for this participant"
+                "Responses have already been submitted for this user"
             )
 
     @property

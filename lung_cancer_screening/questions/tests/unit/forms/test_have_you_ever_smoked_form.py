@@ -1,16 +1,16 @@
 from django.test import TestCase
 
+from ...factories.user_factory import UserFactory
 from ....models.response_set import HaveYouEverSmokedValues
-from ....models.participant import Participant
 from ....forms.have_you_ever_smoked_form import HaveYouEverSmokedForm
 
 class TestHaveYouEverSmokedForm(TestCase):
     def setUp(self):
-        self.participant = Participant.objects.create(unique_id="1234567890")
+        self.user = UserFactory()
 
     def test_is_valid(self):
         form = HaveYouEverSmokedForm(
-            participant=self.participant,
+            user=self.user,
             data={
                 "have_you_ever_smoked": HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY
             }
@@ -19,7 +19,7 @@ class TestHaveYouEverSmokedForm(TestCase):
 
     def test_is_invalid(self):
         form = HaveYouEverSmokedForm(
-            participant=self.participant,
+            user=self.user,
             data={
                 "have_you_ever_smoked": "invalid"
             }
@@ -32,7 +32,7 @@ class TestHaveYouEverSmokedForm(TestCase):
 
     def test_is_invalid_when_no_option_is_selected(self):
         form = HaveYouEverSmokedForm(
-            participant=self.participant,
+            user=self.user,
             data={
                 "have_you_ever_smoked": None
             }
@@ -45,7 +45,7 @@ class TestHaveYouEverSmokedForm(TestCase):
 
     def test_returns_a_boolean_type(self):
         form = HaveYouEverSmokedForm(
-            participant=self.participant,
+            user=self.user,
             data={
                 "have_you_ever_smoked": HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY
             }

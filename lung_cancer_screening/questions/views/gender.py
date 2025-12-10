@@ -1,27 +1,24 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.utils.decorators import method_decorator
 
 from .authenticated_view import AuthenticatedView
-from .decorators.participant_decorators import require_participant
 from ..forms.gender_form import GenderForm
 
-@method_decorator(require_participant, name="dispatch")
 class GenderView(AuthenticatedView):
     def get(self, request):
         return render_template(
             request,
-            GenderForm(participant=request.participant),
+            GenderForm(user=request.user),
         )
 
     def post(self, request):
         form = GenderForm(
-            participant=request.participant,
+            user=request.user,
             data=request.POST
         )
 
         if form.is_valid():
-                response_set = request.participant.responseset_set.last()
+                response_set = request.user.responseset_set.last()
                 response_set.gender = form.cleaned_data["gender"]
                 response_set.save()
                 return redirect(reverse("questions:ethnicity"))

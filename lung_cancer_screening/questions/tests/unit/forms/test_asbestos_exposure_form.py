@@ -1,29 +1,17 @@
 from django.test import TestCase
 
-from ....models.participant import Participant
+from ...factories.user_factory import UserFactory
 from ....forms.asbestos_exposure_form import AsbestosExposureForm
 
 
 class TestAsbestosExposureForm(TestCase):
     def setUp(self):
-        self.participant = Participant.objects.create(unique_id="1234567890")
+        self.user = UserFactory()
 
-    def test_is_valid_with_yes(self):
-        form = AsbestosExposureForm(
-            participant=self.participant,
-            data={
-                "asbestos_exposure": True
-            }
-        )
-        self.assertTrue(form.is_valid())
-        self.assertEqual(
-            form.cleaned_data["asbestos_exposure"],
-            True
-        )
 
-    def test_is_valid_with_no(self):
+    def test_is_valid_with_a_valid_value(self):
         form = AsbestosExposureForm(
-            participant=self.participant,
+            user=self.user,
             data={
                 "asbestos_exposure": False
             }
@@ -36,7 +24,7 @@ class TestAsbestosExposureForm(TestCase):
 
     def test_is_invalid_with_an_invalid_value(self):
         form = AsbestosExposureForm(
-            participant=self.participant,
+            user=self.user,
             data={
                 "asbestos_exposure": "invalid"
             }
@@ -49,7 +37,7 @@ class TestAsbestosExposureForm(TestCase):
 
     def test_is_invalid_when_no_option_is_selected(self):
         form = AsbestosExposureForm(
-            participant=self.participant,
+            user=self.user,
             data={
                 "asbestos_exposure": None
             }

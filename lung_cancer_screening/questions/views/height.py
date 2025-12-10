@@ -1,12 +1,9 @@
 from django.shortcuts import render, redirect
-from django.utils.decorators import method_decorator
 
 from .authenticated_view import AuthenticatedView
 from lung_cancer_screening.questions.forms.metric_height_form import MetricHeightForm
 from lung_cancer_screening.questions.forms.imperial_height_form import ImperialHeightForm
-from .decorators.participant_decorators import require_participant
 
-@method_decorator(require_participant, name="dispatch")
 class HeightView(AuthenticatedView):
     def get(self, request):
         unit = request.GET.get('unit')
@@ -16,7 +13,7 @@ class HeightView(AuthenticatedView):
             request,
             "height.jinja",
             {
-                "form": form_klass(participant=request.participant),
+                "form": form_klass(user=request.user),
                 "unit": unit,
                 "switch_to_unit": "metric" if unit == "imperial" else "imperial"
             }
@@ -29,9 +26,9 @@ class HeightView(AuthenticatedView):
 
         if request.method == "POST":
             form = form_klass(
-                instance = request.participant.responseset_set.last(),
+                instance = request.user.responseset_set.last(),
                 data=request.POST,
-                participant=request.participant
+                user=request.user
             )
 
             if form.is_valid():

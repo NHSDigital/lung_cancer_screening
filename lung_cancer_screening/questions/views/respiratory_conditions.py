@@ -1,28 +1,25 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.utils.decorators import method_decorator
 
 from .authenticated_view import AuthenticatedView
-from .decorators.participant_decorators import require_participant
 from ..forms.respiratory_conditions_form import RespiratoryConditionsForm
 
 
-@method_decorator(require_participant, name="dispatch")
 class RespiratoryConditionsView(AuthenticatedView):
     def get(self, request):
         return render_template(
             request,
-            RespiratoryConditionsForm(participant=request.participant)
+            RespiratoryConditionsForm(user=request.user)
         )
 
     def post(self, request):
         form = RespiratoryConditionsForm(
-            participant=request.participant,
+            user=request.user,
             data=request.POST
         )
 
         if form.is_valid():
-            response_set = request.participant.responseset_set.last()
+            response_set = request.user.responseset_set.last()
             response_set.respiratory_conditions = form.cleaned_data["respiratory_conditions"]
             response_set.save()
             return redirect(reverse("questions:asbestos_exposure"))

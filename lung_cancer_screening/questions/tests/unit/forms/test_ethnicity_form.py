@@ -1,16 +1,16 @@
 from django.test import TestCase
 
+from ...factories.user_factory import UserFactory
 from ....models.response_set import EthnicityValues
-from ....models.participant import Participant
 from ....forms.ethnicity_form import EthnicityForm
 
 class TestEthnicityForm(TestCase):
     def setUp(self):
-        self.participant = Participant.objects.create(unique_id="1234567890")
+        self.user = UserFactory()
 
     def test_is_valid_with_a_valid_value(self):
         form = EthnicityForm(
-            participant=self.participant,
+            user=self.user,
             data={
                 'ethnicity': EthnicityValues.WHITE
             }
@@ -23,7 +23,7 @@ class TestEthnicityForm(TestCase):
 
     def test_is_invalid_with_an_invalid_value(self):
         form = EthnicityForm(
-            participant=self.participant,
+            user=self.user,
             data={
                 "ethnicity": "invalid"
             }
@@ -36,7 +36,7 @@ class TestEthnicityForm(TestCase):
 
     def test_is_invalid_when_no_option_is_selected(self):
         form = EthnicityForm(
-            participant=self.participant,
+            user=self.user,
             data={
                 "ethnicity": None
             }

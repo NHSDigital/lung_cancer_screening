@@ -1,24 +1,21 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.utils.decorators import method_decorator
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from .authenticated_view import AuthenticatedView
-from .decorators.participant_decorators import require_participant
 from ..forms.date_of_birth_form import DateOfBirthForm
 
-@method_decorator(require_participant, name="dispatch")
 class DateOfBirthView(AuthenticatedView):
     def get(self, request):
         return render_template(
             request,
-            DateOfBirthForm(participant=request.participant)
+            DateOfBirthForm(user=request.user)
         )
 
     def post(self, request):
         form = DateOfBirthForm(
-            participant=request.participant,
+            user=request.user,
             data=request.POST
         )
 
@@ -28,7 +25,7 @@ class DateOfBirthView(AuthenticatedView):
             date_of_birth = form.cleaned_data["date_of_birth"]
 
             if (seventy_five_years_ago < date_of_birth <= fifty_five_years_ago):
-                response_set = request.participant.responseset_set.last()
+                response_set = request.user.responseset_set.last()
                 response_set.date_of_birth = date_of_birth
                 response_set.save()
 

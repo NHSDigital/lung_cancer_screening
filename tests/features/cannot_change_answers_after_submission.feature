@@ -3,6 +3,6 @@ Feature: Participants with submitted responses
     Given I am logged in
     And I have already submitted my responses
     When I go to "/start"
-    And I submit my participant id
+    And I click "Start"
     Then I am on "/start"
-    And I see an error summary "Responses have already been submitted for this participant"
+    And I see an error summary "Responses have already been submitted for this user"

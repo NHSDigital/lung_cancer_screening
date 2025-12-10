@@ -1,16 +1,16 @@
 from django.test import TestCase
 
+from ...factories.user_factory import UserFactory
 from ....models.response_set import GenderValues
-from ....models.participant import Participant
 from ....forms.gender_form import GenderForm
 
 class TestGenderForm(TestCase):
     def setUp(self):
-        self.participant = Participant.objects.create(unique_id="1234567890")
+        self.user = UserFactory()
 
     def test_is_valid_with_a_valid_value(self):
         form = GenderForm(
-            participant=self.participant,
+            user=self.user,
             data={
                 "gender": GenderValues.MALE
             }
@@ -23,7 +23,7 @@ class TestGenderForm(TestCase):
 
     def test_is_invalid_with_an_invalid_value(self):
         form = GenderForm(
-            participant=self.participant,
+            user=self.user,
             data={
                 "gender": "invalid"
             }
@@ -36,7 +36,7 @@ class TestGenderForm(TestCase):
 
     def test_is_invalid_when_no_option_is_selected(self):
         form = GenderForm(
-            participant=self.participant,
+            user=self.user,
             data={
                 "gender": None
             }

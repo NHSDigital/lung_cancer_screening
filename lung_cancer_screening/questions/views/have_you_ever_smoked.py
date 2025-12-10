@@ -1,23 +1,20 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.utils.decorators import method_decorator
 
 from .authenticated_view import AuthenticatedView
-from .decorators.participant_decorators import require_participant
 from ..forms.have_you_ever_smoked_form import HaveYouEverSmokedForm
 from ..models.response_set import HaveYouEverSmokedValues
 
-@method_decorator(require_participant, name="dispatch")
 class HaveYouEverSmokedView(AuthenticatedView):
     def get(self, request):
         return render_template(
             request,
-            HaveYouEverSmokedForm(participant=request.participant)
+            HaveYouEverSmokedForm(user=request.user)
         )
 
     def post(self, request):
         form = HaveYouEverSmokedForm(
-            data=request.POST, participant=request.participant
+            data=request.POST, user=request.user
         )
 
         if form.is_valid():
@@ -25,7 +22,7 @@ class HaveYouEverSmokedView(AuthenticatedView):
             have_you_ever_smoked = form.cleaned_data["have_you_ever_smoked"]
 
             if have_you_ever_smoked in has_smoked_values:
-                response_set = request.participant.responseset_set.last()
+                response_set = request.user.responseset_set.last()
                 response_set.have_you_ever_smoked = have_you_ever_smoked
                 response_set.save()
 

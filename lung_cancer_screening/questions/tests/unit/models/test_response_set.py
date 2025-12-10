@@ -5,13 +5,14 @@ from django.utils import timezone
 
 from django.core.exceptions import ValidationError
 
+from ...factories.user_factory import UserFactory
+from ....models.user import User
 from ....models.response_set import ResponseSet, HaveYouEverSmokedValues, SexAtBirthValues, GenderValues, EthnicityValues
-from ....models.participant import Participant
 
 class TestResponseSet(TestCase):
     def setUp(self):
-        participant = Participant.objects.create(unique_id="12345")
-        self.response_set = participant.responseset_set.create()
+        user = UserFactory()
+        self.response_set = user.responseset_set.create()
 
     # FIELDS
 
@@ -60,10 +61,10 @@ class TestResponseSet(TestCase):
             int
         )
 
-    def test_has_a_participant_as_a_foreign_key(self):
+    def test_has_a_user_as_a_foreign_key(self):
         self.assertIsInstance(
-            self.response_set.participant,
-            Participant
+            self.response_set.user,
+            User
         )
 
     def test_has_created_at_as_a_datetime(self):
@@ -121,29 +122,29 @@ class TestResponseSet(TestCase):
     # VALIDATIONS
 
     def test_is_invalid_if_another_unsubmitted_response_set_exists(self):
-        participant = Participant.objects.create(unique_id="56789")
-        participant.responseset_set.create(submitted_at=None)
+        user = UserFactory()
+        user.responseset_set.create(submitted_at=None)
 
         with self.assertRaises(ValidationError) as context:
-            participant.responseset_set.create(submitted_at=None)
+            user.responseset_set.create(submitted_at=None)
 
         self.assertEqual(
             context.exception.messages[0],
-            "An unsubmitted response set already exists for this participant"
+            "An unsubmitted response set already exists for this user"
         )
 
     def test_is_invalid_if_another_response_set_was_submitted_within_the_last_year(self):
-        participant = Participant.objects.create(unique_id="56789")
-        participant.responseset_set.create(
+        user = UserFactory()
+        user.responseset_set.create(
             submitted_at=timezone.now() - relativedelta(days=364)
         )
 
         with self.assertRaises(ValidationError) as context:
-            participant.responseset_set.create()
+            user.responseset_set.create()
 
         self.assertEqual(
             context.exception.messages[0],
-            "Responses have already been submitted for this participant"
+            "Responses have already been submitted for this user"
         )
 
     def test_is_invalid_if_height_is_below_lower_bound(self):

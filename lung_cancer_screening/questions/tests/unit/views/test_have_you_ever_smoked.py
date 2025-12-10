@@ -2,27 +2,17 @@ from django.test import TestCase
 from django.urls import reverse
 
 from .helpers.authentication import login_user
-from lung_cancer_screening.questions.models.participant import Participant
 from lung_cancer_screening.questions.models.response_set import HaveYouEverSmokedValues
 
 class TestHaveYouEverSmoked(TestCase):
     def setUp(self):
-        login_user(self.client)
+        self.user = login_user(self.client)
 
-        self.participant = Participant.objects.create(unique_id="12345")
-        self.participant.responseset_set.create()
+        self.user.responseset_set.create()
         self.valid_params = { "have_you_ever_smoked": HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY }
 
-        session = self.client.session
-        session['participant_id'] = self.participant.unique_id
-        session.save()
-
     def test_get_redirects_if_the_user_is_not_logged_in(self):
-        participant = Participant.objects.create(unique_id="abcdef")
         self.client.logout()
-        session = self.client.session
-        session['participant_id'] = participant.unique_id
-        session.save()
 
         response = self.client.get(
             reverse("questions:have_you_ever_smoked")
@@ -30,16 +20,6 @@ class TestHaveYouEverSmoked(TestCase):
 
         self.assertRedirects(response, "/oidc/authenticate/?next=/have-you-ever-smoked", fetch_redirect_response=False)
 
-    def test_get_redirects_if_the_particpant_does_not_exist(self):
-        session = self.client.session
-        session['participant_id'] = "somebody none existant participant"
-        session.save()
-
-        response = self.client.get(
-            reverse("questions:have_you_ever_smoked")
-        )
-
-        self.assertRedirects(response, reverse("questions:start"))
 
     def test_get_responds_successfully(self):
         response = self.client.get(reverse("questions:have_you_ever_smoked"))
@@ -48,11 +28,6 @@ class TestHaveYouEverSmoked(TestCase):
 
     def test_post_redirects_if_the_user_is_not_logged_in(self):
         self.client.logout()
-        participant = Participant.objects.create(unique_id="abcdef")
-
-        session = self.client.session
-        session['participant_id'] = participant.unique_id
-        session.save()
 
         response = self.client.post(
             reverse("questions:have_you_ever_smoked"),
@@ -61,35 +36,17 @@ class TestHaveYouEverSmoked(TestCase):
 
         self.assertRedirects(response, "/oidc/authenticate/?next=/have-you-ever-smoked", fetch_redirect_response=False)
 
-    def test_post_redirects_if_the_particpant_does_not_exist(self):
-        session = self.client.session
-        session['participant_id'] = "somebody none existant participant"
-        session.save()
 
-        response = self.client.post(
-            reverse("questions:have_you_ever_smoked"),
-            self.valid_params
-        )
-
-        self.assertRedirects(response, reverse("questions:start"))
-
-    def test_post_stores_a_valid_response_for_the_participant(self):
+    def test_post_stores_a_valid_response_for_the_user(self):
         self.client.post(
             reverse("questions:have_you_ever_smoked"),
             self.valid_params
         )
 
-        response_set = self.participant.responseset_set.first()
+        response_set = self.user.responseset_set.first()
         self.assertEqual(response_set.have_you_ever_smoked, self.valid_params["have_you_ever_smoked"])
-        self.assertEqual(response_set.participant, self.participant)
+        self.assertEqual(response_set.user, self.user)
 
-    def test_post_sets_the_participant_id_in_session(self):
-        self.client.post(
-            reverse("questions:have_you_ever_smoked"),
-            self.valid_params
-        )
-
-        self.assertEqual(self.client.session["participant_id"], "12345")
 
     def test_post_redirects_to_the_date_of_birth_path(self):
         response = self.client.post(
@@ -113,7 +70,7 @@ class TestHaveYouEverSmoked(TestCase):
             { "have_you_ever_smoked": HaveYouEverSmokedValues.NO_I_HAVE_NEVER_SMOKED.value }
         )
 
-        self.assertEqual(self.participant.responseset_set.first().have_you_ever_smoked, None)
+        self.assertEqual(self.user.responseset_set.first().have_you_ever_smoked, None)
 
     def test_post_redirects_if_the_user_not_a_smoker(self):
         response = self.client.post(

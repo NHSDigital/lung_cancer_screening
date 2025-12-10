@@ -1,12 +1,9 @@
 from django.shortcuts import render, redirect
-from django.utils.decorators import method_decorator
 
 from .authenticated_view import AuthenticatedView
 from lung_cancer_screening.questions.forms.metric_weight_form import MetricWeightForm
 from lung_cancer_screening.questions.forms.imperial_weight_form import ImperialWeightForm
-from .decorators.participant_decorators import require_participant
 
-@method_decorator(require_participant, name="dispatch")
 class WeightView(AuthenticatedView):
     def get(self, request):
         unit = request.GET.get('unit')
@@ -16,7 +13,7 @@ class WeightView(AuthenticatedView):
             request,
             "weight.jinja",
             {
-                "form": form_klass(participant=request.participant),
+                "form": form_klass(user=request.user),
                 "unit": unit,
                 "switch_to_unit": "metric" if unit == "imperial" else "imperial"
             }
@@ -27,9 +24,9 @@ class WeightView(AuthenticatedView):
         form_klass = ImperialWeightForm if unit == "imperial" else MetricWeightForm
 
         form = form_klass(
-            instance=request.participant.responseset_set.last(),
+            instance=request.user.responseset_set.last(),
             data=request.POST,
-            participant=request.participant
+            user=request.user
         )
 
         if form.is_valid():

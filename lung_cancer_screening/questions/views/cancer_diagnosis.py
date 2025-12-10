@@ -1,12 +1,9 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from .decorators.participant_decorators import require_participant
 from .authenticated_view import AuthenticatedView
 
-from django.utils.decorators import method_decorator
 
-@method_decorator(require_participant, name="dispatch")
 class CancerDiagnosisView(AuthenticatedView):
     def get(self, request):
         return render_template(request)

@@ -1,14 +1,13 @@
+from datetime import datetime, date
 from django.test import TestCase
-from datetime import datetime
 from django.core.exceptions import ValidationError
 
-from ....models.user import User
+from ...factories.user_factory import UserFactory
 
 
 class TestUser(TestCase):
     def setUp(self):
-        self.nhs_number = "1234567890"
-        self.user = User.objects.create_user(self.nhs_number)
+        self.user = UserFactory()
 
     def test_has_nhs_number_as_a_string(self):
         self.assertIsInstance(
@@ -31,20 +30,33 @@ class TestUser(TestCase):
 
     def test_nhs_number_has_a_max_length_of_10(self):
         with self.assertRaises(ValidationError) as context:
-            User.objects.create_user("1"*11)
+            UserFactory(nhs_number="1"*11)
 
         self.assertIn(
             "Ensure this value has at most 10 characters (it has 11).",
             context.exception.messages
         )
 
-    def test_raises_a_value_error_if_nhs_number_is_null(self):
-        with self.assertRaises(ValueError):
-            User.objects.create_user(None)
+    def test_has_many_response_sets(self):
+        response_set = self.user.responseset_set.create(
+            have_you_ever_smoked=0,
+            date_of_birth=date(2000, 9, 8)
+        )
+        self.assertIn(response_set, list(self.user.responseset_set.all()))
+
+    def test_raises_a_validation_error_if_nhs_number_is_null(self):
+        with self.assertRaises(ValidationError) as context:
+            UserFactory(nhs_number=None)
+
+        self.assertIn(
+            "This field cannot be null.",
+            context.exception.messages
+        )
+
 
     def test_raises_a_validation_error_if_nhs_number_is_duplicate(self):
         with self.assertRaises(ValidationError) as context:
-            User.objects.create_user(self.nhs_number)
+            UserFactory(nhs_number=self.user.nhs_number)
 
         self.assertIn(
             "User with this Nhs number already exists.",
