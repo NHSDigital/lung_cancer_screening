@@ -61,6 +61,7 @@ class TestNHSLoginOIDCBackend(TestCase):
 
         self.assertIn("Missing 'nhs_number' claim", str(context.exception))
 
+
     def test_update_user_returns_user(self):
         user = User.objects.create_user(nhs_number='1234567890')
         claims = {'nhs_number': '1234567890', 'email': 'test@example.com'}
@@ -68,6 +69,7 @@ class TestNHSLoginOIDCBackend(TestCase):
         result = self.backend.update_user(user, claims)
 
         self.assertEqual(result, user)
+
 
     @override_settings(
         OIDC_RP_CLIENT_PRIVATE_KEY=None,  # Will be set per test

@@ -1,32 +1,44 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views import View
 
-from .authenticated_view import AuthenticatedView
-from lung_cancer_screening.questions.forms.metric_weight_form import MetricWeightForm
-from lung_cancer_screening.questions.forms.imperial_weight_form import ImperialWeightForm
+from .mixins.ensure_response_set import EnsureResponseSet
+from lung_cancer_screening.questions.forms.metric_weight_form import (
+    MetricWeightForm
+)
+from lung_cancer_screening.questions.forms.imperial_weight_form import (
+    ImperialWeightForm
+)
 
-class WeightView(AuthenticatedView):
+
+class WeightView(LoginRequiredMixin, EnsureResponseSet, View):
     def get(self, request):
         unit = request.GET.get('unit')
-        form_klass = ImperialWeightForm if unit == "imperial" else MetricWeightForm
+        form_klass = (
+            ImperialWeightForm if unit == "imperial" else MetricWeightForm
+        )
 
         return render(
             request,
             "weight.jinja",
             {
-                "form": form_klass(user=request.user),
+                "form": form_klass(instance=request.response_set),
                 "unit": unit,
-                "switch_to_unit": "metric" if unit == "imperial" else "imperial"
+                "switch_to_unit": (
+                    "metric" if unit == "imperial" else "imperial"
+                )
             }
         )
 
     def post(self, request):
         unit = request.GET.get('unit')
-        form_klass = ImperialWeightForm if unit == "imperial" else MetricWeightForm
+        form_klass = (
+            ImperialWeightForm if unit == "imperial" else MetricWeightForm
+        )
 
         form = form_klass(
-            instance=request.user.responseset_set.last(),
-            data=request.POST,
-            user=request.user
+            instance=request.response_set,
+            data=request.POST
         )
 
         if form.is_valid():
@@ -39,7 +51,9 @@ class WeightView(AuthenticatedView):
                 {
                     "form": form,
                     "unit": unit,
-                    "switch_to_unit": "metric" if unit == "imperial" else "imperial"
+                    "switch_to_unit": (
+                        "metric" if unit == "imperial" else "imperial"
+                    )
                 },
                 status=422
             )

@@ -3,12 +3,11 @@ from django import forms
 from ...nhsuk_forms.decimal_field import DecimalField
 from ..models.response_set import ResponseSet
 
+
 class MetricHeightForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
-        self.instance.user = self.user
 
         self.fields["height"] = DecimalField(
             decimal_places=1,
@@ -16,7 +15,10 @@ class MetricHeightForm(forms.ModelForm):
             classes="nhsuk-input--width-4",
             error_messages={
                 'required': 'Enter your height',
-                "max_decimal_places": "Centimetres must be to 1 decimal place, for example 185.5cm",
+                "max_decimal_places": (
+                    "Centimetres must be to 1 decimal place, "
+                    "for example 185.5cm"
+                ),
             },
             suffix="cm"
         )

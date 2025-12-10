@@ -1,19 +1,18 @@
 from django.test import TestCase
 from django.urls import reverse
+from dateutil.relativedelta import relativedelta
+from django.utils import timezone
 
 from .helpers.authentication import login_user
+from lung_cancer_screening.questions.models.response_set import (
+    EthnicityValues
+)
 
-from lung_cancer_screening.questions.models.response_set import EthnicityValues
 
-class TestEthnicity(TestCase):
+class TestGetEthnicity(TestCase):
     def setUp(self):
-        self.user =login_user(self.client)
+        self.user = login_user(self.client)
 
-        self.user.responseset_set.create()
-        self.valid_params = { "ethnicity": EthnicityValues.WHITE }
-
-
-### Test GET request
     def test_get_redirects_if_the_user_is_not_logged_in(self):
         self.client.logout()
 
@@ -21,8 +20,24 @@ class TestEthnicity(TestCase):
             reverse("questions:ethnicity")
         )
 
-        self.assertRedirects(response, "/oidc/authenticate/?next=/ethnicity", fetch_redirect_response=False)
+        self.assertRedirects(
+            response,
+            "/oidc/authenticate/?next=/ethnicity",
+            fetch_redirect_response=False
+        )
 
+    def test_get_redirects_when_submitted_response_set_exists_within_last_year(
+        self
+    ):
+        self.user.responseset_set.create(
+            submitted_at=timezone.now() - relativedelta(days=364)
+        )
+
+        response = self.client.get(
+            reverse("questions:ethnicity")
+        )
+
+        self.assertRedirects(response, reverse("questions:start"))
 
     def test_get_responds_successfully(self):
         response = self.client.get(reverse("questions:ethnicity"))
@@ -34,7 +49,12 @@ class TestEthnicity(TestCase):
 
         self.assertContains(response, "What is your ethnic background?")
 
-### Test POST request
+
+class TestPostEthnicity(TestCase):
+    def setUp(self):
+        self.user = login_user(self.client)
+
+        self.valid_params = {"ethnicity": EthnicityValues.WHITE}
 
     def test_post_redirects_if_the_user_is_not_logged_in(self):
         self.client.logout()
@@ -44,8 +64,79 @@ class TestEthnicity(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, "/oidc/authenticate/?next=/ethnicity", fetch_redirect_response=False)
+        self.assertRedirects(
+            response,
+            "/oidc/authenticate/?next=/ethnicity",
+            fetch_redirect_response=False
+        )
 
+    def test_post_creates_unsubmitted_response_set_when_no_response_set_exists(
+        self
+    ):
+        self.client.post(
+            reverse("questions:ethnicity"),
+            self.valid_params
+        )
+
+        response_set = self.user.responseset_set.first()
+        self.assertEqual(self.user.responseset_set.count(), 1)
+        self.assertEqual(response_set.submitted_at, None)
+        self.assertEqual(
+            response_set.ethnicity, self.valid_params["ethnicity"]
+        )
+        self.assertEqual(response_set.user, self.user)
+
+    def test_post_updates_unsubmitted_response_set_when_one_exists(self):
+        response_set = self.user.responseset_set.create()
+
+        self.client.post(
+            reverse("questions:ethnicity"),
+            self.valid_params
+        )
+
+        response_set.refresh_from_db()
+        self.assertEqual(self.user.responseset_set.count(), 1)
+        self.assertEqual(response_set.submitted_at, None)
+        self.assertEqual(
+            response_set.ethnicity, self.valid_params["ethnicity"]
+        )
+        self.assertEqual(response_set.user, self.user)
+
+    def test_post_creates_new_unsubmitted_response_set_when_submitted_exists_over_year_ago(  # noqa: E501
+        self
+    ):
+        self.user.responseset_set.create(
+            submitted_at=timezone.now() - relativedelta(years=1)
+        )
+
+        self.client.post(
+            reverse("questions:ethnicity"),
+            self.valid_params
+        )
+
+        self.assertEqual(self.user.responseset_set.count(), 2)
+        self.assertEqual(self.user.responseset_set.unsubmitted().count(), 1)
+
+        response_set = self.user.responseset_set.last()
+        self.assertEqual(response_set.submitted_at, None)
+        self.assertEqual(
+            response_set.ethnicity, self.valid_params["ethnicity"]
+        )
+        self.assertEqual(response_set.user, self.user)
+
+    def test_post_redirects_when_submitted_response_set_exists_within_last_year(
+        self
+    ):
+        self.user.responseset_set.create(
+            submitted_at=timezone.now() - relativedelta(days=364)
+        )
+
+        response = self.client.post(
+            reverse("questions:ethnicity"),
+            self.valid_params
+        )
+
+        self.assertRedirects(response, reverse("questions:start"))
 
     def test_post_stores_a_valid_response_for_the_user(self):
         self.client.post(
@@ -54,11 +145,12 @@ class TestEthnicity(TestCase):
         )
 
         response_set = self.user.responseset_set.first()
-        self.assertEqual(response_set.ethnicity, self.valid_params["ethnicity"])
+        self.assertEqual(
+            response_set.ethnicity, self.valid_params["ethnicity"]
+        )
         self.assertEqual(response_set.user, self.user)
 
-
-    def test_post_redirects_to_the_asbestos_exposure_path(self):
+    def test_post_redirects_to_the_education_path(self):
         response = self.client.post(
             reverse("questions:ethnicity"),
             self.valid_params
@@ -66,7 +158,7 @@ class TestEthnicity(TestCase):
 
         self.assertRedirects(response, reverse("questions:education"))
 
-    def test_post_responds_with_422_if_the_date_response_fails_to_create(self):
+    def test_post_responds_with_422_if_the_response_fails_to_create(self):
         response = self.client.post(
             reverse("questions:ethnicity"),
             {"ethnicity": "something not in list"}
@@ -74,11 +166,15 @@ class TestEthnicity(TestCase):
 
         self.assertEqual(response.status_code, 422)
 
-    def test_post_renders_the_ethnicity_page_with_an_error_if_the_form_is_invalid(self):
+    def test_post_renders_the_ethnicity_page_with_an_error_if_form_invalid(
+        self
+    ):
         response = self.client.post(
             reverse("questions:ethnicity"),
             {"ethnicity": "something not in list"}
         )
 
-        self.assertContains(response, "What is your ethnic background?", status_code=422)
+        self.assertContains(
+            response, "What is your ethnic background?", status_code=422
+        )
         self.assertContains(response, "nhsuk-error-message", status_code=422)

@@ -1,21 +1,23 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views import View
 
-from .authenticated_view import AuthenticatedView
+from .mixins.ensure_response_set import EnsureResponseSet
 from ..forms.asbestos_exposure_form import AsbestosExposureForm
 
-class AsbestosExposureView(AuthenticatedView):
+class AsbestosExposureView(LoginRequiredMixin, EnsureResponseSet, View):
     def get(self, request):
         return render(
             request,
             "asbestos_exposure.jinja",
-            {"form": AsbestosExposureForm(user=request.user)}
+            {"form": AsbestosExposureForm(instance=request.response_set)}
         )
 
     def post(self, request):
 
         form = AsbestosExposureForm(
-            user=request.user,
+            instance=request.response_set,
             data=request.POST
         )
 

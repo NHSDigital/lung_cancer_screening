@@ -3,11 +3,10 @@ from django.urls import reverse
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
-from lung_cancer_screening.questions.models.response_set import GenderValues
 from .helpers.authentication import login_user
 
 
-class TestGetGender(TestCase):
+class TestGetEducation(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
 
@@ -15,12 +14,12 @@ class TestGetGender(TestCase):
         self.client.logout()
 
         response = self.client.get(
-            reverse("questions:gender")
+            reverse("questions:education")
         )
 
         self.assertRedirects(
             response,
-            "/oidc/authenticate/?next=/gender",
+            "/oidc/authenticate/?next=/education",
             fetch_redirect_response=False
         )
 
@@ -32,39 +31,31 @@ class TestGetGender(TestCase):
         )
 
         response = self.client.get(
-            reverse("questions:gender")
+            reverse("questions:education")
         )
 
         self.assertRedirects(response, reverse("questions:start"))
 
     def test_get_responds_successfully(self):
-        response = self.client.get(reverse("questions:gender"))
+        response = self.client.get(reverse("questions:education"))
 
         self.assertEqual(response.status_code, 200)
 
-    def test_get_contains_the_correct_form_fields(self):
-        response = self.client.get(reverse("questions:gender"))
 
-        self.assertContains(response, "Which of these best describes you?")
-
-
-class TestPostGender(TestCase):
+class TestPostEducation(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
-
-        self.valid_params = {"gender": GenderValues.MALE}
 
     def test_post_redirects_if_the_user_is_not_logged_in(self):
         self.client.logout()
 
         response = self.client.post(
-            reverse("questions:gender"),
-            self.valid_params
+            reverse("questions:education")
         )
 
         self.assertRedirects(
             response,
-            "/oidc/authenticate/?next=/gender",
+            "/oidc/authenticate/?next=/education",
             fetch_redirect_response=False
         )
 
@@ -72,28 +63,24 @@ class TestPostGender(TestCase):
         self
     ):
         self.client.post(
-            reverse("questions:gender"),
-            self.valid_params
+            reverse("questions:education")
         )
 
         response_set = self.user.responseset_set.first()
         self.assertEqual(self.user.responseset_set.count(), 1)
         self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(response_set.gender, self.valid_params["gender"])
         self.assertEqual(response_set.user, self.user)
 
     def test_post_updates_unsubmitted_response_set_when_one_exists(self):
         response_set = self.user.responseset_set.create()
 
         self.client.post(
-            reverse("questions:gender"),
-            self.valid_params
+            reverse("questions:education")
         )
 
         response_set.refresh_from_db()
         self.assertEqual(self.user.responseset_set.count(), 1)
         self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(response_set.gender, self.valid_params["gender"])
         self.assertEqual(response_set.user, self.user)
 
     def test_post_creates_new_unsubmitted_response_set_when_submitted_exists_over_year_ago(  # noqa: E501
@@ -104,8 +91,7 @@ class TestPostGender(TestCase):
         )
 
         self.client.post(
-            reverse("questions:gender"),
-            self.valid_params
+            reverse("questions:education")
         )
 
         self.assertEqual(self.user.responseset_set.count(), 2)
@@ -113,7 +99,6 @@ class TestPostGender(TestCase):
 
         response_set = self.user.responseset_set.last()
         self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(response_set.gender, self.valid_params["gender"])
         self.assertEqual(response_set.user, self.user)
 
     def test_post_redirects_when_submitted_response_set_exists_within_last_year(  # noqa: E501
@@ -124,47 +109,17 @@ class TestPostGender(TestCase):
         )
 
         response = self.client.post(
-            reverse("questions:gender"),
-            self.valid_params
+            reverse("questions:education")
         )
 
         self.assertRedirects(response, reverse("questions:start"))
 
-    def test_post_stores_a_valid_response_for_the_user(self):
-        self.client.post(
-            reverse("questions:gender"),
-            self.valid_params
-        )
-
-        response_set = self.user.responseset_set.first()
-        self.assertEqual(response_set.gender, self.valid_params["gender"])
-        self.assertEqual(response_set.user, self.user)
-
-    def test_post_redirects_to_the_ethnicity_path(self):
+    def test_post_redirects_to_respiratory_conditions_path(self):
         response = self.client.post(
-            reverse("questions:gender"),
-            self.valid_params
+            reverse("questions:education")
         )
 
-        self.assertRedirects(response, reverse("questions:ethnicity"))
-
-    def test_post_responds_with_422_if_the_response_fails_to_create(self):
-        response = self.client.post(
-            reverse("questions:gender"),
-            {"gender": "something not in list"}
+        self.assertRedirects(
+            response,
+            reverse("questions:respiratory_conditions")
         )
-
-        self.assertEqual(response.status_code, 422)
-
-    def test_post_renders_the_gender_page_with_an_error_if_form_invalid(
-        self
-    ):
-        response = self.client.post(
-            reverse("questions:gender"),
-            {"gender": "something not in list"}
-        )
-
-        self.assertContains(
-            response, "Which of these best describes you?", status_code=422
-        )
-        self.assertContains(response, "nhsuk-error-message", status_code=422)

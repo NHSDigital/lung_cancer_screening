@@ -39,6 +39,7 @@ class NHSLoginOIDCBackend(OIDCAuthenticationBackend):
             raise ValueError("Missing 'nhs_number' claim in OIDC token")
         return User.objects.create_user(nhs_number=nhs_number)
 
+
     def update_user(self, user, _claims):
         return user
 

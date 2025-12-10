@@ -4,11 +4,10 @@ from datetime import date
 from ..models.response_set import ResponseSet
 from ...nhsuk_forms.split_date_field import SplitDateField
 
+
 class DateOfBirthForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
-        self.instance.user = self.user
 
         invalid_error_message = 'Date of birth must be a real date'
         self.fields["date_of_birth"] = SplitDateField(

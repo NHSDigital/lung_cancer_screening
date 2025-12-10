@@ -3,12 +3,11 @@ from django import forms
 from ...nhsuk_forms.choice_field import ChoiceField
 from ..models.response_set import ResponseSet, GenderValues
 
+
 class GenderForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
-        self.instance.user = self.user
 
         self.fields["gender"] = ChoiceField(
             choices=GenderValues.choices,
@@ -16,7 +15,10 @@ class GenderForm(forms.ModelForm):
             label="Which of these best describes you?",
             label_classes="nhsuk-fieldset__legend--l",
             label_is_page_heading=True,
-            hint="This information is used to find your NHS number and match with your GP record.",
+            hint=(
+                "This information is used to find your NHS number and "
+                "match with your GP record."
+            ),
             error_messages={
                 'required': 'Select the option that best describes your gender'
             }

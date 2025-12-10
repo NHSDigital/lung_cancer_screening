@@ -1,19 +1,22 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils import timezone
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views import View
 
-from .authenticated_view import AuthenticatedView
+from .mixins.ensure_response_set import EnsureResponseSet
 
-class ResponsesView(AuthenticatedView):
+
+class ResponsesView(LoginRequiredMixin, EnsureResponseSet, View):
     def get(self, request):
         return render(
             request,
             "responses.jinja",
-            {"response_set": request.user.responseset_set.last()}
+            {"response_set": request.response_set}
         )
 
     def post(self, request):
-        response_set = request.user.responseset_set.last()
+        response_set = request.response_set
 
         response_set.submitted_at = timezone.now()
         response_set.save()

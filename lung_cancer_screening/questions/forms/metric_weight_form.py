@@ -3,12 +3,11 @@ from django import forms
 from ...nhsuk_forms.decimal_field import DecimalField
 from ..models.response_set import ResponseSet
 
+
 class MetricWeightForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
-        self.instance.user = self.user
 
         self.fields["weight_metric"] = DecimalField(
             decimal_places=1,
@@ -17,7 +16,10 @@ class MetricWeightForm(forms.ModelForm):
             required=True,
             error_messages={
                 'required': 'Enter your weight',
-                'max_decimal_places': 'Kilograms must be to 1 decimal place, for example 90.2kgs',
+                'max_decimal_places': (
+                    'Kilograms must be to 1 decimal place, '
+                    'for example 90.2kgs'
+                ),
             },
             suffix="kg"
         )

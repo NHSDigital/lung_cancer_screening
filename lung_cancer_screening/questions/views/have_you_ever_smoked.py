@@ -1,20 +1,24 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views import View
 
-from .authenticated_view import AuthenticatedView
+from .mixins.ensure_response_set import EnsureResponseSet
 from ..forms.have_you_ever_smoked_form import HaveYouEverSmokedForm
 from ..models.response_set import HaveYouEverSmokedValues
 
-class HaveYouEverSmokedView(AuthenticatedView):
+class HaveYouEverSmokedView(LoginRequiredMixin, EnsureResponseSet, View):
     def get(self, request):
         return render_template(
             request,
-            HaveYouEverSmokedForm(user=request.user)
+            HaveYouEverSmokedForm(
+                instance=request.response_set
+            )
         )
 
     def post(self, request):
         form = HaveYouEverSmokedForm(
-            data=request.POST, user=request.user
+            data=request.POST, instance=request.response_set
         )
 
         if form.is_valid():
@@ -36,6 +40,7 @@ class HaveYouEverSmokedView(AuthenticatedView):
                 form,
                 status=422
             )
+
 
 def render_template(request, form, status=200):
     return render(

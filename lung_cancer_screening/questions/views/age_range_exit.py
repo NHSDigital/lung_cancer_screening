@@ -1,12 +1,13 @@
 from django.shortcuts import render
-from django.views.decorators.http import require_GET
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views import View
+
+from .mixins.ensure_response_set import EnsureResponseSet
 
 
-@login_required
-@require_GET
-def age_range_exit(request):
-    return render(
-        request,
-        "age_range_exit.jinja"
-    )
+class AgeRangeExitView(LoginRequiredMixin, EnsureResponseSet, View):
+    def get(self, request):
+        return render(
+            request,
+            "age_range_exit.jinja"
+        )

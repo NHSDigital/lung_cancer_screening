@@ -1,25 +1,29 @@
 from django.test import TestCase
 
 from ...factories.user_factory import UserFactory
-from ....models.response_set import HaveYouEverSmokedValues
+from ....models.response_set import ResponseSet, HaveYouEverSmokedValues
 from ....forms.have_you_ever_smoked_form import HaveYouEverSmokedForm
+
 
 class TestHaveYouEverSmokedForm(TestCase):
     def setUp(self):
         self.user = UserFactory()
+        self.response_set = ResponseSet(user=self.user)
 
     def test_is_valid(self):
         form = HaveYouEverSmokedForm(
-            user=self.user,
+            instance=self.response_set,
             data={
-                "have_you_ever_smoked": HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY
+                "have_you_ever_smoked": (
+                    HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY
+                )
             }
         )
         self.assertTrue(form.is_valid())
 
     def test_is_invalid(self):
         form = HaveYouEverSmokedForm(
-            user=self.user,
+            instance=self.response_set,
             data={
                 "have_you_ever_smoked": "invalid"
             }
@@ -32,7 +36,7 @@ class TestHaveYouEverSmokedForm(TestCase):
 
     def test_is_invalid_when_no_option_is_selected(self):
         form = HaveYouEverSmokedForm(
-            user=self.user,
+            instance=self.response_set,
             data={
                 "have_you_ever_smoked": None
             }
@@ -45,11 +49,15 @@ class TestHaveYouEverSmokedForm(TestCase):
 
     def test_returns_a_boolean_type(self):
         form = HaveYouEverSmokedForm(
-            user=self.user,
+            instance=self.response_set,
             data={
-                "have_you_ever_smoked": HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY
+                "have_you_ever_smoked": (
+                    HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY
+                )
             }
         )
         form.is_valid()
         self.assertEqual(
-            form.cleaned_data["have_you_ever_smoked"], HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY.value)
+            form.cleaned_data["have_you_ever_smoked"],
+            HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY.value
+        )

@@ -3,12 +3,11 @@ from django import forms
 from ...nhsuk_forms.choice_field import ChoiceField
 from ..models.response_set import ResponseSet, SexAtBirthValues
 
+
 class SexAtBirthForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
-        self.instance.user = self.user
 
         self.fields["sex_at_birth"] = ChoiceField(
             choices=SexAtBirthValues.choices,
@@ -16,7 +15,9 @@ class SexAtBirthForm(forms.ModelForm):
             label="What was your sex at birth?",
             label_classes="nhsuk-fieldset__legend--l",
             label_is_page_heading=True,
-            hint="Your sex may impact your chances of developing lung cancer.",
+            hint=(
+                "Your sex may impact your chances of developing lung cancer."
+            ),
             error_messages={
                 'required': 'Select your sex at birth'
             }

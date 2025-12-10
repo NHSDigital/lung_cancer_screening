@@ -6,9 +6,7 @@ from ..models.response_set import ResponseSet, HaveYouEverSmokedValues
 class HaveYouEverSmokedForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
-        self.instance.user = self.user
 
         self.fields["have_you_ever_smoked"] = TypedChoiceField(
             choices=HaveYouEverSmokedValues.choices,

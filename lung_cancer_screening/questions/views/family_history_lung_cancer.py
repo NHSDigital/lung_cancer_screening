@@ -1,14 +1,18 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views import View
 
-from .authenticated_view import AuthenticatedView
+from .mixins.ensure_response_set import EnsureResponseSet
 
-class FamilyHistoryLungCancerView(AuthenticatedView):
+
+class FamilyHistoryLungCancerView(LoginRequiredMixin, EnsureResponseSet, View):
     def get(self, request):
         return render_template(request)
 
     def post(self, request):
         return redirect(reverse("questions:responses"))
+
 
 def render_template(request, status=200):
     return render(

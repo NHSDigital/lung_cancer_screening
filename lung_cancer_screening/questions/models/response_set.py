@@ -49,7 +49,21 @@ def validate_singleton_option(value):
             code="singleton_option",
         )
 
+class ResponseSetQuerySet(models.QuerySet):
+    def unsubmitted(self):
+        return self.filter(submitted_at=None)
+
+    def submitted(self):
+        return self.filter(submitted_at__isnull=False)
+
+    def submitted_in_last_year(self):
+        return self.submitted().filter(submitted_at__gte=timezone.now() - relativedelta(years=1))
+
 class ResponseSet(BaseModel):
+    # Query managers
+    objects = ResponseSetQuerySet.as_manager()
+
+    # Attributes
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     have_you_ever_smoked = models.IntegerField(
@@ -140,7 +154,7 @@ class ResponseSet(BaseModel):
         super().clean()
 
         one_year_ago = timezone.now() - relativedelta(years=1)
-        submitted_response_sets_in_last_year = self.user.responseset_set.filter(submitted_at__gte=one_year_ago)
+        submitted_response_sets_in_last_year = self.user and self.user.responseset_set.filter(submitted_at__gte=one_year_ago)
 
         if submitted_response_sets_in_last_year:
             raise ValidationError(

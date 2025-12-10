@@ -1,17 +1,18 @@
 from django.test import TestCase
 
 from ...factories.user_factory import UserFactory
+from ....models.response_set import ResponseSet
 from ....forms.metric_weight_form import MetricWeightForm
+
 
 class TestMetricWeightForm(TestCase):
     def setUp(self):
         self.user = UserFactory()
-        self.response_set = self.user.responseset_set.create()
+        self.response_set = ResponseSet(user=self.user)
 
     def test_is_valid_with_valid_input(self):
         weight = "70.5"
         form = MetricWeightForm(
-            user=self.user,
             instance=self.response_set,
             data={
                 "weight_metric": weight
@@ -22,7 +23,6 @@ class TestMetricWeightForm(TestCase):
     def test_is_not_valid_with_invalid_input(self):
         weight = "a"
         form = MetricWeightForm(
-            user=self.user,
             instance=self.response_set,
             data={
                 "weight_metric": weight
@@ -33,7 +33,6 @@ class TestMetricWeightForm(TestCase):
     # UAT: Error message when nothing is entered
     def test_error_message_when_weight_is_empty(self):
         form = MetricWeightForm(
-            user=self.user,
             instance=self.response_set,
             data={
                 "weight_metric": ""
@@ -44,7 +43,6 @@ class TestMetricWeightForm(TestCase):
 
     def test_is_not_valid_without_any_weight_value_set(self):
         form = MetricWeightForm(
-            user=self.user,
             instance=self.response_set,
             data={
                 "weight_metric": None
@@ -56,7 +54,6 @@ class TestMetricWeightForm(TestCase):
     # UAT: Error message for weight below minimum (25.4kg)
     def test_error_message_when_weight_below_minimum(self):
         form = MetricWeightForm(
-            user=self.user,
             instance=self.response_set,
             data={
                 "weight_metric": "20.0"
@@ -69,7 +66,6 @@ class TestMetricWeightForm(TestCase):
     # UAT: Error message for weight above maximum (317.5kg)
     def test_error_message_when_weight_above_maximum(self):
         form = MetricWeightForm(
-            user=self.user,
             instance=self.response_set,
             data={
                 "weight_metric": "320.0"
@@ -82,7 +78,6 @@ class TestMetricWeightForm(TestCase):
     # UAT: Edge case - minimum valid weight
     def test_accepts_minimum_valid_weight(self):
         form = MetricWeightForm(
-            user=self.user,
             instance=self.response_set,
             data={
                 "weight_metric": "25.4"
@@ -93,7 +88,6 @@ class TestMetricWeightForm(TestCase):
     # UAT: Edge case - maximum valid weight
     def test_accepts_maximum_valid_weight(self):
         form = MetricWeightForm(
-            user=self.user,
             instance=self.response_set,
             data={
                 "weight_metric": "317.5"
@@ -103,7 +97,6 @@ class TestMetricWeightForm(TestCase):
 
     def test_is_invalid_with_multiple_decimal_places(self):
         form = MetricWeightForm(
-            user=self.user,
             instance=self.response_set,
             data={
                 "weight_metric": "100.01"  # too many decimal places

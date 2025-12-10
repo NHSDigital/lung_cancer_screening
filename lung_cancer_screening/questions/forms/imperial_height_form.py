@@ -3,12 +3,11 @@ from django import forms
 from ...nhsuk_forms.imperial_height_field import ImperialHeightField
 from ..models.response_set import ResponseSet
 
+
 class ImperialHeightForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
-        self.instance.user = self.user
 
         self.fields["height_imperial"] = ImperialHeightField(
             label="Height",
