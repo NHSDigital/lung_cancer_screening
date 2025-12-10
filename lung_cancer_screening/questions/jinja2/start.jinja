@@ -1,35 +1,17 @@
 {% extends 'layout.jinja' %}
-{% from 'nhsuk/components/error-summary/macro.jinja' import errorSummary %}
 {% from 'nhsuk/components/button/macro.jinja' import button %}
-{% from 'nhsuk/components/input/macro.jinja' import input %}
 
 {% block content %}
-
-  {% if error_messages %}
-    {{ errorSummary({
-      "titleText": "There is a problem",
-      "errorList": error_messages
-    }) }}
-  {% endif %}
-
   <div class="nhsuk-grid-row">
     <div class="nhsuk-grid-column-two-thirds">
-      <form action="{{ request.path }}" method="POST">
-        {{ csrf_input }}
+      <h1 class="nhsuk-heading-l">
+        Lung Cancer Risk Check
+      </h1>
 
-        {{ input({
-          "label": {
-            "text": "Enter your unique user ID",
-            "isPageHeading": true
-          },
-          "id": "user_id",
-          "name": "user_id"
-        }) }}
-
-        {{ button({
-            "text": "Start now"
-        }) }}
-      </form>
+      {{ button({
+        "text": "Start now",
+        "href": url("questions:have_you_ever_smoked")
+      }) }}
     </div>
   </div>
 {% endblock %}

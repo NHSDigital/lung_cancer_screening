@@ -5,4 +5,3 @@ Feature: Participants with submitted responses
     When I go to "/start"
     And I click "Start"
     Then I am on "/start"
-    And I see an error summary "Responses have already been submitted for this user"
