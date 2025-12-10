@@ -1,9 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-# from django.utils import timezone
-# from dateutil.relativedelta import relativedelta
 
-# from ...factories.user_factory import UserFactory
 from .helpers.authentication import login_user
 
 class TestGetStart(TestCase):
