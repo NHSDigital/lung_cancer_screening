@@ -23,21 +23,21 @@ class NHSLoginOIDCBackend(OIDCAuthenticationBackend):
 
     def filter_users_by_claims(self, claims):
         """Find users by NHS number from OIDC claims."""
-        User = get_user_model()
+        user_class = get_user_model()
 
         nhs_number = claims.get('nhs_number')
         if not nhs_number:
             return User.objects.none()
 
-        return User.objects.filter(nhs_number=nhs_number)
+        return user_class.objects.filter(nhs_number=nhs_number)
 
     def create_user(self, claims):
-        User = get_user_model()
+        user_class = get_user_model()
 
         nhs_number = claims.get('nhs_number')
         if not nhs_number:
             raise ValueError("Missing 'nhs_number' claim in OIDC token")
-        return User.objects.create_user(nhs_number=nhs_number)
+        return user_class.objects.create_user(nhs_number=nhs_number)
 
 
     def update_user(self, user, _claims):
