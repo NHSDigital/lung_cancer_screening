@@ -27,7 +27,7 @@ class NHSLoginOIDCBackend(OIDCAuthenticationBackend):
 
         nhs_number = claims.get('nhs_number')
         if not nhs_number:
-            return User.objects.none()
+            return user_class.objects.none()
 
         return user_class.objects.filter(nhs_number=nhs_number)
 
