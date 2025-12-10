@@ -9,6 +9,10 @@ class MetricWeightForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        # Convert hundreds of grams to kg for display
+        if self.instance and self.instance.weight_metric is not None:
+            self.initial['weight_metric'] = self.instance.weight_metric / 10
+
         self.fields["weight_metric"] = DecimalField(
             decimal_places=1,
             label="Kilograms",
@@ -27,6 +31,9 @@ class MetricWeightForm(forms.ModelForm):
     def clean_weight_metric(self):
         return self.cleaned_data['weight_metric'] * 10
 
+    def clean_weight_imperial(self):
+        return None
+
     class Meta:
         model = ResponseSet
-        fields = ['weight_metric']
+        fields = ['weight_metric', 'weight_imperial']

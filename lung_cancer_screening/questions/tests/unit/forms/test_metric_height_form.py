@@ -21,7 +21,7 @@ class TestMetricHeightForm(TestCase):
         )
         self.assertTrue(form.is_valid())
 
-    def test_converts_cm_to_mm(self):
+    def test_converts_cm_to_mm_before_saving(self):
         height = "170.4"
         form = MetricHeightForm(
             instance=self.response_set,
@@ -32,6 +32,15 @@ class TestMetricHeightForm(TestCase):
 
         form.is_valid()
         self.assertEqual(form.cleaned_data["height"], 1704)
+
+    def test_converts_mm_to_cm_before_rendering(self):
+        self.response_set.height = 1704
+        form = MetricHeightForm(
+            instance=self.response_set
+        )
+
+        self.assertEqual(form["height"].value(), 170.4)
+
 
     def test_setting_height_clears_imperial_height(self):
         height = "170.4"

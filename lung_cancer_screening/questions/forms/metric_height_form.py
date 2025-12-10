@@ -9,6 +9,10 @@ class MetricHeightForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        # Convert mm to cm for display
+        if self.instance and self.instance.height is not None:
+            self.initial['height'] = self.instance.height / 10
+
         self.fields["height"] = DecimalField(
             decimal_places=1,
             label="Centimetres",

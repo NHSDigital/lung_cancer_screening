@@ -154,3 +154,15 @@ class TestImperialWeightForm(TestCase):
             form.errors["weight_imperial"],
             ["Weight must be between 4 stone and 50 stone"]
         )
+
+    def test_setting_imperial_weight_clears_metric_weight(self):
+        self.response_set.weight_metric = 705
+        form = ImperialWeightForm(
+            instance=self.response_set,
+            data={
+                "weight_imperial_0": "5",
+                "weight_imperial_1": "9"
+            }
+        )
+        form.save()
+        self.assertEqual(self.response_set.weight_metric, None)

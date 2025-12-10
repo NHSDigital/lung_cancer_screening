@@ -20,6 +20,26 @@ class TestMetricWeightForm(TestCase):
         )
         self.assertTrue(form.is_valid())
 
+    def test_converts_kg_to_hundreds_of_grams_before_saving(self):
+        weight = "70.5"
+        form = MetricWeightForm(
+            instance=self.response_set,
+            data={
+                "weight_metric": weight
+            }
+        )
+
+        form.is_valid()
+        self.assertEqual(form.cleaned_data["weight_metric"], 705)
+
+    def test_converts_hundreds_of_grams_to_kg_before_rendering(self):
+        self.response_set.weight_metric = 705
+        form = MetricWeightForm(
+            instance=self.response_set
+        )
+
+        self.assertEqual(form["weight_metric"].value(), 70.5)
+
     def test_is_not_valid_with_invalid_input(self):
         weight = "a"
         form = MetricWeightForm(
@@ -107,3 +127,15 @@ class TestMetricWeightForm(TestCase):
             form.errors["weight_metric"],
             ["Kilograms must be to 1 decimal place, for example 90.2kgs"]
         )
+
+    def test_setting_metric_weight_clears_imperial_weight(self):
+        self.response_set.weight_imperial = "66"
+        form = MetricWeightForm(
+            instance=self.response_set,
+            data={
+                "weight_metric": "70.5"
+            }
+        )
+        form.save()
+        self.response_set.refresh_from_db()
+        self.assertEqual(self.response_set.weight_imperial, None)
