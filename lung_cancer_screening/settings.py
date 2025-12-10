@@ -225,7 +225,6 @@ OIDC_RP_CLIENT_ID = environ.get("OIDC_RP_CLIENT_ID")
 # It w't be used since we override get_token() to use private key JWT
 OIDC_RP_CLIENT_SECRET = "not-used-private-key-jwt"
 OIDC_RP_CLIENT_PRIVATE_KEY = environ.get("OIDC_RP_CLIENT_PRIVATE_KEY")
-# OIDC_RP_CLIENT_KEY_ID = environ.get("OIDC_RP_CLIENT_KEY_ID")
 OIDC_OP_FQDN = environ.get("OIDC_OP_FQDN")
 OIDC_OP_AUTHORIZATION_ENDPOINT = f"{OIDC_OP_FQDN}/authorize"
 OIDC_OP_TOKEN_ENDPOINT = f"{OIDC_OP_FQDN}/token"
@@ -248,17 +247,9 @@ LOGIN_URL = '/oidc/authenticate/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-# Session configuration for OIDC
-# Ensure sessions work properly for OIDC callback
-SESSION_COOKIE_SECURE = not DEBUG  # Only use secure cookies in production
-SESSION_COOKIE_HTTPONLY = True  # Prevent JavaScript access (XSS protection)
-SESSION_COOKIE_SAMESITE = 'Lax'  # CSRF protection, allows OIDC redirects
-SESSION_SAVE_EVERY_REQUEST = True  # Ensure session is saved
 
 # Additional security settings for production
 if not DEBUG:
-    SECURE_SSL_REDIRECT = True  # Redirect HTTP to HTTPS
-    SECURE_HSTS_SECONDS = 31536000  # 1 year
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = True
+
