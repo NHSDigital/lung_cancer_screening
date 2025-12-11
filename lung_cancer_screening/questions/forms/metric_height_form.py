@@ -10,10 +10,10 @@ class MetricHeightForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         # Convert mm to cm for display
-        if self.instance and self.instance.height is not None:
-            self.initial['height'] = self.instance.height / 10
+        if self.instance and self.instance.height_metric is not None:
+            self.initial['height_metric'] = self.instance.height_metric / 10
 
-        self.fields["height"] = DecimalField(
+        self.fields["height_metric"] = DecimalField(
             decimal_places=1,
             label="Centimetres",
             classes="nhsuk-input--width-4",
@@ -27,12 +27,12 @@ class MetricHeightForm(forms.ModelForm):
             suffix="cm"
         )
 
-    def clean_height(self):
-        return self.cleaned_data['height'] * 10
+    def clean_height_metric(self):
+        return self.cleaned_data['height_metric'] * 10
 
     def clean_height_imperial(self):
         return None
 
     class Meta:
         model = ResponseSet
-        fields = ['height', 'height_imperial']
+        fields = ['height_metric', 'height_imperial']

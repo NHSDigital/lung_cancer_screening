@@ -35,12 +35,12 @@ class TestResponseSet(TestCase):
             date
         )
 
-    def test_has_height_as_a_int(self):
-        self.response_set.height = 1700
+    def test_has_height_metric_as_a_int(self):
+        self.response_set.height_metric = 1700
         self.response_set.save()
 
         self.assertIsInstance(
-            self.response_set.height,
+            self.response_set.height_metric,
             int
         )
 
@@ -149,7 +149,7 @@ class TestResponseSet(TestCase):
         )
 
     def test_is_invalid_if_height_is_below_lower_bound(self):
-        self.response_set.height = ResponseSet.MIN_HEIGHT_METRIC - 1
+        self.response_set.height_metric = ResponseSet.MIN_HEIGHT_METRIC - 1
 
         with self.assertRaises(ValidationError) as context:
             self.response_set.full_clean()
@@ -160,7 +160,7 @@ class TestResponseSet(TestCase):
         )
 
     def test_is_invalid_if_height_is_above_upper_bound(self):
-        self.response_set.height = ResponseSet.MAX_HEIGHT_METRIC + 1
+        self.response_set.height_metric = ResponseSet.MAX_HEIGHT_METRIC + 1
 
         with self.assertRaises(ValidationError) as context:
             self.response_set.full_clean()
@@ -193,7 +193,7 @@ class TestResponseSet(TestCase):
         )
 
     def test_formatted_height_returns_height_in_cm_if_set(self):
-        self.response_set.height = 1701
+        self.response_set.height_metric = 1701
         self.response_set.save()
 
         self.assertEqual(

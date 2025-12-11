@@ -9,7 +9,7 @@ class TestImperialHeightForm(TestCase):
     def setUp(self):
         self.user = UserFactory()
         self.response_set = ResponseSet(user=self.user)
-        self.response_set.height = 1704
+        self.response_set.height_metric = 1704
 
     def test_is_valid_with_valid_input(self):
         form = ImperialHeightForm(
@@ -43,7 +43,7 @@ class TestImperialHeightForm(TestCase):
             }
         )
         form.save()
-        self.assertEqual(self.response_set.height, None)
+        self.assertEqual(self.response_set.height_metric, None)
 
     def test_is_invalid_with_missing_data(self):
         form = ImperialHeightForm(

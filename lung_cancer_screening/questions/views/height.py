@@ -13,10 +13,9 @@ from lung_cancer_screening.questions.forms.imperial_height_form import (
 
 class HeightView(LoginRequiredMixin, EnsureResponseSet, View):
     def get(self, request):
-        unit = request.GET.get('unit')
-        form_klass = (
-            ImperialHeightForm if unit == "imperial" else MetricHeightForm
-        )
+        unit = self.get_unit(request)
+
+        form_klass = ImperialHeightForm if unit == "imperial" else MetricHeightForm
 
         return render(
             request,
@@ -31,10 +30,9 @@ class HeightView(LoginRequiredMixin, EnsureResponseSet, View):
         )
 
     def post(self, request):
-        unit = request.GET.get('unit')
-        form_klass = (
-            ImperialHeightForm if unit == "imperial" else MetricHeightForm
-        )
+        unit = self.get_unit(request)
+
+        form_klass = ImperialHeightForm if unit == "imperial" else MetricHeightForm
 
         form = form_klass(
             instance=request.response_set,
@@ -58,3 +56,12 @@ class HeightView(LoginRequiredMixin, EnsureResponseSet, View):
                 },
                 status=422
             )
+
+    def get_unit(self, request):
+        unit = request.GET.get('unit')
+
+        height_imperial=request.response_set.height_imperial
+        if height_imperial and unit != "metric":
+            unit = "imperial"
+
+        return unit

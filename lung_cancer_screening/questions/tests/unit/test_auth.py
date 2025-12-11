@@ -9,7 +9,13 @@ from ...auth import NHSLoginOIDCBackend
 
 User = get_user_model()
 
-
+@override_settings(
+        OIDC_RP_CLIENT_PRIVATE_KEY=None,  # Will be set per test
+        OIDC_OP_TOKEN_ENDPOINT='https://auth.example.com/token',
+        OIDC_RP_CLIENT_ID='test-client-id',
+        OIDC_RP_REDIRECT_URI='https://app.example.com/callback',
+        OIDC_RP_SIGN_ALGO='RS512',
+    )
 class TestNHSLoginOIDCBackend(TestCase):
 
     def setUp(self):
@@ -70,14 +76,6 @@ class TestNHSLoginOIDCBackend(TestCase):
 
         self.assertEqual(result, user)
 
-
-    @override_settings(
-        OIDC_RP_CLIENT_PRIVATE_KEY=None,  # Will be set per test
-        OIDC_OP_TOKEN_ENDPOINT='https://auth.example.com/token',
-        OIDC_RP_CLIENT_ID='test-client-id',
-        OIDC_RP_REDIRECT_URI='https://app.example.com/callback',
-        OIDC_RP_SIGN_ALGO='RS512',
-    )
     @patch('lung_cancer_screening.questions.auth.requests.post')
     def test_get_token_success(self, mock_post):
         settings.OIDC_RP_CLIENT_PRIVATE_KEY = self.test_private_key_pem
@@ -115,12 +113,6 @@ class TestNHSLoginOIDCBackend(TestCase):
             data['redirect_uri'], 'https://app.example.com/somewhereelse'
         )
 
-    @override_settings(
-        OIDC_RP_CLIENT_PRIVATE_KEY=None,  # Will be set per test
-        OIDC_OP_TOKEN_ENDPOINT='https://auth.example.com/token',
-        OIDC_RP_CLIENT_ID='test-client-id',
-        OIDC_RP_REDIRECT_URI='https://app.example.com/callback',
-    )
     @patch('lung_cancer_screening.questions.auth.requests.post')
     def test_get_token_without_redirect_uri(self, mock_post):
         settings.OIDC_RP_CLIENT_PRIVATE_KEY = self.test_private_key_pem
@@ -142,9 +134,7 @@ class TestNHSLoginOIDCBackend(TestCase):
         )
 
     @override_settings(
-        OIDC_RP_CLIENT_PRIVATE_KEY=None,
-        OIDC_OP_TOKEN_ENDPOINT='https://auth.example.com/token',
-        OIDC_RP_REDIRECT_URI='https://app.example.com/callback',
+        OIDC_RP_CLIENT_PRIVATE_KEY=None,  # Will be set per test
     )
     @patch('lung_cancer_screening.questions.auth.requests.post')
     def test_get_token_no_client_assertion(self, mock_post):
@@ -161,13 +151,6 @@ class TestNHSLoginOIDCBackend(TestCase):
             mock_parent_get_token.assert_called_once_with(token_payload)
             mock_post.assert_not_called()
 
-    @override_settings(
-        OIDC_RP_CLIENT_PRIVATE_KEY=None,  # Will be set per test
-        OIDC_OP_TOKEN_ENDPOINT='https://auth.example.com/token',
-        OIDC_RP_CLIENT_ID='test-client-id',
-        OIDC_RP_REDIRECT_URI='https://app.example.com/callback',
-        OIDC_RP_SIGN_ALGO='RS512',
-    )
     @patch('lung_cancer_screening.questions.auth.requests.post')
     def test_get_token_nhs_login_error_response(self, mock_post):
         settings.OIDC_RP_CLIENT_PRIVATE_KEY = self.test_private_key_pem
@@ -189,13 +172,6 @@ class TestNHSLoginOIDCBackend(TestCase):
 
         self.assertIn('Token request failed: 400', str(context.exception))
 
-    @override_settings(
-        OIDC_RP_CLIENT_PRIVATE_KEY=None,  # Will be set per test
-        OIDC_OP_TOKEN_ENDPOINT='https://auth.example.com/token',
-        OIDC_RP_CLIENT_ID='test-client-id',
-        OIDC_RP_REDIRECT_URI='https://app.example.com/callback',
-        OIDC_RP_SIGN_ALGO='RS512',
-    )
     @patch('lung_cancer_screening.questions.auth.requests.post')
     def test_get_token_nhs_login_error_response_no_json(self, mock_post):
         settings.OIDC_RP_CLIENT_PRIVATE_KEY = self.test_private_key_pem

@@ -13,7 +13,8 @@ from lung_cancer_screening.questions.forms.imperial_weight_form import (
 
 class WeightView(LoginRequiredMixin, EnsureResponseSet, View):
     def get(self, request):
-        unit = request.GET.get('unit')
+        unit = self.get_unit(request)
+
         form_klass = (
             ImperialWeightForm if unit == "imperial" else MetricWeightForm
         )
@@ -31,7 +32,8 @@ class WeightView(LoginRequiredMixin, EnsureResponseSet, View):
         )
 
     def post(self, request):
-        unit = request.GET.get('unit')
+        unit = self.get_unit(request)
+
         form_klass = (
             ImperialWeightForm if unit == "imperial" else MetricWeightForm
         )
@@ -57,3 +59,12 @@ class WeightView(LoginRequiredMixin, EnsureResponseSet, View):
                 },
                 status=422
             )
+
+    def get_unit(self, request):
+        unit = request.GET.get('unit')
+
+        weight_imperial=request.response_set.weight_imperial
+        if weight_imperial and unit != "metric":
+            unit = "imperial"
+
+        return unit

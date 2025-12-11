@@ -23,4 +23,4 @@ class ImperialHeightForm(forms.ModelForm):
 
     class Meta:
         model = ResponseSet
-        fields = ['height_imperial', 'height']
+        fields = ['height_imperial', 'height_metric']

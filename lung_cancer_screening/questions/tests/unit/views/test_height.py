@@ -59,8 +59,8 @@ class TestPostHeight(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
 
-        self.valid_height = 170
-        self.valid_params = {"height": self.valid_height}
+        self.valid_height_metric = 170
+        self.valid_params = {"height_metric": self.valid_height_metric}
         self.invalid_height = 80000
 
     def test_post_redirects_if_the_user_is_not_logged_in(self):
@@ -88,7 +88,7 @@ class TestPostHeight(TestCase):
         response_set = self.user.responseset_set.first()
         self.assertEqual(self.user.responseset_set.count(), 1)
         self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(response_set.height, self.valid_height * 10)
+        self.assertEqual(response_set.height_metric, self.valid_height_metric * 10)
         self.assertEqual(response_set.user, self.user)
 
     def test_post_updates_unsubmitted_response_set_when_one_exists(self):
@@ -102,7 +102,7 @@ class TestPostHeight(TestCase):
         response_set.refresh_from_db()
         self.assertEqual(self.user.responseset_set.count(), 1)
         self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(response_set.height, self.valid_height * 10)
+        self.assertEqual(response_set.height_metric, self.valid_height_metric * 10)
         self.assertEqual(response_set.user, self.user)
 
     def test_post_creates_new_unsubmitted_response_set_when_submitted_exists_over_year_ago(  # noqa: E501
@@ -122,7 +122,7 @@ class TestPostHeight(TestCase):
 
         response_set = self.user.responseset_set.last()
         self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(response_set.height, self.valid_height * 10)
+        self.assertEqual(response_set.height_metric, self.valid_height_metric * 10)
         self.assertEqual(response_set.user, self.user)
 
     def test_post_redirects_when_submitted_response_set_exists_within_last_year(  # noqa: E501
@@ -147,7 +147,7 @@ class TestPostHeight(TestCase):
 
         response_set = self.user.responseset_set.first()
 
-        self.assertEqual(response_set.height, self.valid_height * 10)
+        self.assertEqual(response_set.height_metric, self.valid_height_metric * 10)
         self.assertEqual(response_set.user, self.user)
 
     def test_post_redirects_to_weight_path(self):

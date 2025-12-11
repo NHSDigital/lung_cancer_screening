@@ -77,7 +77,7 @@ class ResponseSet(BaseModel):
     MIN_HEIGHT_METRIC = 1397
     MAX_HEIGHT_IMPERIAL = 96
     MIN_HEIGHT_IMPERIAL = 55
-    height = models.PositiveIntegerField(null=True, blank=True, validators=[
+    height_metric = models.PositiveIntegerField(null=True, blank=True, validators=[
         MinValueValidator(MIN_HEIGHT_METRIC, message="Height must be between 139.7cm and 243.8 cm"),
         MaxValueValidator(MAX_HEIGHT_METRIC, message="Height must be between 139.7cm and 243.8 cm"),
     ])
@@ -163,8 +163,8 @@ class ResponseSet(BaseModel):
 
     @property
     def formatted_height(self):
-        if self.height:
-            return f"{Decimal(self.height) / 10}cm"
+        if self.height_metric:
+            return f"{Decimal(self.height_metric) / 10}cm"
         elif self.height_imperial:
             value = Decimal(self.height_imperial)
             return f"{value // 12} feet {value % 12} inches"
