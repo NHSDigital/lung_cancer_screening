@@ -46,6 +46,24 @@ class TestGetHeight(TestCase):
 
         self.assertContains(response, "Centimetres")
 
+    def test_get_renders_the_imperial_form_if_already_has_imperial_height(self):
+        self.user.responseset_set.create(
+            height_imperial=60
+        )
+
+        response = self.client.get(reverse("questions:height"))
+
+        self.assertContains(response, "Feet")
+
+    def test_get_renders_the_metric_form_if_already_has_imperial_height_but_unit_is_metric(self):
+        self.user.responseset_set.create(
+            height_imperial=60
+        )
+
+        response = self.client.get(reverse("questions:height"), {"unit": "metric"})
+
+        self.assertContains(response, "Centimetres")
+
     def test_get_renders_the_imperial_form_if_specified(self):
         response = self.client.get(
             reverse("questions:height"), {"unit": "imperial"}

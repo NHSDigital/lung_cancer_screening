@@ -46,6 +46,32 @@ class TestGetWeight(TestCase):
 
         self.assertContains(response, "Kilograms")
 
+    def test_get_renders_the_imperial_form_if_already_has_imperial_weight(self):
+        self.user.responseset_set.create(
+            weight_imperial=60
+        )
+
+        response = self.client.get(reverse("questions:weight"))
+
+        self.assertContains(response, "Stone")
+
+    def test_get_renders_the_metric_form_if_already_has_imperial_weight_but_unit_is_metric(self):
+        self.user.responseset_set.create(
+            weight_imperial=60
+        )
+
+        response = self.client.get(reverse("questions:weight"), {"unit": "metric"})
+
+        self.assertContains(response, "Kilograms")
+
+    def test_get_renders_the_imperial_form_if_specified(self):
+        response = self.client.get(
+            reverse("questions:weight"), {"unit": "imperial"}
+        )
+
+        self.assertContains(response, "Stone")
+        self.assertContains(response, "Pounds")
+
 
 class TestPostWeight(TestCase):
     def setUp(self):
