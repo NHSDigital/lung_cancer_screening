@@ -33,6 +33,7 @@ from .views.respiratory_conditions import RespiratoryConditionsView
 from .views.asbestos_exposure import AsbestosExposureView
 from .views.cancer_diagnosis import CancerDiagnosisView
 from .views.family_history_lung_cancer import FamilyHistoryLungCancerView
+from .views.logout import logout_view
 
 
 urlpatterns = [
@@ -54,4 +55,5 @@ urlpatterns = [
     path('age-range-exit', AgeRangeExitView.as_view(), name='age_range_exit'),
     path('non-smoker-exit', NonSmokerExitView.as_view(), name='non_smoker_exit'),
     path('your-results', YourResultsView.as_view(), name='your_results'),
+    path('logout', logout_view, name='logout'),
 ]

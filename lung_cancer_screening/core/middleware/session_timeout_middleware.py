@@ -3,11 +3,6 @@ from django.conf import settings
 from django.contrib.auth import logout
 from django.shortcuts import redirect
 
-try:
-    from django.utils.deprecation import MiddlewareMixin
-except ImportError:
-    MiddlewareMixin = object
-
 
 SESSION_START_KEY = "_session_start_"
 LAST_ACTIVITY_KEY = "_last_activity_"
