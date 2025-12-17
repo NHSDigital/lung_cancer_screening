@@ -15,6 +15,15 @@ class TestUser(TestCase):
             str
         )
 
+
+    def test_has_email_as_a_string(self):
+        self.user.email = 'test@example.com'
+        self.assertIsInstance(
+            self.user.email,
+            str
+        )
+
+
     def test_has_created_at_as_a_datetime(self):
         self.assertIsInstance(
             self.user.created_at,

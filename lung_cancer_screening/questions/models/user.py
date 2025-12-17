@@ -19,6 +19,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser):
     nhs_number = models.CharField(max_length=10, unique=True)
+    email = models.EmailField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

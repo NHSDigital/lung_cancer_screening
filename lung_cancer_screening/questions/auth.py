@@ -37,10 +37,18 @@ class NHSLoginOIDCBackend(OIDCAuthenticationBackend):
         nhs_number = claims.get('nhs_number')
         if not nhs_number:
             raise ValueError("Missing 'nhs_number' claim in OIDC token")
-        return user_class.objects.create_user(nhs_number=nhs_number)
 
+        email = claims.get('email')
+        return user_class.objects.create_user(
+            nhs_number=nhs_number,
+            email=email
+        )
 
-    def update_user(self, user, _claims):
+    def update_user(self, user, claims):
+        email = claims.get('email')
+        if email and user.email != email:
+            user.email = email
+            user.save()
         return user
 
     def _create_client_assertion(self):
@@ -64,7 +72,7 @@ class NHSLoginOIDCBackend(OIDCAuthenticationBackend):
             'iss': client_id,
             'sub': client_id,
             'aud': token_endpoint,
-            'jti': f"{client_id}-{now}",
+            'jti': f"{client_id}-{now}",  # noqa: E501
             'iat': now,
             'exp': now + 300,
         }
@@ -72,7 +80,10 @@ class NHSLoginOIDCBackend(OIDCAuthenticationBackend):
         headers = {'alg': settings.OIDC_RP_SIGN_ALGO}
 
         assertion = jwt.encode(
-            claims, private_key, algorithm=settings.OIDC_RP_SIGN_ALGO, headers=headers
+            claims,
+            private_key,
+            algorithm=settings.OIDC_RP_SIGN_ALGO,
+            headers=headers
         )
 
         if isinstance(assertion, bytes):

@@ -59,6 +59,17 @@ class TestNHSLoginOIDCBackend(TestCase):
 
         self.assertEqual(user.nhs_number, '1234567890')
 
+    def test_create_user_with_email_claim(self):
+        claims = {
+            'nhs_number': '1234567890',
+            'email': 'test@example.com'
+        }
+
+        user = self.backend.create_user(claims)
+
+        self.assertEqual(user.nhs_number, '1234567890')
+        self.assertEqual(user.email, 'test@example.com')
+
     def test_create_user_without_nhs_number_raises_error(self):
         claims = {}
 
@@ -74,6 +85,33 @@ class TestNHSLoginOIDCBackend(TestCase):
 
         result = self.backend.update_user(user, claims)
 
+        self.assertEqual(result, user)
+        self.assertEqual(user.email, 'test@example.com')
+
+    def test_update_user_updates_email_when_provided(self):
+        user = User.objects.create_user(
+            nhs_number='1234567890',
+            email='old@example.com'
+        )
+        claims = {'nhs_number': '1234567890', 'email': 'new@example.com'}
+
+        result = self.backend.update_user(user, claims)
+
+        user.refresh_from_db()
+        self.assertEqual(user.email, 'new@example.com')
+        self.assertEqual(result, user)
+
+    def test_update_user_does_not_update_email_when_not_provided(self):
+        user = User.objects.create_user(
+            nhs_number='1234567890',
+            email='existing@example.com'
+        )
+        claims = {'nhs_number': '1234567890'}
+
+        result = self.backend.update_user(user, claims)
+
+        user.refresh_from_db()
+        self.assertEqual(user.email, 'existing@example.com')
         self.assertEqual(result, user)
 
     @patch('lung_cancer_screening.questions.auth.requests.post')
