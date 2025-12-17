@@ -64,6 +64,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'lung_cancer_screening.core.middleware.session_timeout_middleware.SessionTimeoutMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -247,6 +248,11 @@ LOGIN_URL = '/oidc/authenticate/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# NHS Login session timeout settings
+NHS_LOGIN_INACTIVITY_TIMEOUT_MINUTES = 30
+NHS_LOGIN_CONTINUOUS_USAGE_TIMEOUT_HOURS = 12
 
 # Additional security settings for production
 if not DEBUG:
