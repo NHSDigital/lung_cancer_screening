@@ -1,1 +1,2 @@
-EXAMPLE_KEY: example_value
+OIDC_RP_CLIENT_ID: lcrc"
+OIDC_OP_FQDN: https://auth.sandpit.signin.nhs.uk
