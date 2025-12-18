@@ -1,8 +1,21 @@
-REGION=UK South
-APP_SHORT_NAME=lungcs
+REGION=uksouth
+APP_SHORT_NAME=lungrc
+
+bootstrap:
+	az deployment sub create --confirm-with-what-if \
+		--subscription ${AZURE_SUBSCRIPTION} \
+		--location "${REGION}" \
+		--template-file "infrastructure/bootstrap/${BOOTSTRAP}.bicep" \
+		--parameters "infrastructure/bootstrap/environments/${HUB_TYPE}/${BOOTSTRAP}.bicepparam"
 
 poc: # Target the poc environment - make poc <action>
 	$(eval include infrastructure/environments/poc/variables.sh)
+
+hub-nonlive: # Target the non-live hub environment - make hub-nonlive <action>
+	$(eval include infrastructure/bootstrap/environments/nonlive/variables.sh)
+
+hub-live: # Target the live hub environment - make hub-live <action>
+	$(eval include infrastructure/bootstrap/environments/live/variables.sh)
 
 dev: # Target the dev environment - make dev <action>
 	$(eval include infrastructure/environments/dev/variables.sh)
