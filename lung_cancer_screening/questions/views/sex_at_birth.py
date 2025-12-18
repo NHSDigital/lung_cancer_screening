@@ -1,30 +1,30 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
-from django.utils.decorators import method_decorator
 
-from .decorators.participant_decorators import require_participant
+from .mixins.ensure_response_set import EnsureResponseSet
 from ..forms.sex_at_birth_form import SexAtBirthForm
 
-@method_decorator(require_participant, name="dispatch")
-class SexAtBirthView(View):
+
+class SexAtBirthView(LoginRequiredMixin, EnsureResponseSet, View):
     def get(self, request):
         return render_template(
             request,
-            SexAtBirthForm(participant=request.participant)
+            SexAtBirthForm(instance=request.response_set)
         )
 
     def post(self, request):
         form = SexAtBirthForm(
-            participant=request.participant,
+            instance=request.response_set,
             data=request.POST
         )
 
         if form.is_valid():
-                response_set = request.participant.responseset_set.last()
-                response_set.sex_at_birth = form.cleaned_data["sex_at_birth"]
-                response_set.save()
-                return redirect(reverse("questions:gender"))
+            response_set = request.response_set
+            response_set.sex_at_birth = form.cleaned_data["sex_at_birth"]
+            response_set.save()
+            return redirect(reverse("questions:gender"))
         else:
             return render_template(
                 request,

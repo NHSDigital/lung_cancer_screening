@@ -7,19 +7,26 @@ from ..models.response_set import ResponseSet, RespiratoryConditionValues
 class RespiratoryConditionsForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        self.participant = kwargs.pop('participant')
         super().__init__(*args, **kwargs)
-        self.instance.participant = self.participant
 
         self.fields["respiratory_conditions"] = MultipleChoiceField(
             choices=RespiratoryConditionValues.choices,
             widget=forms.CheckboxSelectMultiple,
-            label="Have you ever been diagnosed with any of the following respiratory conditions?",
+            label=(
+                "Have you ever been diagnosed with any of the following "
+                "respiratory conditions?"
+            ),
             label_classes="nhsuk-fieldset__legend--l",
             hint="Select all that apply",
             error_messages={
-                'required': 'Select if you have had any respiratory conditions',
-                'singleton_option': 'Select if you have had any respiratory conditions, or select \'No, I have not had any of these respiratory conditions\''
+                'required': (
+                    'Select if you have had any respiratory conditions'
+                ),
+                'singleton_option': (
+                    'Select if you have had any respiratory conditions, '
+                    'or select \'No, I have not had any of these '
+                    'respiratory conditions\''
+                )
             }
         )
 
@@ -35,11 +42,17 @@ class RespiratoryConditionsForm(forms.ModelForm):
         )
         respiratory_conditions_field.add_hint_for_choice(
             RespiratoryConditionValues.BRONCHITIS,
-            "An inflammation of the airways in the lungs that is usually caused by an infection"
+            (
+                "An inflammation of the airways in the lungs that is "
+                "usually caused by an infection"
+            )
         )
         respiratory_conditions_field.add_hint_for_choice(
             RespiratoryConditionValues.TUBERCULOSIS,
-            "An infection that usually affects the lungs, but can affect any part of the body"
+            (
+                "An infection that usually affects the lungs, but can "
+                "affect any part of the body"
+            )
         )
         respiratory_conditions_field.add_hint_for_choice(
             RespiratoryConditionValues.COPD,

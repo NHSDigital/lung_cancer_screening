@@ -7,7 +7,7 @@ from django.utils import timezone
 from decimal import Decimal
 
 from .base import BaseModel
-from .participant import Participant
+from .user import User
 
 class HaveYouEverSmokedValues(models.IntegerChoices):
     YES_I_CURRENTLY_SMOKE = 0, 'Yes, I currently smoke'
@@ -49,8 +49,22 @@ def validate_singleton_option(value):
             code="singleton_option",
         )
 
+class ResponseSetQuerySet(models.QuerySet):
+    def unsubmitted(self):
+        return self.filter(submitted_at=None)
+
+    def submitted(self):
+        return self.filter(submitted_at__isnull=False)
+
+    def submitted_in_last_year(self):
+        return self.submitted().filter(submitted_at__gte=timezone.now() - relativedelta(years=1))
+
 class ResponseSet(BaseModel):
-    participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
+    # Query managers
+    objects = ResponseSetQuerySet.as_manager()
+
+    # Attributes
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     have_you_ever_smoked = models.IntegerField(
         choices=HaveYouEverSmokedValues.choices,
@@ -63,7 +77,7 @@ class ResponseSet(BaseModel):
     MIN_HEIGHT_METRIC = 1397
     MAX_HEIGHT_IMPERIAL = 96
     MIN_HEIGHT_IMPERIAL = 55
-    height = models.PositiveIntegerField(null=True, blank=True, validators=[
+    height_metric = models.PositiveIntegerField(null=True, blank=True, validators=[
         MinValueValidator(MIN_HEIGHT_METRIC, message="Height must be between 139.7cm and 243.8 cm"),
         MaxValueValidator(MAX_HEIGHT_METRIC, message="Height must be between 139.7cm and 243.8 cm"),
     ])
@@ -129,10 +143,10 @@ class ResponseSet(BaseModel):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["participant"],
+                fields=["user"],
                 condition=models.Q(submitted_at__isnull=True),
-                name="unique_unsubmitted_response_per_participant",
-                violation_error_message="An unsubmitted response set already exists for this participant"
+                name="unique_unsubmitted_response_per_user",
+                violation_error_message="An unsubmitted response set already exists for this user"
             )
         ]
 
@@ -140,17 +154,17 @@ class ResponseSet(BaseModel):
         super().clean()
 
         one_year_ago = timezone.now() - relativedelta(years=1)
-        submitted_response_sets_in_last_year = self.participant.responseset_set.filter(submitted_at__gte=one_year_ago)
+        submitted_response_sets_in_last_year = self.user and self.user.responseset_set.filter(submitted_at__gte=one_year_ago)
 
         if submitted_response_sets_in_last_year:
             raise ValidationError(
-                "Responses have already been submitted for this participant"
+                "Responses have already been submitted for this user"
             )
 
     @property
     def formatted_height(self):
-        if self.height:
-            return f"{Decimal(self.height) / 10}cm"
+        if self.height_metric:
+            return f"{Decimal(self.height_metric) / 10}cm"
         elif self.height_imperial:
             value = Decimal(self.height_imperial)
             return f"{value // 12} feet {value % 12} inches"

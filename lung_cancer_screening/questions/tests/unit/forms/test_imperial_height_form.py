@@ -1,19 +1,18 @@
 from django.test import TestCase
 
-from ....models.participant import Participant
+from ...factories.user_factory import UserFactory
+from ....models.response_set import ResponseSet
 from ....forms.imperial_height_form import ImperialHeightForm
 
 
 class TestImperialHeightForm(TestCase):
     def setUp(self):
-        self.participant = Participant.objects.create(unique_id="1234567890")
-        self.response_set = self.participant.responseset_set.create(
-            height=1704
-        )
+        self.user = UserFactory()
+        self.response_set = ResponseSet(user=self.user)
+        self.response_set.height_metric = 1704
 
     def test_is_valid_with_valid_input(self):
         form = ImperialHeightForm(
-            participant=self.participant,
             instance=self.response_set,
             data={
                 "height_imperial_0": "5",  # feet
@@ -25,7 +24,6 @@ class TestImperialHeightForm(TestCase):
 
     def test_converts_feet_and_inches_to_an_inches_integer(self):
         form = ImperialHeightForm(
-            participant=self.participant,
             instance=self.response_set,
             data={
                 "height_imperial_0": "5",  # feet
@@ -39,18 +37,16 @@ class TestImperialHeightForm(TestCase):
     def test_setting_imperial_height_clears_height(self):
         form = ImperialHeightForm(
             instance=self.response_set,
-            participant=self.participant,
             data={
                 "height_imperial_0": "5",  # feet
                 "height_imperial_1": "9"   # inches
             }
         )
         form.save()
-        self.assertEqual(self.response_set.height, None)
+        self.assertEqual(self.response_set.height_metric, None)
 
     def test_is_invalid_with_missing_data(self):
         form = ImperialHeightForm(
-            participant=self.participant,
             instance=self.response_set,
             data={
                 # missing feet
@@ -65,7 +61,6 @@ class TestImperialHeightForm(TestCase):
 
     def test_is_invalid_with_missing_inches(self):
         form = ImperialHeightForm(
-            participant=self.participant,
             instance=self.response_set,
             data={
                 "height_imperial_0": "5",
@@ -80,7 +75,6 @@ class TestImperialHeightForm(TestCase):
 
     def test_is_invalid_with_missing_feet(self):
         form = ImperialHeightForm(
-            participant=self.participant,
             instance=self.response_set,
             data={
                 #"height_imperial_0": "5",
@@ -95,7 +89,6 @@ class TestImperialHeightForm(TestCase):
 
     def test_is_invalid_when_given_a_decimal_feet_value(self):
         form = ImperialHeightForm(
-            participant=self.participant,
             instance=self.response_set,
             data={
                 "height_imperial_0": "5.2",
@@ -110,7 +103,6 @@ class TestImperialHeightForm(TestCase):
 
     def test_is_invalid_when_inches_under_11(self):
         form = ImperialHeightForm(
-            participant=self.participant,
             instance=self.response_set,
             data={
                 "height_imperial_0": "5",
@@ -125,7 +117,6 @@ class TestImperialHeightForm(TestCase):
 
     def test_is_invalid_when_inches_over_0(self):
         form = ImperialHeightForm(
-            participant=self.participant,
             instance=self.response_set,
             data={
                 "height_imperial_0": "5",
@@ -140,7 +131,6 @@ class TestImperialHeightForm(TestCase):
 
     def test_is_invalid_when_feet_over_4(self):
         form = ImperialHeightForm(
-            participant=self.participant,
             instance=self.response_set,
             data={
                 "height_imperial_0": "3",
@@ -155,7 +145,6 @@ class TestImperialHeightForm(TestCase):
 
     def test_is_invalid_when_feet_under_8(self):
         form = ImperialHeightForm(
-            participant=self.participant,
             instance=self.response_set,
             data={
                 "height_imperial_0": "9",

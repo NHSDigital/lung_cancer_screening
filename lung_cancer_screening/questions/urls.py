@@ -20,9 +20,9 @@ from .views.start import StartView
 from .views.have_you_ever_smoked import HaveYouEverSmokedView
 from .views.date_of_birth import DateOfBirthView
 from .views.responses import ResponsesView
-from .views.age_range_exit import age_range_exit
-from .views.non_smoker_exit import non_smoker_exit
-from .views.your_results import your_results
+from .views.age_range_exit import AgeRangeExitView
+from .views.non_smoker_exit import NonSmokerExitView
+from .views.your_results import YourResultsView
 from .views.height import HeightView
 from .views.weight import WeightView
 from .views.sex_at_birth import SexAtBirthView
@@ -51,7 +51,7 @@ urlpatterns = [
     path('cancer-diagnosis', CancerDiagnosisView.as_view(), name='cancer_diagnosis'),
     path('family-history-lung-cancer', FamilyHistoryLungCancerView.as_view(), name='family_history_lung_cancer'),
     path('responses', ResponsesView.as_view(), name='responses'),
-    path('age-range-exit', age_range_exit, name='age_range_exit'),
-    path('non-smoker-exit', non_smoker_exit, name='non_smoker_exit'),
-    path('your-results', your_results, name='your_results'),
+    path('age-range-exit', AgeRangeExitView.as_view(), name='age_range_exit'),
+    path('non-smoker-exit', NonSmokerExitView.as_view(), name='non_smoker_exit'),
+    path('your-results', YourResultsView.as_view(), name='your_results'),
 ]

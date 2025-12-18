@@ -1,22 +1,22 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils import timezone
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
-from django.utils.decorators import method_decorator
 
-from .decorators.participant_decorators import require_participant
+from .mixins.ensure_response_set import EnsureResponseSet
 
-@method_decorator(require_participant, name="dispatch")
-class ResponsesView(View):
+
+class ResponsesView(LoginRequiredMixin, EnsureResponseSet, View):
     def get(self, request):
         return render(
             request,
             "responses.jinja",
-            {"response_set": request.participant.responseset_set.last()}
+            {"response_set": request.response_set}
         )
 
     def post(self, request):
-        response_set = request.participant.responseset_set.last()
+        response_set = request.response_set
 
         response_set.submitted_at = timezone.now()
         response_set.save()

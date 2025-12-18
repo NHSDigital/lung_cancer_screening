@@ -1,34 +1,34 @@
 from django.test import TestCase
 from django.urls import reverse
+from dateutil.relativedelta import relativedelta
+from django.utils import timezone
 
-from ....models.participant import Participant
+from .helpers.authentication import login_user
 
 
-class TestWeight(TestCase):
+class TestGetWeight(TestCase):
     def setUp(self):
-        self.participant = Participant.objects.create(unique_id="12345")
-        self.participant.responseset_set.create()
+        self.user = login_user(self.client)
 
-        self.valid_weight = 70
-        self.valid_params = {"weight_metric": self.valid_weight}
-
-        self.session = self.client.session
-        self.session['participant_id'] = self.participant.unique_id
-
-        self.session.save()
-
-    def test_get_redirects_if_the_participant_does_not_exist(self):
-        self.session['participant_id'] = "somebody none existent participant"
-        self.session.save()
+    def test_get_redirects_if_the_user_is_not_logged_in(self):
+        self.client.logout()
 
         response = self.client.get(
             reverse("questions:weight")
         )
 
-        self.assertRedirects(response, reverse("questions:start"))
+        self.assertRedirects(
+            response,
+            "/oidc/authenticate/?next=/weight",
+            fetch_redirect_response=False
+        )
 
-    def test_get_redirects_if_the_participant_is_none(self):
-        self.session.flush()
+    def test_get_redirects_when_submitted_response_set_exists_within_last_year(
+        self
+    ):
+        self.user.responseset_set.create(
+            submitted_at=timezone.now() - relativedelta(days=364)
+        )
 
         response = self.client.get(
             reverse("questions:weight")
@@ -46,25 +46,121 @@ class TestWeight(TestCase):
 
         self.assertContains(response, "Kilograms")
 
-    def test_post_redirects_if_the_participant_does_not_exist(self):
-        self.session['participant_id'] = "somebody none existent participant"
-        self.session.save()
+    def test_get_renders_the_imperial_form_if_already_has_imperial_weight(self):
+        self.user.responseset_set.create(
+            weight_imperial=60
+        )
+
+        response = self.client.get(reverse("questions:weight"))
+
+        self.assertContains(response, "Stone")
+
+    def test_get_renders_the_metric_form_if_already_has_imperial_weight_but_unit_is_metric(self):
+        self.user.responseset_set.create(
+            weight_imperial=60
+        )
+
+        response = self.client.get(reverse("questions:weight"), {"unit": "metric"})
+
+        self.assertContains(response, "Kilograms")
+
+    def test_get_renders_the_imperial_form_if_specified(self):
+        response = self.client.get(
+            reverse("questions:weight"), {"unit": "imperial"}
+        )
+
+        self.assertContains(response, "Stone")
+        self.assertContains(response, "Pounds")
+
+
+class TestPostWeight(TestCase):
+    def setUp(self):
+        self.user = login_user(self.client)
+
+        self.valid_weight = 70
+        self.valid_params = {"weight_metric": self.valid_weight}
+
+    def test_post_redirects_if_the_user_is_not_logged_in(self):
+        self.client.logout()
 
         response = self.client.post(
-            reverse("questions:weight")
+            reverse("questions:weight"),
+            self.valid_params
+        )
+
+        self.assertRedirects(
+            response,
+            "/oidc/authenticate/?next=/weight",
+            fetch_redirect_response=False
+        )
+
+    def test_post_creates_unsubmitted_response_set_when_no_response_set_exists(
+        self
+    ):
+        self.client.post(
+            reverse("questions:weight"),
+            self.valid_params
+        )
+
+        response_set = self.user.responseset_set.first()
+        self.assertEqual(self.user.responseset_set.count(), 1)
+        self.assertEqual(response_set.submitted_at, None)
+        self.assertEqual(
+            response_set.weight_metric, self.valid_weight * 10
+        )
+        self.assertEqual(response_set.user, self.user)
+
+    def test_post_updates_unsubmitted_response_set_when_one_exists(self):
+        response_set = self.user.responseset_set.create()
+
+        self.client.post(
+            reverse("questions:weight"),
+            self.valid_params
+        )
+
+        response_set.refresh_from_db()
+        self.assertEqual(self.user.responseset_set.count(), 1)
+        self.assertEqual(response_set.submitted_at, None)
+        self.assertEqual(
+            response_set.weight_metric, self.valid_weight * 10
+        )
+        self.assertEqual(response_set.user, self.user)
+
+    def test_post_creates_new_unsubmitted_response_set_when_submitted_exists_over_year_ago(  # noqa: E501
+        self
+    ):
+        self.user.responseset_set.create(
+            submitted_at=timezone.now() - relativedelta(years=1)
+        )
+
+        self.client.post(
+            reverse("questions:weight"),
+            self.valid_params
+        )
+
+        self.assertEqual(self.user.responseset_set.count(), 2)
+        self.assertEqual(self.user.responseset_set.unsubmitted().count(), 1)
+
+        response_set = self.user.responseset_set.last()
+        self.assertEqual(response_set.submitted_at, None)
+        self.assertEqual(
+            response_set.weight_metric, self.valid_weight * 10
+        )
+        self.assertEqual(response_set.user, self.user)
+
+    def test_post_redirects_when_submitted_response_set_exists_within_last_year(  # noqa: E501
+        self
+    ):
+        self.user.responseset_set.create(
+            submitted_at=timezone.now() - relativedelta(days=364)
+        )
+
+        response = self.client.post(
+            reverse("questions:weight"),
+            self.valid_params
         )
 
         self.assertRedirects(response, reverse("questions:start"))
-
-    def test_post_redirects_if_the_participant_is_none(self):
-        self.session.flush()
-
-        response = self.client.post(
-            reverse("questions:weight")
-        )
-
-        self.assertRedirects(response, reverse("questions:start"))
-
 
     def test_post_redirects_if_the_weight_is_valid(self):
         response = self.client.post(
@@ -80,9 +176,10 @@ class TestWeight(TestCase):
             self.valid_params
         )
 
-        response_set = self.participant.responseset_set.first()
-        self.assertEqual(response_set.weight_metric, self.valid_weight * 10)
-
+        response_set = self.user.responseset_set.first()
+        self.assertEqual(
+            response_set.weight_metric, self.valid_weight * 10
+        )
 
     def test_post_responds_with_422_if_the_resource_is_invalid(self):
         response = self.client.post(

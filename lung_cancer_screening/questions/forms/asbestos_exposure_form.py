@@ -5,9 +5,7 @@ from ..models.response_set import ResponseSet
 
 class AsbestosExposureForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        self.participant = kwargs.pop('participant')
         super().__init__(*args, **kwargs)
-        self.instance.participant = self.participant
 
         self.fields["asbestos_exposure"] = TypedChoiceField(
             choices=[(True, 'Yes'), (False, 'No')],

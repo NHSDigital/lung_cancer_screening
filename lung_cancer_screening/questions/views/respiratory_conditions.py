@@ -1,26 +1,30 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
-from django.utils.decorators import method_decorator
-from .decorators.participant_decorators import require_participant
+
+from .mixins.ensure_response_set import EnsureResponseSet
 from ..forms.respiratory_conditions_form import RespiratoryConditionsForm
 
-@method_decorator(require_participant, name="dispatch")
-class RespiratoryConditionsView(View):
+
+class RespiratoryConditionsView(LoginRequiredMixin, EnsureResponseSet, View):
     def get(self, request):
         return render_template(
             request,
-            RespiratoryConditionsForm(participant=request.participant)        )
+            RespiratoryConditionsForm(instance=request.response_set)
+        )
 
     def post(self, request):
         form = RespiratoryConditionsForm(
-            participant=request.participant,
+            instance=request.response_set,
             data=request.POST
         )
 
         if form.is_valid():
-            response_set = request.participant.responseset_set.last()
-            response_set.respiratory_conditions = form.cleaned_data["respiratory_conditions"]
+            response_set = request.response_set
+            response_set.respiratory_conditions = (
+                form.cleaned_data["respiratory_conditions"]
+            )
             response_set.save()
             return redirect(reverse("questions:asbestos_exposure"))
         else:
@@ -29,6 +33,7 @@ class RespiratoryConditionsView(View):
                 form,
                 status=422
             )
+
 
 def render_template(request, form, status=200):
     return render(

@@ -1,9 +1,13 @@
 from django.shortcuts import render
-from django.views.decorators.http import require_GET
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views import View
 
-@require_GET
-def your_results(request):
-    return render(
-        request,
-        "your_results.jinja"
-    )
+from .mixins.ensure_response_set import EnsureResponseSet
+
+
+class YourResultsView(LoginRequiredMixin, EnsureResponseSet, View):
+    def get(self, request):
+        return render(
+            request,
+            "your_results.jinja"
+        )

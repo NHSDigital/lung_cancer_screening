@@ -1,24 +1,24 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.views import View
-from django.utils.decorators import method_decorator
 from datetime import date
 from dateutil.relativedelta import relativedelta
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views import View
 
-from .decorators.participant_decorators import require_participant
+from .mixins.ensure_response_set import EnsureResponseSet
 from ..forms.date_of_birth_form import DateOfBirthForm
 
-@method_decorator(require_participant, name="dispatch")
-class DateOfBirthView(View):
+
+class DateOfBirthView(LoginRequiredMixin, EnsureResponseSet, View):
     def get(self, request):
         return render_template(
             request,
-            DateOfBirthForm(participant=request.participant)
+            DateOfBirthForm(instance=request.response_set)
         )
 
     def post(self, request):
         form = DateOfBirthForm(
-            participant=request.participant,
+            instance=request.response_set,
             data=request.POST
         )
 
@@ -27,8 +27,11 @@ class DateOfBirthView(View):
             seventy_five_years_ago = date.today() - relativedelta(years=75)
             date_of_birth = form.cleaned_data["date_of_birth"]
 
-            if (seventy_five_years_ago < date_of_birth <= fifty_five_years_ago):
-                response_set = request.participant.responseset_set.last()
+            age_in_range = (
+                seventy_five_years_ago < date_of_birth <= fifty_five_years_ago
+            )
+            if age_in_range:
+                response_set = request.response_set
                 response_set.date_of_birth = date_of_birth
                 response_set.save()
 
@@ -42,6 +45,7 @@ class DateOfBirthView(View):
                 form,
                 status=422
             )
+
 
 def render_template(request, form, status=200):
     return render(

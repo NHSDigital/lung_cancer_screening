@@ -1,29 +1,28 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
-from django.utils.decorators import method_decorator
 
-
-from .decorators.participant_decorators import require_participant
+from .mixins.ensure_response_set import EnsureResponseSet
 from ..forms.asbestos_exposure_form import AsbestosExposureForm
 
-@method_decorator(require_participant, name="dispatch")
-class AsbestosExposureView(View):
+class AsbestosExposureView(LoginRequiredMixin, EnsureResponseSet, View):
     def get(self, request):
         return render(
             request,
             "asbestos_exposure.jinja",
-            {"form": AsbestosExposureForm(participant=request.participant)}
+            {"form": AsbestosExposureForm(instance=request.response_set)}
         )
 
     def post(self, request):
+
         form = AsbestosExposureForm(
-            participant=request.participant,
+            instance=request.response_set,
             data=request.POST
         )
 
         if form.is_valid():
-            response_set = request.participant.responseset_set.last()
+            response_set = request.user.responseset_set.last()
             response_set.asbestos_exposure = form.cleaned_data["asbestos_exposure"]
             response_set.save()
             return redirect(reverse("questions:cancer_diagnosis"))

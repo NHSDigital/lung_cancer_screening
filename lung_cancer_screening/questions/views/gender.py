@@ -1,36 +1,37 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
-from django.utils.decorators import method_decorator
 
-from .decorators.participant_decorators import require_participant
+from .mixins.ensure_response_set import EnsureResponseSet
 from ..forms.gender_form import GenderForm
 
-@method_decorator(require_participant, name="dispatch")
-class GenderView(View):
+
+class GenderView(LoginRequiredMixin, EnsureResponseSet, View):
     def get(self, request):
         return render_template(
             request,
-            GenderForm(participant=request.participant),
+            GenderForm(instance=request.response_set),
         )
 
     def post(self, request):
         form = GenderForm(
-            participant=request.participant,
+            instance=request.response_set,
             data=request.POST
         )
 
         if form.is_valid():
-                response_set = request.participant.responseset_set.last()
-                response_set.gender = form.cleaned_data["gender"]
-                response_set.save()
-                return redirect(reverse("questions:ethnicity"))
+            response_set = request.response_set
+            response_set.gender = form.cleaned_data["gender"]
+            response_set.save()
+            return redirect(reverse("questions:ethnicity"))
         else:
             return render_template(
                 request,
                 form,
                 status=422
             )
+
 
 def render_template(request, form, status=200):
     return render(

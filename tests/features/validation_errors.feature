@@ -1,6 +1,7 @@
 Feature: Validation errors
   Scenario: Date of birth form errors
-    Given I have started the questionnaire
+    Given I am logged in
+    And I have started the questionnaire
     When I go to "/date-of-birth"
     And I submit the form
     Then I am on "/date-of-birth"
@@ -16,14 +17,16 @@ Feature: Validation errors
     And I see a form error "Date of birth must be a real date"
 
   Scenario: Have you ever smoked form errors
-    Given I have started the questionnaire
+    Given I am logged in
+    And I have started the questionnaire
     When I go to "/have-you-ever-smoked"
     And I submit the form
     Then I am on "/have-you-ever-smoked"
     And I see a form error "Select if you have ever smoked"
 
   Scenario: Height form errors
-    Given I have started the questionnaire
+    Given I am logged in
+    And I have started the questionnaire
     When I go to "/height"
     And I submit the form
     Then I am on "/height"
@@ -36,7 +39,8 @@ Feature: Validation errors
     And I see a form error "Height must be between 139.7cm and 243.8 cm"
 
   Scenario: Height imperial form errors
-    Given I have started the questionnaire
+    Given I am logged in
+    And I have started the questionnaire
     When I go to "/height?unit=imperial"
     And I submit the form
     Then I am on "/height?unit=imperial"
@@ -52,7 +56,8 @@ Feature: Validation errors
     And I see a form error "Height must be between 4 feet 7 inches and 8 feet"
 
   Scenario: Weight form errors
-    Given I have started the questionnaire
+    Given I am logged in
+    And I have started the questionnaire
     When I go to "/weight"
     And I submit the form
     Then I am on "/weight"
@@ -65,7 +70,8 @@ Feature: Validation errors
     And I see a form error "Weight must be between 25.4kg and 317.5kg"
 
   Scenario: Weight imperial form errors
-    Given I have started the questionnaire
+    Given I am logged in
+    And I have started the questionnaire
     When I go to "/weight?unit=imperial"
     And I submit the form
     Then I am on "/weight?unit=imperial"
@@ -84,28 +90,32 @@ Feature: Validation errors
     And I see a form error "Weight must be between 4 stone and 50 stone"
 
   Scenario: Sex at birth form errors
-    Given I have started the questionnaire
+    Given I am logged in
+    And I have started the questionnaire
     When I go to "/sex-at-birth"
     And I submit the form
     Then I am on "/sex-at-birth"
     And I see a form error "Select your sex at birth"
 
   Scenario: Gender form errors
-    Given I have started the questionnaire
+    Given I am logged in
+    And I have started the questionnaire
     When I go to "/gender"
     And I submit the form
     Then I am on "/gender"
     And I see a form error "Select the option that best describes your gender"
 
   Scenario: Ethnicity form errors
-    Given I have started the questionnaire
+    Given I am logged in
+    And I have started the questionnaire
     When I go to "/ethnicity"
     And I submit the form
     Then I am on "/ethnicity"
     And I see a form error "Select your ethnic background"
 
   Scenario: Respiratory conditions form errors
-    Given I have started the questionnaire
+    Given I am logged in
+    And I have started the questionnaire
     When I go to "/respiratory-conditions"
     And I submit the form
     Then I am on "/respiratory-conditions"

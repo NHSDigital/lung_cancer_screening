@@ -5,13 +5,15 @@ from django.utils import timezone
 
 from django.core.exceptions import ValidationError
 
+from ...factories.user_factory import UserFactory
+from ...factories.response_set_factory import ResponseSetFactory
+from ....models.user import User
 from ....models.response_set import ResponseSet, HaveYouEverSmokedValues, SexAtBirthValues, GenderValues, EthnicityValues
-from ....models.participant import Participant
 
 class TestResponseSet(TestCase):
     def setUp(self):
-        participant = Participant.objects.create(unique_id="12345")
-        self.response_set = participant.responseset_set.create()
+        user = UserFactory()
+        self.response_set = user.responseset_set.create()
 
     # FIELDS
 
@@ -33,12 +35,12 @@ class TestResponseSet(TestCase):
             date
         )
 
-    def test_has_height_as_a_int(self):
-        self.response_set.height = 1700
+    def test_has_height_metric_as_a_int(self):
+        self.response_set.height_metric = 1700
         self.response_set.save()
 
         self.assertIsInstance(
-            self.response_set.height,
+            self.response_set.height_metric,
             int
         )
 
@@ -60,10 +62,10 @@ class TestResponseSet(TestCase):
             int
         )
 
-    def test_has_a_participant_as_a_foreign_key(self):
+    def test_has_a_user_as_a_foreign_key(self):
         self.assertIsInstance(
-            self.response_set.participant,
-            Participant
+            self.response_set.user,
+            User
         )
 
     def test_has_created_at_as_a_datetime(self):
@@ -121,33 +123,33 @@ class TestResponseSet(TestCase):
     # VALIDATIONS
 
     def test_is_invalid_if_another_unsubmitted_response_set_exists(self):
-        participant = Participant.objects.create(unique_id="56789")
-        participant.responseset_set.create(submitted_at=None)
+        user = UserFactory()
+        user.responseset_set.create(submitted_at=None)
 
         with self.assertRaises(ValidationError) as context:
-            participant.responseset_set.create(submitted_at=None)
+            user.responseset_set.create(submitted_at=None)
 
         self.assertEqual(
             context.exception.messages[0],
-            "An unsubmitted response set already exists for this participant"
+            "An unsubmitted response set already exists for this user"
         )
 
     def test_is_invalid_if_another_response_set_was_submitted_within_the_last_year(self):
-        participant = Participant.objects.create(unique_id="56789")
-        participant.responseset_set.create(
+        user = UserFactory()
+        user.responseset_set.create(
             submitted_at=timezone.now() - relativedelta(days=364)
         )
 
         with self.assertRaises(ValidationError) as context:
-            participant.responseset_set.create()
+            user.responseset_set.create()
 
         self.assertEqual(
             context.exception.messages[0],
-            "Responses have already been submitted for this participant"
+            "Responses have already been submitted for this user"
         )
 
     def test_is_invalid_if_height_is_below_lower_bound(self):
-        self.response_set.height = ResponseSet.MIN_HEIGHT_METRIC - 1
+        self.response_set.height_metric = ResponseSet.MIN_HEIGHT_METRIC - 1
 
         with self.assertRaises(ValidationError) as context:
             self.response_set.full_clean()
@@ -158,7 +160,7 @@ class TestResponseSet(TestCase):
         )
 
     def test_is_invalid_if_height_is_above_upper_bound(self):
-        self.response_set.height = ResponseSet.MAX_HEIGHT_METRIC + 1
+        self.response_set.height_metric = ResponseSet.MAX_HEIGHT_METRIC + 1
 
         with self.assertRaises(ValidationError) as context:
             self.response_set.full_clean()
@@ -191,7 +193,7 @@ class TestResponseSet(TestCase):
         )
 
     def test_formatted_height_returns_height_in_cm_if_set(self):
-        self.response_set.height = 1701
+        self.response_set.height_metric = 1701
         self.response_set.save()
 
         self.assertEqual(
@@ -286,4 +288,65 @@ class TestResponseSet(TestCase):
         self.assertEqual(
             context.exception.messages[0],
             "Value 'X' is not a valid choice."
+        )
+
+# Query managers
+    def test_objects_returns_all_response_sets(self):
+        unsubmitted_response_set = ResponseSetFactory()
+        submitted_response_set = ResponseSetFactory(submitted_at=timezone.now())
+
+        response_sets = ResponseSet.objects.all()
+        self.assertIn(
+            unsubmitted_response_set,
+            response_sets,
+        )
+        self.assertIn(
+            submitted_response_set,
+            response_sets,
+        )
+
+    def test_unsubmitted_returns_only_unsubmitted_response_sets(self):
+        unsubmitted_response_set = ResponseSetFactory()
+        submitted_response_set = ResponseSetFactory(submitted_at=timezone.now())
+
+        unsubmitted_response_sets = ResponseSet.objects.unsubmitted().all()
+        self.assertIn(
+            unsubmitted_response_set,
+            unsubmitted_response_sets,
+        )
+        self.assertNotIn(
+            submitted_response_set,
+            unsubmitted_response_sets,
+        )
+
+    def test_submitted_returns_only_submitted_response_sets(self):
+        unsubmitted_response_set = ResponseSetFactory()
+        submitted_response_set = ResponseSetFactory(submitted_at=timezone.now() - relativedelta(years=1))
+
+        submitted_response_sets = ResponseSet.objects.submitted().all()
+        self.assertIn(
+            submitted_response_set,
+            submitted_response_sets,
+        )
+        self.assertNotIn(
+            unsubmitted_response_set,
+            submitted_response_sets,
+        )
+
+    def test_submitted_in_last_year_returns_only_submitted_response_sets_in_the_last_year(self):
+        submitted_response_set_in_last_year = ResponseSetFactory(
+            submitted_at=timezone.now() - relativedelta(days=364)
+        )
+        submitted_response_set_older_than_last_year = ResponseSetFactory(
+            submitted_at=timezone.now() - relativedelta(years=1)
+        )
+
+        submitted_response_sets_in_last_year = ResponseSet.objects.submitted_in_last_year().all()
+        self.assertIn(
+            submitted_response_set_in_last_year,
+            submitted_response_sets_in_last_year,
+        )
+        self.assertNotIn(
+            submitted_response_set_older_than_last_year,
+            submitted_response_sets_in_last_year,
         )

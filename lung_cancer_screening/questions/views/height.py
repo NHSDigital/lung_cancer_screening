@@ -1,51 +1,67 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
-from django.utils.decorators import method_decorator
 
-from lung_cancer_screening.questions.forms.metric_height_form import MetricHeightForm
-from lung_cancer_screening.questions.forms.imperial_height_form import ImperialHeightForm
-from .decorators.participant_decorators import require_participant
+from .mixins.ensure_response_set import EnsureResponseSet
+from lung_cancer_screening.questions.forms.metric_height_form import (
+    MetricHeightForm
+)
+from lung_cancer_screening.questions.forms.imperial_height_form import (
+    ImperialHeightForm
+)
 
-@method_decorator(require_participant, name="dispatch")
-class HeightView(View):
+
+class HeightView(LoginRequiredMixin, EnsureResponseSet, View):
     def get(self, request):
-        unit = request.GET.get('unit')
+        unit = self.get_unit(request)
+
         form_klass = ImperialHeightForm if unit == "imperial" else MetricHeightForm
 
         return render(
             request,
             "height.jinja",
             {
-                "form": form_klass(participant=request.participant),
+                "form": form_klass(instance=request.response_set),
                 "unit": unit,
-                "switch_to_unit": "metric" if unit == "imperial" else "imperial"
+                "switch_to_unit": (
+                    "metric" if unit == "imperial" else "imperial"
+                )
             }
         )
 
-
     def post(self, request):
-        unit = request.GET.get('unit')
+        unit = self.get_unit(request)
+
         form_klass = ImperialHeightForm if unit == "imperial" else MetricHeightForm
 
-        if request.method == "POST":
-            form = form_klass(
-                instance = request.participant.responseset_set.last(),
-                data=request.POST,
-                participant=request.participant
+        form = form_klass(
+            instance=request.response_set,
+            data=request.POST
+        )
+
+        if form.is_valid():
+            form.save()
+
+            return redirect("questions:weight")
+        else:
+            return render(
+                request,
+                "height.jinja",
+                {
+                    "form": form,
+                    "unit": unit,
+                    "switch_to_unit": (
+                        "metric" if unit == "imperial" else "imperial"
+                    )
+                },
+                status=422
             )
 
-            if form.is_valid():
-                form.save()
+    def get_unit(self, request):
+        unit = request.GET.get('unit')
 
-                return redirect("questions:weight")
-            else:
-                return render(
-                    request,
-                    "height.jinja",
-                    {
-                        "form": form,
-                        "unit": unit,
-                        "switch_to_unit": "metric" if unit == "imperial" else "imperial"
-                    },
-                    status=422
-                )
+        height_imperial=request.response_set.height_imperial
+        if height_imperial and unit != "metric":
+            unit = "imperial"
+
+        return unit

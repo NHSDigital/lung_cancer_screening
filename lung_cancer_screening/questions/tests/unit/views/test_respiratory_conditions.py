@@ -1,23 +1,34 @@
 from django.test import TestCase
 from django.urls import reverse
+from dateutil.relativedelta import relativedelta
+from django.utils import timezone
 
-from lung_cancer_screening.questions.models.participant import Participant
+from .helpers.authentication import login_user
 
 
-class TestRespiratoryConditions(TestCase):
+class TestGetRespiratoryConditions(TestCase):
     def setUp(self):
-        self.participant = Participant.objects.create(unique_id="12345")
-        self.participant.responseset_set.create()
-        self.valid_params = {"respiratory_conditions": ["P", "E"]}
+        self.user = login_user(self.client)
 
-        session = self.client.session
-        session['participant_id'] = self.participant.unique_id
-        session.save()
+    def test_get_redirects_if_the_user_is_not_logged_in(self):
+        self.client.logout()
 
-    def test_get_redirects_if_the_participant_does_not_exist(self):
-        session = self.client.session
-        session['participant_id'] = "somebody none existant participant"
-        session.save()
+        response = self.client.get(
+            reverse("questions:respiratory_conditions")
+        )
+
+        self.assertRedirects(
+            response,
+            "/oidc/authenticate/?next=/respiratory-conditions",
+            fetch_redirect_response=False
+        )
+
+    def test_get_redirects_when_submitted_response_set_exists_within_last_year(
+        self
+    ):
+        self.user.responseset_set.create(
+            submitted_at=timezone.now() - relativedelta(days=364)
+        )
 
         response = self.client.get(
             reverse("questions:respiratory_conditions")
@@ -26,23 +37,116 @@ class TestRespiratoryConditions(TestCase):
         self.assertRedirects(response, reverse("questions:start"))
 
     def test_get_responds_successfully(self):
-        response = self.client.get(reverse("questions:respiratory_conditions"))
+        response = self.client.get(
+            reverse("questions:respiratory_conditions")
+        )
         self.assertEqual(response.status_code, 200)
 
     def test_get_contains_the_correct_form_fields(self):
-        response = self.client.get(reverse("questions:respiratory_conditions"))
-        self.assertContains(response, "Have you ever been diagnosed with any of the following respiratory conditions?")
+        response = self.client.get(
+            reverse("questions:respiratory_conditions")
+        )
+        self.assertContains(
+            response,
+            "Have you ever been diagnosed with any of the following "
+            "respiratory conditions?"
+        )
         self.assertContains(response, "Pneumonia")
         self.assertContains(response, "Emphysema")
         self.assertContains(response, "Bronchitis")
         self.assertContains(response, "Tuberculosis (TB)")
-        self.assertContains(response, "Chronic obstructive pulmonary disease (COPD)")
-        self.assertContains(response, "No, I have not had any of these respiratory conditions")
+        self.assertContains(
+            response, "Chronic obstructive pulmonary disease (COPD)"
+        )
+        self.assertContains(
+            response,
+            "No, I have not had any of these respiratory conditions"
+        )
 
-    def test_post_redirects_if_the_participant_does_not_exist(self):
-        session = self.client.session
-        session['participant_id'] = "somebody none existant participant"
-        session.save()
+
+class TestPostRespiratoryConditions(TestCase):
+    def setUp(self):
+        self.user = login_user(self.client)
+
+        self.valid_params = {"respiratory_conditions": ["P", "E"]}
+
+    def test_post_redirects_if_the_user_is_not_logged_in(self):
+        self.client.logout()
+
+        response = self.client.post(
+            reverse("questions:respiratory_conditions"),
+            self.valid_params
+        )
+
+        self.assertRedirects(
+            response,
+            "/oidc/authenticate/?next=/respiratory-conditions",
+            fetch_redirect_response=False
+        )
+
+    def test_post_creates_unsubmitted_response_set_when_no_response_set_exists(
+        self
+    ):
+        self.client.post(
+            reverse("questions:respiratory_conditions"),
+            self.valid_params
+        )
+
+        response_set = self.user.responseset_set.first()
+        self.assertEqual(self.user.responseset_set.count(), 1)
+        self.assertEqual(response_set.submitted_at, None)
+        self.assertEqual(
+            response_set.respiratory_conditions,
+            self.valid_params["respiratory_conditions"]
+        )
+        self.assertEqual(response_set.user, self.user)
+
+    def test_post_updates_unsubmitted_response_set_when_one_exists(self):
+        response_set = self.user.responseset_set.create()
+
+        self.client.post(
+            reverse("questions:respiratory_conditions"),
+            self.valid_params
+        )
+
+        response_set.refresh_from_db()
+        self.assertEqual(self.user.responseset_set.count(), 1)
+        self.assertEqual(response_set.submitted_at, None)
+        self.assertEqual(
+            response_set.respiratory_conditions,
+            self.valid_params["respiratory_conditions"]
+        )
+        self.assertEqual(response_set.user, self.user)
+
+    def test_post_creates_new_unsubmitted_response_set_when_submitted_exists_over_year_ago(  # noqa: E501
+        self
+    ):
+        self.user.responseset_set.create(
+            submitted_at=timezone.now() - relativedelta(years=1)
+        )
+
+        self.client.post(
+            reverse("questions:respiratory_conditions"),
+            self.valid_params
+        )
+
+        self.assertEqual(self.user.responseset_set.count(), 2)
+        self.assertEqual(self.user.responseset_set.unsubmitted().count(), 1)
+
+        response_set = self.user.responseset_set.last()
+        self.assertEqual(response_set.submitted_at, None)
+        self.assertEqual(
+            response_set.respiratory_conditions,
+            self.valid_params["respiratory_conditions"]
+        )
+        self.assertEqual(response_set.user, self.user)
+
+    def test_post_redirects_when_submitted_response_set_exists_within_last_year(  # noqa: E501
+        self
+    ):
+        self.user.responseset_set.create(
+            submitted_at=timezone.now() - relativedelta(days=364)
+        )
 
         response = self.client.post(
             reverse("questions:respiratory_conditions"),
@@ -51,18 +155,18 @@ class TestRespiratoryConditions(TestCase):
 
         self.assertRedirects(response, reverse("questions:start"))
 
-    def test_post_stores_a_valid_response_for_the_participant(self):
+    def test_post_stores_a_valid_response_for_the_user(self):
         self.client.post(
             reverse("questions:respiratory_conditions"),
             self.valid_params
         )
 
-        response_set = self.participant.responseset_set.first()
+        response_set = self.user.responseset_set.first()
         self.assertEqual(
             response_set.respiratory_conditions,
             self.valid_params["respiratory_conditions"]
         )
-        self.assertEqual(response_set.participant, self.participant)
+        self.assertEqual(response_set.user, self.user)
 
     def test_post_stores_single_selection(self):
         self.client.post(
@@ -70,19 +174,21 @@ class TestRespiratoryConditions(TestCase):
             {"respiratory_conditions": ["N"]}
         )
 
-        response_set = self.participant.responseset_set.first()
+        response_set = self.user.responseset_set.first()
         self.assertEqual(
             response_set.respiratory_conditions,
             ["N"]
         )
 
-    def test_post_redirects_to_the_next_page(self):
+    def test_post_redirects_to_the_asbestos_exposure_path(self):
         response = self.client.post(
             reverse("questions:respiratory_conditions"),
             self.valid_params
         )
 
-        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(
+            response, reverse("questions:asbestos_exposure")
+        )
 
     def test_post_responds_with_422_if_the_response_fails_to_create(self):
         response = self.client.post(
@@ -107,6 +213,6 @@ class TestRespiratoryConditions(TestCase):
         )
 
         self.assertEqual(
-            self.participant.responseset_set.first().respiratory_conditions,
+            self.user.responseset_set.first().respiratory_conditions,
             None
         )

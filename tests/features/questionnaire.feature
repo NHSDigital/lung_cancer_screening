@@ -1,7 +1,8 @@
 Feature: Questionnaire
   Scenario: The user can complete the full questionnaire
+    Given I am logged in
     When I go to "/start"
-    And I submit my participant id
+    And I click "Start"
     Then I am on "/have-you-ever-smoked"
     And I see a back link to "/start"
     When I fill in and submit my smoking status with "Yes, I used to smoke"

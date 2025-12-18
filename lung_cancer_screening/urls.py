@@ -19,5 +19,6 @@ from django.urls import path, include
 urlpatterns = [
     path('', include(
         ("lung_cancer_screening.questions.urls", "questions"),
-        namespace="questions"))
+        namespace="questions")),
+    path('oidc/', include('mozilla_django_oidc.urls')),
 ]

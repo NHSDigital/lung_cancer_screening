@@ -14,6 +14,9 @@ dependencies = [
     "psycopg2-binary (>=2.9.10,<3.0.0)",
     "python-dateutil (>=2.9.0.post0,<3.0.0)",
     "whitenoise (>=6.9.0,<7.0.0)",
+    "mozilla-django-oidc (>=3.0.0,<4.0.0)",
+    "pyjwt (>=2.8.0,<3.0.0)",
+    "cryptography (>=41.0.0,<43.0.0)"
 ]
 
 [tool.poetry]
@@ -24,6 +27,7 @@ ruff = "^0.14.7"
 playwright = "^1.56.0"
 axe-playwright-python = "^0.1.7"
 behave-django = "^1.8.0"
+factory-boy = "^3.3.3"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
