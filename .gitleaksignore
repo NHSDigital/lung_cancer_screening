@@ -11,3 +11,15 @@ infrastructure/terraform/resource_group_init/main.bicep:generic-api-key:32
 infrastructure/terraform/resource_group_init/main.bicep:generic-api-key:33
 infrastructure/terraform/resource_group_init/storage.bicep:generic-api-key:59
 infrastructure/terraform/resource_group_init/keyVault.bicep:generic-api-key:10
+infrastructure/bootstrap/core.bicep:generic-api-key:10
+infrastructure/bootstrap/core.bicep:generic-api-key:11
+infrastructure/bootstrap/core.bicep:generic-api-key:12
+infrastructure/bootstrap/core.bicep:generic-api-key:13
+infrastructure/bootstrap/core.bicep:generic-api-key:14
+infrastructure/bootstrap/main.bicep:generic-api-key:29
+infrastructure/bootstrap/main.bicep:generic-api-key:30
+infrastructure/bootstrap/main.bicep:generic-api-key:31
+infrastructure/bootstrap/main.bicep:generic-api-key:32
+infrastructure/bootstrap/main.bicep:generic-api-key:33
+infrastructure/bootstrap/modules/storage.bicep:generic-api-key:59
+infrastructure/bootstrap/modules/keyVault.bicep:generic-api-key:10

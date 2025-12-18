@@ -51,7 +51,7 @@ resource managedIdentityRG 'Microsoft.Resources/resourceGroups@2024-11-01' exist
 }
 
 // Create the managed identity assumed by Azure devops to connect to Azure
-module managedIdentiyADOtoAZ 'managedIdentity.bicep' = {
+module managedIdentiyADOtoAZ 'modules/managedIdentity.bicep' = {
   scope: managedIdentityRG
   params: {
     name: miADOtoAZname
@@ -60,7 +60,7 @@ module managedIdentiyADOtoAZ 'managedIdentity.bicep' = {
 }
 
 // Create the managed identity assumed by Github actions to trigger Azure devops pipelines
-module managedIdentiyGHtoADO 'managedIdentity.bicep' = {
+module managedIdentiyGHtoADO 'modules/managedIdentity.bicep' = {
   scope: managedIdentityRG
   params: {
     name: miGHtoADOname
@@ -84,7 +84,7 @@ resource readerAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' =
 }
 
 // Create the storage account, blob service and container
-module terraformStateStorageAccount 'storage.bicep' = {
+module terraformStateStorageAccount 'modules/storage.bicep' = {
   scope: storageAccountRG
   params: {
     storageLocation: region
@@ -96,7 +96,7 @@ module terraformStateStorageAccount 'storage.bicep' = {
 }
 
 // Retrieve storage private DNS zone
-module storagePrivateDNSZone 'dns.bicep' = {
+module storagePrivateDNSZone 'modules/dns.bicep' = {
   scope: privateDNSZoneRG
   params: {
     resourceServiceType: 'storage'
@@ -104,7 +104,7 @@ module storagePrivateDNSZone 'dns.bicep' = {
 }
 
 // Retrieve key vault private DNS zone
-module keyVaultPrivateDNSZone 'dns.bicep' = {
+module keyVaultPrivateDNSZone 'modules/dns.bicep' = {
   scope: privateDNSZoneRG
   params: {
     resourceServiceType: 'keyVault'
@@ -112,7 +112,7 @@ module keyVaultPrivateDNSZone 'dns.bicep' = {
 }
 
 // Create private endpoint and register DNS
-module storageAccountPrivateEndpoint 'privateEndpoint.bicep' = {
+module storageAccountPrivateEndpoint 'modules/privateEndpoint.bicep' = {
   scope: privateEndpointResourceGroup
   params: {
     hub: hubMap[envConfig]
@@ -141,7 +141,7 @@ resource infraRG 'Microsoft.Resources/resourceGroups@2024-11-01' = {
 }
 
 // Private endpoint for infra key vault
-module kvPrivateEndpoint 'privateEndpoint.bicep' = {
+module kvPrivateEndpoint 'modules/privateEndpoint.bicep' = {
   scope: resourceGroup(infraResourceGroupName)
   params: {
     hub: hubMap[envConfig]
@@ -154,7 +154,7 @@ module kvPrivateEndpoint 'privateEndpoint.bicep' = {
 }
 
 // Use a module to deploy Key Vault into the infra RG
-module keyVaultModule 'keyVault.bicep' = {
+module keyVaultModule 'modules/keyVault.bicep' = {
   name: 'keyVaultDeployment'
   scope: resourceGroup(infraResourceGroupName)
   params: {

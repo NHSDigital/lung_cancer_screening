@@ -1,4 +1,3 @@
-
 param enableSoftDelete bool
 param keyVaultName string
 param miPrincipalId string
