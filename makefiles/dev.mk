@@ -19,10 +19,10 @@ dev-logs:
 	$(DOCKER_COMPOSE_CMD) logs -f
 
 dev-shell:
-	$(DOCKER_COMPOSE_CMD) run --rm web bash
+	$(DOCKER_COMPOSE_CMD) run --rm --entrypoint /bin/sh web
 
 dev-migrate:
-	$(DOCKER_COMPOSE_CMD) run --rm web python manage.py migrate
+	$(DOCKER_COMPOSE_CMD) run --rm --entrypoint /usr/bin/python web manage.py migrate
 
 dev-makemigrations:
 	$(DOCKER_COMPOSE_CMD) run --rm web python manage.py makemigrations

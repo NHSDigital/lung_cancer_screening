@@ -1,5 +1,5 @@
 # Alpine doesn't support playwright
-FROM python:3.14.1-slim AS development
+FROM python:3.14.1-slim
 
 ARG UID=1000
 ENV USER=app
@@ -55,3 +55,5 @@ RUN poetry run playwright install --with-deps chromium
 
 USER ${USER}
 COPY --chown=${USER}:${USER} . .
+
+CMD ["/usr/bin/python", "manage.py", "runserver", "0.0.0.0:8000"]
