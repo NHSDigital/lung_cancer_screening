@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
 from .helpers.authentication import login_user
+from lung_cancer_screening.questions.models.date_of_birth_response import DateOfBirthResponse
 
 
 class TestGetDateOfBirth(TestCase):
@@ -49,16 +50,16 @@ class TestPostDateOfBirth(TestCase):
 
         self.valid_age = date.today() - relativedelta(years=55)
         self.valid_params = {
-            "date_of_birth_0": self.valid_age.day,
-            "date_of_birth_1": self.valid_age.month,
-            "date_of_birth_2": self.valid_age.year
+            "value_0": self.valid_age.day,
+            "value_1": self.valid_age.month,
+            "value_2": self.valid_age.year
         }
 
         self.invalid_age = date.today() - relativedelta(years=20)
         self.invalid_params = {
-            "date_of_birth_0": self.invalid_age.day,
-            "date_of_birth_1": self.invalid_age.month,
-            "date_of_birth_2": self.invalid_age.year
+            "value_0": self.invalid_age.day,
+            "value_1": self.invalid_age.month,
+            "value_2": self.invalid_age.year
         }
 
     def test_post_redirects_if_the_user_is_not_logged_in(self):
@@ -86,7 +87,7 @@ class TestPostDateOfBirth(TestCase):
         response_set = self.user.responseset_set.first()
         self.assertEqual(self.user.responseset_set.count(), 1)
         self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(response_set.date_of_birth, self.valid_age)
+        self.assertEqual(DateOfBirthResponse.objects.get(response_set=response_set).value, self.valid_age)
         self.assertEqual(response_set.user, self.user)
 
     def test_post_updates_unsubmitted_response_set_when_one_exists(self):
@@ -100,7 +101,7 @@ class TestPostDateOfBirth(TestCase):
         response_set.refresh_from_db()
         self.assertEqual(self.user.responseset_set.count(), 1)
         self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(response_set.date_of_birth, self.valid_age)
+        self.assertEqual(DateOfBirthResponse.objects.get(response_set=response_set).value, self.valid_age)
         self.assertEqual(response_set.user, self.user)
 
     def test_post_creates_new_unsubmitted_response_set_when_submitted_exists_over_year_ago(  # noqa: E501
@@ -120,7 +121,7 @@ class TestPostDateOfBirth(TestCase):
 
         response_set = self.user.responseset_set.last()
         self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(response_set.date_of_birth, self.valid_age)
+        self.assertEqual(DateOfBirthResponse.objects.get(response_set=response_set).value, self.valid_age)
         self.assertEqual(response_set.user, self.user)
 
     def test_post_redirects_when_submitted_response_set_exists_within_last_year(
@@ -144,7 +145,7 @@ class TestPostDateOfBirth(TestCase):
         )
 
         response_set = self.user.responseset_set.first()
-        self.assertEqual(response_set.date_of_birth, self.valid_age)
+        self.assertEqual(DateOfBirthResponse.objects.get(response_set=response_set).value, self.valid_age)
         self.assertEqual(response_set.user, self.user)
 
     def test_post_redirects_to_height_path(self):
@@ -159,9 +160,9 @@ class TestPostDateOfBirth(TestCase):
         response = self.client.post(
             reverse("questions:date_of_birth"),
             {
-                "date_of_birth_0": "80000",
-                "date_of_birth_1": "90000",
-                "date_of_birth_2": "20000000"
+                "value_0": "80000",
+                "value_1": "90000",
+                "value_2": "20000000"
             }
         )
 
@@ -175,9 +176,9 @@ class TestPostDateOfBirth(TestCase):
             self.invalid_params
         )
 
-        self.assertEqual(
-            self.user.responseset_set.first().date_of_birth, None
-        )
+        response_set = self.user.responseset_set.first()
+        if response_set:
+            self.assertFalse(DateOfBirthResponse.objects.filter(response_set=response_set).exists())
 
     def test_post_redirects_if_user_not_in_correct_age_range(self):
         response = self.client.post(
