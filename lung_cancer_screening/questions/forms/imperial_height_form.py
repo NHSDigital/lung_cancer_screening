@@ -1,7 +1,7 @@
 from django import forms
 
 from ...nhsuk_forms.imperial_height_field import ImperialHeightField
-from ..models.response_set import ResponseSet
+from ..models.height_response import HeightResponse
 
 
 class ImperialHeightForm(forms.ModelForm):
@@ -9,7 +9,7 @@ class ImperialHeightForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["height_imperial"] = ImperialHeightField(
+        self.fields["imperial"] = ImperialHeightField(
             label="Height",
             required=True,
             require_all_fields=False,
@@ -18,9 +18,9 @@ class ImperialHeightForm(forms.ModelForm):
             }
         )
 
-    def clean_height(self):
+    def clean_metric(self):
         return None
 
     class Meta:
-        model = ResponseSet
-        fields = ['height_imperial', 'height_metric']
+        model = HeightResponse
+        fields = ['imperial', 'metric']
