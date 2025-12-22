@@ -19,6 +19,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 RUN addgroup --gid 1000 --system ${USER} \
     && adduser --uid 1000 --system ${USER} --ingroup ${USER}
 
+
 FROM python_base AS builder
 
 WORKDIR /app
@@ -32,63 +33,6 @@ COPY pyproject.toml poetry.lock ./
 RUN pip install poetry
 RUN poetry install --without dev --no-root && rm -rf $POETRY_CACHE_DIR
 
-# Alpine doesn't support playwright
-FROM python:3.14.2-slim AS development
-
-ARG UID=1000
-ENV USER=app
-ENV APP_DIR=/app
-RUN addgroup --gid $UID --system ${USER} \
-    && adduser --uid $UID --system ${USER} --ingroup ${USER} \
-    && mkdir -p ${APP_DIR} \
-    && chown ${USER}:${USER} ${APP_DIR}
-
-ENV VIRTUAL_ENV=${APP_DIR}/.venv
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-
-USER root
-WORKDIR ${APP_DIR}
-
-# Install system dependencies needed for Playwright
-RUN apt-get update && apt-get install -y \
-    fonts-liberation \
-    libasound2 \
-    libatk-bridge2.0-0 \
-    libatk1.0-0 \
-    libatspi2.0-0 \
-    libcups2 \
-    libdbus-1-3 \
-    libdrm2 \
-    libexpat1 \
-    libgbm1 \
-    libglib2.0-0 \
-    libgtk-3-0 \
-    libnspr4 \
-    libnss3 \
-    libx11-6 \
-    libxcomposite1 \
-    libxdamage1 \
-    libxext6 \
-    libxfixes3 \
-    libxrandr2 \
-    libxss1 \
-    libxtst6 \
-    xdg-utils \
-    && rm -rf /var/lib/apt/lists/*
-
-ENV POETRY_NO_INTERACTION=1 \
-    POETRY_VIRTUALENVS_IN_PROJECT=1 \
-    POETRY_VIRTUALENVS_CREATE=1 \
-    POETRY_CACHE_DIR=/tmp/poetry_cache \
-    PLAYWRIGHT_BROWSERS_PATH=${APP_DIR}/browsers
-
-COPY pyproject.toml poetry.lock ./
-RUN pip install poetry
-RUN poetry install --no-root && rm -rf $POETRY_CACHE_DIR
-RUN poetry run playwright install --with-deps chromium
-
-USER ${USER}
-COPY --chown=${USER}:${USER} . .
 
 FROM python_base
 
