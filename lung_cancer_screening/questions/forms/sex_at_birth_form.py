@@ -1,7 +1,7 @@
 from django import forms
 
 from ...nhsuk_forms.choice_field import ChoiceField
-from ..models.response_set import ResponseSet, SexAtBirthValues
+from ..models.sex_at_birth_response import SexAtBirthResponse, SexAtBirthValues
 
 
 class SexAtBirthForm(forms.ModelForm):
@@ -9,7 +9,7 @@ class SexAtBirthForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["sex_at_birth"] = ChoiceField(
+        self.fields["value"] = ChoiceField(
             choices=SexAtBirthValues.choices,
             widget=forms.RadioSelect,
             label="What was your sex at birth?",
@@ -24,5 +24,5 @@ class SexAtBirthForm(forms.ModelForm):
         )
 
     class Meta:
-        model = ResponseSet
-        fields = ['sex_at_birth']
+        model = SexAtBirthResponse
+        fields = ['value']

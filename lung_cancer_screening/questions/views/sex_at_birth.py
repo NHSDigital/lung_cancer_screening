@@ -5,25 +5,31 @@ from django.views import View
 
 from .mixins.ensure_response_set import EnsureResponseSet
 from ..forms.sex_at_birth_form import SexAtBirthForm
+from ..models.sex_at_birth_response import SexAtBirthResponse
 
 
 class SexAtBirthView(LoginRequiredMixin, EnsureResponseSet, View):
     def get(self, request):
+        response, _ = SexAtBirthResponse.objects.get_or_build(
+            response_set=request.response_set
+        )
         return render_template(
             request,
-            SexAtBirthForm(instance=request.response_set)
+            SexAtBirthForm(instance=response)
         )
 
     def post(self, request):
+        response, _ = SexAtBirthResponse.objects.get_or_build(
+            response_set=request.response_set
+        )
         form = SexAtBirthForm(
-            instance=request.response_set,
+            instance=response,
             data=request.POST
         )
 
         if form.is_valid():
-            response_set = request.response_set
-            response_set.sex_at_birth = form.cleaned_data["sex_at_birth"]
-            response_set.save()
+            response.value = form.cleaned_data["value"]
+            response.save()
             return redirect(reverse("questions:gender"))
         else:
             return render_template(
