@@ -1,50 +1,53 @@
 from django.test import TestCase
 
-from ...factories.user_factory import UserFactory
-from ....models.response_set import ResponseSet, EthnicityValues
+from ...factories.response_set_factory import ResponseSetFactory
+from ....models.ethnicity_response import EthnicityResponse, EthnicityValues
 from ....forms.ethnicity_form import EthnicityForm
 
 
 class TestEthnicityForm(TestCase):
     def setUp(self):
-        self.user = UserFactory()
-        self.response_set = ResponseSet(user=self.user)
+        self.response_set = ResponseSetFactory()
+        self.response = EthnicityResponse.objects.create(
+            response_set=self.response_set,
+            value=EthnicityValues.WHITE
+        )
 
     def test_is_valid_with_a_valid_value(self):
         form = EthnicityForm(
-            instance=self.response_set,
+            instance=self.response,
             data={
-                'ethnicity': EthnicityValues.WHITE
+                'value': EthnicityValues.WHITE
             }
         )
         self.assertTrue(form.is_valid())
         self.assertEqual(
-            form.cleaned_data['ethnicity'],
+            form.cleaned_data['value'],
             EthnicityValues.WHITE
         )
 
     def test_is_invalid_with_an_invalid_value(self):
         form = EthnicityForm(
-            instance=self.response_set,
+            instance=self.response,
             data={
-                "ethnicity": "invalid"
+                "value": "invalid"
             }
         )
         self.assertFalse(form.is_valid())
         self.assertEqual(
-            form.errors["ethnicity"],
+            form.errors["value"],
             ["Select a valid choice. invalid is not one of the available choices."]
         )
 
     def test_is_invalid_when_no_option_is_selected(self):
         form = EthnicityForm(
-            instance=self.response_set,
+            instance=self.response,
             data={
-                "ethnicity": None
+                "value": None
             }
         )
         self.assertFalse(form.is_valid())
         self.assertEqual(
-            form.errors["ethnicity"],
+            form.errors["value"],
             ["Select your ethnic background"]
         )
