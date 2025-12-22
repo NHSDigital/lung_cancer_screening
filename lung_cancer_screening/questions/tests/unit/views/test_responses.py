@@ -6,16 +6,17 @@ from django.utils import timezone
 
 from ...factories.user_factory import UserFactory
 from .helpers.authentication import login_user
+from ....models.have_you_ever_smoked_response import HaveYouEverSmokedResponse, HaveYouEverSmokedValues
+from ....models.date_of_birth_response import DateOfBirthResponse
 
 
 class TestGetResponses(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
 
-        self.response_set = self.user.responseset_set.create(
-            have_you_ever_smoked=True,
-            date_of_birth=date(2000, 9, 8)
-        )
+        self.response_set = self.user.responseset_set.create()
+        HaveYouEverSmokedResponse.objects.create(response_set=self.response_set, value=HaveYouEverSmokedValues.YES_I_CURRENTLY_SMOKE)
+        DateOfBirthResponse.objects.create(response_set=self.response_set, value=date(2000, 9, 8))
 
     def test_get_redirects_if_the_user_is_not_logged_in(self):
         self.client.logout()
@@ -55,28 +56,27 @@ class TestGetResponses(TestCase):
             reverse("questions:responses")
         )
 
+        have_you_ever_smoked = HaveYouEverSmokedResponse.objects.get(response_set=self.response_set)
+        date_of_birth = DateOfBirthResponse.objects.get(response_set=self.response_set)
         self.assertContains(
             response,
-            self.response_set.get_have_you_ever_smoked_display()
+            have_you_ever_smoked.get_value_display()
         )
         self.assertContains(
-            response, self.response_set.date_of_birth
+            response, date_of_birth.value
         )
 
     def test_get_does_not_contain_responses_for_other_users(self):
         other_user = UserFactory()
-        other_date_response = other_user.responseset_set.create(
-            have_you_ever_smoked=0, date_of_birth=date(1990, 1, 1)
-        )
+        other_response_set = other_user.responseset_set.create()
+        DateOfBirthResponse.objects.create(response_set=other_response_set, value=date(1990, 1, 1))
 
         response = self.client.get(reverse("questions:responses"))
 
+        other_date_of_birth = DateOfBirthResponse.objects.get(response_set=other_response_set)
+
         self.assertNotContains(
-            response,
-            other_date_response.get_have_you_ever_smoked_display()
-        )
-        self.assertNotContains(
-            response, other_date_response.date_of_birth
+            response, other_date_of_birth.value
         )
 
 
@@ -84,10 +84,9 @@ class TestPostResponses(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
 
-        self.response_set = self.user.responseset_set.create(
-            have_you_ever_smoked=True,
-            date_of_birth=date(2000, 9, 8)
-        )
+        self.response_set = self.user.responseset_set.create()
+        HaveYouEverSmokedResponse.objects.create(response_set=self.response_set, value=HaveYouEverSmokedValues.YES_I_CURRENTLY_SMOKE)
+        DateOfBirthResponse.objects.create(response_set=self.response_set, value=date(2000, 9, 8))
 
     def test_post_redirects_if_the_user_is_not_logged_in(self):
         self.client.logout()

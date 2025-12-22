@@ -5,30 +5,35 @@ from django.views import View
 
 from .mixins.ensure_response_set import EnsureResponseSet
 from ..forms.have_you_ever_smoked_form import HaveYouEverSmokedForm
-from ..models.response_set import HaveYouEverSmokedValues
+from ..models.have_you_ever_smoked_response import HaveYouEverSmokedResponse, HaveYouEverSmokedValues
 
 class HaveYouEverSmokedView(LoginRequiredMixin, EnsureResponseSet, View):
     def get(self, request):
+        response, _ = HaveYouEverSmokedResponse.objects.get_or_build(
+            response_set=request.response_set
+        )
         return render_template(
             request,
             HaveYouEverSmokedForm(
-                instance=request.response_set
+                instance=response
             )
         )
 
     def post(self, request):
+        response, _ = HaveYouEverSmokedResponse.objects.get_or_build(
+            response_set=request.response_set
+        )
         form = HaveYouEverSmokedForm(
-            data=request.POST, instance=request.response_set
+            data=request.POST, instance=response
         )
 
         if form.is_valid():
             has_smoked_values = (HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY.value, HaveYouEverSmokedValues.YES_I_CURRENTLY_SMOKE.value)
-            have_you_ever_smoked = form.cleaned_data["have_you_ever_smoked"]
+            have_you_ever_smoked = form.cleaned_data["value"]
 
             if have_you_ever_smoked in has_smoked_values:
-                response_set = request.user.responseset_set.last()
-                response_set.have_you_ever_smoked = have_you_ever_smoked
-                response_set.save()
+                response.value = have_you_ever_smoked
+                response.save()
 
                 return redirect(reverse("questions:date_of_birth"))
             else:
