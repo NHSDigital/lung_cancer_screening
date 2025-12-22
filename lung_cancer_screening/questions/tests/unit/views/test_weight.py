@@ -4,6 +4,7 @@ from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
 from .helpers.authentication import login_user
+from lung_cancer_screening.questions.models.weight_response import WeightResponse
 
 
 class TestGetWeight(TestCase):
@@ -47,18 +48,16 @@ class TestGetWeight(TestCase):
         self.assertContains(response, "Kilograms")
 
     def test_get_renders_the_imperial_form_if_already_has_imperial_weight(self):
-        self.user.responseset_set.create(
-            weight_imperial=60
-        )
+        response_set = self.user.responseset_set.create()
+        WeightResponse.objects.create(response_set=response_set, imperial=60)
 
         response = self.client.get(reverse("questions:weight"))
 
         self.assertContains(response, "Stone")
 
     def test_get_renders_the_metric_form_if_already_has_imperial_weight_but_unit_is_metric(self):
-        self.user.responseset_set.create(
-            weight_imperial=60
-        )
+        response_set = self.user.responseset_set.create()
+        WeightResponse.objects.create(response_set=response_set, imperial=60)
 
         response = self.client.get(reverse("questions:weight"), {"unit": "metric"})
 
@@ -78,7 +77,7 @@ class TestPostWeight(TestCase):
         self.user = login_user(self.client)
 
         self.valid_weight = 70
-        self.valid_params = {"weight_metric": self.valid_weight}
+        self.valid_params = {"metric": self.valid_weight}
 
     def test_post_redirects_if_the_user_is_not_logged_in(self):
         self.client.logout()
@@ -106,7 +105,7 @@ class TestPostWeight(TestCase):
         self.assertEqual(self.user.responseset_set.count(), 1)
         self.assertEqual(response_set.submitted_at, None)
         self.assertEqual(
-            response_set.weight_metric, self.valid_weight * 10
+            WeightResponse.objects.get(response_set=response_set).metric, self.valid_weight * 10
         )
         self.assertEqual(response_set.user, self.user)
 
@@ -122,7 +121,7 @@ class TestPostWeight(TestCase):
         self.assertEqual(self.user.responseset_set.count(), 1)
         self.assertEqual(response_set.submitted_at, None)
         self.assertEqual(
-            response_set.weight_metric, self.valid_weight * 10
+            WeightResponse.objects.get(response_set=response_set).metric, self.valid_weight * 10
         )
         self.assertEqual(response_set.user, self.user)
 
@@ -144,7 +143,7 @@ class TestPostWeight(TestCase):
         response_set = self.user.responseset_set.last()
         self.assertEqual(response_set.submitted_at, None)
         self.assertEqual(
-            response_set.weight_metric, self.valid_weight * 10
+            WeightResponse.objects.get(response_set=response_set).metric, self.valid_weight * 10
         )
         self.assertEqual(response_set.user, self.user)
 
@@ -178,13 +177,13 @@ class TestPostWeight(TestCase):
 
         response_set = self.user.responseset_set.first()
         self.assertEqual(
-            response_set.weight_metric, self.valid_weight * 10
+            WeightResponse.objects.get(response_set=response_set).metric, self.valid_weight * 10
         )
 
     def test_post_responds_with_422_if_the_resource_is_invalid(self):
         response = self.client.post(
             reverse("questions:weight"),
-            {"weight": "not a valid weight"}
+            {"metric": "not a valid weight"}
         )
 
         self.assertEqual(response.status_code, 422)

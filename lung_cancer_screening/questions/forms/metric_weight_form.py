@@ -1,7 +1,7 @@
 from django import forms
 
 from ...nhsuk_forms.decimal_field import DecimalField
-from ..models.response_set import ResponseSet
+from ..models.weight_response import WeightResponse
 
 
 class MetricWeightForm(forms.ModelForm):
@@ -10,10 +10,10 @@ class MetricWeightForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         # Convert hundreds of grams to kg for display
-        if self.instance and self.instance.weight_metric is not None:
-            self.initial['weight_metric'] = self.instance.weight_metric / 10
+        if self.instance and self.instance.metric is not None:
+            self.initial['metric'] = self.instance.metric / 10
 
-        self.fields["weight_metric"] = DecimalField(
+        self.fields["metric"] = DecimalField(
             decimal_places=1,
             label="Kilograms",
             classes="nhsuk-input--width-4",
@@ -28,12 +28,12 @@ class MetricWeightForm(forms.ModelForm):
             suffix="kg"
         )
 
-    def clean_weight_metric(self):
-        return self.cleaned_data['weight_metric'] * 10
+    def clean_metric(self):
+        return int(self.cleaned_data['metric'] * 10)
 
-    def clean_weight_imperial(self):
+    def clean_imperial(self):
         return None
 
     class Meta:
-        model = ResponseSet
-        fields = ['weight_metric', 'weight_imperial']
+        model = WeightResponse
+        fields = ['metric', 'imperial']

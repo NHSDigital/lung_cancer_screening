@@ -7,3 +7,5 @@ from .ethnicity_response import EthnicityResponse # noqa: F401
 from .gender_response import GenderResponse # noqa: F401
 from .height_response import HeightResponse # noqa: F401
 from .respiratory_conditions_response import RespiratoryConditionsResponse # noqa: F401
+from .sex_at_birth_response import SexAtBirthResponse # noqa: F401
+from .weight_response import WeightResponse # noqa: F401
