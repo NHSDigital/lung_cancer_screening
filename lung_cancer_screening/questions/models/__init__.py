@@ -4,3 +4,4 @@ from .have_you_ever_smoked_response import HaveYouEverSmokedResponse # noqa: F40
 from .asbestos_exposure_response import AsbestosExposureResponse # noqa: F401
 from .date_of_birth_response import DateOfBirthResponse # noqa: F401
 from .ethnicity_response import EthnicityResponse # noqa: F401
+from .gender_response import GenderResponse # noqa: F401
