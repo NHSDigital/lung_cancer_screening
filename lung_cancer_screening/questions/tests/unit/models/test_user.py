@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import datetime
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 
@@ -47,11 +47,9 @@ class TestUser(TestCase):
         )
 
     def test_has_many_response_sets(self):
-        response_set = self.user.responseset_set.create(
-            have_you_ever_smoked=0,
-            date_of_birth=date(2000, 9, 8)
-        )
+        response_set = self.user.responseset_set.create()
         self.assertIn(response_set, list(self.user.responseset_set.all()))
+
 
     def test_raises_a_validation_error_if_nhs_number_is_null(self):
         with self.assertRaises(ValidationError) as context:
