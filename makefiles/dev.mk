@@ -19,20 +19,17 @@ dev-logs:
 	$(DOCKER_COMPOSE_CMD) logs -f
 
 dev-shell:
-	$(DOCKER_COMPOSE_CMD) run --rm web bash
+	$(DOCKER_COMPOSE_CMD) run --rm --entrypoint /bin/sh web
 
 dev-migrate:
-	$(DOCKER_COMPOSE_CMD) run --rm web python manage.py migrate
+	$(DOCKER_COMPOSE_CMD) run --rm --entrypoint /app/.venv/bin/python web manage.py migrate
 
 dev-makemigrations:
-	$(DOCKER_COMPOSE_CMD) run --rm web python manage.py makemigrations
+	$(DOCKER_COMPOSE_CMD) run --rm --entrypoint /app/.venv/bin/python web manage.py makemigrations
 
 dev-clean:
 	$(DOCKER_COMPOSE_CMD) down -v --remove-orphans
 	$(DOCKER_COMPOSE_CMD) system prune -f
-
-dev-test:
-	$(DOCKER_COMPOSE_CMD) run --rm web python manage.py test
 
 dev-lint-fix:
 	$(DOCKER_COMPOSE_CMD) run --rm web poetry run ruff check --no-cache lung_cancer_screening --fix
