@@ -6,3 +6,4 @@ from .date_of_birth_response import DateOfBirthResponse # noqa: F401
 from .ethnicity_response import EthnicityResponse # noqa: F401
 from .gender_response import GenderResponse # noqa: F401
 from .height_response import HeightResponse # noqa: F401
+from .respiratory_conditions_response import RespiratoryConditionsResponse # noqa: F401
