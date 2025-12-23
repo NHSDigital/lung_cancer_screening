@@ -4,7 +4,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.chainguard
       target: development
     command: python manage.py runserver 0.0.0.0:8000
     ports:
@@ -23,7 +23,7 @@ services:
   asset_builder:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.chainguard
       target: asset_builder
     command: npm run watch
     volumes:
