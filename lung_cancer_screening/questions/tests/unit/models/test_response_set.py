@@ -12,10 +12,14 @@ from ....models.response_set import ResponseSet
 
 class TestResponseSet(TestCase):
     def setUp(self):
-        user = UserFactory()
-        self.response_set = user.responseset_set.create()
+        self.user = UserFactory()
+        self.response_set = ResponseSetFactory(user=self.user)
 
-    # FIELDS
+
+    def test_has_a_valid_factory(self):
+        model = ResponseSetFactory.build(user=UserFactory())
+        model.full_clean()
+
 
     def test_has_a_user_as_a_foreign_key(self):
         self.assertIsInstance(

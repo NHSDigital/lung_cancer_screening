@@ -29,13 +29,3 @@ class RespiratoryConditionsResponse(BaseModel):
         models.CharField(max_length=1, choices=RespiratoryConditionValues.choices),
         validators=[validate_singleton_option]
     )
-
-    @property
-    def formatted(self):
-        if not self.value:
-            return None
-        display_values = [
-            RespiratoryConditionValues(code).label
-            for code in self.value
-        ]
-        return ", ".join(display_values)

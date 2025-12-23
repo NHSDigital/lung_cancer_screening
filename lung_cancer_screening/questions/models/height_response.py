@@ -1,7 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
-from decimal import Decimal
 
 from .base import BaseModel
 from .response_set import ResponseSet
@@ -29,12 +28,3 @@ class HeightResponse(BaseModel):
             raise ValidationError("Either metric or imperial height must be provided.")
         if self.metric and self.imperial:
             raise ValidationError("Cannot provide both metric and imperial height.")
-
-    @property
-    def formatted(self):
-        if self.metric:
-            return f"{Decimal(self.metric) / 10}cm"
-        elif self.imperial:
-            value = Decimal(self.imperial)
-            return f"{value // 12} feet {value % 12} inches"
-        return None

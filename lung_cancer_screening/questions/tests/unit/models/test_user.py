@@ -9,6 +9,12 @@ class TestUser(TestCase):
     def setUp(self):
         self.user = UserFactory()
 
+
+    def test_has_a_valid_factory(self):
+        model = UserFactory.build()
+        model.full_clean()
+
+
     def test_has_nhs_number_as_a_string(self):
         self.assertIsInstance(
             self.user.nhs_number,

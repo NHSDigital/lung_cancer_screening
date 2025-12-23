@@ -18,25 +18,17 @@
     <div class="nhsuk-grid-column-two-thirds">
       <h1 class="nhsuk-heading-l">Responses</h1>
       <ul class="responses">
-        {% set have_you_ever_smoked = response_set.have_you_ever_smoked_response %}
-        {% set date_of_birth = response_set.date_of_birth_response %}
-        {% set height = response_set.height_response %}
-        {% set weight = response_set.weight_response %}
-        {% set sex_at_birth = response_set.sex_at_birth_response %}
-        {% set gender = response_set.gender_response %}
-        {% set ethnicity = response_set.ethnicity_response %}
-        {% set asbestos_exposure = response_set.asbestos_exposure_response %}
-        {% set respiratory_conditions = response_set.respiratory_conditions_response %}
-        <li>Have you ever smoked? {% if have_you_ever_smoked %}{{ have_you_ever_smoked.get_value_display() }}{% endif %}</li>
-        <li>What is your date of birth? {% if date_of_birth %}{{ date_of_birth.value }}{% endif %}</li>
-        <li>What is your height? {% if height %}{{ height.formatted }}{% endif %}</li>
-        <li>What is your weight? {% if weight %}{{ weight.formatted }}{% endif %}</li>
-        <li>What was your sex at birth? {% if sex_at_birth %}{{ sex_at_birth.get_value_display() }}{% endif %}</li>
-        <li>Which of these best describes you? {% if gender %}{{ gender.get_value_display() }}{% endif %}</li>
-        <li>What is your ethnic background? {% if ethnicity %}{{ ethnicity.get_value_display() }}{% endif %}</li>
-        <li>Have you ever worked in a job where you might have been exposed to asbestos? {% if asbestos_exposure %}{{ "Yes" if asbestos_exposure.value else "No" }}{% else %}No{% endif %}</li>
-        <li>Have you ever been diagnosed with any of the following respiratory conditions? {% if respiratory_conditions %}{{ respiratory_conditions.formatted }}{% endif %}</li>
+        <li>Have you ever smoked? {{ response_set.have_you_ever_smoked }}</li>
+        <li>What is your date of birth? {{ response_set.date_of_birth }}</li>
+        <li>What is your height? {{ response_set.height }}</li>
+        <li>What is your weight? {{ response_set.weight }}</li>
+        <li>What was your sex at birth? {{ response_set.sex_at_birth }}</li>
+        <li>Which of these best describes you? {{ response_set.gender }}</li>
+        <li>What is your ethnic background? {{ response_set.ethnicity }}</li>
+        <li>Have you ever worked in a job where you might have been exposed to asbestos? {{ response_set.asbestos_exposure }}</li>
+        <li>Have you ever been diagnosed with any of the following respiratory conditions? {{ response_set.respiratory_conditions }}</li>
       </ul>
+
       <form action="{{ request.path }}" method="post">
         {{ csrf_input }}
         {{ button({
