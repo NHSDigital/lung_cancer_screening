@@ -7,33 +7,39 @@ from django.views import View
 
 from .mixins.ensure_response_set import EnsureResponseSet
 from ..forms.date_of_birth_form import DateOfBirthForm
+from ..models.date_of_birth_response import DateOfBirthResponse
 
 
 class DateOfBirthView(LoginRequiredMixin, EnsureResponseSet, View):
     def get(self, request):
+        response, _ = DateOfBirthResponse.objects.get_or_build(
+            response_set=request.response_set
+        )
         return render_template(
             request,
-            DateOfBirthForm(instance=request.response_set)
+            DateOfBirthForm(instance=response)
         )
 
     def post(self, request):
+        response, _ = DateOfBirthResponse.objects.get_or_build(
+            response_set=request.response_set
+        )
         form = DateOfBirthForm(
-            instance=request.response_set,
+            instance=response,
             data=request.POST
         )
 
         if form.is_valid():
             fifty_five_years_ago = date.today() - relativedelta(years=55)
             seventy_five_years_ago = date.today() - relativedelta(years=75)
-            date_of_birth = form.cleaned_data["date_of_birth"]
+            date_of_birth = form.cleaned_data["value"]
 
             age_in_range = (
                 seventy_five_years_ago < date_of_birth <= fifty_five_years_ago
             )
             if age_in_range:
-                response_set = request.response_set
-                response_set.date_of_birth = date_of_birth
-                response_set.save()
+                response.value = date_of_birth
+                response.save()
 
                 return redirect(reverse("questions:height"))
             else:

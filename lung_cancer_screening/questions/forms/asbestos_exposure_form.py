@@ -1,13 +1,13 @@
 from django import forms
 from ...nhsuk_forms.typed_choice_field import TypedChoiceField
-from ..models.response_set import ResponseSet
+from ..models.asbestos_exposure_response import AsbestosExposureResponse
 
 
 class AsbestosExposureForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["asbestos_exposure"] = TypedChoiceField(
+        self.fields["value"] = TypedChoiceField(
             choices=[(True, 'Yes'), (False, 'No')],
             widget=forms.RadioSelect,
             label="Have you ever worked in a job where you might have been exposed to asbestos?",
@@ -19,5 +19,5 @@ class AsbestosExposureForm(forms.ModelForm):
         )
 
     class Meta:
-        model = ResponseSet
-        fields = ['asbestos_exposure']
+        model = AsbestosExposureResponse
+        fields = ['value']

@@ -4,6 +4,7 @@ from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
 from .helpers.authentication import login_user
+from lung_cancer_screening.questions.models.respiratory_conditions_response import RespiratoryConditionsResponse
 
 
 class TestGetRespiratoryConditions(TestCase):
@@ -68,7 +69,7 @@ class TestPostRespiratoryConditions(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
 
-        self.valid_params = {"respiratory_conditions": ["P", "E"]}
+        self.valid_params = {"value": ["P", "E"]}
 
     def test_post_redirects_if_the_user_is_not_logged_in(self):
         self.client.logout()
@@ -96,8 +97,8 @@ class TestPostRespiratoryConditions(TestCase):
         self.assertEqual(self.user.responseset_set.count(), 1)
         self.assertEqual(response_set.submitted_at, None)
         self.assertEqual(
-            response_set.respiratory_conditions,
-            self.valid_params["respiratory_conditions"]
+            RespiratoryConditionsResponse.objects.get(response_set=response_set).value,
+            self.valid_params["value"]
         )
         self.assertEqual(response_set.user, self.user)
 
@@ -113,8 +114,8 @@ class TestPostRespiratoryConditions(TestCase):
         self.assertEqual(self.user.responseset_set.count(), 1)
         self.assertEqual(response_set.submitted_at, None)
         self.assertEqual(
-            response_set.respiratory_conditions,
-            self.valid_params["respiratory_conditions"]
+            RespiratoryConditionsResponse.objects.get(response_set=response_set).value,
+            self.valid_params["value"]
         )
         self.assertEqual(response_set.user, self.user)
 
@@ -136,8 +137,8 @@ class TestPostRespiratoryConditions(TestCase):
         response_set = self.user.responseset_set.last()
         self.assertEqual(response_set.submitted_at, None)
         self.assertEqual(
-            response_set.respiratory_conditions,
-            self.valid_params["respiratory_conditions"]
+            RespiratoryConditionsResponse.objects.get(response_set=response_set).value,
+            self.valid_params["value"]
         )
         self.assertEqual(response_set.user, self.user)
 
@@ -163,20 +164,20 @@ class TestPostRespiratoryConditions(TestCase):
 
         response_set = self.user.responseset_set.first()
         self.assertEqual(
-            response_set.respiratory_conditions,
-            self.valid_params["respiratory_conditions"]
+            RespiratoryConditionsResponse.objects.get(response_set=response_set).value,
+            self.valid_params["value"]
         )
         self.assertEqual(response_set.user, self.user)
 
     def test_post_stores_single_selection(self):
         self.client.post(
             reverse("questions:respiratory_conditions"),
-            {"respiratory_conditions": ["N"]}
+            {"value": ["N"]}
         )
 
         response_set = self.user.responseset_set.first()
         self.assertEqual(
-            response_set.respiratory_conditions,
+            RespiratoryConditionsResponse.objects.get(response_set=response_set).value,
             ["N"]
         )
 
@@ -201,7 +202,7 @@ class TestPostRespiratoryConditions(TestCase):
     def test_post_responds_with_422_if_no_selection_is_made(self):
         response = self.client.post(
             reverse("questions:respiratory_conditions"),
-            {"respiratory_conditions": []}
+            {"value": []}
         )
 
         self.assertEqual(response.status_code, 422)
@@ -212,7 +213,6 @@ class TestPostRespiratoryConditions(TestCase):
             {"respiratory_conditions": ["INVALID"]}
         )
 
-        self.assertEqual(
-            self.user.responseset_set.first().respiratory_conditions,
-            None
-        )
+        response_set = self.user.responseset_set.first()
+        if response_set:
+            self.assertFalse(RespiratoryConditionsResponse.objects.filter(response_set=response_set).exists())

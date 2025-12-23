@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 
 from .mixins.ensure_response_set import EnsureResponseSet
+from ..presenters.response_set_presenter import ResponseSetPresenter
 
 
 class ResponsesView(LoginRequiredMixin, EnsureResponseSet, View):
@@ -12,7 +13,7 @@ class ResponsesView(LoginRequiredMixin, EnsureResponseSet, View):
         return render(
             request,
             "responses.jinja",
-            {"response_set": request.response_set}
+            { "response_set": ResponseSetPresenter(request.response_set) }
         )
 
     def post(self, request):

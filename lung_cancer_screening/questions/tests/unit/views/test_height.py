@@ -4,6 +4,7 @@ from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
 from .helpers.authentication import login_user
+from lung_cancer_screening.questions.models.height_response import HeightResponse
 
 
 class TestGetHeight(TestCase):
@@ -47,18 +48,16 @@ class TestGetHeight(TestCase):
         self.assertContains(response, "Centimetres")
 
     def test_get_renders_the_imperial_form_if_already_has_imperial_height(self):
-        self.user.responseset_set.create(
-            height_imperial=60
-        )
+        response_set = self.user.responseset_set.create()
+        HeightResponse.objects.create(response_set=response_set, imperial=60)
 
         response = self.client.get(reverse("questions:height"))
 
         self.assertContains(response, "Feet")
 
     def test_get_renders_the_metric_form_if_already_has_imperial_height_but_unit_is_metric(self):
-        self.user.responseset_set.create(
-            height_imperial=60
-        )
+        response_set = self.user.responseset_set.create()
+        HeightResponse.objects.create(response_set=response_set, imperial=60)
 
         response = self.client.get(reverse("questions:height"), {"unit": "metric"})
 
@@ -78,7 +77,7 @@ class TestPostHeight(TestCase):
         self.user = login_user(self.client)
 
         self.valid_height_metric = 170
-        self.valid_params = {"height_metric": self.valid_height_metric}
+        self.valid_params = {"metric": self.valid_height_metric}
         self.invalid_height = 80000
 
     def test_post_redirects_if_the_user_is_not_logged_in(self):
@@ -106,7 +105,7 @@ class TestPostHeight(TestCase):
         response_set = self.user.responseset_set.first()
         self.assertEqual(self.user.responseset_set.count(), 1)
         self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(response_set.height_metric, self.valid_height_metric * 10)
+        self.assertEqual(HeightResponse.objects.get(response_set=response_set).metric, self.valid_height_metric * 10)
         self.assertEqual(response_set.user, self.user)
 
     def test_post_updates_unsubmitted_response_set_when_one_exists(self):
@@ -120,7 +119,7 @@ class TestPostHeight(TestCase):
         response_set.refresh_from_db()
         self.assertEqual(self.user.responseset_set.count(), 1)
         self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(response_set.height_metric, self.valid_height_metric * 10)
+        self.assertEqual(HeightResponse.objects.get(response_set=response_set).metric, self.valid_height_metric * 10)
         self.assertEqual(response_set.user, self.user)
 
     def test_post_creates_new_unsubmitted_response_set_when_submitted_exists_over_year_ago(  # noqa: E501
@@ -140,7 +139,7 @@ class TestPostHeight(TestCase):
 
         response_set = self.user.responseset_set.last()
         self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(response_set.height_metric, self.valid_height_metric * 10)
+        self.assertEqual(HeightResponse.objects.get(response_set=response_set).metric, self.valid_height_metric * 10)
         self.assertEqual(response_set.user, self.user)
 
     def test_post_redirects_when_submitted_response_set_exists_within_last_year(  # noqa: E501
@@ -165,7 +164,7 @@ class TestPostHeight(TestCase):
 
         response_set = self.user.responseset_set.first()
 
-        self.assertEqual(response_set.height_metric, self.valid_height_metric * 10)
+        self.assertEqual(HeightResponse.objects.get(response_set=response_set).metric, self.valid_height_metric * 10)
         self.assertEqual(response_set.user, self.user)
 
     def test_post_redirects_to_weight_path(self):
@@ -179,7 +178,7 @@ class TestPostHeight(TestCase):
     def test_post_responds_with_422_if_the_resource_is_invalid(self):
         response = self.client.post(
             reverse("questions:height"),
-            {"height": "a"}
+            {"metric": "a"}
         )
 
         self.assertEqual(response.status_code, 422)

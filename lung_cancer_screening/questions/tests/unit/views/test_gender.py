@@ -3,7 +3,7 @@ from django.urls import reverse
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
-from lung_cancer_screening.questions.models.response_set import GenderValues
+from lung_cancer_screening.questions.models.gender_response import GenderResponse, GenderValues
 from .helpers.authentication import login_user
 
 
@@ -52,7 +52,7 @@ class TestPostGender(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
 
-        self.valid_params = {"gender": GenderValues.MALE}
+        self.valid_params = {"value": GenderValues.MALE}
 
     def test_post_redirects_if_the_user_is_not_logged_in(self):
         self.client.logout()
@@ -79,7 +79,7 @@ class TestPostGender(TestCase):
         response_set = self.user.responseset_set.first()
         self.assertEqual(self.user.responseset_set.count(), 1)
         self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(response_set.gender, self.valid_params["gender"])
+        self.assertEqual(GenderResponse.objects.get(response_set=response_set).value, self.valid_params["value"])
         self.assertEqual(response_set.user, self.user)
 
     def test_post_updates_unsubmitted_response_set_when_one_exists(self):
@@ -93,7 +93,7 @@ class TestPostGender(TestCase):
         response_set.refresh_from_db()
         self.assertEqual(self.user.responseset_set.count(), 1)
         self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(response_set.gender, self.valid_params["gender"])
+        self.assertEqual(GenderResponse.objects.get(response_set=response_set).value, self.valid_params["value"])
         self.assertEqual(response_set.user, self.user)
 
     def test_post_creates_new_unsubmitted_response_set_when_submitted_exists_over_year_ago(  # noqa: E501
@@ -113,7 +113,7 @@ class TestPostGender(TestCase):
 
         response_set = self.user.responseset_set.last()
         self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(response_set.gender, self.valid_params["gender"])
+        self.assertEqual(GenderResponse.objects.get(response_set=response_set).value, self.valid_params["value"])
         self.assertEqual(response_set.user, self.user)
 
     def test_post_redirects_when_submitted_response_set_exists_within_last_year(  # noqa: E501
@@ -137,7 +137,7 @@ class TestPostGender(TestCase):
         )
 
         response_set = self.user.responseset_set.first()
-        self.assertEqual(response_set.gender, self.valid_params["gender"])
+        self.assertEqual(GenderResponse.objects.get(response_set=response_set).value, self.valid_params["value"])
         self.assertEqual(response_set.user, self.user)
 
     def test_post_redirects_to_the_ethnicity_path(self):
@@ -151,7 +151,7 @@ class TestPostGender(TestCase):
     def test_post_responds_with_422_if_the_response_fails_to_create(self):
         response = self.client.post(
             reverse("questions:gender"),
-            {"gender": "something not in list"}
+            {"value": "something not in list"}
         )
 
         self.assertEqual(response.status_code, 422)
@@ -161,7 +161,7 @@ class TestPostGender(TestCase):
     ):
         response = self.client.post(
             reverse("questions:gender"),
-            {"gender": "something not in list"}
+            {"value": "something not in list"}
         )
 
         self.assertContains(

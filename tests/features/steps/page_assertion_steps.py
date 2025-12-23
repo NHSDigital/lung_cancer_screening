@@ -1,7 +1,9 @@
-from behave import given, then
+from behave import then
 from playwright.sync_api import expect
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+
+from lung_cancer_screening.questions.presenters.response_set_presenter import ResponseSetPresenter
 
 @then(u'I see a title "{title}"')
 def then_i_see_a_title(context, title):
@@ -22,4 +24,4 @@ def then_i_see_responses(context, text):
 def then_i_see_responses_with_a_date(context, text, years):
     date_of_birth = datetime.now() - relativedelta(years=int(years))
     responses = context.page.locator(".responses")
-    expect(responses).to_contain_text(f"{text} {date_of_birth.strftime('%Y-%m-%d')}")
+    expect(responses).to_contain_text(f"{text} {date_of_birth.strftime(ResponseSetPresenter.DATE_FORMAT)}")

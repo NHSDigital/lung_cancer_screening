@@ -1,77 +1,80 @@
 from django.test import TestCase
 
-from ...factories.user_factory import UserFactory
-from ....models.response_set import ResponseSet
+from ...factories.response_set_factory import ResponseSetFactory
+from ....models.respiratory_conditions_response import RespiratoryConditionsResponse
 from ....forms.respiratory_conditions_form import RespiratoryConditionsForm
 
 
 class TestRespiratoryConditionsForm(TestCase):
     def setUp(self):
-        self.user = UserFactory()
-        self.response_set = ResponseSet(user=self.user)
+        self.response_set = ResponseSetFactory()
+        self.response = RespiratoryConditionsResponse.objects.create(
+            response_set=self.response_set,
+            value=["P"]
+        )
 
     def test_is_valid_with_single_condition(self):
         form = RespiratoryConditionsForm(
-            instance=self.response_set,
+            instance=self.response,
             data={
-                "respiratory_conditions": ["P"]
+                "value": ["P"]
             }
         )
         self.assertTrue(form.is_valid())
         self.assertEqual(
-            form.cleaned_data["respiratory_conditions"],
+            form.cleaned_data["value"],
             ["P"]
         )
 
     def test_is_valid_with_multiple_conditions(self):
         form = RespiratoryConditionsForm(
-            instance=self.response_set,
+            instance=self.response,
             data={
-                "respiratory_conditions": ["P", "E", "C"]
+                "value": ["P", "E", "C"]
             }
         )
         self.assertTrue(form.is_valid())
         self.assertEqual(
-            form.cleaned_data["respiratory_conditions"],
+            form.cleaned_data["value"],
             ["P", "E", "C"]
         )
 
     def test_is_valid_with_none_of_the_above(self):
         form = RespiratoryConditionsForm(
-            instance=self.response_set,
+            instance=self.response,
             data={
-                "respiratory_conditions": ["N"]
+                "value": ["N"]
             }
         )
         self.assertTrue(form.is_valid())
         self.assertEqual(
-            form.cleaned_data["respiratory_conditions"],
+            form.cleaned_data["value"],
             ["N"]
         )
 
     def test_is_invalid_with_an_invalid_value(self):
         form = RespiratoryConditionsForm(
-            instance=self.response_set,
+            instance=self.response,
             data={
-                "respiratory_conditions": ["invalid"]
+                "value": ["invalid"]
             }
         )
         self.assertFalse(form.is_valid())
         self.assertEqual(
-            form.errors["respiratory_conditions"],
+            form.errors["value"],
             ["Select a valid choice. invalid is not one of the available choices."]
         )
 
     def test_is_invalid_when_no_option_is_selected(self):
         form = RespiratoryConditionsForm(
-            instance=self.response_set,
+            instance=self.response,
             data={
-                "respiratory_conditions": []
+                "value": []
             }
         )
         self.assertFalse(form.is_valid())
         self.assertEqual(
-            form.errors["respiratory_conditions"],
+            form.errors["value"],
             ["Select if you have had any respiratory conditions"]
         )
 
@@ -79,14 +82,14 @@ class TestRespiratoryConditionsForm(TestCase):
         self
     ):
         form = RespiratoryConditionsForm(
-            instance=self.response_set,
+            instance=self.response,
             data={
-                "respiratory_conditions": ["N", "P", "E", "C"]
+                "value": ["N", "P", "E", "C"]
             }
         )
         self.assertFalse(form.is_valid())
         self.assertEqual(
-            form.errors["respiratory_conditions"][0],
+            form.errors["value"][0],
             (
                 "Select if you have had any respiratory conditions, "
                 "or select 'No, I have not had any of these "

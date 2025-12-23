@@ -4,6 +4,7 @@ from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
 from .helpers.authentication import login_user
+from lung_cancer_screening.questions.models.asbestos_exposure_response import AsbestosExposureResponse
 
 
 class TestGetAsbestosExposure(TestCase):
@@ -49,7 +50,7 @@ class TestPostAsbestosExposure(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
 
-        self.valid_params = {"asbestos_exposure": True}
+        self.valid_params = {"value": True}
 
 
     def test_post_redirects_if_the_user_is_not_logged_in(self):
@@ -72,7 +73,7 @@ class TestPostAsbestosExposure(TestCase):
         response_set = self.user.responseset_set.first()
         self.assertEqual(self.user.responseset_set.count(), 1)
         self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(response_set.asbestos_exposure, self.valid_params["asbestos_exposure"])
+        self.assertEqual(AsbestosExposureResponse.objects.get(response_set=response_set).value, self.valid_params["value"])
         self.assertEqual(response_set.user, self.user)
 
 
@@ -87,7 +88,7 @@ class TestPostAsbestosExposure(TestCase):
         response_set.refresh_from_db()
         self.assertEqual(self.user.responseset_set.count(), 1)
         self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(response_set.asbestos_exposure, self.valid_params["asbestos_exposure"])
+        self.assertEqual(AsbestosExposureResponse.objects.get(response_set=response_set).value, self.valid_params["value"])
         self.assertEqual(response_set.user, self.user)
 
 
@@ -106,7 +107,7 @@ class TestPostAsbestosExposure(TestCase):
 
         response_set = self.user.responseset_set.last()
         self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(response_set.asbestos_exposure, self.valid_params["asbestos_exposure"])
+        self.assertEqual(AsbestosExposureResponse.objects.get(response_set=response_set).value, self.valid_params["value"])
         self.assertEqual(response_set.user, self.user)
 
 
@@ -135,7 +136,7 @@ class TestPostAsbestosExposure(TestCase):
     def test_post_responds_with_422_if_the_response_fails_to_create(self):
         response = self.client.post(
             reverse("questions:asbestos_exposure"),
-            {"asbestos_exposure": "something not in list"}
+            {"value": "something not in list"}
         )
 
         self.assertEqual(response.status_code, 422)
@@ -143,10 +144,9 @@ class TestPostAsbestosExposure(TestCase):
     def test_post_does_not_update_response_set_on_invalid_data(self):
         self.client.post(
             reverse("questions:asbestos_exposure"),
-            {"asbestos_exposure": "invalid"}
+            {"value": "invalid"}
         )
 
-        self.assertEqual(
-            self.user.responseset_set.first().asbestos_exposure,
-            None
-        )
+        response_set = self.user.responseset_set.first()
+        if response_set:
+            self.assertFalse(AsbestosExposureResponse.objects.filter(response_set=response_set).exists())

@@ -1,7 +1,7 @@
 from django import forms
 
 from ...nhsuk_forms.choice_field import ChoiceField
-from ..models.response_set import ResponseSet, EthnicityValues
+from ..models.ethnicity_response import EthnicityResponse, EthnicityValues
 
 
 class EthnicityForm(forms.ModelForm):
@@ -9,7 +9,7 @@ class EthnicityForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["ethnicity"] = ChoiceField(
+        self.fields["value"] = ChoiceField(
             choices=EthnicityValues.choices,
             label="What is your ethnic background?",
             widget=forms.RadioSelect,
@@ -24,10 +24,10 @@ class EthnicityForm(forms.ModelForm):
             }
         )
 
-        self["ethnicity"].add_divider_after(
+        self["value"].add_divider_after(
             EthnicityValues.OTHER.value, "or"
         )
 
     class Meta:
-        model = ResponseSet
-        fields = ['ethnicity']
+        model = EthnicityResponse
+        fields = ['value']

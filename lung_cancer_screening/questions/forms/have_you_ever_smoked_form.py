@@ -1,14 +1,14 @@
 from django import forms
 
 from ...nhsuk_forms.typed_choice_field import TypedChoiceField
-from ..models.response_set import ResponseSet, HaveYouEverSmokedValues
+from ..models.have_you_ever_smoked_response import HaveYouEverSmokedResponse, HaveYouEverSmokedValues
 
 class HaveYouEverSmokedForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["have_you_ever_smoked"] = TypedChoiceField(
+        self.fields["value"] = TypedChoiceField(
             choices=HaveYouEverSmokedValues.choices,
             widget=forms.RadioSelect,
             label="Have you ever smoked?",
@@ -21,5 +21,5 @@ class HaveYouEverSmokedForm(forms.ModelForm):
         )
 
     class Meta:
-        model = ResponseSet
-        fields = ['have_you_ever_smoked']
+        model = HaveYouEverSmokedResponse
+        fields = ['value']

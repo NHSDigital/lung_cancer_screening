@@ -5,25 +5,31 @@ from django.views import View
 
 from .mixins.ensure_response_set import EnsureResponseSet
 from ..forms.ethnicity_form import EthnicityForm
+from ..models.ethnicity_response import EthnicityResponse
 
 
 class EthnicityView(LoginRequiredMixin, EnsureResponseSet, View):
     def get(self, request):
+        response, _ = EthnicityResponse.objects.get_or_build(
+            response_set=request.response_set
+        )
         return render_template(
             request,
-            EthnicityForm(instance=request.response_set)
+            EthnicityForm(instance=response)
         )
 
     def post(self, request):
+        response, _ = EthnicityResponse.objects.get_or_build(
+            response_set=request.response_set
+        )
         form = EthnicityForm(
-            instance=request.response_set,
+            instance=response,
             data=request.POST
         )
 
         if form.is_valid():
-            response_set = request.response_set
-            response_set.ethnicity = form.cleaned_data["ethnicity"]
-            response_set.save()
+            response.value = form.cleaned_data["value"]
+            response.save()
             return redirect(reverse("questions:education"))
         else:
             return render_template(

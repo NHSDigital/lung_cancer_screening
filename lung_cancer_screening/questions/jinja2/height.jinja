@@ -38,9 +38,9 @@
         %}
 
         {% if unit == "imperial" %}
-          {{ form.height_imperial.as_field_group() }}
+          {{ form.imperial.as_field_group() }}
         {% else %}
-          {{ form.height_metric.as_field_group() }}
+          {{ form.metric.as_field_group() }}
         {% endif %}
 
 

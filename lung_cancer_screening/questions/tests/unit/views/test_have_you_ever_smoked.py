@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from .helpers.authentication import login_user
-from lung_cancer_screening.questions.models.response_set import HaveYouEverSmokedValues
+from lung_cancer_screening.questions.models.have_you_ever_smoked_response import HaveYouEverSmokedResponse, HaveYouEverSmokedValues
 
 class TestGetHaveYouEverSmoked(TestCase):
     def setUp(self):
@@ -43,7 +43,7 @@ class TestPostHaveYouEverSmoked(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
 
-        self.valid_params = { "have_you_ever_smoked": HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY }
+        self.valid_params = { "value": HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY }
 
 
     def test_post_redirects_if_the_user_is_not_logged_in(self):
@@ -66,7 +66,7 @@ class TestPostHaveYouEverSmoked(TestCase):
         response_set = self.user.responseset_set.first()
         self.assertEqual(self.user.responseset_set.count(), 1)
         self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(response_set.have_you_ever_smoked, self.valid_params["have_you_ever_smoked"])
+        self.assertEqual(HaveYouEverSmokedResponse.objects.get(response_set=response_set).value, self.valid_params["value"])
         self.assertEqual(response_set.user, self.user)
 
 
@@ -81,7 +81,7 @@ class TestPostHaveYouEverSmoked(TestCase):
         response_set.refresh_from_db()
         self.assertEqual(self.user.responseset_set.count(), 1)
         self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(response_set.have_you_ever_smoked, self.valid_params["have_you_ever_smoked"])
+        self.assertEqual(HaveYouEverSmokedResponse.objects.get(response_set=response_set).value, self.valid_params["value"])
         self.assertEqual(response_set.user, self.user)
 
 
@@ -100,7 +100,7 @@ class TestPostHaveYouEverSmoked(TestCase):
 
         response_set = self.user.responseset_set.last()
         self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(response_set.have_you_ever_smoked, self.valid_params["have_you_ever_smoked"])
+        self.assertEqual(HaveYouEverSmokedResponse.objects.get(response_set=response_set).value, self.valid_params["value"])
         self.assertEqual(response_set.user, self.user)
 
 
@@ -128,7 +128,7 @@ class TestPostHaveYouEverSmoked(TestCase):
     def test_post_responds_with_422_if_the_date_response_fails_to_create(self):
         response = self.client.post(
             reverse("questions:have_you_ever_smoked"),
-            {"have_you_ever_smoked": "something not in list"}
+            {"value": "something not in list"}
         )
 
         self.assertEqual(response.status_code, 422)
@@ -136,15 +136,17 @@ class TestPostHaveYouEverSmoked(TestCase):
     def test_post_does_not_update_the_response_set_if_the_user_is_not_a_smoker(self):
         self.client.post(
             reverse("questions:have_you_ever_smoked"),
-            { "have_you_ever_smoked": HaveYouEverSmokedValues.NO_I_HAVE_NEVER_SMOKED.value }
+            { "value": HaveYouEverSmokedValues.NO_I_HAVE_NEVER_SMOKED.value }
         )
 
-        self.assertEqual(self.user.responseset_set.first().have_you_ever_smoked, None)
+        response_set = self.user.responseset_set.first()
+        if response_set:
+            self.assertFalse(HaveYouEverSmokedResponse.objects.filter(response_set=response_set).exists())
 
     def test_post_redirects_if_the_user_not_a_smoker(self):
         response = self.client.post(
             reverse("questions:have_you_ever_smoked"),
-            {"have_you_ever_smoked": HaveYouEverSmokedValues.NO_I_HAVE_NEVER_SMOKED.value }
+            {"value": HaveYouEverSmokedValues.NO_I_HAVE_NEVER_SMOKED.value }
         )
 
         self.assertRedirects(response, reverse("questions:non_smoker_exit"))

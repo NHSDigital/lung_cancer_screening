@@ -5,26 +5,31 @@ from django.views import View
 
 from .mixins.ensure_response_set import EnsureResponseSet
 from ..forms.asbestos_exposure_form import AsbestosExposureForm
+from ..models.asbestos_exposure_response import AsbestosExposureResponse
 
 class AsbestosExposureView(LoginRequiredMixin, EnsureResponseSet, View):
     def get(self, request):
+        response, _ = AsbestosExposureResponse.objects.get_or_build(
+            response_set=request.response_set
+        )
         return render(
             request,
             "asbestos_exposure.jinja",
-            {"form": AsbestosExposureForm(instance=request.response_set)}
+            {"form": AsbestosExposureForm(instance=response)}
         )
 
     def post(self, request):
-
+        response, _ = AsbestosExposureResponse.objects.get_or_build(
+            response_set=request.response_set
+        )
         form = AsbestosExposureForm(
-            instance=request.response_set,
+            instance=response,
             data=request.POST
         )
 
         if form.is_valid():
-            response_set = request.user.responseset_set.last()
-            response_set.asbestos_exposure = form.cleaned_data["asbestos_exposure"]
-            response_set.save()
+            response.value = form.cleaned_data["value"]
+            response.save()
             return redirect(reverse("questions:cancer_diagnosis"))
         else:
             return render(

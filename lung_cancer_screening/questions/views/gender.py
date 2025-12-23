@@ -5,25 +5,31 @@ from django.views import View
 
 from .mixins.ensure_response_set import EnsureResponseSet
 from ..forms.gender_form import GenderForm
+from ..models.gender_response import GenderResponse
 
 
 class GenderView(LoginRequiredMixin, EnsureResponseSet, View):
     def get(self, request):
+        response, _ = GenderResponse.objects.get_or_build(
+            response_set=request.response_set
+        )
         return render_template(
             request,
-            GenderForm(instance=request.response_set),
+            GenderForm(instance=response),
         )
 
     def post(self, request):
+        response, _ = GenderResponse.objects.get_or_build(
+            response_set=request.response_set
+        )
         form = GenderForm(
-            instance=request.response_set,
+            instance=response,
             data=request.POST
         )
 
         if form.is_valid():
-            response_set = request.response_set
-            response_set.gender = form.cleaned_data["gender"]
-            response_set.save()
+            response.value = form.cleaned_data["value"]
+            response.save()
             return redirect(reverse("questions:ethnicity"))
         else:
             return render_template(

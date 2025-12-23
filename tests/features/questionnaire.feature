@@ -55,4 +55,4 @@ Feature: Questionnaire
     And I see responses "Which of these best describes you? Female"
     And I see responses "What is your ethnic background? White"
     And I see responses "Have you ever worked in a job where you might have been exposed to asbestos? No"
-    And I see responses "Have you ever been diagnosed with any of the following respiratory conditions? Pneumonia, Emphysema"
+    And I see responses "Have you ever been diagnosed with any of the following respiratory conditions? Pneumonia and Emphysema"

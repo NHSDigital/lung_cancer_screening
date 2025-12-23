@@ -9,11 +9,16 @@ from lung_cancer_screening.questions.forms.metric_height_form import (
 from lung_cancer_screening.questions.forms.imperial_height_form import (
     ImperialHeightForm
 )
+from ..models.height_response import HeightResponse
 
 
 class HeightView(LoginRequiredMixin, EnsureResponseSet, View):
     def get(self, request):
-        unit = self.get_unit(request)
+        response, _ = HeightResponse.objects.get_or_build(
+            response_set=request.response_set
+        )
+
+        unit = self.get_unit(request, response)
 
         form_klass = ImperialHeightForm if unit == "imperial" else MetricHeightForm
 
@@ -21,7 +26,7 @@ class HeightView(LoginRequiredMixin, EnsureResponseSet, View):
             request,
             "height.jinja",
             {
-                "form": form_klass(instance=request.response_set),
+                "form": form_klass(instance=response),
                 "unit": unit,
                 "switch_to_unit": (
                     "metric" if unit == "imperial" else "imperial"
@@ -30,12 +35,17 @@ class HeightView(LoginRequiredMixin, EnsureResponseSet, View):
         )
 
     def post(self, request):
-        unit = self.get_unit(request)
+
+        response, _ = HeightResponse.objects.get_or_build(
+            response_set=request.response_set
+        )
+
+        unit = self.get_unit(request, response)
 
         form_klass = ImperialHeightForm if unit == "imperial" else MetricHeightForm
 
         form = form_klass(
-            instance=request.response_set,
+            instance=response,
             data=request.POST
         )
 
@@ -57,11 +67,10 @@ class HeightView(LoginRequiredMixin, EnsureResponseSet, View):
                 status=422
             )
 
-    def get_unit(self, request):
+    def get_unit(self, request, response):
         unit = request.GET.get('unit')
 
-        height_imperial=request.response_set.height_imperial
-        if height_imperial and unit != "metric":
+        if response.imperial and unit != "metric":
             unit = "imperial"
 
         return unit

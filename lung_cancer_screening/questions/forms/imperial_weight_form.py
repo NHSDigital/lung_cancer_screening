@@ -1,7 +1,7 @@
 from django import forms
 
 from ...nhsuk_forms.imperial_weight_field import ImperialWeightField
-from ..models.response_set import ResponseSet
+from ..models.weight_response import WeightResponse
 
 
 class ImperialWeightForm(forms.ModelForm):
@@ -9,7 +9,7 @@ class ImperialWeightForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["weight_imperial"] = ImperialWeightField(
+        self.fields["imperial"] = ImperialWeightField(
             label="Weight",
             required=True,
             require_all_fields=False,
@@ -18,9 +18,9 @@ class ImperialWeightForm(forms.ModelForm):
             }
         )
 
-    def clean_weight_metric(self):
+    def clean_metric(self):
         return None
 
     class Meta:
-        model = ResponseSet
-        fields = ['weight_imperial', 'weight_metric']
+        model = WeightResponse
+        fields = ['imperial', 'metric']

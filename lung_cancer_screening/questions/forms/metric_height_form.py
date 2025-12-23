@@ -1,7 +1,7 @@
 from django import forms
 
 from ...nhsuk_forms.decimal_field import DecimalField
-from ..models.response_set import ResponseSet
+from ..models.height_response import HeightResponse
 
 
 class MetricHeightForm(forms.ModelForm):
@@ -10,10 +10,10 @@ class MetricHeightForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         # Convert mm to cm for display
-        if self.instance and self.instance.height_metric is not None:
-            self.initial['height_metric'] = self.instance.height_metric / 10
+        if self.instance and self.instance.metric is not None:
+            self.initial['metric'] = self.instance.metric / 10
 
-        self.fields["height_metric"] = DecimalField(
+        self.fields["metric"] = DecimalField(
             decimal_places=1,
             label="Centimetres",
             classes="nhsuk-input--width-4",
@@ -27,12 +27,12 @@ class MetricHeightForm(forms.ModelForm):
             suffix="cm"
         )
 
-    def clean_height_metric(self):
-        return self.cleaned_data['height_metric'] * 10
+    def clean_metric(self):
+        return int(self.cleaned_data['metric'] * 10)
 
-    def clean_height_imperial(self):
+    def clean_imperial(self):
         return None
 
     class Meta:
-        model = ResponseSet
-        fields = ['height_metric', 'height_imperial']
+        model = HeightResponse
+        fields = ['metric', 'imperial']

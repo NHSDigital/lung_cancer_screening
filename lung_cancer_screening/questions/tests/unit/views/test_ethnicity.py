@@ -4,9 +4,7 @@ from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
 from .helpers.authentication import login_user
-from lung_cancer_screening.questions.models.response_set import (
-    EthnicityValues
-)
+from lung_cancer_screening.questions.models.ethnicity_response import EthnicityResponse, EthnicityValues
 
 
 class TestGetEthnicity(TestCase):
@@ -54,7 +52,7 @@ class TestPostEthnicity(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
 
-        self.valid_params = {"ethnicity": EthnicityValues.WHITE}
+        self.valid_params = {"value": EthnicityValues.WHITE}
 
     def test_post_redirects_if_the_user_is_not_logged_in(self):
         self.client.logout()
@@ -82,7 +80,7 @@ class TestPostEthnicity(TestCase):
         self.assertEqual(self.user.responseset_set.count(), 1)
         self.assertEqual(response_set.submitted_at, None)
         self.assertEqual(
-            response_set.ethnicity, self.valid_params["ethnicity"]
+            EthnicityResponse.objects.get(response_set=response_set).value, self.valid_params["value"]
         )
         self.assertEqual(response_set.user, self.user)
 
@@ -98,7 +96,7 @@ class TestPostEthnicity(TestCase):
         self.assertEqual(self.user.responseset_set.count(), 1)
         self.assertEqual(response_set.submitted_at, None)
         self.assertEqual(
-            response_set.ethnicity, self.valid_params["ethnicity"]
+            EthnicityResponse.objects.get(response_set=response_set).value, self.valid_params["value"]
         )
         self.assertEqual(response_set.user, self.user)
 
@@ -120,7 +118,7 @@ class TestPostEthnicity(TestCase):
         response_set = self.user.responseset_set.last()
         self.assertEqual(response_set.submitted_at, None)
         self.assertEqual(
-            response_set.ethnicity, self.valid_params["ethnicity"]
+            EthnicityResponse.objects.get(response_set=response_set).value, self.valid_params["value"]
         )
         self.assertEqual(response_set.user, self.user)
 
@@ -146,7 +144,7 @@ class TestPostEthnicity(TestCase):
 
         response_set = self.user.responseset_set.first()
         self.assertEqual(
-            response_set.ethnicity, self.valid_params["ethnicity"]
+            EthnicityResponse.objects.get(response_set=response_set).value, self.valid_params["value"]
         )
         self.assertEqual(response_set.user, self.user)
 
@@ -161,7 +159,7 @@ class TestPostEthnicity(TestCase):
     def test_post_responds_with_422_if_the_response_fails_to_create(self):
         response = self.client.post(
             reverse("questions:ethnicity"),
-            {"ethnicity": "something not in list"}
+            {"value": "something not in list"}
         )
 
         self.assertEqual(response.status_code, 422)
@@ -171,7 +169,7 @@ class TestPostEthnicity(TestCase):
     ):
         response = self.client.post(
             reverse("questions:ethnicity"),
-            {"ethnicity": "something not in list"}
+            {"value": "something not in list"}
         )
 
         self.assertContains(

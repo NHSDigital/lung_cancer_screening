@@ -1,7 +1,7 @@
 from django import forms
 
 from ...nhsuk_forms.choice_field import ChoiceField
-from ..models.response_set import ResponseSet, GenderValues
+from ..models.gender_response import GenderResponse, GenderValues
 
 
 class GenderForm(forms.ModelForm):
@@ -9,7 +9,7 @@ class GenderForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["gender"] = ChoiceField(
+        self.fields["value"] = ChoiceField(
             choices=GenderValues.choices,
             widget=forms.RadioSelect,
             label="Which of these best describes you?",
@@ -25,5 +25,5 @@ class GenderForm(forms.ModelForm):
         )
 
     class Meta:
-        model = ResponseSet
-        fields = ['gender']
+        model = GenderResponse
+        fields = ['value']
