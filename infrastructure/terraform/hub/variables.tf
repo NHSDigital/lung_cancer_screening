@@ -203,6 +203,16 @@ variable "vnet_name" {
   default     = "vnet-hub-nonlive-uks"
 }
 
+variable "infra_key_vault_name" {
+  description = "Name of the infra key vault"
+  type        = string
+}
+
+variable "infra_key_vault_rg" {
+  description = "Name of the infra key vault resource group"
+  type        = string
+}
+
 variable "vnet_resource_group" {
   description = "Resource group name of the hub virtual network"
   type        = string

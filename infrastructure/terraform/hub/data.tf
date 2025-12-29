@@ -1,5 +1,7 @@
 data "azurerm_client_config" "current" {}
 
+data "azurerm_subscription" "current" {}
+
 data "azuread_group" "avd_users" {
   display_name = var.avd_users_group_name
 }
@@ -8,6 +10,17 @@ data "azuread_group" "avd_users" {
 data "azuread_group" "avd_admins" {
   display_name = var.avd_admins_group_name
 }
+
+data "azurerm_key_vault" "infra" {
+  name                = var.infra_key_vault_name
+  resource_group_name = var.infra_key_vault_rg
+}
+
+data "azurerm_key_vault_secret" "infra" {
+  name         = "monitoring-email-address"
+  key_vault_id = data.azurerm_key_vault.infra.id
+}
+
 
 # This client id is the same for all Azure customers - it is not a secret.
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service_certificate
