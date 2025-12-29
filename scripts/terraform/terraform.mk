@@ -8,6 +8,7 @@ bootstrap:
 		--template-file "infrastructure/bootstrap/${BOOTSTRAP}.bicep" \
 		--parameters "infrastructure/bootstrap/environments/${HUB_TYPE}/${BOOTSTRAP}.bicepparam"
 
+
 poc: # Target the poc environment - make poc <action>
 	$(eval include infrastructure/environments/poc/variables.sh)
 
