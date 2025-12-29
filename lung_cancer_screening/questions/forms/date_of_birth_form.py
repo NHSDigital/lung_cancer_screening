@@ -1,7 +1,7 @@
 from django import forms
 from datetime import date
 
-from ..models.response_set import ResponseSet
+from ..models.date_of_birth_response import DateOfBirthResponse
 from ...nhsuk_forms.split_date_field import SplitDateField
 
 
@@ -10,7 +10,7 @@ class DateOfBirthForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         invalid_error_message = 'Date of birth must be a real date'
-        self.fields["date_of_birth"] = SplitDateField(
+        self.fields["value"] = SplitDateField(
             max_value=date.today(),
             required=True,
             require_all_fields=False,
@@ -28,5 +28,5 @@ class DateOfBirthForm(forms.ModelForm):
         )
 
     class Meta:
-        model = ResponseSet
-        fields = ['date_of_birth']
+        model = DateOfBirthResponse
+        fields = ['value']

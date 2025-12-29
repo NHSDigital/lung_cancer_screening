@@ -9,11 +9,16 @@ from lung_cancer_screening.questions.forms.metric_weight_form import (
 from lung_cancer_screening.questions.forms.imperial_weight_form import (
     ImperialWeightForm
 )
+from ..models.weight_response import WeightResponse
 
 
 class WeightView(LoginRequiredMixin, EnsureResponseSet, View):
     def get(self, request):
-        unit = self.get_unit(request)
+        response, _ = WeightResponse.objects.get_or_build(
+            response_set=request.response_set
+        )
+
+        unit = self.get_unit(request, response)
 
         form_klass = (
             ImperialWeightForm if unit == "imperial" else MetricWeightForm
@@ -23,7 +28,7 @@ class WeightView(LoginRequiredMixin, EnsureResponseSet, View):
             request,
             "weight.jinja",
             {
-                "form": form_klass(instance=request.response_set),
+                "form": form_klass(instance=response),
                 "unit": unit,
                 "switch_to_unit": (
                     "metric" if unit == "imperial" else "imperial"
@@ -32,14 +37,18 @@ class WeightView(LoginRequiredMixin, EnsureResponseSet, View):
         )
 
     def post(self, request):
-        unit = self.get_unit(request)
+        response, _ = WeightResponse.objects.get_or_build(
+            response_set=request.response_set
+        )
+        unit = self.get_unit(request, response)
+
 
         form_klass = (
             ImperialWeightForm if unit == "imperial" else MetricWeightForm
         )
 
         form = form_klass(
-            instance=request.response_set,
+            instance=response,
             data=request.POST
         )
 
@@ -60,11 +69,10 @@ class WeightView(LoginRequiredMixin, EnsureResponseSet, View):
                 status=422
             )
 
-    def get_unit(self, request):
+    def get_unit(self, request, response):
         unit = request.GET.get('unit')
 
-        weight_imperial=request.response_set.weight_imperial
-        if weight_imperial and unit != "metric":
+        if response.imperial and unit != "metric":
             unit = "imperial"
 
         return unit

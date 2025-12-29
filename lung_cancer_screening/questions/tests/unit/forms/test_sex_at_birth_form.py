@@ -1,50 +1,53 @@
 from django.test import TestCase
 
-from ...factories.user_factory import UserFactory
-from ....models.response_set import ResponseSet, SexAtBirthValues
+from ...factories.response_set_factory import ResponseSetFactory
+from ....models.sex_at_birth_response import SexAtBirthResponse, SexAtBirthValues
 from ....forms.sex_at_birth_form import SexAtBirthForm
 
 class TestSexAtBirthForm(TestCase):
     def setUp(self):
-        self.user = UserFactory()
-        self.response_set = ResponseSet(user=self.user)
+        self.response_set = ResponseSetFactory()
+        self.response = SexAtBirthResponse.objects.create(
+            response_set=self.response_set,
+            value=SexAtBirthValues.MALE
+        )
 
 
     def test_is_valid_with_a_valid_value(self):
         form = SexAtBirthForm(
-            instance=self.response_set,
+            instance=self.response,
             data={
-                "sex_at_birth": SexAtBirthValues.FEMALE
+                "value": SexAtBirthValues.FEMALE
             }
         )
         self.assertTrue(form.is_valid())
         self.assertEqual(
-            form.cleaned_data["sex_at_birth"],
+            form.cleaned_data["value"],
             SexAtBirthValues.FEMALE.value
         )
 
     def test_is_invalid_with_an_invalid_value(self):
         form = SexAtBirthForm(
-            instance=self.response_set,
+            instance=self.response,
             data={
-                "sex_at_birth": "invalid"
+                "value": "invalid"
             }
         )
         self.assertFalse(form.is_valid())
         self.assertEqual(
-            form.errors["sex_at_birth"],
+            form.errors["value"],
             ["Select a valid choice. invalid is not one of the available choices."]
         )
 
     def test_is_invalid_when_no_option_is_selected(self):
         form = SexAtBirthForm(
-            instance=self.response_set,
+            instance=self.response,
             data={
-                "sex_at_birth": None
+                "value": None
             }
         )
         self.assertFalse(form.is_valid())
         self.assertEqual(
-            form.errors["sex_at_birth"],
+            form.errors["value"],
             ["Select your sex at birth"]
         )

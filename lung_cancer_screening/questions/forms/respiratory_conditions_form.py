@@ -1,7 +1,7 @@
 from django import forms
 
 from ...nhsuk_forms.choice_field import MultipleChoiceField
-from ..models.response_set import ResponseSet, RespiratoryConditionValues
+from ..models.respiratory_conditions_response import RespiratoryConditionsResponse, RespiratoryConditionValues
 
 
 class RespiratoryConditionsForm(forms.ModelForm):
@@ -9,7 +9,7 @@ class RespiratoryConditionsForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["respiratory_conditions"] = MultipleChoiceField(
+        self.fields["value"] = MultipleChoiceField(
             choices=RespiratoryConditionValues.choices,
             widget=forms.CheckboxSelectMultiple,
             label=(
@@ -31,7 +31,7 @@ class RespiratoryConditionsForm(forms.ModelForm):
         )
 
         # Add hints for each choice
-        respiratory_conditions_field = self["respiratory_conditions"]
+        respiratory_conditions_field = self["value"]
         respiratory_conditions_field.add_hint_for_choice(
             RespiratoryConditionValues.PNEUMONIA,
             "An infection of the lungs, usually diagnosed by a chest x-ray"
@@ -66,5 +66,5 @@ class RespiratoryConditionsForm(forms.ModelForm):
         )
 
     class Meta:
-        model = ResponseSet
-        fields = ['respiratory_conditions']
+        model = RespiratoryConditionsResponse
+        fields = ['value']
