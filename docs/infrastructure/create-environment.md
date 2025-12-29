@@ -127,3 +127,7 @@ Add the infrastructure secrets to the _inf_ key vault `kv-lungcs-[environment]-i
 - Set `fetch_secrets_from_app_key_vault` terraform variable to `true`
 - Test running terraform manually from the AVD (Optional)
 - Raise a pull request, review and merge to trigger the pipeline
+
+
+assign yourself "Key Vault Secrets User" to application key vault to run the terraform code from the cli inside the AVD when first trying to deploy the application.
+assign yourself "Data Blob Reader" to State file storage account to run the terraform code from the cli inside the AVD when first trying to deploy the application.
