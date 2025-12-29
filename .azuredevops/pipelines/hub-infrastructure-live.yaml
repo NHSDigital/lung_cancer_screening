@@ -1,0 +1,56 @@
+---
+name: $(Build.SourceBranchName)-$(Date:yyyyMMdd)_$(Rev:r)
+trigger: none
+pr: none
+
+pool:
+  name: private-pool-hub-live-uks
+
+resources:
+  repositories:
+    - repository: dtos-devops-templates
+      type: github
+      name: NHSDigital/dtos-devops-templates
+      ref: PPHA-417-Create-infra-as-code-for-Hub-resources
+      endpoint: NHSDigital
+
+variables:
+  - group: LIVE_hub_backend
+  - name: TF_DIRECTORY
+    value: $(System.DefaultWorkingDirectory)/lung_cancer_screening/infrastructure/terraform/hub
+  - name: TF_VERSION
+    value: 1.14.3
+  - name: TF_PLAN_ARTIFACT
+    value: tf_plan_hub_art_LIVE_dev
+  - name: ENVIRONMENT
+    value: live
+
+stages:
+  - stage: terraform_plan
+    displayName: Terraform Plan
+    condition: eq(variables['Build.Reason'], 'Manual')
+    variables:
+      tfVarsFile: ../../environments/$(ENVIRONMENT)/variables.tfvars
+    jobs:
+      - job: init_and_plan
+        displayName: Init, plan, store artifact
+        steps:
+          - checkout: self
+          - checkout: dtos-devops-templates
+          - template: .azuredevops/templates/steps/tf_plan.yaml@dtos-devops-templates
+
+  - stage: terraform_apply
+    displayName: Terraform Apply
+    dependsOn: [terraform_plan]
+    condition: and(eq(dependencies.terraform_plan.outputs['init_and_plan.TerraformPlan.changesPresent'], 'true'), eq(variables['Build.Reason'], 'Manual'))
+    jobs:
+      - deployment: terraform_apply
+        displayName: Init, get plan artifact, apply
+        environment: $(ENVIRONMENT)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                - checkout: dtos-devops-templates
+                - template: .azuredevops/templates/steps/tf_apply.yaml@dtos-devops-templates

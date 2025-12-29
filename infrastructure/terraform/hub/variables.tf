@@ -220,11 +220,6 @@ variable "AVD_OBJECT_ID" {
   type        = string
 }
 
-variable "AVD_APPLICATION_ID" {
-  description = "AVD Application ID for role assignments"
-  type        = string
-}
-
 variable "virtual_desktop_group_active" {
   description = <<-EOT
     This can either be 'blue', 'green', 'both-with-blue-primary',  'both-with-green-primary', 'both-with-blue-primary-but-equal-vms' or 'both-with-green-primary-but-equal-vms'.

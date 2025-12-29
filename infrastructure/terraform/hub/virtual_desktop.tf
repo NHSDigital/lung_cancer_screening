@@ -32,17 +32,6 @@ resource "azurerm_resource_group" "avd_blue" {
   location = each.key
 }
 
-resource "azurerm_role_assignment" "avd_autoscale_blue_hostpool" {
-  for_each = local.deploy_blue_avd ? var.regions : {}
-
-  scope                = azurerm_resource_group.avd_blue[each.key].id
-  role_definition_name = "Desktop Virtualization Host Pool Contributor"
-
-  principal_id   = var.AVD_APPLICATION_ID
-  principal_type = "ServicePrincipal"
-}
-
-
 module "virtual-desktop-blue" {
   for_each = (local.deploy_blue_avd ? var.regions : {})
 
@@ -79,9 +68,8 @@ module "virtual-desktop-blue" {
   vm_storage_account_type = "StandardSSD_LRS"
   vm_size                 = var.avd_vm_size
   vm_license_type         = "Windows_Client"
-  workspace_name          = "lungcs-${each.key}"
-
-  principal_id = var.AVD_OBJECT_ID
+  workspace_name          = var.environment == "live" ? "lungcs-${var.environment}-${each.key}" : "lungcs-${each.key}"
+  principal_id            = var.AVD_OBJECT_ID
 
   tags = var.tags
 
@@ -121,7 +109,8 @@ module "virtual-desktop-green" {
   vm_storage_account_type   = "StandardSSD_LRS"
   vm_size                   = var.avd_vm_size
   vm_license_type           = "Windows_Client"
-  workspace_name            = "lungcs-${each.key}"
+  workspace_name            = var.environment == "live" ? "lungcs-${var.environment}-${each.key}" : "lungcs-${each.key}"
+
 
   principal_id = var.AVD_OBJECT_ID
   tags         = var.tags
