@@ -1,13 +1,13 @@
 data "azurerm_client_config" "current" {}
 
-# data "azuread_group" "avd_users" {
-#   display_name = var.avd_users_group_name
-# }
+data "azuread_group" "avd_users" {
+  display_name = var.avd_users_group_name
+}
 
 # Awaiting permission to read group membership via Microsoft Graph API
-# data "azuread_group" "avd_admins" {
-#   display_name = var.avd_admins_group_name
-# }
+data "azuread_group" "avd_admins" {
+  display_name = var.avd_admins_group_name
+}
 
 # This client id is the same for all Azure customers - it is not a secret.
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service_certificate

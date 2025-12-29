@@ -12,8 +12,7 @@ param devopsSubnetName string
 param devopsSubnetAddressPrefix string
 param virtualNetworkName string
 
-param fabricProfileSkuName string = 'Standard_D2ads_v5'
-
+param fabricProfileSkuName string = 'Standard_D2as_v5'
 param poolSize int = 1
 param location string = 'uksouth'
 

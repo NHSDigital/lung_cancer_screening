@@ -3,11 +3,11 @@ cd9c0efec38c5d63053dd865e5d4e207c0760d91:docs/guides/Perform_static_analysis.md:
 infrastructure/terraform/spoke/resource_group_init/core.bicep:generic-api-key:10
 infrastructure/terraform/spoke/resource_group_init/core.bicep:generic-api-key:11
 infrastructure/terraform/spoke/resource_group_init/core.bicep:generic-api-key:12
-infrastructure/terraform/spoke/resource_group_init/main.bicep:generic-api-key:29
-infrastructure/terraform/spoke/resource_group_init/main.bicep:generic-api-key:30
-infrastructure/terraform/spoke/resource_group_init/main.bicep:generic-api-key:31
-infrastructure/terraform/spoke/resource_group_init/main.bicep:generic-api-key:32
-infrastructure/terraform/spoke/resource_group_init/main.bicep:generic-api-key:33
+infrastructure/terraform/spoke/resource_group_init/spoke.bicep:generic-api-key:29
+infrastructure/terraform/spoke/resource_group_init/spoke.bicep:generic-api-key:30
+infrastructure/terraform/spoke/resource_group_init/spoke.bicep:generic-api-key:31
+infrastructure/terraform/spoke/resource_group_init/spoke.bicep:generic-api-key:32
+infrastructure/terraform/spoke/resource_group_init/spoke.bicep:generic-api-key:33
 infrastructure/terraform/spoke/resource_group_init/storage.bicep:generic-api-key:59
 infrastructure/terraform/spoke/resource_group_init/keyVault.bicep:generic-api-key:10
 infrastructure/bootstrap/hub.bicep:generic-api-key:55
@@ -19,4 +19,4 @@ infrastructure/terraform/hub/data.tf:generic-api-key:19
 infrastructure/terraform/hub/data.tf:generic-api-key:23
 infrastructure/terraform/resource_group_init/core.bicep:generic-api-key:11
 infrastructure/terraform/resource_group_init/keyVault.bicep:generic-api-key:10
-infrastructure/terraform/resource_group_init/main.bicep:generic-api-key:30
+infrastructure/terraform/resource_group_init/spoke.bicep:generic-api-key:30
