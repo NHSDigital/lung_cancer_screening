@@ -52,17 +52,3 @@ The following quotas need to be increased, raise a support ticket with Azure sup
 | Lung Cancer Risk Check - Review       | ******                                      | Review      | UK South | N/A                | N/A        | Regional deployment         | Compute       | B_Standard_B1ms    | N/A              | Units | 1      | 1      | 1      | 1      | 1      | 1      |
 | Lung Cancer Risk Check - Prod         | ******                                      | Prod        | UK South | N/A                | N/A        | Regional deployment         | Compute       | GP_Standard_D2ds_v5| N/A              | Units | 3      | 3      | 3      | 3      | 3      | 3      |
 | Lung Cancer Risk Check - Preprod      | ******                                      | Preprod     | UK South | N/A                | N/A        | Regional deployment         | Compute       | GP_Standard_D2ds_v5| N/A              | Units | 3      | 3      | 3      | 3      | 3      | 3      |
-
-`alastairlock@Mac lung_cancer_screening % az feature register \
-  --namespace Microsoft.Compute \
-  --name EncryptionAtHost
-
-Once the feature 'EncryptionAtHost' is registered, invoking 'az provider register -n Microsoft.Compute' is required to get the change propagated
-{
-  "id": "/subscriptions/819ef61d-786e-4906-bbd7-9061b095a91d/providers/Microsoft.Features/providers/Microsoft.Compute/features/EncryptionAtHost",
-  "name": "Microsoft.Compute/EncryptionAtHost",
-  "properties": {
-    "state": "Registered"
-  },
-  "type": "Microsoft.Features/providers/features"
-}`
