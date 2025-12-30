@@ -46,11 +46,14 @@ class TestPostCancerDiagnosis(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
 
+        self.valid_params = {"value": True}
+
     def test_post_redirects_if_the_user_is_not_logged_in(self):
         self.client.logout()
 
         response = self.client.post(
-            reverse("questions:cancer_diagnosis")
+            reverse("questions:cancer_diagnosis"),
+            self.valid_params
         )
 
         self.assertRedirects(
@@ -83,7 +86,7 @@ class TestPostCancerDiagnosis(TestCase):
         self.assertEqual(response_set.submitted_at, None)
         self.assertEqual(response_set.user, self.user)
 
-    def test_post_creates_new_unsubmitted_response_set_when_submitted_exists_over_year_ago(  # noqa: E501
+    def test_post_creates_new_unsubmitted_response_set_when_submitted_exists_over_year_ago(
         self
     ):
         self.user.responseset_set.create(
@@ -101,7 +104,7 @@ class TestPostCancerDiagnosis(TestCase):
         self.assertEqual(response_set.submitted_at, None)
         self.assertEqual(response_set.user, self.user)
 
-    def test_post_redirects_when_submitted_response_set_exists_within_last_year(  # noqa: E501
+    def test_post_redirects_when_submitted_response_set_exists_within_last_year(
         self
     ):
         self.user.responseset_set.create(
@@ -116,7 +119,8 @@ class TestPostCancerDiagnosis(TestCase):
 
     def test_post_redirects_to_family_history_lung_cancer_path(self):
         response = self.client.post(
-            reverse("questions:cancer_diagnosis")
+            reverse("questions:cancer_diagnosis"),
+            self.valid_params
         )
 
         self.assertRedirects(

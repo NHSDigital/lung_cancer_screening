@@ -10,6 +10,7 @@ from ...factories.gender_response_factory import GenderResponseFactory
 from ...factories.ethnicity_response_factory import EthnicityResponseFactory
 from ...factories.asbestos_exposure_response_factory import AsbestosExposureResponseFactory
 from ...factories.respiratory_conditions_response_factory import RespiratoryConditionsResponseFactory
+from ...factories.cancer_diagnosis_response_factory import CancerDiagnosisResponseFactory
 
 from ....models.have_you_ever_smoked_response import HaveYouEverSmokedValues
 from ....models.sex_at_birth_response import SexAtBirthValues
@@ -164,3 +165,16 @@ class TestResponseSetPresenter(TestCase):
         )
         presenter = ResponseSetPresenter(self.response_set)
         self.assertEqual(presenter.respiratory_conditions, RespiratoryConditionValues.COPD.label + " and " + RespiratoryConditionValues.BRONCHITIS.label)
+
+    def test_cancer_diagnosis_with_no_value(self):
+        presenter = ResponseSetPresenter(self.response_set)
+        self.assertEqual(presenter.cancer_diagnosis, None)
+
+
+    def test_cancer_diagnosis_with_value(self):
+        CancerDiagnosisResponseFactory(
+            response_set=self.response_set,
+            value=True
+        )
+        presenter = ResponseSetPresenter(self.response_set)
+        self.assertEqual(presenter.cancer_diagnosis, "Yes")

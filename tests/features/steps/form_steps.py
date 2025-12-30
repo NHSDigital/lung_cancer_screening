@@ -74,6 +74,11 @@ def when_i_fill_in_and_submit_my_asbestos_exposure(context, asbestos_exposure):
     context.page.get_by_label(asbestos_exposure, exact=True).check()
     when_i_submit_the_form(context)
 
+@when(u'I fill in and submit my cancer diagnosis with "{cancer_diagnosis}"')
+def when_i_fill_in_and_submit_my_cancer_diagnosis(context, cancer_diagnosis):
+    context.page.get_by_label(cancer_diagnosis, exact=True).check()
+    when_i_submit_the_form(context)
+
 @when('I submit the form')
 def when_i_submit_the_form(context):
     context.page.click("text=Continue")
