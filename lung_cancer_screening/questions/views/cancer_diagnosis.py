@@ -5,20 +5,50 @@ from django.views import View
 
 from .mixins.ensure_response_set import EnsureResponseSet
 
+from ..forms.cancer_diagnosis_form import CancerDiagnosisForm
+from ..models.cancer_diagnosis_response import CancerDiagnosisResponse
 
 class CancerDiagnosisView(LoginRequiredMixin, EnsureResponseSet, View):
+#    def setup(self, request):
+#        super()
+#        self.response, _ = CancerDiagnosisResponse.objects.get_or_build(
+#            response_set=request.response_set
+#        )
+
     def get(self, request):
-        return render_template(request)
+        response, _ = CancerDiagnosisResponse.objects.get_or_build(
+            response_set=request.response_set
+        )
+        return render_template(request, response)
 
     def post(self, request):
-        return redirect(reverse("questions:family_history_lung_cancer"))
+        response, _ = CancerDiagnosisResponse.objects.get_or_build(
+            response_set=request.response_set
+        )
+
+        form = CancerDiagnosisForm(
+            instance=response,
+            data=request.POST
+        )
+
+        if form.is_valid():
+            response.value = form.cleaned_data["value"]
+            response.save()
+            return redirect(reverse("questions:family_history_lung_cancer"))
+        else:
+            return render_template(request, response, 422)
 
 
-def render_template(request, status=200):
+def render_template(request, response, status=200):
+    #response, _ = CancerDiagnosisResponse.objects.get_or_build(
+    #    response_set=request.response_set
+    #)
+
     return render(
         request,
-        "question_form.jinja",
+        "cancer_diagnosis.jinja",
         {
+            "form": CancerDiagnosisForm(instance=response),
             "back_link_url": reverse("questions:asbestos_exposure")
         },
         status=status

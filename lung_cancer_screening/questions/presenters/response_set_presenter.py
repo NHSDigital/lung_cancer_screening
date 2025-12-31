@@ -77,6 +77,13 @@ class ResponseSetPresenter:
         return "Yes" if self.response_set.asbestos_exposure_response.value else "No"
 
     @property
+    def cancer_diagnosis(self):
+        if not hasattr(self.response_set, 'cancer_diagnosis_response'):
+            return None
+
+        return "Yes" if self.response_set.cancer_diagnosis_response.value else "No"
+
+    @property
     def respiratory_conditions(self):
         if not hasattr(self.response_set, 'respiratory_conditions_response'):
             return None
