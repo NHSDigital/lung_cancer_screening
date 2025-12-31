@@ -1,14 +1,14 @@
 # Infra FAQ
-<!-- vale off: Vale.Terms, Vale.Spelling -->
+
 - [Terraform](#terraform)
-<!-- vale on -->
+
 - [GitHub action triggering Azure devops pipeline](#github-action-triggering-azure-devops-pipeline)
 - [Bicep errors](#bicep-errors)
 - [Front door](#front-door)
 - [Smoke Testing](#smoke-testing)
-<!-- vale off: Vale.Terms, Vale.Spelling -->
+
 ## Terraform
-<!-- vale on -->
+
 ### Import into terraform state file
 
 To import Azure resources into the Terraform state file, you can use the following command. If you're working on an AVD machine, you may need to set the environment variables:
