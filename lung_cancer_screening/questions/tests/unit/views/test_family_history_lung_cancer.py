@@ -3,7 +3,10 @@ from django.urls import reverse
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
+from lung_cancer_screening.questions.models.family_history_lung_cancer_response import FamilyHistoryLungCancerValues
+
 from .helpers.authentication import login_user
+
 
 @tag("FamilyHistoryLungCancer")
 class TestGetFamilyHistoryLungCancer(TestCase):
@@ -48,11 +51,14 @@ class TestPostFamilyHistoryLungCancer(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
 
+        self.valid_params = {"value": FamilyHistoryLungCancerValues.NO}
+
     def test_post_redirects_if_the_user_is_not_logged_in(self):
         self.client.logout()
 
         response = self.client.post(
-            reverse("questions:family_history_lung_cancer")
+            reverse("questions:family_history_lung_cancer"),
+            self.valid_params
         )
 
         self.assertRedirects(
@@ -118,7 +124,8 @@ class TestPostFamilyHistoryLungCancer(TestCase):
 
     def test_post_redirects_to_responses_path(self):
         response = self.client.post(
-            reverse("questions:family_history_lung_cancer")
+            reverse("questions:family_history_lung_cancer"),
+            self.valid_params
         )
 
         self.assertRedirects(response, reverse("questions:responses"))
