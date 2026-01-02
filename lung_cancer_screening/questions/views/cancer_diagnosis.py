@@ -19,7 +19,7 @@ class CancerDiagnosisView(LoginRequiredMixin, EnsureResponseSet, View):
         response, _ = CancerDiagnosisResponse.objects.get_or_build(
             response_set=request.response_set
         )
-        return render_template(request, response)
+        return render_template(request, CancerDiagnosisForm(instance=response))
 
     def post(self, request):
         response, _ = CancerDiagnosisResponse.objects.get_or_build(
@@ -36,10 +36,10 @@ class CancerDiagnosisView(LoginRequiredMixin, EnsureResponseSet, View):
             response.save()
             return redirect(reverse("questions:family_history_lung_cancer"))
         else:
-            return render_template(request, response, 422)
+            return render_template(request, form, 422)
 
 
-def render_template(request, response, status=200):
+def render_template(request, form, status=200):
     #response, _ = CancerDiagnosisResponse.objects.get_or_build(
     #    response_set=request.response_set
     #)
@@ -48,7 +48,7 @@ def render_template(request, response, status=200):
         request,
         "cancer_diagnosis.jinja",
         {
-            "form": CancerDiagnosisForm(instance=response),
+            "form": form,
             "back_link_url": reverse("questions:asbestos_exposure")
         },
         status=status

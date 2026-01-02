@@ -33,7 +33,7 @@ from .views.respiratory_conditions import RespiratoryConditionsView
 from .views.asbestos_exposure import AsbestosExposureView
 from .views.cancer_diagnosis import CancerDiagnosisView
 from .views.family_history_lung_cancer import FamilyHistoryLungCancerView
-
+from .views.relatives_age_when_diagnosed import RelativesAgeWhenDiagnosedView
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/start'), name='root'),
@@ -50,6 +50,7 @@ urlpatterns = [
     path('asbestos-exposure', AsbestosExposureView.as_view(), name='asbestos_exposure'),
     path('cancer-diagnosis', CancerDiagnosisView.as_view(), name='cancer_diagnosis'),
     path('family-history-lung-cancer', FamilyHistoryLungCancerView.as_view(), name='family_history_lung_cancer'),
+    path('relatives-age-when-diagnosed', RelativesAgeWhenDiagnosedView.as_view(), name='relatives_age_when_diagnosed'),
     path('responses', ResponsesView.as_view(), name='responses'),
     path('age-range-exit', AgeRangeExitView.as_view(), name='age_range_exit'),
     path('non-smoker-exit', NonSmokerExitView.as_view(), name='non_smoker_exit'),

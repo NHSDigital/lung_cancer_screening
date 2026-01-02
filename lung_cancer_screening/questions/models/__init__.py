@@ -1,1 +1,14 @@
+# Required to make migrations correctly generate.
+from .response_set import ResponseSet # noqa: F401
 from .user import User # noqa: F401
+from .have_you_ever_smoked_response import HaveYouEverSmokedResponse # noqa: F401
+from .asbestos_exposure_response import AsbestosExposureResponse # noqa: F401
+from .date_of_birth_response import DateOfBirthResponse # noqa: F401
+from .ethnicity_response import EthnicityResponse # noqa: F401
+from .gender_response import GenderResponse # noqa: F401
+from .height_response import HeightResponse # noqa: F401
+from .respiratory_conditions_response import RespiratoryConditionsResponse # noqa: F401
+from .sex_at_birth_response import SexAtBirthResponse # noqa: F401
+from .weight_response import WeightResponse # noqa: F401
+from .cancer_diagnosis_response import CancerDiagnosisResponse # noqa: F401
+from .family_history_lung_cancer_response import FamilyHistoryLungCancerResponse # noqa: F401

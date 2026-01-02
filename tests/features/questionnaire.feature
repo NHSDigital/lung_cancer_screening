@@ -44,7 +44,7 @@ Feature: Questionnaire
     When I fill in and submit my cancer diagnosis with "No"
     Then I am on "/family-history-lung-cancer"
     And I see a back link to "/cancer-diagnosis"
-    When I click "Continue"
+    When I fill in and submit my family history lung cancer with "No"
     Then I am on "/responses"
     And I see a back link to "/family-history-lung-cancer"
     And I see responses "Have you ever smoked? Yes, I used to smoke"

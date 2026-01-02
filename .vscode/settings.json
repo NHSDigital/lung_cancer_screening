@@ -19,6 +19,7 @@
     "nhsuk",
     "novalidate",
     "psycopg",
+    "pyjwt",
     "relativedelta",
     "responseset",
     "stylesheet",
