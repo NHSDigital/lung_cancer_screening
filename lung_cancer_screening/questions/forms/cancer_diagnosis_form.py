@@ -11,7 +11,7 @@ class CancerDiagnosisForm(forms.ModelForm):
             choices=[(True, 'Yes'), (False, 'No')],
             widget=forms.RadioSelect,
             label="If you have ever been diagnosed with cancer",
-            label_classes="nhsuk-fieldset__legend--l",
+            label_classes="nhsuk-fieldset__legend--m",
             coerce=lambda x: x == 'True',
             error_messages={
                 'required': 'Select if you have been diagnosed with cancer'

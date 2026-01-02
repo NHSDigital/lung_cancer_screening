@@ -16,6 +16,11 @@ infrastructure/bootstrap/core.bicep:generic-api-key:11
 infrastructure/bootstrap/core.bicep:generic-api-key:12
 infrastructure/bootstrap/core.bicep:generic-api-key:13
 infrastructure/bootstrap/core.bicep:generic-api-key:14
+infrastructure/bootstrap/hub.bicep:generic-api-key:55
+infrastructure/bootstrap/hub.bicep:generic-api-key:56
+infrastructure/bootstrap/hub.bicep:generic-api-key:57
+infrastructure/bootstrap/hub.bicep:generic-api-key:58
+infrastructure/bootstrap/hub.bicep:generic-api-key:59
 infrastructure/bootstrap/main.bicep:generic-api-key:29
 infrastructure/bootstrap/main.bicep:generic-api-key:30
 infrastructure/bootstrap/main.bicep:generic-api-key:31

@@ -79,6 +79,11 @@ def when_i_fill_in_and_submit_my_cancer_diagnosis(context, cancer_diagnosis):
     context.page.get_by_label(cancer_diagnosis, exact=True).check()
     when_i_submit_the_form(context)
 
+@when(u'I fill in and submit my family history lung cancer with "{family_history_lung_cancer}"')
+def when_i_fill_in_and_submit_my_cancer_diagnosis(context, family_history_lung_cancer):
+    context.page.get_by_label(family_history_lung_cancer, exact=True).check()
+    when_i_submit_the_form(context)
+
 @when('I submit the form')
 def when_i_submit_the_form(context):
     context.page.click("text=Continue")
