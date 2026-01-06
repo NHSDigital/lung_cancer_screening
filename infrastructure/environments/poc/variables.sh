@@ -1,3 +1,7 @@
+# Fix POC environment variables for terraform.mk - these differ from new prod like envs
+REGION=UK South
+APP_SHORT_NAME=lungcs
+
 ENVIRONMENT=poc
 ENV_CONFIG=poc
 AZURE_SUBSCRIPTION="Lung Cancer Screening - Dev"
