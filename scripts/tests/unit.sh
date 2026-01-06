@@ -33,7 +33,7 @@ else
   TEST_MODULE=""
 fi
 
-docker compose run --rm --remove-orphans web sh -c \
+UID=$(id -u) GID=$(id -u) docker compose run --rm --remove-orphans web sh -c \
     "echo 'Running unit tests...' && \
     poetry run coverage run manage.py test $TEST_MODULE $TAG \
     --settings=lung_cancer_screening.settings_test \

@@ -43,7 +43,7 @@ omit = [
   "*/tests/*",
   "manage.py"
 ]
-data_file = "/tmp/.coverage"
+data_file = ".coverage"
 
 [tool.coverage.xml]
-output = "/tmp/coverage.xml"
+output = "coverage.xml"
