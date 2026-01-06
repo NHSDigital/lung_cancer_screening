@@ -85,10 +85,17 @@ class ResponseSetPresenter:
 
     @property
     def family_history_lung_cancer(self):
-        if not hasattr(self.response_set, 'family_history_lung_cancer_response'):
+        if not hasattr(self.response_set, 'family_history_lung_cancer'):
             return None
 
-        return self.response_set.family_history_lung_cancer_response.get_value_display()
+        return self.response_set.family_history_lung_cancer.get_value_display()
+
+    @property
+    def relatives_age_when_diagnosed(self):
+        if not hasattr(self.response_set, 'relatives_age_when_diagnosed'):
+            return None
+
+        return self.response_set.relatives_age_when_diagnosed.get_value_display()
 
     @property
     def respiratory_conditions(self):

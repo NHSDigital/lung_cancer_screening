@@ -5,8 +5,8 @@ from .response_set import ResponseSet
 
 
 class FamilyHistoryLungCancerValues(models.TextChoices):
-    YES = "Y", 'Yes'
-    NO = "N", 'No'
+    YES = "Y", "Yes"
+    NO = "N", "No"
     UNKNOWN = "U", "I do not know"
 
 class FamilyHistoryLungCancerResponse(BaseModel):

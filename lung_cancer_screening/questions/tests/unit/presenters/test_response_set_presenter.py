@@ -11,11 +11,17 @@ from ...factories.ethnicity_response_factory import EthnicityResponseFactory
 from ...factories.asbestos_exposure_response_factory import AsbestosExposureResponseFactory
 from ...factories.respiratory_conditions_response_factory import RespiratoryConditionsResponseFactory
 from ...factories.cancer_diagnosis_response_factory import CancerDiagnosisResponseFactory
+from ...factories.family_history_lung_cancer_response_factory import FamilyHistoryLungCancerResponseFactory
+from ...factories.relatives_age_when_diagnosed_response_factory import RelativesAgeWhenDiagnosedResponseFactory
 
 from ....models.have_you_ever_smoked_response import HaveYouEverSmokedValues
 from ....models.sex_at_birth_response import SexAtBirthValues
 from ....models.gender_response import GenderValues
 from ....models.ethnicity_response import EthnicityValues
+from ....models.family_history_lung_cancer_response import FamilyHistoryLungCancerValues
+from ....models.relatives_age_when_diagnosed_response import RelativesAgeWhenDiagnosedValues
+
+
 from ....models.respiratory_conditions_response import RespiratoryConditionValues
 
 from ....presenters.response_set_presenter import ResponseSetPresenter
@@ -178,3 +184,30 @@ class TestResponseSetPresenter(TestCase):
         )
         presenter = ResponseSetPresenter(self.response_set)
         self.assertEqual(presenter.cancer_diagnosis, "Yes")
+
+    def test_family_history_lung_cancer_with_no_value(self):
+        presenter = ResponseSetPresenter(self.response_set)
+        self.assertEqual(presenter.family_history_lung_cancer, None)
+
+    def test_family_history_lung_cancer_with_value(self):
+        FamilyHistoryLungCancerResponseFactory(
+            response_set=self.response_set,
+            value=FamilyHistoryLungCancerValues.YES
+        )
+
+        presenter = ResponseSetPresenter(self.response_set)
+
+        self.assertEqual(presenter.family_history_lung_cancer, FamilyHistoryLungCancerValues.YES.label)
+
+    def test_relative_age_when_diagnosed_with_no_value(self):
+        presenter = ResponseSetPresenter(self.response_set)
+        self.assertEqual(presenter.relatives_age_when_diagnosed, None)
+
+
+    def test_relative_age_when_diagnosed_with_value(self):
+        RelativesAgeWhenDiagnosedResponseFactory(
+            response_set=self.response_set,
+            value=RelativesAgeWhenDiagnosedValues.YES
+        )
+        presenter = ResponseSetPresenter(self.response_set)
+        self.assertEqual(presenter.relatives_age_when_diagnosed, RelativesAgeWhenDiagnosedValues.YES.label)

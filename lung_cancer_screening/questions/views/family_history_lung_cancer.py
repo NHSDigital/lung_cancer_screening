@@ -29,8 +29,6 @@ class FamilyHistoryLungCancerView(LoginRequiredMixin, EnsureResponseSet, View):
             response.value = form.cleaned_data["value"]
             response.save()
 
-            print(response.value)
-
             if response.value == FamilyHistoryLungCancerValues.YES:
                 return redirect(reverse("questions:relatives_age_when_diagnosed"))
             else:
