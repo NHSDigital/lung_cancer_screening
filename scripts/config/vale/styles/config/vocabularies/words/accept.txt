@@ -12,12 +12,13 @@ onboarding
 Podman
 Python
 sed
+(?i)dev
+Preprod
 Syft
-Terraform
+(?i)Terraform
 toolchain
 Trufflehog
 Structurizr
 sigterm
-terraform
 config
 Entra
