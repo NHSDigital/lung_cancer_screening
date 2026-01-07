@@ -32,4 +32,4 @@ dev-clean:
 	$(DOCKER_COMPOSE_CMD) system prune -f
 
 dev-lint-fix:
-	$(DOCKER_COMPOSE_CMD) run --rm web poetry run ruff check --no-cache lung_cancer_screening --fix
+	$(DOCKER_COMPOSE_CMD) run --rm --entrypoint /app/.venv/bin/ruff web check --no-cache lung_cancer_screening --fix

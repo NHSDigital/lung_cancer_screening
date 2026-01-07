@@ -4,7 +4,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile.chainguard
+      dockerfile: Dockerfile.dev
     ports:
       - "8000:8000"
     env_file:
@@ -12,10 +12,10 @@ services:
     depends_on:
       - db
       - asset_builder
-    # volumes:
-      # - ./:/app
-      # - venv:/app/.venv
-      # - playwright_browsers:/app/browsers
+    volumes:
+      - ./:/app
+      - venv:/app/.venv
+      - playwright_browsers:/app/browsers
     restart: unless-stopped
 
   asset_builder:

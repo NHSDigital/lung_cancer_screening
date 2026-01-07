@@ -1,5 +1,6 @@
-FROM node:25.2.1-alpine3.21 AS asset_builder
+FROM cgr.dev/nhs.net/node:25.2-dev AS asset_builder
 
+USER root
 WORKDIR /app
 
 COPY package.json package-lock.json rollup.config.js  ./
@@ -8,7 +9,7 @@ RUN npm ci
 RUN npm run compile
 
 
-FROM python:3.14.1-alpine3.21 AS python_base
+FROM cgr.dev/nhs.net/python:3.14-dev AS python_base
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -16,12 +17,14 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PATH="/app/.venv/bin:$PATH" \
     USER=app
 
+USER root
 RUN addgroup --gid 1000 --system ${USER} \
     && adduser --uid 1000 --system ${USER} --ingroup ${USER}
 
 
 FROM python_base AS builder
 
+USER root
 WORKDIR /app
 
 ENV POETRY_NO_INTERACTION=1 \
@@ -48,4 +51,4 @@ RUN python ./manage.py collectstatic --noinput
 
 EXPOSE 8000
 
-CMD ["/app/.venv/bin/gunicorn", "--bind", "0.0.0.0:8000", "lung_cancer_screening.wsgi"]
+ENTRYPOINT ["/app/.venv/bin/gunicorn", "--bind", "0.0.0.0:8000", "lung_cancer_screening.wsgi"]
