@@ -1,22 +1,22 @@
-Feature: Asbestos exposure page
+Feature: Cancer diagnosis page
   Scenario: The page is accessible
     Given I am logged in
-    When I go to "/asbestos-exposure"
+    When I go to "/cancer-diagnosis"
     Then there are no accessibility violations
     When I click "Continue"
     Then there are no accessibility violations
 
   Scenario: Form errors
     Given I am logged in
-    When I go to "/asbestos-exposure"
+    When I go to "/cancer-diagnosis"
     And I click "Continue"
-    Then I am on "/asbestos-exposure"
-    And I see a form error "Select if you have been exposed to asbestos"
+    Then I am on "/cancer-diagnosis"
+    And I see a form error "Select if you have been diagnosed with cancer"
 
   Scenario: Navigating backwards and forwards
     Given I am logged in
-    When I go to "/asbestos-exposure"
-    Then I see a back link to "/respiratory-conditions"
+    When I go to "/cancer-diagnosis"
+    Then I see a back link to "/asbestos-exposure"
     When I fill in and submit my asbestos exposure with "No"
-    Then I am on "/cancer-diagnosis"
+    Then I am on "/family-history-lung-cancer"
 

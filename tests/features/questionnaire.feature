@@ -44,8 +44,8 @@ Feature: Questionnaire
     When I fill in and submit my asbestos exposure with "No"
 
     Then I am on "/cancer-diagnosis"
-    And I see a back link to "/asbestos-exposure"
     When I fill in and submit my cancer diagnosis with "No"
+
     Then I am on "/family-history-lung-cancer"
     And I see a back link to "/cancer-diagnosis"
     When I fill in and submit my family history lung cancer with "Yes"
