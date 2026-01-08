@@ -41,8 +41,8 @@ Feature: Questionnaire
     When I fill in and submit my respiratory conditions with "Pneumonia" and "Emphysema"
 
     Then I am on "/asbestos-exposure"
-    And I see a back link to "/respiratory-conditions"
     When I fill in and submit my asbestos exposure with "No"
+
     Then I am on "/cancer-diagnosis"
     And I see a back link to "/asbestos-exposure"
     When I fill in and submit my cancer diagnosis with "No"
