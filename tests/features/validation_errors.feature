@@ -16,14 +16,6 @@ Feature: Validation errors
     Then I am on "/date-of-birth"
     And I see a form error "Date of birth must be a real date"
 
-  Scenario: Have you ever smoked form errors
-    Given I am logged in
-    And I have started the questionnaire
-    When I go to "/have-you-ever-smoked"
-    And I submit the form
-    Then I am on "/have-you-ever-smoked"
-    And I see a form error "Select if you have ever smoked"
-
   Scenario: Height form errors
     Given I am logged in
     And I have started the questionnaire

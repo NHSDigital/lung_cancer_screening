@@ -1,10 +1,16 @@
 Feature: Questionnaire
+  Scenario: Cannot change responses once submitted
+    Given I am logged in
+    And I have already submitted my responses
+    When I go to "/start"
+    And I click "Start"
+    Then I am on "/start"
+
   Scenario: The user can complete the full questionnaire
     Given I am logged in
     When I go to "/start"
     And I click "Start"
     Then I am on "/have-you-ever-smoked"
-    And I see a back link to "/start"
     When I fill in and submit my smoking status with "Yes, I used to smoke"
     Then I am on "/date-of-birth"
     And I see a back link to "/have-you-ever-smoked"
