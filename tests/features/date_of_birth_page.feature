@@ -1,4 +1,4 @@
-Feature:Date of birth page
+Feature: Date of birth page
   Scenario: The page is accessible
     Given I am logged in
     When I go to "/date-of-birth"

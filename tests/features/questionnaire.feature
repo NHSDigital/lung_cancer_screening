@@ -26,8 +26,8 @@ Feature: Questionnaire
     And I fill in and submit my weight with "5" stone and "10" pounds
 
     Then I am on "/sex-at-birth"
-    And I see a back link to "/weight"
     When I fill in and submit my sex at birth with "Male"
+
     Then I am on "/gender"
     And I see a back link to "/sex-at-birth"
     When I fill in and submit my gender with "Female"

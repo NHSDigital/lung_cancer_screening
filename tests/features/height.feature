@@ -1,4 +1,4 @@
-Feature: Have you ever smoked page
+Feature: Height page
   Scenario: The page is accessible
     Given I am logged in
     When I go to "/height"
@@ -9,7 +9,7 @@ Feature: Have you ever smoked page
   Scenario: Metric form errors
     Given I am logged in
     When I go to "/height"
-    And I submit the form
+    And I click "Continue"
     Then I am on "/height"
     And I see a form error "Enter your height"
     When I fill in and submit my height with "139.6"
@@ -22,7 +22,7 @@ Feature: Have you ever smoked page
   Scenario: Imperial form errors
     Given I am logged in
     When I go to "/height?unit=imperial"
-    And I submit the form
+    And I click "Continue"
     Then I am on "/height?unit=imperial"
     And I see a form error "Enter your height"
     When I fill in and submit my height with "5.2" feet and "2" inches

@@ -1,4 +1,4 @@
-Feature: Have you ever smoked page
+Feature: Weight page
   Scenario: The page is accessible
     Given I am logged in
     When I go to "/weight"
@@ -9,7 +9,7 @@ Feature: Have you ever smoked page
   Scenario: Metric form errors
     Given I am logged in
     When I go to "/weight"
-    And I submit the form
+    And I click "Continue"
     Then I am on "/weight"
     And I see a form error "Enter your weight"
     When I fill in and submit my weight with "25.3"
@@ -22,7 +22,7 @@ Feature: Have you ever smoked page
   Scenario: Imperial form errors
     Given I am logged in
     When I go to "/weight?unit=imperial"
-    And I submit the form
+    And I click "Continue"
     Then I am on "/weight?unit=imperial"
     And I see a form error "Enter your weight"
     When I fill in and submit my weight with "5.2" stone and "2" pounds
