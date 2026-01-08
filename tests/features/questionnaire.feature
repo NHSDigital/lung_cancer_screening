@@ -35,11 +35,11 @@ Feature: Questionnaire
     When I fill in and submit my ethnicity with "White"
 
     Then I am on "/education"
-    And I see a back link to "/ethnicity"
     When I click "Continue"
+
     Then I am on "/respiratory-conditions"
-    And I see a back link to "/education"
     When I fill in and submit my respiratory conditions with "Pneumonia" and "Emphysema"
+
     Then I am on "/asbestos-exposure"
     And I see a back link to "/respiratory-conditions"
     When I fill in and submit my asbestos exposure with "No"
