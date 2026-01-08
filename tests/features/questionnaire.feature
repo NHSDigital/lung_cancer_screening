@@ -18,15 +18,13 @@ Feature: Questionnaire
     When I fill in and submit my date of birth as 55 years ago
 
     Then I am on "/height"
-    And I click "Switch to feet and inches"
-    When I fill in and submit my height with "5" feet and "7" inches
+    When I click "Switch to feet and inches"
+    And I fill in and submit my height with "5" feet and "7" inches
 
     Then I am on "/weight"
-    And I see a back link to "/height"
-    When I fill in and submit my weight with "70"
-    And I click "Back"
-    And I click "Switch to stone and pounds"
-    When I fill in and submit my weight with "5" stone and "10" pounds
+    When I click "Switch to stone and pounds"
+    And I fill in and submit my weight with "5" stone and "10" pounds
+
     Then I am on "/sex-at-birth"
     And I see a back link to "/weight"
     When I fill in and submit my sex at birth with "Male"

@@ -8,7 +8,6 @@ Feature: Have you ever smoked page
 
   Scenario: Metric form errors
     Given I am logged in
-    And I have started the questionnaire
     When I go to "/height"
     And I submit the form
     Then I am on "/height"
@@ -22,7 +21,6 @@ Feature: Have you ever smoked page
 
   Scenario: Imperial form errors
     Given I am logged in
-    And I have started the questionnaire
     When I go to "/height?unit=imperial"
     And I submit the form
     Then I am on "/height?unit=imperial"
