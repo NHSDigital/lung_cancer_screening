@@ -9,7 +9,7 @@ Feature: Sex at birth page
   Scenario: Form errors
     Given I am logged in
     When I go to "/sex-at-birth"
-    And click "Continue"
+    And I click "Continue"
     Then I am on "/sex-at-birth"
     And I see a form error "Select your sex at birth"
 

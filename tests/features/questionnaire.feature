@@ -29,8 +29,8 @@ Feature: Questionnaire
     When I fill in and submit my sex at birth with "Male"
 
     Then I am on "/gender"
-    And I see a back link to "/sex-at-birth"
     When I fill in and submit my gender with "Female"
+
     Then I am on "/ethnicity"
     And I see a back link to "/gender"
     When I fill in and submit my ethnicity with "White"
