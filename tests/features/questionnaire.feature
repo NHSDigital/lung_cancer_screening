@@ -32,8 +32,8 @@ Feature: Questionnaire
     When I fill in and submit my gender with "Female"
 
     Then I am on "/ethnicity"
-    And I see a back link to "/gender"
     When I fill in and submit my ethnicity with "White"
+
     Then I am on "/education"
     And I see a back link to "/ethnicity"
     When I click "Continue"
