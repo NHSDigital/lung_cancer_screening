@@ -1,13 +1,26 @@
 {% extends 'layout.jinja' %}
-{% from 'nhsuk/components/button/macro.jinja' import button %}
-{% from 'nhsuk/components/input/macro.jinja' import input %}
+{% from 'nhsuk/components/back-link/macro.jinja' import backLink %}
+
+{% block beforeContent %}
+<nav>
+  {{
+    backLink({
+    "href": url("questions:date_of_birth"),
+    "text": "Back"
+    })
+  }}
+</nav>
+{% endblock beforeContent %}
 
 {% block content %}
   <div class="nhsuk-grid-row">
     <div class="nhsuk-grid-column-two-thirds">
-      <h2 class="title">You do not need an NHS lung health check</h2>
+      <h2 class="title">You are not eligible for lung cancer screening</h2>
 
-      <p>The NHS lung health check is for people between the ages of 55 and 74.</p>
+      <p>NHS lung cancer screening is for people between the ages of 55 and 74.</p>
+      <p>According to the date of birth you have provided you are not in this age range.</p>
+
+      {% include '_speak_to_a_gp_if.jinja' %}
     </div>
   </div>
 {% endblock %}
