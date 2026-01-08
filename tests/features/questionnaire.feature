@@ -10,11 +10,13 @@ Feature: Questionnaire
     Given I am logged in
     When I go to "/start"
     And I click "Start"
+
     Then I am on "/have-you-ever-smoked"
     When I fill in and submit my smoking status with "Yes, I used to smoke"
+
     Then I am on "/date-of-birth"
-    And I see a back link to "/have-you-ever-smoked"
     When I fill in and submit my date of birth as 55 years ago
+
     Then I am on "/height"
     And I see a back link to "/date-of-birth"
     When I fill in and submit my height with "170"
