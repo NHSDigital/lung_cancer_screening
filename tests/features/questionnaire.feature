@@ -18,11 +18,9 @@ Feature: Questionnaire
     When I fill in and submit my date of birth as 55 years ago
 
     Then I am on "/height"
-    And I see a back link to "/date-of-birth"
-    When I fill in and submit my height with "170"
-    And I click "Back"
     And I click "Switch to feet and inches"
     When I fill in and submit my height with "5" feet and "7" inches
+
     Then I am on "/weight"
     And I see a back link to "/height"
     When I fill in and submit my weight with "70"
