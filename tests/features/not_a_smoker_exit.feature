@@ -5,4 +5,4 @@ Feature: Non smokers
     When I go to "/have-you-ever-smoked"
     And I fill in and submit my smoking status with "No, I have never smoked"
     Then I am on "/non-smoker-exit"
-    And I see a title "You do not need an NHS lung health check"
+    And I see a title "You are not eligible for lung cancer screening"
