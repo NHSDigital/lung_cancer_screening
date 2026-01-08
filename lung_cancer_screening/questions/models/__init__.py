@@ -12,3 +12,4 @@ from .sex_at_birth_response import SexAtBirthResponse # noqa: F401
 from .weight_response import WeightResponse # noqa: F401
 from .cancer_diagnosis_response import CancerDiagnosisResponse # noqa: F401
 from .family_history_lung_cancer_response import FamilyHistoryLungCancerResponse # noqa: F401
+from .relatives_age_when_diagnosed_response import RelativesAgeWhenDiagnosedResponse # noqa: F401

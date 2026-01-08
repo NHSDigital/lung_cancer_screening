@@ -1,17 +1,6 @@
 {% extends 'layout.jinja' %}
-{% from 'nhsuk/components/button/macro.jinja' import button %}
-{% from 'nhsuk/components/back-link/macro.jinja' import backLink %}
 
-{% block beforeContent %}
-  <nav>
-    {{
-      backLink({
-        "href": url("questions:family_history_lung_cancer"),
-        "text": "Back"
-      })
-    }}
-  </nav>
-{% endblock beforeContent %}
+{% from 'nhsuk/components/button/macro.jinja' import button %}
 
 {% block page_content %}
   <div class="nhsuk-grid-row">
@@ -27,6 +16,9 @@
         <li>What is your ethnic background? {{ response_set.ethnicity }}</li>
         <li>Have you ever worked in a job where you might have been exposed to asbestos? {{ response_set.asbestos_exposure }}</li>
         <li>Have you ever been diagnosed with any of the following respiratory conditions? {{ response_set.respiratory_conditions }}</li>
+        <li>Have you ever been diagnosed with cancer? {{ response_set.cancer_diagnosis }}</li>
+        <li>Have any of your parents, siblings or children ever been diagnosed with lung cancer {{ response_set.family_history_lung_cancer }}</li>
+        <li>Were any of your relatives younger than 60 years old when they were diagnosed with lung cancer? {{ response_set.relatives_age_when_diagnosed }}</li>
       </ul>
 
       <form action="{{ request.path }}" method="post">

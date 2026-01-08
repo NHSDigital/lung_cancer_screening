@@ -123,3 +123,30 @@ Feature: Validation errors
     When I fill in and submit my respiratory conditions with "Bronchitis" and "No, I have not had any of these respiratory conditions"
     Then I am on "/respiratory-conditions"
     And I see a form error "Select if you have had any respiratory conditions, or select 'No, I have not had any of these respiratory conditions'"
+
+  Scenario: Respiratory conditions form errors
+    Given I am logged in
+    And I have started the questionnaire
+    When I go to "/cancer-diagnosis"
+    And I submit the form
+    Then I am on "/cancer-diagnosis"
+    And I see a form error "Select if you have been diagnosed with cancer"
+
+  Scenario: Respiratory conditions form errors
+    Given I am logged in
+    And I have started the questionnaire
+    When I go to "/family-history-lung-cancer"
+    And I submit the form
+    Then I am on "/family-history-lung-cancer"
+    And I see a form error "Select if any of your parents, siblings or children have had a diagnosis of lung cancer"
+
+  Scenario: Respiratory conditions form errors
+    Given I am logged in
+    And I have started the questionnaire
+    When I go to "/relatives-age-when-diagnosed"
+    Then I am on "/family-history-lung-cancer"
+    When I fill in and submit my family history lung cancer with "Yes"
+    Then I am on "/relatives-age-when-diagnosed"
+    When I submit the form
+    Then I am on "/relatives-age-when-diagnosed"
+    And I see a form error "Select if your relatives were younger than 60 when they were diagnosed with lung cancer"

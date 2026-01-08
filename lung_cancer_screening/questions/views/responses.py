@@ -13,7 +13,10 @@ class ResponsesView(LoginRequiredMixin, EnsureResponseSet, View):
         return render(
             request,
             "responses.jinja",
-            { "response_set": ResponseSetPresenter(request.response_set) }
+            {
+                "response_set": ResponseSetPresenter(request.response_set),
+                "back_link_url": reverse("questions:relatives_age_when_diagnosed")
+            }
         )
 
     def post(self, request):
