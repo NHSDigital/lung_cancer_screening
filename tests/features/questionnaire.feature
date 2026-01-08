@@ -50,8 +50,8 @@ Feature: Questionnaire
     When I fill in and submit my family history lung cancer with "Yes"
 
     Then I am on "/relatives-age-when-diagnosed"
-    And I see a back link to "/family-history-lung-cancer"
     When I fill in and submit my relatives age when diagnosed with "Yes, they were younger than 60"
+
     Then I am on "/responses"
     And I see a back link to "/relatives-age-when-diagnosed"
     And I see responses "Have you ever smoked? Yes, I used to smoke"
