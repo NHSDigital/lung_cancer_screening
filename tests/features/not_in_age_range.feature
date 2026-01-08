@@ -5,4 +5,4 @@ Feature: Not in age range
     When I go to "/date-of-birth"
     And I fill in and submit my date of birth with "01-01-1900"
     Then I am on "/age-range-exit"
-    And I see a title "You do not need an NHS lung health check"
+    And I see a title "You are not eligible for lung cancer screening"
