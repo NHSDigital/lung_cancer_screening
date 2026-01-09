@@ -38,7 +38,8 @@ Feature: Questionnaire
     When I fill in and submit my ethnicity with "White"
 
     Then I am on "/education"
-    When I click "Continue"
+    When I fill in and submit my education with "A-levels"
+
 
     Then I am on "/respiratory-conditions"
     When I fill in and submit my respiratory conditions with "Pneumonia" and "Emphysema"
@@ -64,6 +65,7 @@ Feature: Questionnaire
     And I see responses "What was your sex at birth? Male"
     And I see responses "Which of these best describes you? Female"
     And I see responses "What is your ethnic background? White"
+    And I see responses "What level of education have you completed? A-levels"
     And I see responses "Have you ever worked in a job where you might have been exposed to asbestos? No"
     And I see responses "Have you ever been diagnosed with any of the following respiratory conditions? Pneumonia and Emphysema"
     And I see responses "Have you ever been diagnosed with cancer? No"

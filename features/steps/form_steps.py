@@ -74,6 +74,11 @@ def when_i_fill_in_and_submit_my_ethnicity(context, ethnicity):
     context.page.get_by_label(ethnicity, exact=True).check()
     when_i_submit_the_form(context)
 
+@when(u'I fill in and submit my education with "{education}"')
+def when_i_fill_in_and_submit_my_education(context, education):
+    context.page.get_by_label(education, exact=True).check()
+    when_i_submit_the_form(context)
+
 @when(u'I fill in and submit my respiratory conditions with "{condition_a}" and "{condition_b}"')
 def when_i_fill_in_and_submit_my_respiratory_conditions(context, condition_a, condition_b):
     context.page.get_by_label(condition_a).check()
