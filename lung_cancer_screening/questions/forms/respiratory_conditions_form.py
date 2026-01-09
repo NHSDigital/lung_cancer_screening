@@ -17,6 +17,7 @@ class RespiratoryConditionsForm(forms.ModelForm):
                 "respiratory conditions?"
             ),
             label_classes="nhsuk-fieldset__legend--l",
+            label_is_page_heading=True,
             hint="Select all that apply",
             error_messages={
                 'required': (

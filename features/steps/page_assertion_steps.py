@@ -7,7 +7,7 @@ from lung_cancer_screening.questions.presenters.response_set_presenter import Re
 
 @then(u'I see a title "{title}"')
 def then_i_see_a_title(context, title):
-    expect(context.page.locator('.title')).to_have_text(title)
+    expect(context.page.locator('.nhsuk-heading-l')).to_have_text(title)
 
 @then(u'I see a back link to "{url}"')
 def then_i_see_a_back_link_to(context, url):

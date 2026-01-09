@@ -1,53 +1,57 @@
 Feature: Questionnaire
+  Scenario: Cannot change responses once submitted
+    Given I am logged in
+    And I have already submitted my responses
+    When I go to "/start"
+    And I click "Start"
+    Then I am on "/start"
+
   Scenario: The user can complete the full questionnaire
     Given I am logged in
     When I go to "/start"
     And I click "Start"
+
     Then I am on "/have-you-ever-smoked"
-    And I see a back link to "/start"
     When I fill in and submit my smoking status with "Yes, I used to smoke"
+
     Then I am on "/date-of-birth"
-    And I see a back link to "/have-you-ever-smoked"
     When I fill in and submit my date of birth as 55 years ago
+
     Then I am on "/height"
-    And I see a back link to "/date-of-birth"
-    When I fill in and submit my height with "170"
-    And I click "Back"
-    And I click "Switch to feet and inches"
-    When I fill in and submit my height with "5" feet and "7" inches
+    When I click "Switch to feet and inches"
+    And I fill in and submit my height with "5" feet and "7" inches
+
     Then I am on "/weight"
-    And I see a back link to "/height"
-    When I fill in and submit my weight with "70"
-    And I click "Back"
-    And I click "Switch to stone and pounds"
-    When I fill in and submit my weight with "5" stone and "10" pounds
+    When I click "Switch to stone and pounds"
+    And I fill in and submit my weight with "5" stone and "10" pounds
+
     Then I am on "/sex-at-birth"
-    And I see a back link to "/weight"
     When I fill in and submit my sex at birth with "Male"
+
     Then I am on "/gender"
-    And I see a back link to "/sex-at-birth"
     When I fill in and submit my gender with "Female"
+
     Then I am on "/ethnicity"
-    And I see a back link to "/gender"
     When I fill in and submit my ethnicity with "White"
+
     Then I am on "/education"
-    And I see a back link to "/ethnicity"
     When I click "Continue"
+
     Then I am on "/respiratory-conditions"
-    And I see a back link to "/education"
     When I fill in and submit my respiratory conditions with "Pneumonia" and "Emphysema"
+
     Then I am on "/asbestos-exposure"
-    And I see a back link to "/respiratory-conditions"
     When I fill in and submit my asbestos exposure with "No"
+
     Then I am on "/cancer-diagnosis"
-    And I see a back link to "/asbestos-exposure"
     When I fill in and submit my cancer diagnosis with "No"
+
     Then I am on "/family-history-lung-cancer"
-    And I see a back link to "/cancer-diagnosis"
     When I fill in and submit my family history lung cancer with "Yes"
+
     Then I am on "/relatives-age-when-diagnosed"
-    And I see a back link to "/family-history-lung-cancer"
     When I fill in and submit my relatives age when diagnosed with "Yes, they were younger than 60"
+
     Then I am on "/responses"
     And I see a back link to "/relatives-age-when-diagnosed"
     And I see responses "Have you ever smoked? Yes, I used to smoke"
