@@ -8,6 +8,7 @@ from ...factories.weight_response_factory import WeightResponseFactory
 from ...factories.sex_at_birth_response_factory import SexAtBirthResponseFactory
 from ...factories.gender_response_factory import GenderResponseFactory
 from ...factories.ethnicity_response_factory import EthnicityResponseFactory
+from ...factories.education_response_factory import EducationResponseFactory
 from ...factories.asbestos_exposure_response_factory import AsbestosExposureResponseFactory
 from ...factories.respiratory_conditions_response_factory import RespiratoryConditionsResponseFactory
 from ...factories.cancer_diagnosis_response_factory import CancerDiagnosisResponseFactory
@@ -18,6 +19,7 @@ from ....models.have_you_ever_smoked_response import HaveYouEverSmokedValues
 from ....models.sex_at_birth_response import SexAtBirthValues
 from ....models.gender_response import GenderValues
 from ....models.ethnicity_response import EthnicityValues
+from ....models.education_response import EducationValues
 from ....models.family_history_lung_cancer_response import FamilyHistoryLungCancerValues
 from ....models.relatives_age_when_diagnosed_response import RelativesAgeWhenDiagnosedValues
 
@@ -138,6 +140,7 @@ class TestResponseSetPresenter(TestCase):
         presenter = ResponseSetPresenter(self.response_set)
         self.assertEqual(presenter.ethnicity, None)
 
+
     def test_ethnicity_with_value(self):
         EthnicityResponseFactory(
             response_set=self.response_set,
@@ -145,6 +148,20 @@ class TestResponseSetPresenter(TestCase):
         )
         presenter = ResponseSetPresenter(self.response_set)
         self.assertEqual(presenter.ethnicity, EthnicityValues.WHITE.label)
+
+    def test_education_with_no_value(self):
+        presenter = ResponseSetPresenter(self.response_set)
+        self.assertEqual(presenter.education, None)
+
+
+    def test_education_with_value(self):
+        EducationResponseFactory(
+            response_set=self.response_set,
+            value=EducationValues.GCSES
+        )
+        presenter = ResponseSetPresenter(self.response_set)
+        self.assertEqual(presenter.education, EducationValues.GCSES.label)
+
 
     def test_asbestos_exposure_with_no_value(self):
         presenter = ResponseSetPresenter(self.response_set)
