@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('questions', '0038_relativesagewhendiagnosedresponse_and_more'),
+        ('questions', '0039_checkneedappointmentresponse'),
     ]
 
     operations = [

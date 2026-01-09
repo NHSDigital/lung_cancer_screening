@@ -52,6 +52,7 @@ class TestGetEducation(TestCase):
         self.assertContains(response, "What level of education have you completed?")
 
 
+@tag("Education")
 class TestPostEducation(TestCase):
     def setUp(self):
         self.user = login_user(self.client)

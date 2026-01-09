@@ -13,8 +13,7 @@ class EducationForm(forms.ModelForm):
             choices=EducationValues.choices,
             label="What level of education have you completed?",
             widget=forms.RadioSelect,
-            label_classes="nhsuk-fieldset__legend--l",
-            label_is_page_heading=True,
+            label_classes="nhsuk-fieldset__legend--m",
             hint=(
                 "Select all that apply"
             ),
