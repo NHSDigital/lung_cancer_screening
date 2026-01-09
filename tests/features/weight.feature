@@ -3,7 +3,7 @@ Feature: Weight page
     Given I am logged in
     When I go to "/weight"
     Then there are no accessibility violations
-    When I click "Continue"
+    When I click "Switch to stone and pounds"
     Then there are no accessibility violations
 
   Scenario: Metric form errors
@@ -18,6 +18,7 @@ Feature: Weight page
     When I fill in and submit my weight with "317.6"
     Then I am on "/weight"
     And I see a form error "Weight must be between 25.4kg and 317.5kg"
+    And there are no accessibility violations
 
   Scenario: Imperial form errors
     Given I am logged in
@@ -37,6 +38,7 @@ Feature: Weight page
     When I fill in and submit my weight with "50" stone and "1" pound
     Then I am on "/weight?unit=imperial"
     And I see a form error "Weight must be between 4 stone and 50 stone"
+    And there are no accessibility violations
 
   Scenario: Navigating backwards and forwards
     Given I am logged in

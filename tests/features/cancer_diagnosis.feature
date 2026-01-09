@@ -3,8 +3,6 @@ Feature: Cancer diagnosis page
     Given I am logged in
     When I go to "/cancer-diagnosis"
     Then there are no accessibility violations
-    When I click "Continue"
-    Then there are no accessibility violations
 
   Scenario: Form errors
     Given I am logged in
@@ -12,6 +10,7 @@ Feature: Cancer diagnosis page
     And I click "Continue"
     Then I am on "/cancer-diagnosis"
     And I see a form error "Select if you have been diagnosed with cancer"
+    And there are no accessibility violations
 
   Scenario: Navigating backwards and forwards
     Given I am logged in

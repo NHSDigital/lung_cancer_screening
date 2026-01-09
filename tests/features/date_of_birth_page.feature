@@ -3,8 +3,6 @@ Feature: Date of birth page
     Given I am logged in
     When I go to "/date-of-birth"
     Then there are no accessibility violations
-    When I click "Continue"
-    Then there are no accessibility violations
 
   Scenario: Form errors
     Given I am logged in
@@ -22,6 +20,7 @@ Feature: Date of birth page
     When I fill in and submit my date of birth with "31-02-2001"
     Then I am on "/date-of-birth"
     And I see a form error "Date of birth must be a real date"
+    And there are no accessibility violations
 
   Scenario: Eligibility of people not in age range
     Given I am logged in

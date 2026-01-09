@@ -3,8 +3,6 @@ Feature: Family history of lung cancer page
     Given I am logged in
     When I go to "/family-history-lung-cancer"
     Then there are no accessibility violations
-    When I click "Continue"
-    Then there are no accessibility violations
 
   Scenario: Form errors
     Given I am logged in
@@ -12,6 +10,7 @@ Feature: Family history of lung cancer page
     And I click "Continue"
     Then I am on "/family-history-lung-cancer"
     And I see a form error "Select if any of your parents, siblings or children have had a diagnosis of lung cancer"
+    And there are no accessibility violations
 
   Scenario: Navigating backwards and forwards
     Given I am logged in

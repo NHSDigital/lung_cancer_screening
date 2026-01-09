@@ -3,8 +3,6 @@ Feature: Have you ever smoked page
     Given I am logged in
     When I go to "/have-you-ever-smoked"
     Then there are no accessibility violations
-    When I click "Continue"
-    Then there are no accessibility violations
 
   Scenario: Form errors
     Given I am logged in
@@ -12,6 +10,7 @@ Feature: Have you ever smoked page
     And I submit the form
     Then I am on "/have-you-ever-smoked"
     And I see a form error "Select if you have ever smoked"
+    And there are no accessibility violations
 
   Scenario: Eligibility of non smokers
     Given I am logged in
@@ -19,6 +18,7 @@ Feature: Have you ever smoked page
     And I fill in and submit my smoking status with "No, I have never smoked"
     Then I am on "/non-smoker-exit"
     And I see a title "You are not eligible for lung cancer screening"
+    And there are no accessibility violations
 
   Scenario: Navigating backwards and forwards
     Given I am logged in

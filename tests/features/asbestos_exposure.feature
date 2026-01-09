@@ -3,8 +3,6 @@ Feature: Asbestos exposure page
     Given I am logged in
     When I go to "/asbestos-exposure"
     Then there are no accessibility violations
-    When I click "Continue"
-    Then there are no accessibility violations
 
   Scenario: Form errors
     Given I am logged in
@@ -12,6 +10,7 @@ Feature: Asbestos exposure page
     And I click "Continue"
     Then I am on "/asbestos-exposure"
     And I see a form error "Select if you have been exposed to asbestos"
+    And there are no accessibility violations
 
   Scenario: Navigating backwards and forwards
     Given I am logged in

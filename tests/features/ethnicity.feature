@@ -3,8 +3,6 @@ Feature: Ethnicity page
     Given I am logged in
     When I go to "/ethnicity"
     Then there are no accessibility violations
-    When I click "Continue"
-    Then there are no accessibility violations
 
   Scenario: Form errors
     Given I am logged in
@@ -12,6 +10,7 @@ Feature: Ethnicity page
     And I click "Continue"
     Then I am on "/ethnicity"
     And I see a form error "Select your ethnic background"
+    And there are no accessibility violations
 
   Scenario: Navigating backwards and forwards
     Given I am logged in

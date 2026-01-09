@@ -3,7 +3,7 @@ Feature: Height page
     Given I am logged in
     When I go to "/height"
     Then there are no accessibility violations
-    When I click "Continue"
+    When I click "Switch to feet and inches"
     Then there are no accessibility violations
 
   Scenario: Metric form errors
@@ -18,6 +18,7 @@ Feature: Height page
     When I fill in and submit my height with "243.9"
     Then I am on "/height"
     And I see a form error "Height must be between 139.7cm and 243.8 cm"
+    And there are no accessibility violations
 
   Scenario: Imperial form errors
     Given I am logged in
@@ -34,6 +35,7 @@ Feature: Height page
     When I fill in and submit my height with "8" feet and "1" inch
     Then I am on "/height?unit=imperial"
     And I see a form error "Height must be between 4 feet 7 inches and 8 feet"
+    And there are no accessibility violations
 
   Scenario: Navigating backwards and forwards
     Given I am logged in
