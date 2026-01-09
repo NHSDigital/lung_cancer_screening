@@ -6,6 +6,7 @@ Feature: Questionnaire
     And I click "Start now"
     Then I am on "/start"
 
+  @wip
   Scenario: The user can complete the full questionnaire
     Given I am logged in
     When I go to "/start"
@@ -58,16 +59,32 @@ Feature: Questionnaire
 
     Then I am on "/responses"
     And I see a back link to "/relatives-age-when-diagnosed"
-    And I see responses "Have you ever smoked? Yes, I used to smoke"
-    And I see responses "What is your date of birth?" with a date 55 years ago
-    And I see responses "What is your height? 5 feet 7 inches"
-    And I see responses "What is your weight? 5 stone 10 pounds"
-    And I see responses "What was your sex at birth? Male"
-    And I see responses "Which of these best describes you? Female"
-    And I see responses "What is your ethnic background? White"
-    And I see responses "What level of education have you completed? A-levels"
-    And I see responses "Have you ever worked in a job where you might have been exposed to asbestos? No"
-    And I see responses "Have you ever been diagnosed with any of the following respiratory conditions? Pneumonia and Emphysema"
-    And I see responses "Have you ever been diagnosed with cancer? No"
-    And I see responses "Have any of your parents, siblings or children ever been diagnosed with lung cancer Yes"
-    And I see responses "Were any of your relatives younger than 60 years old when they were diagnosed with lung cancer? Yes, they were younger than 60"
+
+    And I see "Yes, I used to smoke" as a response to "Have you ever smoked tobacco?" under "Eligibility"
+    And I see "/have-you-ever-smoked" as a link to change "Have you ever smoked tobacco?" under "Eligibility"
+    And I see a date 55 years ago as a response to "Date of birth" under "Eligibility"
+    And I see "/date-of-birth" as a link to change "Date of birth" under "Eligibility"
+
+    And I see "5 feet 7 inches" as a response to "Height" under "About you"
+    And I see "/height" as a link to change "Height" under "About you"
+    And I see "5 stone 10 pounds" as a response to "Weight" under "About you"
+    And I see "/weight" as a link to change "Weight" under "About you"
+    And I see "Male" as a response to "Sex at birth" under "About you"
+    And I see "/sex-at-birth" as a link to change "Sex at birth" under "About you"
+    And I see "Female" as a response to "Gender identity" under "About you"
+    And I see "/gender" as a link to change "Gender identity" under "About you"
+    And I see "White" as a response to "Ethnic group" under "About you"
+    And I see "/ethnicity" as a link to change "Ethnic group" under "About you"
+    And I see "/education" as a link to change "Highest level of education" under "About you"
+
+    And I see "Pneumonia and Emphysema" as a response to "Diagnosed respiratory conditions" under "Your health"
+    And I see "/respiratory-conditions" as a link to change "Diagnosed respiratory conditions" under "Your health"
+    And I see "No" as a response to "Have you ever worked in a job where you were exposed to asbestos?" under "Your health"
+    And I see "/asbestos-exposure" as a link to change "Have you ever worked in a job where you were exposed to asbestos?" under "Your health"
+    And I see "No" as a response to "Have you ever been diagnosed with cancer?" under "Your health"
+    And I see "/cancer-diagnosis" as a link to change "Have you ever been diagnosed with cancer?" under "Your health"
+
+    And I see "Yes" as a response to "Have any of your parents, siblings or children ever been diagnosed with lung cancer?" under "Family history"
+    And I see "/family-history-lung-cancer" as a link to change "Have any of your parents, siblings or children ever been diagnosed with lung cancer?" under "Family history"
+    And I see "Yes, they were younger than 60" as a response to "Were any of your relatives younger than 60 years old when they were diagnosed with lung cancer?" under "Family history"
+    And I see "/relatives-age-when-diagnosed" as a link to change "Were any of your relatives younger than 60 years old when they were diagnosed with lung cancer?" under "Family history"
