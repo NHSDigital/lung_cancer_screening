@@ -41,7 +41,7 @@ class DateOfBirthView(LoginRequiredMixin, EnsureResponseSet, View):
                 response.value = date_of_birth
                 response.save()
 
-                return redirect(reverse("questions:height"))
+                return redirect(reverse("questions:check_need_appointment"))
             else:
                 return redirect(reverse("questions:age_range_exit"))
 

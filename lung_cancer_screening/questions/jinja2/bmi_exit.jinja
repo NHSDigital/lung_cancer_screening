@@ -1,0 +1,27 @@
+{% extends 'layout.jinja' %}
+{% from 'nhsuk/components/back-link/macro.jinja' import backLink %}
+
+{% block beforeContent %}
+<nav>
+  {{
+    backLink({
+    "href": url("questions:check_need_appointment"),
+    "text": "Back"
+    })
+  }}
+</nav>
+{% endblock beforeContent %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      <h1 class="nhsuk-heading-l">Call us to book an appointment</h1>
+
+      <p>A healthcare professional will check if you need a lung scan at your appointment.</p>
+      <p>They will take your height and weight measurements to calculate your body mass index (BMI).</p>
+      <p>Call us on 020 0000 0000 to book an appointment. If we do not hear from you in 2 weeks we will call you.</p>
+
+      {% include '_speak_to_a_gp_if.jinja' %}
+    </div>
+  </div>
+{% endblock %}

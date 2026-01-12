@@ -3,19 +3,22 @@ Feature: Questionnaire
     Given I am logged in
     And I have already submitted my responses
     When I go to "/start"
-    And I click "Start"
+    And I click "Start now"
     Then I am on "/start"
 
   Scenario: The user can complete the full questionnaire
     Given I am logged in
     When I go to "/start"
-    And I click "Start"
+    And I click "Start now"
 
     Then I am on "/have-you-ever-smoked"
     When I fill in and submit my smoking status with "Yes, I used to smoke"
 
     Then I am on "/date-of-birth"
     When I fill in and submit my date of birth as 55 years ago
+
+    Then I am on "/check-if-you-need-an-appointment"
+    When I check "No, I can continue online" and submit
 
     Then I am on "/height"
     When I click "Switch to feet and inches"

@@ -40,7 +40,7 @@ Feature: Height page
   Scenario: Navigating backwards and forwards
     Given I am logged in
     When I go to "/height"
-    Then I see a back link to "/date-of-birth"
+    Then I see a back link to "/check-if-you-need-an-appointment"
     When I fill in and submit my height with "170"
     Then I am on "/weight"
     When I click "Back"

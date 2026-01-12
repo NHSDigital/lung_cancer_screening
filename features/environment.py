@@ -3,6 +3,7 @@ Behave environment setup for Django tests.
 behave-django handles test database setup automatically.
 We just need to add live server and Playwright setup.
 """
+from datetime import datetime
 import os
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase  # noqa: E402
 from playwright.sync_api import sync_playwright  # noqa: E402
@@ -63,3 +64,8 @@ def after_scenario(context, _scenario):
         del context.page
 
     # behave-django automatically rolls back database transactions
+
+def after_step(context, step):
+    if step.status == "failed":
+        print(f"Error on step: {step.name}")
+        context.page.screenshot(full_page=True, path=f"screenshots/{datetime.now()}-screenshot.png")
