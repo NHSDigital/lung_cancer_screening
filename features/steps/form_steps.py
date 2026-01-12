@@ -2,6 +2,17 @@ from behave import when
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+from features.steps.navigation_steps import when_i_click
+
+@when('I check "{value}" and submit')
+def when_i_check_value_and_submit(context, value):
+    context.page.get_by_label(value, exact=True).check()
+    when_i_submit_the_form(context)
+
+@when("I take a screenshot")
+@when("I take a screenshot {value}")
+def screenshot(context, value=""):
+    context.page.screenshot(full_page=True, path=f"screenshots/{datetime.now()}-{value}-screenshot.png")
 
 @when('I fill in and submit my smoking status with "{smoking_status}"')
 def when_i_fill_in_and_submit_my_smoking_status(context, smoking_status):
@@ -91,4 +102,4 @@ def when_i_fill_in_and_submit_my_cancer_diagnosis(context, relatives_age_when_di
 
 @when('I submit the form')
 def when_i_submit_the_form(context):
-    context.page.click("text=Continue")
+    when_i_click(context, "Continue")

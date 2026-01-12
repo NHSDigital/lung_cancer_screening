@@ -8,7 +8,7 @@ def given_i_go_to(context, path):
 
 @when('I click "{text}"')
 def when_i_click(context, text):
-    context.page.click(f"text={text}")
+    context.page.get_by_text(text, exact=True).click()
 
 @then('I am on "{path}"')
 def then_i_am_on(context, path):

@@ -34,4 +34,4 @@ Feature: Date of birth page
     When I go to "/date-of-birth"
     Then I see a back link to "/have-you-ever-smoked"
     When I fill in and submit my date of birth as 55 years ago
-    Then I am on "/height"
+    Then I am on "/check-if-you-need-an-appointment"
