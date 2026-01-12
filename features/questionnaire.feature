@@ -63,7 +63,6 @@ Feature: Questionnaire
     And I see a date 55 years ago as a response to "Date of birth" under "Eligibility"
 
     And I see "5 feet 7 inches" as a response to "Height" under "About you"
-    And I see "/height" as a link to change "Height" under "About you"
     And I see "5 stone 10 pounds" as a response to "Weight" under "About you"
     And I see "/weight" as a link to change "Weight" under "About you"
     And I see "Male" as a response to "Sex at birth" under "About you"

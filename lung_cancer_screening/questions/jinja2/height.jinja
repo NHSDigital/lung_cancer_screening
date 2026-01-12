@@ -24,6 +24,11 @@
   <div class="nhsuk-grid-column-two-thirds">
     <form action="{{ request.get_full_path() }}" method="POST" novalidate>
       {{ csrf_input }}
+
+      {% if request.GET.get("change") == "True" %}
+        <input type="hidden" name="change" value="True">
+      {% endif %}
+
       <h1 class="nhsuk-heading-l">Enter your height</h1>
       <p>An accurate measurement is important.
 
@@ -43,8 +48,12 @@
           {{ form.metric.as_field_group() }}
         {% endif %}
 
-
-      <p><a href="?unit={{ switch_to_unit }}">Switch to {{ HEIGHT_UNIT[switch_to_unit] }}</a></p>
+      <p>
+        {% set change_param = "&change=True" if request.GET.get("change") == "True" else "" %}
+        <a href="?unit={{ switch_to_unit }}{{ change_param }}">
+          Switch to {{ HEIGHT_UNIT[switch_to_unit] }}
+        </a>
+      </p>
 
       {% endcall %}
 

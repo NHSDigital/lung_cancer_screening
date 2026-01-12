@@ -50,3 +50,17 @@ Feature: Height page
     When I click "Back"
     Then I am on "/height"
 
+  Scenario: Checking responses and changing them
+    Given I am logged in
+    When I go to "/height"
+    And I fill in and submit my height with "170"
+    When I go to "/check-your-answers"
+    Then I see "170 cm" as a response to "Height" under "About you"
+    And I see "/height?change=True" as a link to change "Height" under "About you"
+    When I click the link to change "Height" under "About you"
+    Then I am on "/height?change=True"
+    When I click "Switch to feet and inches"
+    And I fill in and submit my height with "5" feet and "7" inches
+    Then I am on "/check-your-answers"
+    And I see "5 feet 7 inches" as a response to "Height" under "About you"
+
