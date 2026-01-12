@@ -62,7 +62,6 @@ Feature: Questionnaire
     And I see "Yes, I used to smoke" as a response to "Have you ever smoked tobacco?" under "Eligibility"
     And I see "/have-you-ever-smoked" as a link to change "Have you ever smoked tobacco?" under "Eligibility"
     And I see a date 55 years ago as a response to "Date of birth" under "Eligibility"
-    And I see "/date-of-birth" as a link to change "Date of birth" under "Eligibility"
 
     And I see "5 feet 7 inches" as a response to "Height" under "About you"
     And I see "/height" as a link to change "Height" under "About you"

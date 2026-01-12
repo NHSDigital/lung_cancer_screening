@@ -148,13 +148,24 @@ class TestPostDateOfBirth(TestCase):
         self.assertEqual(DateOfBirthResponse.objects.get(response_set=response_set).value, self.valid_age)
         self.assertEqual(response_set.user, self.user)
 
-    def test_post_redirects_to_height_path(self):
+    def test_post_redirects_to_height(self):
         response = self.client.post(
             reverse("questions:date_of_birth"),
             self.valid_params
         )
 
         self.assertRedirects(response, reverse("questions:check_need_appointment"))
+
+    def test_post_redirects_to_responses_if_change_query_param_is_true(self):
+        response = self.client.post(
+            reverse("questions:date_of_birth"),
+            {
+                **self.valid_params,
+                "change": "True"
+            }
+        )
+
+        self.assertRedirects(response, reverse("questions:responses"))
 
     def test_post_responds_with_422_if_the_resource_is_invalid(self):
         response = self.client.post(
