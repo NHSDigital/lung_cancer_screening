@@ -34,16 +34,18 @@ class CancerDiagnosisView(LoginRequiredMixin, EnsureResponseSet, View):
         if form.is_valid():
             response.value = form.cleaned_data["value"]
             response.save()
-            return redirect(reverse("questions:family_history_lung_cancer"))
+            if self._should_redirect_to_responses(request):
+                return redirect(reverse("questions:responses"))
+            else:
+                return redirect(reverse("questions:family_history_lung_cancer"))
         else:
             return render_template(request, form, 422)
 
 
-def render_template(request, form, status=200):
-    #response, _ = CancerDiagnosisResponse.objects.get_or_build(
-    #    response_set=request.response_set
-    #)
+    def _should_redirect_to_responses(self, request):
+        return request.POST.get("change") == "True"
 
+def render_template(request, form, status=200):
     return render(
         request,
         "cancer_diagnosis.jinja",
