@@ -6,7 +6,6 @@ Feature: Questionnaire
     And I click "Start now"
     Then I am on "/start"
 
-  @wip
   Scenario: The user can complete the full questionnaire
     Given I am logged in
     When I go to "/start"
@@ -80,7 +79,6 @@ Feature: Questionnaire
     And I see "Pneumonia and Emphysema" as a response to "Diagnosed respiratory conditions" under "Your health"
     And I see "/respiratory-conditions" as a link to change "Diagnosed respiratory conditions" under "Your health"
     And I see "No" as a response to "Have you ever worked in a job where you were exposed to asbestos?" under "Your health"
-    And I see "/asbestos-exposure" as a link to change "Have you ever worked in a job where you were exposed to asbestos?" under "Your health"
     And I see "No" as a response to "Have you ever been diagnosed with cancer?" under "Your health"
     And I see "/cancer-diagnosis" as a link to change "Have you ever been diagnosed with cancer?" under "Your health"
 

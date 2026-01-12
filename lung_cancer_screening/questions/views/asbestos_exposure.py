@@ -12,10 +12,9 @@ class AsbestosExposureView(LoginRequiredMixin, EnsureResponseSet, View):
         response, _ = AsbestosExposureResponse.objects.get_or_build(
             response_set=request.response_set
         )
-        return render(
+        return render_template(
             request,
-            "asbestos_exposure.jinja",
-            {"form": AsbestosExposureForm(instance=response)}
+            AsbestosExposureForm(instance=response)
         )
 
     def post(self, request):
@@ -30,11 +29,24 @@ class AsbestosExposureView(LoginRequiredMixin, EnsureResponseSet, View):
         if form.is_valid():
             response.value = form.cleaned_data["value"]
             response.save()
-            return redirect(reverse("questions:cancer_diagnosis"))
+            if self._should_redirect_to_responses(request):
+                return redirect(reverse("questions:responses"))
+            else:
+                return redirect(reverse("questions:cancer_diagnosis"))
         else:
-            return render(
-                request,
-                "asbestos_exposure.jinja",
-                {"form": form},
-                status=422
-            )
+            return render_template(request, form, 422)
+
+
+    def _should_redirect_to_responses(self, request):
+        return bool(request.POST.get("change"))
+
+def render_template(request, form, status=200):
+    return render(
+        request,
+        "asbestos_exposure.jinja",
+        {
+            "form": form,
+            "back_link_url": reverse("questions:respiratory_conditions")
+        },
+        status=status
+    )

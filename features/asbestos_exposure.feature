@@ -19,3 +19,15 @@ Feature: Asbestos exposure page
     When I fill in and submit my asbestos exposure with "No"
     Then I am on "/cancer-diagnosis"
 
+  Scenario: Checking responses and changing them
+    Given I am logged in
+    When I go to "/asbestos-exposure"
+    And I fill in and submit my asbestos exposure with "No"
+    When I go to "/check-your-answers"
+    Then I see "No" as a response to "Have you ever worked in a job where you were exposed to asbestos?" under "Your health"
+    And I see "/asbestos-exposure?change=True" as a link to change "Have you ever worked in a job where you were exposed to asbestos?" under "Your health"
+    When I click the link to change "Have you ever worked in a job where you were exposed to asbestos?" under "Your health"
+    Then I am on "/asbestos-exposure?change=True"
+    When I fill in and submit my asbestos exposure with "Yes"
+    Then I am on "/check-your-answers"
+    And I see "Yes" as a response to "Have you ever worked in a job where you were exposed to asbestos?" under "Your health"

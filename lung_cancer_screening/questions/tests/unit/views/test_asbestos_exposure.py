@@ -124,14 +124,26 @@ class TestPostAsbestosExposure(TestCase):
         self.assertRedirects(response, reverse("questions:start"))
 
 
-    def test_post_redirects_to_the_next_page(self):
+    def test_post_redirects_to_cancer_diagnosis(self):
         response = self.client.post(
             reverse("questions:asbestos_exposure"),
             self.valid_params
         )
 
-        # Assuming it redirects to the next question page - adjust as needed
-        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse("questions:cancer_diagnosis"))
+
+
+    def test_post_redirects_to_responses_if_change_query_param_is_true(self):
+        response = self.client.post(
+            reverse("questions:asbestos_exposure"),
+            {
+                **self.valid_params,
+                "change": "True"
+            }
+        )
+
+        self.assertRedirects(response, reverse("questions:responses"))
+
 
     def test_post_responds_with_422_if_the_response_fails_to_create(self):
         response = self.client.post(
