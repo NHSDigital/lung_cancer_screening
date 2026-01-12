@@ -148,13 +148,24 @@ class TestPostEthnicity(TestCase):
         )
         self.assertEqual(response_set.user, self.user)
 
-    def test_post_redirects_to_the_education_path(self):
+    def test_post_redirects_to_education(self):
         response = self.client.post(
             reverse("questions:ethnicity"),
             self.valid_params
         )
 
         self.assertRedirects(response, reverse("questions:education"))
+
+    def test_post_redirects_to_responses_if_change_query_param_is_true(self):
+        response = self.client.post(
+            reverse("questions:ethnicity"),
+            {
+                **self.valid_params,
+                "change": "True"
+            }
+        )
+
+        self.assertRedirects(response, reverse("questions:responses"))
 
     def test_post_responds_with_422_if_the_response_fails_to_create(self):
         response = self.client.post(
