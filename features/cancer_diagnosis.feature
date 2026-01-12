@@ -19,7 +19,6 @@ Feature: Cancer diagnosis page
     When I fill in and submit my cancer diagnosis with "No"
     Then I am on "/family-history-lung-cancer"
 
-  @wip
   Scenario: Checking responses and changing them
     Given I am logged in
     When I go to "/cancer-diagnosis"

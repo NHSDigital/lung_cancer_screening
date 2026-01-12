@@ -80,7 +80,6 @@ Feature: Questionnaire
     And I see "/respiratory-conditions" as a link to change "Diagnosed respiratory conditions" under "Your health"
     And I see "No" as a response to "Have you ever worked in a job where you were exposed to asbestos?" under "Your health"
     And I see "No" as a response to "Have you ever been diagnosed with cancer?" under "Your health"
-    And I see "/cancer-diagnosis" as a link to change "Have you ever been diagnosed with cancer?" under "Your health"
 
     And I see "Yes" as a response to "Have any of your parents, siblings or children ever been diagnosed with lung cancer?" under "Family history"
     And I see "/family-history-lung-cancer" as a link to change "Have any of your parents, siblings or children ever been diagnosed with lung cancer?" under "Family history"

@@ -1,19 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.urls import reverse
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views import View
 
-from .mixins.ensure_response_set import EnsureResponseSet
-
+from .question_base_view import QuestionBaseView
 from ..forms.cancer_diagnosis_form import CancerDiagnosisForm
 from ..models.cancer_diagnosis_response import CancerDiagnosisResponse
 
-class CancerDiagnosisView(LoginRequiredMixin, EnsureResponseSet, View):
-#    def setup(self, request):
-#        super()
-#        self.response, _ = CancerDiagnosisResponse.objects.get_or_build(
-#            response_set=request.response_set
-#        )
+class CancerDiagnosisView(QuestionBaseView):
 
     def get(self, request):
         response, _ = CancerDiagnosisResponse.objects.get_or_build(
@@ -34,16 +26,13 @@ class CancerDiagnosisView(LoginRequiredMixin, EnsureResponseSet, View):
         if form.is_valid():
             response.value = form.cleaned_data["value"]
             response.save()
-            if self._should_redirect_to_responses(request):
-                return redirect(reverse("questions:responses"))
-            else:
-                return redirect(reverse("questions:family_history_lung_cancer"))
+            return self.redirect_to_response_or_next_question(
+                request,
+                "questions:family_history_lung_cancer"
+            )
         else:
             return render_template(request, form, 422)
 
-
-    def _should_redirect_to_responses(self, request):
-        return request.POST.get("change") == "True"
 
 def render_template(request, form, status=200):
     return render(
