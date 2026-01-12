@@ -1,14 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.urls import reverse
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views import View
 
-from .mixins.ensure_response_set import EnsureResponseSet
+from .question_base_view import QuestionBaseView
 from ..forms.gender_form import GenderForm
 from ..models.gender_response import GenderResponse
 
 
-class GenderView(LoginRequiredMixin, EnsureResponseSet, View):
+class GenderView(QuestionBaseView):
     def get(self, request):
         response, _ = GenderResponse.objects.get_or_build(
             response_set=request.response_set
@@ -30,7 +28,10 @@ class GenderView(LoginRequiredMixin, EnsureResponseSet, View):
         if form.is_valid():
             response.value = form.cleaned_data["value"]
             response.save()
-            return redirect(reverse("questions:ethnicity"))
+            return self.redirect_to_response_or_next_question(
+                request,
+                "questions:ethnicity"
+            )
         else:
             return render_template(
                 request,

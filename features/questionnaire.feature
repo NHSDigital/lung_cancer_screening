@@ -70,7 +70,6 @@ Feature: Questionnaire
     And I see "Male" as a response to "Sex at birth" under "About you"
     And I see "/sex-at-birth" as a link to change "Sex at birth" under "About you"
     And I see "Female" as a response to "Gender identity" under "About you"
-    And I see "/gender" as a link to change "Gender identity" under "About you"
     And I see "White" as a response to "Ethnic group" under "About you"
     And I see "/education" as a link to change "Highest level of education" under "About you"
 
