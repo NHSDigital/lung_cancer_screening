@@ -29,7 +29,7 @@ class CheckNeedAppointmentView(LoginRequiredMixin, EnsureResponseSet, View):
             response.save()
 
             if form.cleaned_data["value"] :
-                return redirect(reverse("questions:bmi_exit"))
+                return redirect(reverse("questions:book_an_appointment"))
             else :
                 return redirect(reverse("questions:height"))
         else:

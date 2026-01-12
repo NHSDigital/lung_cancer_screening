@@ -18,7 +18,7 @@ Feature: Check if you need an appointment page
     When I go to "/check-if-you-need-an-appointment"
     Then I see a back link to "/date-of-birth"
     When I check "Yes, one or more of these things applies to me and I need a face-to-face appointment" and submit
-    Then I am on "/bmi-exit"
+    Then I am on "/call-us-to-book-an-appointment"
 
   Scenario: Navigating backwards and forwards
     Given I am logged in

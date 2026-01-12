@@ -5,9 +5,9 @@ from django.views import View
 from .mixins.ensure_response_set import EnsureResponseSet
 
 
-class BmiExitView(LoginRequiredMixin, EnsureResponseSet, View):
+class BookAnAppointmentExitView(LoginRequiredMixin, EnsureResponseSet, View):
     def get(self, request):
         return render(
             request,
-            "bmi_exit.jinja"
+            "book_an_appointment.jinja"
         )

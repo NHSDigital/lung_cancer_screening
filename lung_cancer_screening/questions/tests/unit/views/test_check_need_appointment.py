@@ -133,14 +133,14 @@ class TestPostCheckNeedAppointment(TestCase):
         # Assuming it redirects to the next question page - adjust as needed
         self.assertRedirects(response, reverse("questions:height"))
 
-    def test_post_redirects_to_bmi_exit_page(self):
+    def test_post_redirects_to_book_an_appointment_page(self):
         response = self.client.post(
             reverse("questions:check_need_appointment"),
             {"value": True}
         )
 
         # Assuming it redirects to the next question page - adjust as needed
-        self.assertRedirects(response, reverse("questions:bmi_exit"))
+        self.assertRedirects(response, reverse("questions:book_an_appointment"))
 
     def test_post_responds_with_422_if_the_response_fails_to_create(self):
         response = self.client.post(

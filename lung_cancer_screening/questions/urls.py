@@ -19,7 +19,7 @@ from django.views.generic import RedirectView
 
 from .views.age_range_exit import AgeRangeExitView
 from .views.asbestos_exposure import AsbestosExposureView
-from .views.bmi_exit import BmiExitView
+from .views.book_an_appointment import BookAnAppointmentExitView
 from .views.cancer_diagnosis import CancerDiagnosisView
 from .views.check_need_appointment import CheckNeedAppointmentView
 from .views.date_of_birth import DateOfBirthView
@@ -40,24 +40,24 @@ from .views.your_results import YourResultsView
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/start'), name='root'),
-    path('start', StartView.as_view(), name='start'),
-    path('have-you-ever-smoked', HaveYouEverSmokedView.as_view(), name='have_you_ever_smoked'),
-    path('date-of-birth', DateOfBirthView.as_view(), name='date_of_birth'),
-    path('check-if-you-need-an-appointment', CheckNeedAppointmentView.as_view(), name='check_need_appointment'),
-    path('height', HeightView.as_view(), name='height'),
-    path('weight', WeightView.as_view(), name='weight'),
-    path('sex-at-birth', SexAtBirthView.as_view(), name='sex_at_birth'),
-    path('gender', GenderView.as_view(), name='gender'),
-    path('ethnicity', EthnicityView.as_view(), name='ethnicity'),
-    path('education', EducationView.as_view(), name='education'),
-    path('respiratory-conditions', RespiratoryConditionsView.as_view(), name='respiratory_conditions'),
-    path('asbestos-exposure', AsbestosExposureView.as_view(), name='asbestos_exposure'),
-    path('cancer-diagnosis', CancerDiagnosisView.as_view(), name='cancer_diagnosis'),
-    path('family-history-lung-cancer', FamilyHistoryLungCancerView.as_view(), name='family_history_lung_cancer'),
-    path('relatives-age-when-diagnosed', RelativesAgeWhenDiagnosedView.as_view(), name='relatives_age_when_diagnosed'),
-    path('responses', ResponsesView.as_view(), name='responses'),
     path('age-range-exit', AgeRangeExitView.as_view(), name='age_range_exit'),
-    path('bmi-exit', BmiExitView.as_view(), name='bmi_exit'),
+    path('asbestos-exposure', AsbestosExposureView.as_view(), name='asbestos_exposure'),
+    path('call-us-to-book-an-appointment', BookAnAppointmentExitView.as_view(), name='book_an_appointment'),
+    path('cancer-diagnosis', CancerDiagnosisView.as_view(), name='cancer_diagnosis'),
+    path('check-if-you-need-an-appointment', CheckNeedAppointmentView.as_view(), name='check_need_appointment'),
+    path('date-of-birth', DateOfBirthView.as_view(), name='date_of_birth'),
+    path('education', EducationView.as_view(), name='education'),
+    path('ethnicity', EthnicityView.as_view(), name='ethnicity'),
+    path('family-history-lung-cancer', FamilyHistoryLungCancerView.as_view(), name='family_history_lung_cancer'),
+    path('gender', GenderView.as_view(), name='gender'),
+    path('have-you-ever-smoked', HaveYouEverSmokedView.as_view(), name='have_you_ever_smoked'),
+    path('height', HeightView.as_view(), name='height'),
     path('non-smoker-exit', NonSmokerExitView.as_view(), name='non_smoker_exit'),
+    path('relatives-age-when-diagnosed', RelativesAgeWhenDiagnosedView.as_view(), name='relatives_age_when_diagnosed'),
+    path('respiratory-conditions', RespiratoryConditionsView.as_view(), name='respiratory_conditions'),
+    path('responses', ResponsesView.as_view(), name='responses'),
+    path('sex-at-birth', SexAtBirthView.as_view(), name='sex_at_birth'),
+    path('start', StartView.as_view(), name='start'),
+    path('weight', WeightView.as_view(), name='weight'),
     path('your-results', YourResultsView.as_view(), name='your_results'),
 ]
