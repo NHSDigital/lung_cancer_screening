@@ -9,7 +9,15 @@
   <script type="module" src="{{ static('js/bundle.js' )}}"></script>
 {% endblock %}
 
-{% block pageTitle %}Lung Cancer Screening - NHS{% endblock %}
+{% block pageTitle %}Check if you need a lung scan{% endblock %}
+
+{% block header %}
+  {{ header({
+    "service": {
+      "text": "Check if you need a lung scan"
+    }
+  }) }}
+{% endblock header %}
 
 {% block beforeContent %}
   {% if back_link_url %}
