@@ -26,7 +26,7 @@ class TestGetResponses(TestCase):
 
         self.assertRedirects(
             response,
-            "/oidc/authenticate/?next=/responses",
+            "/oidc/authenticate/?next=/check-your-answers",
             fetch_redirect_response=False
         )
 
@@ -90,7 +90,7 @@ class TestPostResponses(TestCase):
 
         self.assertRedirects(
             response,
-            "/oidc/authenticate/?next=/responses",
+            "/oidc/authenticate/?next=/check-your-answers",
             fetch_redirect_response=False
         )
 

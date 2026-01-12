@@ -57,7 +57,7 @@ Feature: Questionnaire
     Then I am on "/relatives-age-when-diagnosed"
     When I fill in and submit my relatives age when diagnosed with "Yes, they were younger than 60"
 
-    Then I am on "/responses"
+    Then I am on "/check-your-answers"
     And I see a back link to "/relatives-age-when-diagnosed"
 
     And I see "Yes, I used to smoke" as a response to "Have you ever smoked tobacco?" under "Eligibility"

@@ -17,7 +17,7 @@ Feature: Family history of lung cancer page
     When I go to "/family-history-lung-cancer"
     Then I see a back link to "/cancer-diagnosis"
     When I fill in and submit my asbestos exposure with "No"
-    Then I am on "/responses"
+    Then I am on "/check-your-answers"
     When I click "Back"
     When I fill in and submit my family history lung cancer with "Yes"
     Then I am on "/relatives-age-when-diagnosed"
