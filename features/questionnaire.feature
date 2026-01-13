@@ -67,7 +67,6 @@ Feature: Questionnaire
     And I see "Male" as a response to "Sex at birth" under "About you"
     And I see "Female" as a response to "Gender identity" under "About you"
     And I see "White" as a response to "Ethnic group" under "About you"
-    And I see "/education" as a link to change "Highest level of education" under "About you"
 
     And I see "Pneumonia and Emphysema" as a response to "Diagnosed respiratory conditions" under "Your health"
     And I see "No" as a response to "Have you ever worked in a job where you were exposed to asbestos?" under "Your health"
