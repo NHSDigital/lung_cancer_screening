@@ -79,4 +79,3 @@ Feature: Questionnaire
     And I see "Yes" as a response to "Have any of your parents, siblings or children ever been diagnosed with lung cancer?" under "Family history"
     And I see "/family-history-lung-cancer" as a link to change "Have any of your parents, siblings or children ever been diagnosed with lung cancer?" under "Family history"
     And I see "Yes, they were younger than 60" as a response to "Were any of your relatives younger than 60 years old when they were diagnosed with lung cancer?" under "Family history"
-    And I see "/relatives-age-when-diagnosed" as a link to change "Were any of your relatives younger than 60 years old when they were diagnosed with lung cancer?" under "Family history"

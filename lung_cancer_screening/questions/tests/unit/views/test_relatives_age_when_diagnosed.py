@@ -145,10 +145,21 @@ class TestPostRelativesAgeWhenDiagnosed(TestCase):
 
         self.assertRedirects(response, reverse("questions:start"))
 
-    def test_post_redirects_to_responses_path(self):
+    def test_post_redirects_to_responses(self):
         response = self.client.post(
             reverse("questions:relatives_age_when_diagnosed"),
             self.valid_params
+        )
+
+        self.assertRedirects(response, reverse("questions:responses"))
+
+    def test_post_redirects_to_responses_if_change_query_param_is_true(self):
+        response = self.client.post(
+            reverse("questions:relatives_age_when_diagnosed"),
+            {
+                **self.valid_params,
+                "change": "True"
+            }
         )
 
         self.assertRedirects(response, reverse("questions:responses"))
