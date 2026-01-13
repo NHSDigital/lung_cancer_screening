@@ -29,6 +29,11 @@
       {% endif %}
       <form action="{{ action_url }}" method="POST" novalidate>
         {{ csrf_input }}
+
+        {% if request.GET.get("change") == "True" %}
+          <input type="hidden" name="change" value="True">
+        {% endif %}
+
         <h1 class="nhsuk-heading-l">Enter your weight</h1>
 
         <p>An accurate measurement is important.
@@ -42,13 +47,18 @@
           }
         }) %}
 
-        {% if unit == "imperial" %}
-          {{ form.imperial.as_field_group() }}
-        {% else %}
-          {{ form.metric.as_field_group() }}
-        {% endif %}
+          {% if unit == "imperial" %}
+            {{ form.imperial.as_field_group() }}
+          {% else %}
+            {{ form.metric.as_field_group() }}
+          {% endif %}
 
-          <p><a href="?unit={{ switch_to_unit }}">Switch to {{ WEIGHT_UNIT[switch_to_unit] }}</a></p>
+          <p>
+            {% set change_param = "&change=True" if request.GET.get("change") == "True" else "" %}
+            <a href="?unit={{ switch_to_unit }}{{ change_param }}">
+              Switch to {{ WEIGHT_UNIT[switch_to_unit] }}
+            </a>
+          </p>
         {% endcall %}
 
         {{ button({

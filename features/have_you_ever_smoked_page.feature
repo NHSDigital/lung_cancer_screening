@@ -26,3 +26,16 @@ Feature: Have you ever smoked page
     Then I see a back link to "/start"
     When I fill in and submit my smoking status with "Yes, I used to smoke"
     Then I am on "/date-of-birth"
+
+  Scenario: Checking responses and changing them
+    Given I am logged in
+    When I go to "/have-you-ever-smoked"
+    And I fill in and submit my smoking status with "Yes, I used to smoke"
+    When I go to "/check-your-answers"
+    Then I see "Yes, I used to smoke" as a response to "Have you ever smoked tobacco?" under "Eligibility"
+    And I see "/have-you-ever-smoked?change=True" as a link to change "Have you ever smoked tobacco?" under "Eligibility"
+    When I click the link to change "Have you ever smoked tobacco?" under "Eligibility"
+    Then I am on "/have-you-ever-smoked?change=True"
+    When I fill in and submit my smoking status with "Yes, I currently smoke"
+    Then I am on "/check-your-answers"
+    And I see "Yes, I currently smoke" as a response to "Have you ever smoked tobacco?" under "Eligibility"

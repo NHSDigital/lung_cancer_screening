@@ -129,3 +129,39 @@ class TestPostFamilyHistoryLungCancer(TestCase):
         )
 
         self.assertRedirects(response, reverse("questions:responses"))
+
+    def test_post_redirects_to_responses_path_when_change_query_param_is_true(self):
+        response = self.client.post(
+            reverse("questions:family_history_lung_cancer"),
+            {
+                **self.valid_params,
+                "change": "True"
+            }
+        )
+
+        self.assertRedirects(response, reverse("questions:responses"))
+
+    def test_post_redirects_to_relatives_age_when_diagnosed_path_when_response_is_yes(self):
+        response = self.client.post(
+            reverse("questions:family_history_lung_cancer"),
+            {"value": FamilyHistoryLungCancerValues.YES}
+        )
+
+        self.assertRedirects(response, reverse("questions:relatives_age_when_diagnosed"))
+
+    def test_post_redirects_to_relatives_age_when_diagnosed_path_with_query_params_when_response_is_yes_and_change_true(self):
+        response = self.client.post(
+            reverse("questions:family_history_lung_cancer"),
+            {
+                "value": FamilyHistoryLungCancerValues.YES,
+                "change": "True"
+            }
+        )
+
+        self.assertRedirects(
+            response,
+            reverse(
+                "questions:relatives_age_when_diagnosed",
+                query={"change": "True"}
+            )
+        )

@@ -1,13 +1,11 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views import View
 
-from .mixins.ensure_response_set import EnsureResponseSet
+from .question_base_view import QuestionBaseView
 from ..forms.have_you_ever_smoked_form import HaveYouEverSmokedForm
 from ..models.have_you_ever_smoked_response import HaveYouEverSmokedResponse, HaveYouEverSmokedValues
 
-class HaveYouEverSmokedView(LoginRequiredMixin, EnsureResponseSet, View):
+class HaveYouEverSmokedView(QuestionBaseView):
     def get(self, request):
         response, _ = HaveYouEverSmokedResponse.objects.get_or_build(
             response_set=request.response_set
@@ -35,7 +33,10 @@ class HaveYouEverSmokedView(LoginRequiredMixin, EnsureResponseSet, View):
                 response.value = have_you_ever_smoked
                 response.save()
 
-                return redirect(reverse("questions:date_of_birth"))
+                return self.redirect_to_response_or_next_question(
+                    request,
+                    "questions:date_of_birth"
+                )
             else:
                 return redirect(reverse("questions:non_smoker_exit"))
 

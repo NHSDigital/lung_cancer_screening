@@ -161,13 +161,24 @@ class TestPostWeight(TestCase):
 
         self.assertRedirects(response, reverse("questions:start"))
 
-    def test_post_redirects_if_the_weight_is_valid(self):
+    def test_post_redirects_to_sex_at_birth(self):
         response = self.client.post(
             reverse("questions:weight"),
             self.valid_params
         )
 
         self.assertRedirects(response, reverse("questions:sex_at_birth"))
+
+    def test_post_redirects_to_responses_if_change_query_param_is_true(self):
+        response = self.client.post(
+            reverse("questions:weight"),
+            {
+                **self.valid_params,
+                "change": "True"
+            }
+        )
+
+        self.assertRedirects(response, reverse("questions:responses"))
 
     def test_post_valid_weight_added_to_response_set(self):
         self.client.post(

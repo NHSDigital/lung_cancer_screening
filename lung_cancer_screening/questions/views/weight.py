@@ -1,8 +1,6 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views import View
+from django.shortcuts import render
 
-from .mixins.ensure_response_set import EnsureResponseSet
+from .question_base_view import QuestionBaseView
 from lung_cancer_screening.questions.forms.metric_weight_form import (
     MetricWeightForm
 )
@@ -12,7 +10,7 @@ from lung_cancer_screening.questions.forms.imperial_weight_form import (
 from ..models.weight_response import WeightResponse
 
 
-class WeightView(LoginRequiredMixin, EnsureResponseSet, View):
+class WeightView(QuestionBaseView):
     def get(self, request):
         response, _ = WeightResponse.objects.get_or_build(
             response_set=request.response_set
@@ -54,7 +52,10 @@ class WeightView(LoginRequiredMixin, EnsureResponseSet, View):
 
         if form.is_valid():
             form.save()
-            return redirect("questions:sex_at_birth")
+            return self.redirect_to_response_or_next_question(
+                request,
+                "questions:sex_at_birth"
+            )
         else:
             return render(
                 request,

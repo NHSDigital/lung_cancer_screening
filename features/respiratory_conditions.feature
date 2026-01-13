@@ -22,3 +22,16 @@ Feature: Respiratory conditions page
     When I fill in and submit my respiratory conditions with "Pneumonia" and "Emphysema"
     Then I am on "/asbestos-exposure"
 
+  Scenario: Checking responses and changing them
+    Given I am logged in
+    When I go to "/respiratory-conditions"
+    And I fill in and submit my respiratory conditions with "Pneumonia" and "Emphysema"
+    When I go to "/check-your-answers"
+    Then I see "Pneumonia and Emphysema" as a response to "Diagnosed respiratory conditions" under "Your health"
+    And I see "/respiratory-conditions?change=True" as a link to change "Diagnosed respiratory conditions" under "Your health"
+    When I click the link to change "Diagnosed respiratory conditions" under "Your health"
+    Then I am on "/respiratory-conditions?change=True"
+    When I fill in and submit my respiratory conditions with "Bronchitis" and "Tuberculosis (TB)"
+    Then I am on "/check-your-answers"
+    And I see "Pneumonia, Emphysema, Bronchitis, and Tuberculosis (TB)" as a response to "Diagnosed respiratory conditions" under "Your health"
+

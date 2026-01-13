@@ -19,3 +19,16 @@ Feature: Gender page
     When I fill in and submit my gender with "Female"
     Then I am on "/ethnicity"
 
+  Scenario: Checking responses and changing them
+    Given I am logged in
+    When I go to "/gender"
+    And I fill in and submit my gender with "Female"
+    When I go to "/check-your-answers"
+    Then I see "Female" as a response to "Gender identity" under "About you"
+    And I see "/gender?change=True" as a link to change "Gender identity" under "About you"
+    When I click the link to change "Gender identity" under "About you"
+    Then I am on "/gender?change=True"
+    When I fill in and submit my gender with "Female"
+    Then I am on "/check-your-answers"
+    And I see "Female" as a response to "Gender identity" under "About you"
+

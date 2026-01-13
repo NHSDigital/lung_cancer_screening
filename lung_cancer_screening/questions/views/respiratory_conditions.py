@@ -1,14 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.urls import reverse
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views import View
 
-from .mixins.ensure_response_set import EnsureResponseSet
+from .question_base_view import QuestionBaseView
 from ..forms.respiratory_conditions_form import RespiratoryConditionsForm
 from ..models.respiratory_conditions_response import RespiratoryConditionsResponse
 
 
-class RespiratoryConditionsView(LoginRequiredMixin, EnsureResponseSet, View):
+class RespiratoryConditionsView(QuestionBaseView):
     def get(self, request):
         response, _ = RespiratoryConditionsResponse.objects.get_or_build(
             response_set=request.response_set
@@ -30,7 +28,10 @@ class RespiratoryConditionsView(LoginRequiredMixin, EnsureResponseSet, View):
         if form.is_valid():
             response.value = form.cleaned_data["value"]
             response.save()
-            return redirect(reverse("questions:asbestos_exposure"))
+            return self.redirect_to_response_or_next_question(
+                request,
+                "questions:asbestos_exposure"
+            )
         else:
             return render_template(
                 request,

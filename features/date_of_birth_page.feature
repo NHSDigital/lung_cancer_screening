@@ -35,3 +35,16 @@ Feature: Date of birth page
     Then I see a back link to "/have-you-ever-smoked"
     When I fill in and submit my date of birth as 55 years ago
     Then I am on "/check-if-you-need-an-appointment"
+
+  Scenario: Checking responses and changing them
+    Given I am logged in
+    When I go to "/date-of-birth"
+    And I fill in and submit my date of birth as 55 years ago
+    When I go to "/check-your-answers"
+    Then I see a date 55 years ago as a response to "Date of birth" under "Eligibility"
+    And I see "/date-of-birth?change=True" as a link to change "Date of birth" under "Eligibility"
+    When I click the link to change "Date of birth" under "Eligibility"
+    Then I am on "/date-of-birth?change=True"
+    When I fill in and submit my date of birth as 60 years ago
+    Then I am on "/check-your-answers"
+    And I see a date 60 years ago as a response to "Date of birth" under "Eligibility"

@@ -2,15 +2,13 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from datetime import date
 from dateutil.relativedelta import relativedelta
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views import View
 
-from .mixins.ensure_response_set import EnsureResponseSet
+from .question_base_view import QuestionBaseView
 from ..forms.date_of_birth_form import DateOfBirthForm
 from ..models.date_of_birth_response import DateOfBirthResponse
 
 
-class DateOfBirthView(LoginRequiredMixin, EnsureResponseSet, View):
+class DateOfBirthView(QuestionBaseView):
     def get(self, request):
         response, _ = DateOfBirthResponse.objects.get_or_build(
             response_set=request.response_set
@@ -41,7 +39,10 @@ class DateOfBirthView(LoginRequiredMixin, EnsureResponseSet, View):
                 response.value = date_of_birth
                 response.save()
 
-                return redirect(reverse("questions:check_need_appointment"))
+                return self.redirect_to_response_or_next_question(
+                    request,
+                    "questions:check_need_appointment"
+                )
             else:
                 return redirect(reverse("questions:age_range_exit"))
 

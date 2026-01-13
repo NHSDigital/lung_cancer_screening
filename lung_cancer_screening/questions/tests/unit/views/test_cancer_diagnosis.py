@@ -117,13 +117,21 @@ class TestPostCancerDiagnosis(TestCase):
 
         self.assertRedirects(response, reverse("questions:start"))
 
-    def test_post_redirects_to_family_history_lung_cancer_path(self):
+    def test_post_redirects_to_family_history_lung_cancer(self):
         response = self.client.post(
             reverse("questions:cancer_diagnosis"),
             self.valid_params
         )
 
-        self.assertRedirects(
-            response,
-            reverse("questions:family_history_lung_cancer")
+        self.assertRedirects(response, reverse("questions:family_history_lung_cancer"))
+
+    def test_post_redirects_to_responses_if_change_query_param_is_true(self):
+        response = self.client.post(
+            reverse("questions:cancer_diagnosis"),
+            {
+                **self.valid_params,
+                "change": "True"
+            }
         )
+
+        self.assertRedirects(response, reverse("questions:responses"))
