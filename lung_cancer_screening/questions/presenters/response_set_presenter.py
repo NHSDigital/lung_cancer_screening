@@ -70,6 +70,13 @@ class ResponseSetPresenter:
         return self.response_set.ethnicity_response.get_value_display()
 
     @property
+    def education(self):
+        if not hasattr(self.response_set, 'education_response'):
+            return None
+
+        return self.response_set.education_response.get_value_display()
+
+    @property
     def asbestos_exposure(self):
         if not hasattr(self.response_set, 'asbestos_exposure_response'):
             return None
