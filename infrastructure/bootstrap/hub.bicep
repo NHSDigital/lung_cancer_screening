@@ -28,10 +28,9 @@ param vnetAddressPrefixes array
 param enableSoftDelete bool
 
 
-// var keyVaultName = 'kv-lungcs-${envConfig}-inf'
-
 // removed when generalised
-var appShortName = 'lungrc'
+var appShortName = 'lungcs'
+//var appShortName = 'lungal'
 
 var devCenterSuffix = substring(uniqueString(subscription().id), 0, 3)
 var devCenterName = 'devc-hub-${hubType}-${regionShortName}-${devCenterSuffix}'
@@ -50,6 +49,7 @@ var storageAccountName = 'sa${appShortName}${regionShortName}state'
 var miADOtoAZname = 'mi-${appShortName}-${hubType}-adotoaz-${regionShortName}'
 var miGHtoADOname = 'mi-${appShortName}-${hubType}-ghtoado-${regionShortName}'
 
+
 // See: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
 var roleID = {
   CDNContributor: 'ec156ff8-a8d1-4d15-830c-5b80698ca432'
@@ -57,6 +57,8 @@ var roleID = {
   networkContributor: '4d97b98b-1d4f-4787-a291-c67834d212e7'
   rbacAdmin: 'f58310d9-a9f6-439a-9e8d-f62e7b41a168'
   reader: 'acdd72a7-3385-48ef-bd42-f606fba81ae7'
+  contributor: 'b24988ac-6180-42a0-ab88-20f7382dd24c'
+  storageBlobDataContributor: 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
 }
 
 
@@ -78,6 +80,7 @@ module virtualNetwork 'modules/virtualNetwork.bicep' = {
 module managedDevopsPool 'modules/managedDevopsPool.bicep' = {
   scope: bootstrapRG
   params: {
+    //adoOrg: 'nhse-pps-1'
     adoOrg: 'nhse-dtos'
     agentProfileMaxAgentLifetime: '00.04:00:00'
     devCenterName: devCenterName
@@ -179,6 +182,26 @@ resource CDNContributorAssignment 'Microsoft.Authorization/roleAssignments@2022-
   }
 }
 
+@description('Let the managed identity deploy terraform on the subscription')
+resource TerraformContributorAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(subscription().subscriptionId, hubType, 'TerraformContributor')
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roleID.contributor)
+    principalId: managedIdentiyADOtoAZ.outputs.miPrincipalID
+    description: '${miADOtoAZname} Terraform Contributor access to subscription'
+  }
+}
+
+@description('Let the managed identity strore blobs in storage account')
+resource StorageAccountBlobContributorAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(subscription().subscriptionId, hubType, 'StorageAccountBlobContributorAssignment')
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roleID.storageBlobDataContributor)
+    principalId: managedIdentiyADOtoAZ.outputs.miPrincipalID
+    description: '${miADOtoAZname} Storage Account Blob Contributor access to subscription'
+  }
+}
+
 @description('Create the managed identity assumed by Github actions to trigger Azure devops pipelines')
 module managedIdentiyGHtoADO 'modules/managedIdentity.bicep' = {
   scope: managedIdentityRG
@@ -192,7 +215,6 @@ module managedIdentiyGHtoADO 'modules/managedIdentity.bicep' = {
     region: region
   }
 }
-
 
 @description('Let the GHtoADO managed identity access a subscription')
 resource readerAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {

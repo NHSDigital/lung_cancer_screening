@@ -1,6 +1,6 @@
 REGION=uksouth
-APP_SHORT_NAME=lungrc
-
+APP_SHORT_NAME=lungcs
+# APP_SHORT_NAME=lungal
 bootstrap:
 	az deployment sub create --confirm-with-what-if \
 		--subscription ${AZURE_SUBSCRIPTION} \
@@ -51,7 +51,7 @@ terraform-init-no-backend: # Initialise terraform modules only and update terraf
 	rm -rf infrastructure/modules/dtos-devops-templates
 	git -c advice.detachedHead=false clone --depth=1 --single-branch --branch ${TERRAFORM_MODULES_REF} \
 		https://github.com/NHSDigital/dtos-devops-templates.git infrastructure/modules/dtos-devops-templates
-	terraform -chdir=infrastructure/terraform init -upgrade -backend=false
+	terraform -chdir=infrastructure/terraform/spoke init -upgrade -backend=false
 
 terraform-init: set-azure-account get-subscription-ids # Initialise Terraform - make <env> terraform-init
 	$(eval STORAGE_ACCOUNT_NAME=sa${APP_SHORT_NAME}${ENV_CONFIG}tfstate)
@@ -61,7 +61,21 @@ terraform-init: set-azure-account get-subscription-ids # Initialise Terraform - 
 	git -c advice.detachedHead=false clone --depth=1 --single-branch --branch ${TERRAFORM_MODULES_REF} \
 		https://github.com/NHSDigital/dtos-devops-templates.git infrastructure/modules/dtos-devops-templates
 
-	terraform -chdir=infrastructure/terraform init -upgrade -reconfigure \
+	terraform -chdir=infrastructure/terraform/spoke init -upgrade -reconfigure \
+		-backend-config=subscription_id=${HUB_SUBSCRIPTION_ID} \
+		-backend-config=resource_group_name=${STORAGE_ACCOUNT_RG} \
+		-backend-config=storage_account_name=${STORAGE_ACCOUNT_NAME} \
+		-backend-config=key=${ENVIRONMENT}.tfstate
+
+	terraform-hub-init: set-azure-account get-subscription-ids # Initialise Terraform - make <env> terraform-init
+	$(eval STORAGE_ACCOUNT_NAME=sa${APP_SHORT_NAME}${ENV_CONFIG}tfstate)
+	$(eval export ARM_USE_AZUREAD=true)
+
+	rm -rf infrastructure/modules/dtos-devops-templates
+	git -c advice.detachedHead=false clone --depth=1 --single-branch --branch ${TERRAFORM_MODULES_REF} \
+		https://github.com/NHSDigital/dtos-devops-templates.git infrastructure/modules/dtos-devops-templates
+
+	terraform -chdir=infrastructure/terraform/hub init -upgrade -reconfigure \
 		-backend-config=subscription_id=${HUB_SUBSCRIPTION_ID} \
 		-backend-config=resource_group_name=${STORAGE_ACCOUNT_RG} \
 		-backend-config=storage_account_name=${STORAGE_ACCOUNT_NAME} \
@@ -75,16 +89,16 @@ terraform-init: set-azure-account get-subscription-ids # Initialise Terraform - 
 	$(eval export TF_VAR_hub_subscription_id=${HUB_SUBSCRIPTION_ID})
 
 terraform-plan: terraform-init # Plan Terraform changes - make <env> terraform-plan DOCKER_IMAGE_TAG=abcd123
-	terraform -chdir=infrastructure/terraform plan -var-file ../environments/${ENV_CONFIG}/variables.tfvars
+	terraform -chdir=infrastructure/terraform/spoke plan -var-file ../environments/${ENV_CONFIG}/variables.tfvars
 
 terraform-apply: terraform-init # Apply Terraform changes - make <env> terraform-apply DOCKER_IMAGE_TAG=abcd123
-	terraform -chdir=infrastructure/terraform apply -var-file ../environments/${ENV_CONFIG}/variables.tfvars ${AUTO_APPROVE}
+	terraform -chdir=infrastructure/terraform/spoke apply -var-file ../environments/${ENV_CONFIG}/variables.tfvars ${AUTO_APPROVE}
 
 terraform-destroy: terraform-init # Destroy Terraform resources - make <env> terraform-destroy
-	terraform -chdir=infrastructure/terraform destroy -var-file ../environments/${ENV_CONFIG}/variables.tfvars ${AUTO_APPROVE}
+	terraform -chdir=infrastructure/terraform/spoke destroy -var-file ../environments/${ENV_CONFIG}/variables.tfvars ${AUTO_APPROVE}
 
 terraform-validate: terraform-init-no-backend # Validate Terraform changes - make <env> terraform-validate
-	terraform -chdir=infrastructure/terraform validate
+	terraform -chdir=infrastructure/terraform/spoke validate
 
 terraform-fmt:
-	terraform -chdir=infrastructure/terraform fmt
+	terraform -chdir=infrastructure/terraform/spoke fmt

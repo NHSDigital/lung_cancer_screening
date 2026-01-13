@@ -1,0 +1,77 @@
+trigger: none
+pr: none
+
+parameters:
+  - name: commitSHA
+    displayName: Commit SHA
+    type: string
+  - name: environment
+    displayName: Environment
+    type: string
+  - name: prNumber
+    displayName: Pull request number
+    type: string
+    default: ''
+  - name: pool
+    displayName: ADO management pool
+    type: string
+
+stages:
+  - stage: ${{ parameters.environment }}
+    displayName: Deploy to ${{ parameters.environment }} environment
+    pool:
+      name: ${{ parameters.pool }}
+    lockBehavior: sequential
+    isSkippable: false
+
+    jobs:
+      - deployment: DeployApp
+        displayName: Deploy application
+        environment: ${{ parameters.environment }}
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+
+                - task: UsePythonVersion@0
+                  inputs:
+                    versionSpec: '3.x'
+                    architecture: 'x64'
+
+                - task: TerraformInstaller@1
+                  displayName: Install terraform
+                  inputs:
+                    terraformVersion: 1.7.0
+
+                - task: AzureCLI@2
+                  displayName: Run terraform
+                  inputs:
+                    azureSubscription: lung-${{ parameters.environment }}
+                    scriptType: bash
+                    scriptLocation: inlineScript
+                    addSpnToEnvironment: true
+                    inlineScript: |
+                      export ARM_TENANT_ID="$tenantId"
+                      export ARM_CLIENT_ID="$servicePrincipalId"
+                      export ARM_OIDC_TOKEN="$idToken"
+                      export ARM_USE_OIDC=true
+                      make ci ${{ parameters.environment }} terraform-apply DOCKER_IMAGE_TAG=git-sha-${{ parameters.commitSHA }} PR_NUMBER=${{ parameters.prNumber }}
+
+                # - task: AzureCLI@2
+                #   displayName: Run database setup
+                #   inputs:
+                #     azureSubscription: lungcs-${{ parameters.environment }}
+                #     scriptType: bash
+                #     scriptLocation: inlineScript
+                #     addSpnToEnvironment: true
+                #     inlineScript: make ci ${{ parameters.environment }} db-setup PR_NUMBER=${{ parameters.prNumber }}
+
+                # - task: AzureCLI@2
+                #   displayName: Run notifications smoke test
+                #   inputs:
+                #     azureSubscription: lungcs-${{ parameters.environment }}
+                #     scriptType: bash
+                #     scriptLocation: inlineScript
+                #     addSpnToEnvironment: true
+                #     inlineScript: make ci ${{ parameters.environment }} notifications-smoke-test PR_NUMBER=${{ parameters.prNumber }}

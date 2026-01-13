@@ -7,37 +7,37 @@ New subscription that are created within Azure often have limitations on them, t
 Resource providers components need to be enabled:-
 
 - Microsoft.Authorization
-- Microsoft.AzureTerraform
+- Microsoft.AzureTerraform  +
 - Microsoft.Billing
 - Microsoft.ChangeSafety
 - Microsoft.ClassicSubscription
 - Microsoft.Commerce
-- Microsoft.Compute
-- Microsoft.ComputeSchedule
+- Microsoft.Compute +
+- Microsoft.ComputeSchedule +
 - Microsoft.Consumption
-- Microsoft.ContainerService
+- Microsoft.ContainerService +
 - Microsoft.CostManagement
-- Microsoft.DesktopVirtualization
-- Microsoft.DevCenter
-- Microsoft.DevOpsInfrastructure
+- Microsoft.DesktopVirtualization +
+- Microsoft.DevCenter +
+- Microsoft.DevOpsInfrastructure +
 - Microsoft.Diagnostics
 - Microsoft.Features
 - Microsoft.GuestConfiguration
 - Microsoft.Insights
-- Microsoft.KeyVault
+- Microsoft.KeyVault +
 - Microsoft.ManagedIdentity
 - Microsoft.MarketplaceOrdering
-- Microsoft.Network
+- Microsoft.Network +
 - Microsoft.PolicyInsights
 - Microsoft.Portal
-- Microsoft.Quota
+- Microsoft.Quota +
 - Microsoft.ResourceGraph
 - Microsoft.ResourceIntelligence
 - Microsoft.ResourceNotifications
 - Microsoft.Resources
 - Microsoft.Security
 - Microsoft.SerialConsole
-- Microsoft.Storage
+- Microsoft.Storage +
 - Microsoft.Support
 
 ## Step 2

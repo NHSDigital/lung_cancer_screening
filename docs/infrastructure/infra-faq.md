@@ -22,7 +22,7 @@ Below is an example of how to do it.
 export ARM_USE_AZUREAD=true
 export MSYS_NO_PATHCONV=true
 
-terraform -chdir=infrastructure/terraform import  -var-file ../environments/${ENV_CONFIG}/variables.tfvars module.infra[0].module.postgres_subnet.azurerm_subnet.subnet  /subscriptions/xxx/resourceGroups/rg-lungrc-review-uks/providers/Microsoft.Network/virtualNetworks/vnet-review-uks-lungrc/subnets/snet-postgres
+terraform -chdir=infrastructure/terraform/spoke import  -var-file ../environments/${ENV_CONFIG}/variables.tfvars module.infra[0].module.postgres_subnet.azurerm_subnet.subnet  /subscriptions/xxx/resourceGroups/rg-lungcs-review-uks/providers/Microsoft.Network/virtualNetworks/vnet-review-uks-lungcs/subnets/snet-postgres
 ```
 
 ### Error: Failed to load state
@@ -65,7 +65,7 @@ Example:
 Running Azure CLI Login.
 ...
 Attempting Azure CLI login by using OIDC...
-Error: AADSTS70025: The client '***'(mi-lungrc-ado-review-temp) has no configured federated identity credentials. Trace ID: xxx Correlation ID: xxx Timestamp: xxx
+Error: AADSTS70025: The client '***'(mi-lungcs-ado-review-temp) has no configured federated identity credentials. Trace ID: xxx Correlation ID: xxx Timestamp: xxx
 
 Error: Interactive authentication is needed. Please run:
 az login
@@ -122,10 +122,10 @@ The ADO group must have the "View project-level information" permission.
 Example:
 
 ```shell
-The pipeline is not valid. Job DeployApp: Step input azureSubscription references service connection lungrc-review which could not be found. The service connection does not exist, has been disabled or has not been authorized for use. For authorization details, refer to https://aka.ms/yamlauthz. Job DeployApp: Step input azureSubscription references service connection lungrc-review which could not be found. The service connection does not exist, has been disabled or has not been authorized for use. For authorization details, refer to https://aka.ms/yamlauthz.
+The pipeline is not valid. Job DeployApp: Step input azureSubscription references service connection lungcs-review which could not be found. The service connection does not exist, has been disabled or has not been authorized for use. For authorization details, refer to https://aka.ms/yamlauthz. Job DeployApp: Step input azureSubscription references service connection lungcs-review which could not be found. The service connection does not exist, has been disabled or has not been authorized for use. For authorization details, refer to https://aka.ms/yamlauthz.
 ```
 
-The Azure service connection lungrc-[environment] is missing
+The Azure service connection lungcs-[environment] is missing
 
 ## Bicep errors
 
@@ -149,7 +149,7 @@ If you can't find the right scope, follow this process:
 
 ```shell
  ~ Microsoft.Authorization/roleAssignments/abcd-123 [2022-04-01]
-    ~ properties.principalId: "xxx" => "[reference('/subscriptions/xxx/resourceGroups/rg-mi-review-uks/providers/Microsoft.ManagedIdentity/userAssignedIdentities/mi-lungrc-ado-review-uks', '2024-11-30').principalId]"
+    ~ properties.principalId: "xxx" => "[reference('/subscriptions/xxx/resourceGroups/rg-mi-review-uks/providers/Microsoft.ManagedIdentity/userAssignedIdentities/mi-lungcs-ado-review-uks', '2024-11-30').principalId]"
 ```
 
 - Get the subscription id
@@ -207,20 +207,20 @@ When initially creating the terraform; the pipeline will try to create a state f
 Example:
 
 ```shell
-Failed to get existing workspaces: containers.Client#ListBlobs: Failure sending request: StatusCode=0 -- Original Error: Get "https://salungrcpreprodtfstate.blob.core.windows.net/terraform-state?comp=list&prefix=preprod.tfstateenv%3A&restype=container": dial tcp: lookup salungrcpreprodtfstate.blob.core.windows.net on *.*.*.*:53: no such host
+Failed to get existing workspaces: containers.Client#ListBlobs: Failure sending request: StatusCode=0 -- Original Error: Get "https://salungcspreprodtfstate.blob.core.windows.net/terraform-state?comp=list&prefix=preprod.tfstateenv%3A&restype=container": dial tcp: lookup salungcspreprodtfstate.blob.core.windows.net on *.*.*.*:53: no such host
 ```
 
 You can check to see if the blobstorage is accessible via logging into the VDI machine and trying to do an nslookup on the blob storage account: -
 
 ```shell
-$ nslookup salungrcpreprodtfstate.blob.core.windows.net
+$ nslookup salungcspreprodtfstate.blob.core.windows.net
 Server: UnKnown
 Address: _._._._
 
 Non-authoritative answer:
-Name: salungrcpreprodtfstate.privatelink.blob.core.windows.net
+Name: salungcspreprodtfstate.privatelink.blob.core.windows.net
 Address: _._._._
-Aliases: salungrcpreprodtfstate.blob.core.windows.net
+Aliases: salungcspreprodtfstate.blob.core.windows.net
 ```
 
 In the above example it was discoverd that the pipeline pool was on the wrong ADO management pool, i.e on the private-pool-dev-uks instead of the private-pool-prod-uks.

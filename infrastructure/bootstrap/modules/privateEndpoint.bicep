@@ -10,9 +10,6 @@ param privateEndpointSubnetName string
 param virtualNetworkName string
 param privateEndpointSubnetAddressPrefix string
 
-//var RGName = 'rg-hub-${hub}-uks-hub-networking'
-//var vnetName = 'VNET-${toUpper(hub)}-UKS-HUB'
-
 var groupID = {
   storage: 'blob'
   keyVault: 'vault'
