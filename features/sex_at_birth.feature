@@ -19,3 +19,16 @@ Feature: Sex at birth page
     When I fill in and submit my sex at birth with "Male"
     Then I am on "/gender"
 
+  Scenario: Checking responses and changing them
+    Given I am logged in
+    When I go to "/sex-at-birth"
+    And I fill in and submit my sex at birth with "Male"
+    When I go to "/check-your-answers"
+    Then I see "Male" as a response to "Sex at birth" under "About you"
+    And I see "/sex-at-birth?change=True" as a link to change "Sex at birth" under "About you"
+    When I click the link to change "Sex at birth" under "About you"
+    Then I am on "/sex-at-birth?change=True"
+    When I fill in and submit my sex at birth with "Female"
+    Then I am on "/check-your-answers"
+    And I see "Female" as a response to "Sex at birth" under "About you"
+
