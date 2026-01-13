@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, tag
 from django.urls import reverse
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
@@ -7,6 +7,7 @@ from .helpers.authentication import login_user
 from lung_cancer_screening.questions.models.asbestos_exposure_response import AsbestosExposureResponse
 
 
+@tag("AsbestosExposure")
 class TestGetAsbestosExposure(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
@@ -46,6 +47,7 @@ class TestGetAsbestosExposure(TestCase):
         self.assertContains(response, "Have you ever worked in a job where you might have been exposed to asbestos?")
 
 
+@tag("AsbestosExposure")
 class TestPostAsbestosExposure(TestCase):
     def setUp(self):
         self.user = login_user(self.client)

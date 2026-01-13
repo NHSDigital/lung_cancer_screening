@@ -108,3 +108,7 @@ def when_i_fill_in_and_submit_my_cancer_diagnosis(context, relatives_age_when_di
 @when('I submit the form')
 def when_i_submit_the_form(context):
     when_i_click(context, "Continue")
+
+@then(u'I see "{value}" selected')
+def then_i_see_value_selected(context, value):
+    assert context.page.get_by_label(value, exact=True).is_checked()
