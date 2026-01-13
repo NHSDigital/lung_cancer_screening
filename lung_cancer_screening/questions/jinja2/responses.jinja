@@ -8,6 +8,8 @@
     <div class="nhsuk-grid-column-full">
       <h1 class="nhsuk-heading-l">Check your answers</h1>
 
+      {% set change_query_params = { "change": "True" } %}
+
       <section>
         <h2 class="nhsuk-heading-m">Eligibility</h2>
         {{ summaryList({
@@ -18,7 +20,7 @@
               "actions": {
                 "items": [
                   {
-                    "href": url('questions:have_you_ever_smoked', query = {"change": "True"}),
+                    "href": url('questions:have_you_ever_smoked', query = change_query_params),
                     "text": "Change"
                   }
                 ]
@@ -30,7 +32,7 @@
               "actions": {
                 "items": [
                   {
-                    "href": url('questions:date_of_birth', query = {"change": "True"}),
+                    "href": url('questions:date_of_birth', query = change_query_params),
                     "text": "Change"
                   }
                 ]
@@ -50,7 +52,7 @@
               "actions": {
                 "items": [
                   {
-                    "href": url('questions:height', query = {"change": "True"}),
+                    "href": url('questions:height', query = change_query_params),
                     "text": "Change"
                   }
                 ]
@@ -62,7 +64,7 @@
               "actions": {
                 "items": [
                   {
-                    "href": url('questions:weight', query = {"change": "True"}),
+                    "href": url('questions:weight', query = change_query_params),
                     "text": "Change"
                   }
                 ]
@@ -74,7 +76,7 @@
               "actions": {
                 "items": [
                   {
-                    "href": url('questions:sex_at_birth', query = {"change": "True"}),
+                    "href": url('questions:sex_at_birth', query = change_query_params),
                     "text": "Change"
                   }
                 ]
@@ -86,7 +88,7 @@
               "actions": {
                 "items": [
                   {
-                    "href": url('questions:gender', query = {"change": "True"}),
+                    "href": url('questions:gender', query = change_query_params),
                     "text": "Change"
                   }
                 ]
@@ -98,7 +100,7 @@
               "actions": {
                 "items": [
                   {
-                    "href": url('questions:ethnicity', query = {"change": "True"}),
+                    "href": url('questions:ethnicity', query = change_query_params),
                     "text": "Change"
                   }
                 ]
@@ -130,7 +132,7 @@
               "actions": {
                 "items": [
                   {
-                    "href": url('questions:respiratory_conditions', query = {"change": "True"}),
+                    "href": url('questions:respiratory_conditions', query = change_query_params),
                     "text": "Change"
                   }
                 ]
@@ -142,7 +144,7 @@
               "actions": {
                 "items": [
                   {
-                    "href": url('questions:asbestos_exposure', query = {"change": "True"}),
+                    "href": url('questions:asbestos_exposure', query = change_query_params),
                     "text": "Change"
                   }
                 ]
@@ -154,7 +156,7 @@
               "actions": {
                 "items": [
                   {
-                    "href": url('questions:cancer_diagnosis', query = {"change": "True"}),
+                    "href": url('questions:cancer_diagnosis', query = change_query_params),
                     "text": "Change"
                   }
                 ]
@@ -174,7 +176,7 @@
               "actions": {
                 "items": [
                   {
-                    "href": url('questions:family_history_lung_cancer'),
+                    "href": url('questions:family_history_lung_cancer', query = change_query_params),
                     "text": "Change"
                   }
                 ]
@@ -186,7 +188,7 @@
               "actions": {
                 "items": [
                   {
-                    "href": url('questions:relatives_age_when_diagnosed', query = {"change": "True"}),
+                    "href": url('questions:relatives_age_when_diagnosed', query = change_query_params),
                     "text": "Change"
                   }
                 ]

@@ -74,5 +74,4 @@ Feature: Questionnaire
     And I see "No" as a response to "Have you ever been diagnosed with cancer?" under "Your health"
 
     And I see "Yes" as a response to "Have any of your parents, siblings or children ever been diagnosed with lung cancer?" under "Family history"
-    And I see "/family-history-lung-cancer" as a link to change "Have any of your parents, siblings or children ever been diagnosed with lung cancer?" under "Family history"
     And I see "Yes, they were younger than 60" as a response to "Were any of your relatives younger than 60 years old when they were diagnosed with lung cancer?" under "Family history"

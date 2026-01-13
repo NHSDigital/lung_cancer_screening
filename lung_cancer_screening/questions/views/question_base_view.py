@@ -7,13 +7,12 @@ from .mixins.ensure_response_set import EnsureResponseSet
 
 
 class QuestionBaseView(LoginRequiredMixin, EnsureResponseSet, View):
-    pass
 
-    def _should_redirect_to_responses(self, request):
+    def should_redirect_to_responses(self, request):
         return bool(request.POST.get("change"))
 
-    def redirect_to_response_or_next_question(self, request, next_question_url):
-        if self._should_redirect_to_responses(request):
-            return redirect(reverse("questions:responses"))
+    def redirect_to_response_or_next_question(self, request, next_question_url, query=None):
+        if self.should_redirect_to_responses(request):
+            return redirect(reverse("questions:responses", query=query))
         else:
             return redirect(reverse(next_question_url))
