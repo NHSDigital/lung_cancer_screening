@@ -181,15 +181,24 @@ class TestPostRespiratoryConditions(TestCase):
             ["N"]
         )
 
-    def test_post_redirects_to_the_asbestos_exposure_path(self):
+    def test_post_redirects_to_asbestos_exposure(self):
         response = self.client.post(
             reverse("questions:respiratory_conditions"),
             self.valid_params
         )
 
-        self.assertRedirects(
-            response, reverse("questions:asbestos_exposure")
+        self.assertRedirects(response, reverse("questions:asbestos_exposure"))
+
+    def test_post_redirects_to_responses_if_change_query_param_is_true(self):
+        response = self.client.post(
+            reverse("questions:respiratory_conditions"),
+            {
+                **self.valid_params,
+                "change": "True"
+            }
         )
+
+        self.assertRedirects(response, reverse("questions:responses"))
 
     def test_post_responds_with_422_if_the_response_fails_to_create(self):
         response = self.client.post(
