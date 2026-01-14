@@ -1,3 +1,4 @@
+@CancerDiagnosis
 Feature: Cancer diagnosis page
   Scenario: The page is accessible
     Given I am logged in
@@ -28,6 +29,7 @@ Feature: Cancer diagnosis page
     And I see "/cancer-diagnosis?change=True" as a link to change "Have you ever been diagnosed with cancer?" under "Your health"
     When I click the link to change "Have you ever been diagnosed with cancer?" under "Your health"
     Then I am on "/cancer-diagnosis?change=True"
+    And I see "No" selected
     When I fill in and submit my cancer diagnosis with "Yes"
     Then I am on "/check-your-answers"
     And I see "Yes" as a response to "Have you ever been diagnosed with cancer?" under "Your health"
