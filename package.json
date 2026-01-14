@@ -13,7 +13,7 @@
     "watch": "concurrently npm:*:watch --prefix none"
   },
   "dependencies": {
-    "nhsuk-frontend": "^10.2.2"
+    "nhsuk-frontend": "^10.3.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^29.0.0",
