@@ -1,10 +1,11 @@
-from django.test import TestCase
+from django.test import TestCase, tag
 
 from ...factories.response_set_factory import ResponseSetFactory
 from ....models.ethnicity_response import EthnicityResponse, EthnicityValues
 from ....forms.ethnicity_form import EthnicityForm
 
 
+@tag("Ethnicity")
 class TestEthnicityForm(TestCase):
     def setUp(self):
         self.response_set = ResponseSetFactory()

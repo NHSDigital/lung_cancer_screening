@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, tag
 from django.urls import reverse
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
@@ -7,6 +7,7 @@ from .helpers.authentication import login_user
 from lung_cancer_screening.questions.models.ethnicity_response import EthnicityResponse, EthnicityValues
 
 
+@tag("Ethnicity")
 class TestGetEthnicity(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
@@ -48,6 +49,7 @@ class TestGetEthnicity(TestCase):
         self.assertContains(response, "What is your ethnic background?")
 
 
+@tag("Ethnicity")
 class TestPostEthnicity(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
