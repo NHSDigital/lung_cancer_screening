@@ -4,14 +4,53 @@
 {% block content %}
   <div class="nhsuk-grid-row">
     <div class="nhsuk-grid-column-two-thirds">
-      <h1 class="nhsuk-heading-l">
-        Lung Cancer Risk Check
-      </h1>
+      <h1 class="nhsuk-heading-l">Help us test a new online service</h1>
+
+      <p>We are testing a new online questionnaire that helps you check if you need a lung scan. This service will ask you some questions about your medical history and lifestyle.</p>
+
+      <p>This online service cannot currently calculate your level of risk. Once you have completed the questionnaire you will need to call us to repeat the questionnaire by phone.</p>
+
+      <p>As a thank you we will be offering you a £10 voucher for testing the online service.</p>
+
+      <section>
+        <h2 class="nhsuk-heading-m">The benefits of lung cancer screening</h2>
+
+        <p>Your risk of lung cancer increases as you get older. Screening aims to find lung cancer early, sometimes before you have symptoms. Early diagnosis can make lung cancer more treatable and make treatment more successful.</p>
+
+        <p>You are eligible for lung cancer screening if you are:</p>
+        <ul>
+          <li>aged between 55 and 74</li>
+          <li>registered with a GP surgery</li>
+          <li>someone who smokes or used to smoke</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="nhsuk-heading-m">What to expect in the online service</h2>
+
+        <p>To understand your level of risk we will ask you questions about:</p>
+
+        <ul>
+          <li>your height and weight</li>
+          <li>your ethnicity</li>
+          <li>your education</li>
+          <li>if you have ever had a cancer diagnosis</li>
+          <li>if your parents, siblings, or children have ever had a lung cancer diagnosis</li>
+          <li>your smoking habits</li>
+        </ul>
+
+        <p>Once you have submitted your answers you will need to call us to complete the questionnaire by phone.</p>
+      </section>
 
       {{ button({
         "text": "Start now",
         "href": url("questions:have_you_ever_smoked")
       }) }}
+
+      <section>
+        <h2 class="nhsuk-heading-s">If you do not want to test the online service</h2>
+        <p>You should call us on <a href="tel:02000000000">020 0000 0000</a> to complete your NHS lung cancer risk check by phone.</p>
+      </section>
     </div>
   </div>
 {% endblock %}
