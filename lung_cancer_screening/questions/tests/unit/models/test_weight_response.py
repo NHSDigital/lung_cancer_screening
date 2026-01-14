@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, tag
 
 from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.weight_response_factory import WeightResponseFactory
@@ -6,6 +6,7 @@ from ...factories.weight_response_factory import WeightResponseFactory
 from ....models.weight_response import WeightResponse
 
 
+@tag("Weight")
 class TestWeightResponse(TestCase):
     def setUp(self):
         self.response_set = ResponseSetFactory()

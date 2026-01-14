@@ -1,3 +1,4 @@
+@Weight
 Feature: Weight page
   Scenario: The page is accessible
     Given I am logged in
@@ -62,8 +63,17 @@ Feature: Weight page
     And I see "/weight?change=True" as a link to change "Weight" under "About you"
     When I click the link to change "Weight" under "About you"
     Then I am on "/weight?change=True"
+    And I see "70.0" filled in for "Kilograms"
     When I click "Switch to stone and pounds"
     And I fill in and submit my weight with "5" stone and "10" pounds
     Then I am on "/check-your-answers"
     And I see "5 stone 10 pounds" as a response to "Weight" under "About you"
+    When I click the link to change "Weight" under "About you"
+    Then I am on "/weight?change=True"
+    And I see "5" filled in for "Stone"
+    And I see "10" filled in for "Pounds"
+    When I click "Switch to kilograms"
+    And I fill in and submit my weight with "70.4"
+    Then I am on "/check-your-answers"
+    And I see "70.4 kg" as a response to "Weight" under "About you"
 

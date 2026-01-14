@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.urls import reverse_lazy
 
 from .question_base_view import QuestionBaseView
 from lung_cancer_screening.questions.forms.metric_weight_form import (
@@ -11,69 +11,27 @@ from ..models.weight_response import WeightResponse
 
 
 class WeightView(QuestionBaseView):
-    def get(self, request):
-        response, _ = WeightResponse.objects.get_or_build(
-            response_set=request.response_set
+    template_name = "weight.jinja"
+    model = WeightResponse
+    success_url = reverse_lazy("questions:sex_at_birth")
+    back_link_url = reverse_lazy("questions:height")
+
+    def get_form_class(self):
+        unit = self.get_unit()
+        return ImperialWeightForm if unit == "imperial" else MetricWeightForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        unit = self.get_unit()
+        context["unit"] = unit
+        context["switch_to_unit"] = (
+            "metric" if unit == "imperial" else "imperial"
         )
+        return context
 
-        unit = self.get_unit(request, response)
-
-        form_klass = (
-            ImperialWeightForm if unit == "imperial" else MetricWeightForm
-        )
-
-        return render(
-            request,
-            "weight.jinja",
-            {
-                "form": form_klass(instance=response),
-                "unit": unit,
-                "switch_to_unit": (
-                    "metric" if unit == "imperial" else "imperial"
-                )
-            }
-        )
-
-    def post(self, request):
-        response, _ = WeightResponse.objects.get_or_build(
-            response_set=request.response_set
-        )
-        unit = self.get_unit(request, response)
-
-
-        form_klass = (
-            ImperialWeightForm if unit == "imperial" else MetricWeightForm
-        )
-
-        form = form_klass(
-            instance=response,
-            data=request.POST
-        )
-
-        if form.is_valid():
-            form.save()
-            return self.redirect_to_response_or_next_question(
-                request,
-                "questions:sex_at_birth"
-            )
-        else:
-            return render(
-                request,
-                "weight.jinja",
-                {
-                    "form": form,
-                    "unit": unit,
-                    "switch_to_unit": (
-                        "metric" if unit == "imperial" else "imperial"
-                    )
-                },
-                status=422
-            )
-
-    def get_unit(self, request, response):
-        unit = request.GET.get('unit')
-
+    def get_unit(self):
+        unit = self.request.GET.get('unit')
+        response = self.get_object()
         if response.imperial and unit != "metric":
             unit = "imperial"
-
         return unit
