@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, tag
 
 from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.asbestos_exposure_response_factory import AsbestosExposureResponseFactory
@@ -6,6 +6,7 @@ from ...factories.asbestos_exposure_response_factory import AsbestosExposureResp
 from ....models.asbestos_exposure_response import AsbestosExposureResponse
 
 
+@tag("AsbestosExposure")
 class TestAsbestosExposureResponse(TestCase):
     def setUp(self):
         self.response_set = ResponseSetFactory()

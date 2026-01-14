@@ -1,3 +1,4 @@
+@AsbestosExposure
 Feature: Asbestos exposure page
   Scenario: The page is accessible
     Given I am logged in
@@ -28,6 +29,7 @@ Feature: Asbestos exposure page
     And I see "/asbestos-exposure?change=True" as a link to change "Have you ever worked in a job where you were exposed to asbestos?" under "Your health"
     When I click the link to change "Have you ever worked in a job where you were exposed to asbestos?" under "Your health"
     Then I am on "/asbestos-exposure?change=True"
+    And I see "No" selected
     When I fill in and submit my asbestos exposure with "Yes"
     Then I am on "/check-your-answers"
     And I see "Yes" as a response to "Have you ever worked in a job where you were exposed to asbestos?" under "Your health"
