@@ -1,3 +1,4 @@
+@SexAtBirth
 Feature: Sex at birth page
   Scenario: The page is accessible
     Given I am logged in
@@ -28,6 +29,7 @@ Feature: Sex at birth page
     And I see "/sex-at-birth?change=True" as a link to change "Sex at birth" under "About you"
     When I click the link to change "Sex at birth" under "About you"
     Then I am on "/sex-at-birth?change=True"
+    And I see "Male" selected
     When I fill in and submit my sex at birth with "Female"
     Then I am on "/check-your-answers"
     And I see "Female" as a response to "Sex at birth" under "About you"
