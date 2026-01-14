@@ -119,3 +119,7 @@ def then_i_see_a_date_x_years_ago_filled_in(context, years):
     assert context.page.get_by_label('Day').input_value() == str(date_of_birth.day)
     assert context.page.get_by_label('Month').input_value() == str(date_of_birth.month)
     assert context.page.get_by_label('Year').input_value() == str(date_of_birth.year)
+
+@then(u'I see "{value}" filled in for "{label}"')
+def then_i_see_value_filled_in_for_label(context, value, label):
+    assert context.page.get_by_label(label, exact=True).input_value() == value

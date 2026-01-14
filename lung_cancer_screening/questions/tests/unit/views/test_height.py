@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, tag
 from django.urls import reverse
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
@@ -7,6 +7,7 @@ from .helpers.authentication import login_user
 from lung_cancer_screening.questions.models.height_response import HeightResponse
 
 
+@tag("Height")
 class TestGetHeight(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
@@ -72,6 +73,7 @@ class TestGetHeight(TestCase):
         self.assertContains(response, "Inches")
 
 
+@tag("Height")
 class TestPostHeight(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
