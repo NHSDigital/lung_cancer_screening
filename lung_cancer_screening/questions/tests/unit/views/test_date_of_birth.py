@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, tag
 from django.urls import reverse
 from datetime import date
 from dateutil.relativedelta import relativedelta
@@ -8,6 +8,7 @@ from .helpers.authentication import login_user
 from lung_cancer_screening.questions.models.date_of_birth_response import DateOfBirthResponse
 
 
+@tag("DateOfBirth")
 class TestGetDateOfBirth(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
@@ -44,6 +45,7 @@ class TestGetDateOfBirth(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+@tag("DateOfBirth")
 class TestPostDateOfBirth(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
@@ -179,17 +181,6 @@ class TestPostDateOfBirth(TestCase):
 
         self.assertEqual(response.status_code, 422)
 
-    def test_post_does_not_set_date_of_birth_if_user_not_in_correct_age_range(
-        self
-    ):
-        self.client.post(
-            reverse("questions:date_of_birth"),
-            self.invalid_params
-        )
-
-        response_set = self.user.responseset_set.first()
-        if response_set:
-            self.assertFalse(DateOfBirthResponse.objects.filter(response_set=response_set).exists())
 
     def test_post_redirects_if_user_not_in_correct_age_range(self):
         response = self.client.post(

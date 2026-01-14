@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, tag
 from datetime import date
 
 from ...factories.response_set_factory import ResponseSetFactory
@@ -6,6 +6,7 @@ from ....models.date_of_birth_response import DateOfBirthResponse
 from ....forms.date_of_birth_form import DateOfBirthForm
 
 
+@tag("DateOfBirth")
 class TestDateOfBirthForm(TestCase):
     def setUp(self):
         self.response_set = ResponseSetFactory()

@@ -112,3 +112,10 @@ def when_i_submit_the_form(context):
 @then(u'I see "{value}" selected')
 def then_i_see_value_selected(context, value):
     assert context.page.get_by_label(value, exact=True).is_checked()
+
+@then(u'I see a date {years} years ago filled in')
+def then_i_see_a_date_x_years_ago_filled_in(context, years):
+    date_of_birth = datetime.now() - relativedelta(years=int(years))
+    assert context.page.get_by_label('Day').input_value() == str(date_of_birth.day)
+    assert context.page.get_by_label('Month').input_value() == str(date_of_birth.month)
+    assert context.page.get_by_label('Year').input_value() == str(date_of_birth.year)
