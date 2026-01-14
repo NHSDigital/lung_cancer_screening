@@ -1,10 +1,11 @@
-from django.test import TestCase
+from django.test import TestCase, tag
 
 from ...factories.response_set_factory import ResponseSetFactory
 from ....models.gender_response import GenderResponse, GenderValues
 from ....forms.gender_form import GenderForm
 
 
+@tag("Gender")
 class TestGenderForm(TestCase):
     def setUp(self):
         self.response_set = ResponseSetFactory()
