@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.core.exceptions import ValidationError
 from dateutil.relativedelta import relativedelta
@@ -13,10 +14,13 @@ class ResponseSetQuerySet(BaseQuerySet):
     def submitted(self):
         return self.filter(submitted_at__isnull=False)
 
-    def submitted_in_last_year(self):
-        return self.submitted().filter(submitted_at__gte=timezone.now() - relativedelta(years=1))
+    def recently_submitted(self):
+        submitted_since = timezone.now() - relativedelta(days=ResponseSet.RECENTLY_SUBMITTED_PERIOD_DAYS)
+        return self.submitted().filter(submitted_at__gte=submitted_since)
 
 class ResponseSet(BaseModel):
+    RECENTLY_SUBMITTED_PERIOD_DAYS = 0 if settings.DISABLE_RECENT_SUBMISSION_LIMITATION else 365
+
     # Query managers
     objects = ResponseSetQuerySet.as_manager()
 
@@ -37,13 +41,15 @@ class ResponseSet(BaseModel):
 
     def clean(self):
         super().clean()
+        self._validate_any_submitted_response_set_recently()
 
-        one_year_ago = timezone.now() - relativedelta(years=1)
-        submitted_response_sets_in_last_year = self.user and self.user.responseset_set.filter(submitted_at__gte=one_year_ago)
 
-        if submitted_response_sets_in_last_year:
+    def has_user_submitted_response_set_recently(self):
+        return self.user and self.user.responseset_set.recently_submitted().exists()
+
+
+    def _validate_any_submitted_response_set_recently(self):
+        if self.has_user_submitted_response_set_recently():
             raise ValidationError(
                 "Responses have already been submitted for this user"
             )
-
-

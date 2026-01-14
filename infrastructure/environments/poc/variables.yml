@@ -1,2 +1,3 @@
 OIDC_RP_CLIENT_ID: lcrc
 OIDC_OP_FQDN: https://auth.sandpit.signin.nhs.uk
+DISABLE_RECENT_SUBMISSION_LIMITATION: true
