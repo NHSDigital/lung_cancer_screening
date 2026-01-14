@@ -1,3 +1,4 @@
+@HaveYouEverSmoked
 Feature: Have you ever smoked page
   Scenario: The page is accessible
     Given I am logged in
@@ -36,6 +37,7 @@ Feature: Have you ever smoked page
     And I see "/have-you-ever-smoked?change=True" as a link to change "Have you ever smoked tobacco?" under "Eligibility"
     When I click the link to change "Have you ever smoked tobacco?" under "Eligibility"
     Then I am on "/have-you-ever-smoked?change=True"
+    And I see "Yes, I used to smoke" selected
     When I fill in and submit my smoking status with "Yes, I currently smoke"
     Then I am on "/check-your-answers"
     And I see "Yes, I currently smoke" as a response to "Have you ever smoked tobacco?" under "Eligibility"

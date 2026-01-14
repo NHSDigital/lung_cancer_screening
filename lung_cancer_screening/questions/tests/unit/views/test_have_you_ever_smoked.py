@@ -1,11 +1,13 @@
 from dateutil.relativedelta import relativedelta
-from django.test import TestCase
+from django.test import TestCase, tag
 from django.urls import reverse
 from django.utils import timezone
 
 from .helpers.authentication import login_user
 from lung_cancer_screening.questions.models.have_you_ever_smoked_response import HaveYouEverSmokedResponse, HaveYouEverSmokedValues
 
+
+@tag("HaveYouEverSmoked")
 class TestGetHaveYouEverSmoked(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
@@ -39,6 +41,7 @@ class TestGetHaveYouEverSmoked(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+@tag("HaveYouEverSmoked")
 class TestPostHaveYouEverSmoked(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
@@ -144,15 +147,6 @@ class TestPostHaveYouEverSmoked(TestCase):
 
         self.assertEqual(response.status_code, 422)
 
-    def test_post_does_not_update_the_response_set_if_the_user_is_not_a_smoker(self):
-        self.client.post(
-            reverse("questions:have_you_ever_smoked"),
-            { "value": HaveYouEverSmokedValues.NO_I_HAVE_NEVER_SMOKED.value }
-        )
-
-        response_set = self.user.responseset_set.first()
-        if response_set:
-            self.assertFalse(HaveYouEverSmokedResponse.objects.filter(response_set=response_set).exists())
 
     def test_post_redirects_if_the_user_not_a_smoker(self):
         response = self.client.post(

@@ -1,60 +1,21 @@
-from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 
 from .question_base_view import QuestionBaseView
 from ..forms.have_you_ever_smoked_form import HaveYouEverSmokedForm
-from ..models.have_you_ever_smoked_response import HaveYouEverSmokedResponse, HaveYouEverSmokedValues
+from ..models.have_you_ever_smoked_response import (
+    HaveYouEverSmokedResponse
+)
+
 
 class HaveYouEverSmokedView(QuestionBaseView):
-    def get(self, request):
-        response, _ = HaveYouEverSmokedResponse.objects.get_or_build(
-            response_set=request.response_set
-        )
-        return render_template(
-            request,
-            HaveYouEverSmokedForm(
-                instance=response
-            )
-        )
+    template_name = "have_you_ever_smoked.jinja"
+    form_class = HaveYouEverSmokedForm
+    model = HaveYouEverSmokedResponse
+    success_url = reverse_lazy("questions:date_of_birth")
+    back_link_url = reverse_lazy("questions:start")
 
-    def post(self, request):
-        response, _ = HaveYouEverSmokedResponse.objects.get_or_build(
-            response_set=request.response_set
-        )
-        form = HaveYouEverSmokedForm(
-            data=request.POST, instance=response
-        )
-
-        if form.is_valid():
-            has_smoked_values = (HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY.value, HaveYouEverSmokedValues.YES_I_CURRENTLY_SMOKE.value)
-            have_you_ever_smoked = form.cleaned_data["value"]
-
-            if have_you_ever_smoked in has_smoked_values:
-                response.value = have_you_ever_smoked
-                response.save()
-
-                return self.redirect_to_response_or_next_question(
-                    request,
-                    "questions:date_of_birth"
-                )
-            else:
-                return redirect(reverse("questions:non_smoker_exit"))
-
+    def get_success_url(self):
+        if self.object.has_smoked_regularly():
+            return super().get_success_url()
         else:
-            return render_template(
-                request,
-                form,
-                status=422
-            )
-
-
-def render_template(request, form, status=200):
-    return render(
-        request,
-        "have_you_ever_smoked.jinja",
-        {
-            "form": form,
-            "back_link_url": reverse("questions:start")
-        },
-        status=status
-    )
+            return reverse("questions:non_smoker_exit")
