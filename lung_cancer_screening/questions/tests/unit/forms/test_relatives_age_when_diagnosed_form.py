@@ -4,7 +4,7 @@ from ...factories.response_set_factory import ResponseSetFactory
 from ....models.relatives_age_when_diagnosed_response import RelativesAgeWhenDiagnosedResponse, RelativesAgeWhenDiagnosedValues
 from ....forms.relatives_age_when_diagnosed_form import RelativesAgeWhenDiagnosedForm
 
-@tag("FamilyHistoryLungCancer")
+@tag("RelativesAgeWhenDiagnosed")
 class TestRelativesLungCancerForm(TestCase):
     def setUp(self):
         self.response_set = ResponseSetFactory()

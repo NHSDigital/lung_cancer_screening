@@ -5,7 +5,7 @@ from ...factories.relatives_age_when_diagnosed_response_factory import Relatives
 
 from ....models.relatives_age_when_diagnosed_response import RelativesAgeWhenDiagnosedResponse
 
-@tag("FamilyHistoryLungCancer")
+@tag("RelativesAgeWhenDiagnosed")
 class TestRelativesAgeWhenDiagnosedResponse(TestCase):
     def setUp(self):
         self.response_set = ResponseSetFactory()

@@ -1,3 +1,4 @@
+@RelativesAgeWhenDiagnosed
 Feature: Relatives age when diagnosed page
   Scenario: The page is accessible
     Given I am logged in
@@ -40,6 +41,7 @@ Feature: Relatives age when diagnosed page
     And I see "/relatives-age-when-diagnosed?change=True" as a link to change "Were any of your relatives younger than 60 years old when they were diagnosed with lung cancer?" under "Family history"
     When I click the link to change "Were any of your relatives younger than 60 years old when they were diagnosed with lung cancer?" under "Family history"
     Then I am on "/relatives-age-when-diagnosed?change=True"
+    And I see "Yes, they were younger than 60" selected
     When I fill in and submit my relatives age when diagnosed with "No, they were 60 or older"
     Then I am on "/check-your-answers"
     And I see "No, they were 60 or older" as a response to "Were any of your relatives younger than 60 years old when they were diagnosed with lung cancer?" under "Family history"
