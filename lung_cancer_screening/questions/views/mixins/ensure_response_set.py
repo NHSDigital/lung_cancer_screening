@@ -6,7 +6,7 @@ from lung_cancer_screening.questions.models.response_set import ResponseSet
 class EnsureResponseSet:
 
     def dispatch(self, request, *args, **kwargs):
-        if request.user and request.user.responseset_set.submitted_in_last_year().count() > 0:
+        if request.user and request.user.responseset_set.recently_submitted().count() > 0:
             return redirect(reverse("questions:start"))
         else:
             if request.method == "POST":

@@ -66,10 +66,10 @@ class TestResponseSet(TestCase):
             "An unsubmitted response set already exists for this user"
         )
 
-    def test_is_invalid_if_another_response_set_was_submitted_within_the_last_year(self):
+    def test_is_invalid_if_another_response_set_was_submitted_within_the_recently_submitted_period(self):
         user = UserFactory()
         user.responseset_set.create(
-            submitted_at=timezone.now() - relativedelta(days=364)
+            submitted_at=timezone.now() - relativedelta(days=ResponseSet.RECENTLY_SUBMITTED_PERIOD_DAYS - 1)
         )
 
         with self.assertRaises(ValidationError) as context:
@@ -123,20 +123,24 @@ class TestResponseSet(TestCase):
             submitted_response_sets,
         )
 
-    def test_submitted_in_last_year_returns_only_submitted_response_sets_in_the_last_year(self):
-        submitted_response_set_in_last_year = ResponseSetFactory(
-            submitted_at=timezone.now() - relativedelta(days=364)
+    def test_submitted_recently_returns_only_submitted_response_sets_in_the_recently_submitted_period(self):
+        recently_submitted_response = ResponseSetFactory(
+            submitted_at=timezone.now() - relativedelta(
+                days=ResponseSet.RECENTLY_SUBMITTED_PERIOD_DAYS - 1
+            )
         )
-        submitted_response_set_older_than_last_year = ResponseSetFactory(
-            submitted_at=timezone.now() - relativedelta(years=1)
+        old_submitted_response = ResponseSetFactory(
+            submitted_at=timezone.now() - relativedelta(
+                days=ResponseSet.RECENTLY_SUBMITTED_PERIOD_DAYS + 1
+            )
         )
 
-        submitted_response_sets_in_last_year = ResponseSet.objects.submitted_in_last_year().all()
+        recently_submitted_response_sets = ResponseSet.objects.recently_submitted().all()
         self.assertIn(
-            submitted_response_set_in_last_year,
-            submitted_response_sets_in_last_year,
+            recently_submitted_response,
+            recently_submitted_response_sets,
         )
         self.assertNotIn(
-            submitted_response_set_older_than_last_year,
-            submitted_response_sets_in_last_year,
+            old_submitted_response,
+            recently_submitted_response_sets,
         )
