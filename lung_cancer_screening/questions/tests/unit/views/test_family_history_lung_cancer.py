@@ -47,6 +47,7 @@ class TestGetFamilyHistoryLungCancer(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+@tag("FamilyHistoryLungCancer")
 class TestPostFamilyHistoryLungCancer(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
