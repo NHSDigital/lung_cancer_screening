@@ -1,3 +1,4 @@
+@DateOfBirth
 Feature: Date of birth page
   Scenario: The page is accessible
     Given I am logged in
@@ -45,6 +46,7 @@ Feature: Date of birth page
     And I see "/date-of-birth?change=True" as a link to change "Date of birth" under "Eligibility"
     When I click the link to change "Date of birth" under "Eligibility"
     Then I am on "/date-of-birth?change=True"
+    And I see a date 55 years ago filled in
     When I fill in and submit my date of birth as 60 years ago
     Then I am on "/check-your-answers"
     And I see a date 60 years ago as a response to "Date of birth" under "Eligibility"
