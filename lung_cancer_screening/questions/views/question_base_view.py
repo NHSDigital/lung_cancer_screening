@@ -1,4 +1,3 @@
-from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import UpdateView
@@ -10,12 +9,6 @@ class QuestionBaseView(LoginRequiredMixin, EnsureResponseSet, UpdateView):
 
     def should_redirect_to_responses(self, request):
         return bool(request.POST.get("change"))
-
-    def redirect_to_response_or_next_question(self, request, next_question_url, query=None):
-        if self.should_redirect_to_responses(request):
-            return redirect(reverse("questions:responses", query=query))
-        else:
-            return redirect(reverse(next_question_url))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
