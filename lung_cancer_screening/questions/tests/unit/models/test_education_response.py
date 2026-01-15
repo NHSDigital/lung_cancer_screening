@@ -15,19 +15,18 @@ class TestEducationResponse(TestCase):
         model.full_clean()
 
     def test_has_response_set_as_foreign_key(self):
-        response_set = ResponseSetFactory()
         response = EducationResponse.objects.create(
-            response_set=response_set,
-            value=EducationValues.A_LEVELS
+            response_set=self.response_set,
+            value=[EducationValues.A_LEVELS]
         )
 
-        self.assertEqual(response.response_set, response_set)
+        self.assertEqual(response.response_set, self.response_set)
 
-    def test_has_value_as_string(self):
-        response_set = ResponseSetFactory()
+    def test_has_value_as_list_of_strings(self):
         response = EducationResponse.objects.create(
-            response_set=response_set,
-            value=EducationValues.A_LEVELS
+            response_set=self.response_set,
+            value=[EducationValues.A_LEVELS]
         )
 
-        self.assertIsInstance(response.value, str)
+        self.assertIsInstance(response.value, list)
+        self.assertIsInstance(response.value[0], str)

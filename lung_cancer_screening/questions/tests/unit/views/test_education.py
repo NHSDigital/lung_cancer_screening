@@ -57,7 +57,7 @@ class TestPostEducation(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
 
-        self.valid_params = {"value": EducationValues.A_LEVELS}
+        self.valid_params = {"value": [EducationValues.A_LEVELS]}
 
 
     def test_post_redirects_if_the_user_is_not_logged_in(self):
@@ -87,7 +87,8 @@ class TestPostEducation(TestCase):
         self.assertEqual(self.user.responseset_set.count(), 1)
         self.assertEqual(response_set.submitted_at, None)
         self.assertEqual(
-            EducationResponse.objects.get(response_set=response_set).value, self.valid_params["value"]
+            EducationResponse.objects.get(response_set=response_set).value,
+            self.valid_params["value"]
         )
         self.assertEqual(response_set.user, self.user)
 

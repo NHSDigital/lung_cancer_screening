@@ -9,4 +9,4 @@ class EducationResponseFactory(factory.django.DjangoModelFactory):
         model = EducationResponse
 
     response_set = factory.SubFactory(ResponseSetFactory)
-    value = factory.Iterator(EducationValues)
+    value = [EducationValues.GCSES]

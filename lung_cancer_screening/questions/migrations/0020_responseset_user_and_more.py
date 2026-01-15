@@ -28,6 +28,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='responseset',
             name='respiratory_conditions',
-            field=django.contrib.postgres.fields.ArrayField(base_field=models.CharField(choices=[('P', 'Pneumonia'), ('E', 'Emphysema'), ('B', 'Bronchitis'), ('T', 'Tuberculosis (TB)'), ('C', 'Chronic obstructive pulmonary disease (COPD)'), ('N', 'No, I have not had any of these respiratory conditions')], max_length=1), blank=True, null=True, size=None, validators=[lung_cancer_screening.questions.models.respiratory_conditions_response.validate_singleton_option]),
+            field=django.contrib.postgres.fields.ArrayField(base_field=models.CharField(choices=[('P', 'Pneumonia'), ('E', 'Emphysema'), ('B', 'Bronchitis'), ('T', 'Tuberculosis (TB)'), ('C', 'Chronic obstructive pulmonary disease (COPD)'), ('N', 'No, I have not had any of these respiratory conditions')], max_length=1), blank=True, null=True, size=None, validators=[lung_cancer_screening.questions.models.validators.singleton_option.validate_singleton_option]),
         ),
     ]

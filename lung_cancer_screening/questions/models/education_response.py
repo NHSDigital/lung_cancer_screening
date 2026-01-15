@@ -1,5 +1,7 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
+from .validators.singleton_option import validate_singleton_option
 from .base import BaseModel
 from .response_set import ResponseSet
 
@@ -15,4 +17,9 @@ class EducationValues(models.TextChoices):
 
 class EducationResponse(BaseModel):
     response_set = models.OneToOneField(ResponseSet, on_delete=models.CASCADE, related_name='education_response')
-    value = models.CharField(max_length=1, choices=EducationValues.choices)
+    value = ArrayField(
+        models.CharField(max_length=1, choices=EducationValues.choices),
+        validators=[
+            validate_singleton_option
+        ]
+    )
