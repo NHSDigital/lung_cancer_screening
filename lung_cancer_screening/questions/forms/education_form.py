@@ -24,6 +24,25 @@ class EducationForm(forms.ModelForm):
             },
         )
 
+        # Add hints for each choice
+        education_field = self["value"]
+        education_field.add_hint_for_choice(
+            EducationValues.GCSES,
+            "Previously O-levels",
+        )
+        education_field.add_hint_for_choice(
+            EducationValues.A_LEVELS,
+            "Previously Higher School Certificate (HSC)",
+        )
+        education_field.add_hint_for_choice(
+            EducationValues.BACHELORS_DEGREE,
+            "A university degree, also known as an undergraduate degree",
+        )
+        education_field.add_hint_for_choice(
+            EducationValues.POSTGRADUATE_DEGREE,
+            "For example, a Masters or PhD",
+        )
+
         self["value"].add_divider_after(
             EducationValues.POSTGRADUATE_DEGREE.value, "or"
         )
