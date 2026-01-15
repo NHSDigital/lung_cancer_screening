@@ -36,7 +36,7 @@ from .views.responses import ResponsesView
 from .views.sex_at_birth import SexAtBirthView
 from .views.start import StartView
 from .views.weight import WeightView
-from .views.your_results import YourResultsView
+from .views.confirmation import ConfirmationView
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/start'), name='root'),
@@ -59,5 +59,5 @@ urlpatterns = [
     path('sex-at-birth', SexAtBirthView.as_view(), name='sex_at_birth'),
     path('start', StartView.as_view(), name='start'),
     path('weight', WeightView.as_view(), name='weight'),
-    path('your-results', YourResultsView.as_view(), name='your_results'),
+    path('confirmation', ConfirmationView.as_view(), name='confirmation'),
 ]

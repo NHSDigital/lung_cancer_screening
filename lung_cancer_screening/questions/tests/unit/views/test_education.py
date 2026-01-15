@@ -38,7 +38,7 @@ class TestGetEducation(TestCase):
             reverse("questions:education")
         )
 
-        self.assertRedirects(response, reverse("questions:start"))
+        self.assertRedirects(response, reverse("questions:confirmation"))
 
 
     def test_get_responds_successfully(self):
@@ -145,7 +145,7 @@ class TestPostEducation(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:start"))
+        self.assertRedirects(response, reverse("questions:confirmation"))
 
 
     def test_post_stores_a_valid_response_for_the_user(self):

@@ -1,0 +1,15 @@
+{% from "nhsuk/components/inset-text/macro.jinja" import insetText %}
+
+{% set insetTextHtml %}
+  <p>When you stop smoking, in:</p>
+  <ul>
+    <li>2 days, all harmful carbon monoxide leaves your body</li>
+    <li>2 to 12 weeks, your circulation improves</li>
+    <li>3 to 9 months, your lung function and breathing improves</li>
+    <li>1 year, your risk of a heart attack halves compared to a smoker</li>
+  </ul>
+{% endset %}
+
+{{ insetText({
+  "html": insetTextHtml
+}) }}

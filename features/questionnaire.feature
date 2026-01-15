@@ -4,7 +4,7 @@ Feature: Questionnaire
     And I have already submitted my responses
     When I go to "/start"
     And I click "Start now"
-    Then I am on "/start"
+    Then I am on "/confirmation"
 
   Scenario: The user can complete the full questionnaire
     Given I am logged in
@@ -74,3 +74,6 @@ Feature: Questionnaire
 
     And I see "Yes" as a response to "Have any of your parents, siblings or children ever been diagnosed with lung cancer?" under "Family history"
     And I see "Yes, they were younger than 60" as a response to "Were any of your relatives younger than 60 years old when they were diagnosed with lung cancer?" under "Family history"
+
+    When I click "Submit"
+    Then I am on "/confirmation"

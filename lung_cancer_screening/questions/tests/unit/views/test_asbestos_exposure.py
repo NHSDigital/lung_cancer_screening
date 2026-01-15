@@ -32,7 +32,7 @@ class TestGetAsbestosExposure(TestCase):
             reverse("questions:asbestos_exposure")
         )
 
-        self.assertRedirects(response, reverse("questions:start"))
+        self.assertRedirects(response, reverse("questions:confirmation"))
 
 
     def test_get_responds_successfully(self):
@@ -123,7 +123,7 @@ class TestPostAsbestosExposure(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:start"))
+        self.assertRedirects(response, reverse("questions:confirmation"))
 
 
     def test_post_redirects_to_cancer_diagnosis(self):

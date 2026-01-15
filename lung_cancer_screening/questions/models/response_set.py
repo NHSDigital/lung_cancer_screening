@@ -45,7 +45,7 @@ class ResponseSet(BaseModel):
 
 
     def has_user_submitted_response_set_recently(self):
-        return self.user and self.user.responseset_set.recently_submitted().exists()
+        return self.user and self.user.has_recently_submitted_responses()
 
 
     def _validate_any_submitted_response_set_recently(self):

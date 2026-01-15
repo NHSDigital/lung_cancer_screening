@@ -25,4 +25,4 @@ class ResponsesView(LoginRequiredMixin, EnsureResponseSet, View):
         response_set.submitted_at = timezone.now()
         response_set.save()
 
-        return redirect(reverse("questions:your_results"))
+        return redirect(reverse("questions:confirmation"))

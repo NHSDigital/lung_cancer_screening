@@ -42,7 +42,7 @@ class TestGetResponses(TestCase):
         )
 
         self.assertRedirects(
-            response, reverse("questions:start")
+            response, reverse("questions:confirmation")
         )
 
     def test_get_responds_successfully(self):
@@ -105,13 +105,13 @@ class TestPostResponses(TestCase):
             reverse("questions:responses")
         )
 
-        self.assertRedirects(response, reverse("questions:start"))
+        self.assertRedirects(response, reverse("questions:confirmation"))
 
 
-    def test_post_redirects_to_your_results(self):
+    def test_post_redirects_to_confirmation(self):
         response = self.client.post(reverse("questions:responses"))
 
-        self.assertRedirects(response, reverse("questions:your_results"), fetch_redirect_response=False)
+        self.assertRedirects(response, reverse("questions:confirmation"), fetch_redirect_response=False)
 
 
     def test_post_marks_the_result_set_as_submitted(self):
