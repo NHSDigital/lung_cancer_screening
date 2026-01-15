@@ -35,5 +35,8 @@ else
   TEST_MODULE=""
 fi
 
-docker compose run --rm --remove-orphans web poetry run python manage.py test $TEST_MODULE $TAG --settings=lung_cancer_screening.settings_test --exclude-tag=accessibility
+env UID="$(id -u)" docker compose run --rm web \
+  poetry run python manage.py test $TEST_MODULE $TAG \
+  --settings=lung_cancer_screening.settings_test \
+  --exclude-tag=accessibility
 

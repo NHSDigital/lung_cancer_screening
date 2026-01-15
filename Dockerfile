@@ -86,6 +86,7 @@ COPY pyproject.toml poetry.lock ./
 RUN pip install poetry
 RUN poetry install --no-root && rm -rf $POETRY_CACHE_DIR
 RUN poetry run playwright install --with-deps chromium
+RUN chown -R ${USER}:${USER} ${APP_DIR}
 
 USER ${USER}
 COPY --chown=${USER}:${USER} . .
