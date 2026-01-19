@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('value', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(choices=[('P', 'Pneumonia'), ('E', 'Emphysema'), ('B', 'Bronchitis'), ('T', 'Tuberculosis (TB)'), ('C', 'Chronic obstructive pulmonary disease (COPD)'), ('N', 'No, I have not had any of these respiratory conditions')], max_length=1), size=None, validators=[lung_cancer_screening.questions.models.respiratory_conditions_response.validate_singleton_option])),
+                ('value', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(choices=[('P', 'Pneumonia'), ('E', 'Emphysema'), ('B', 'Bronchitis'), ('T', 'Tuberculosis (TB)'), ('C', 'Chronic obstructive pulmonary disease (COPD)'), ('N', 'No, I have not had any of these respiratory conditions')], max_length=1), size=None, validators=[lung_cancer_screening.questions.models.validators.singleton_option.validate_singleton_option])),
                 ('response_set', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='respiratory_conditions_response', to='questions.responseset')),
             ],
             options={

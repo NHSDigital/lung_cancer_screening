@@ -11,27 +11,27 @@ class TestEducationForm(TestCase):
         self.response_set = ResponseSetFactory()
         self.response = EducationResponse.objects.create(
             response_set=self.response_set,
-            value=EducationValues.GCSES
+            value=[EducationValues.GCSES]
         )
 
     def test_is_valid_with_a_valid_value(self):
         form = EducationForm(
             instance=self.response,
             data={
-                'value': EducationValues.GCSES
+                'value': [EducationValues.GCSES]
             }
         )
         self.assertTrue(form.is_valid())
         self.assertEqual(
             form.cleaned_data['value'],
-            EducationValues.GCSES
+            [EducationValues.GCSES]
         )
 
     def test_is_invalid_with_an_invalid_value(self):
         form = EducationForm(
             instance=self.response,
             data={
-                "value": "invalid"
+                "value": ["invalid"]
             }
         )
         self.assertFalse(form.is_valid())
@@ -44,7 +44,7 @@ class TestEducationForm(TestCase):
         form = EducationForm(
             instance=self.response,
             data={
-                "value": None
+                "value": []
             }
         )
         self.assertFalse(form.is_valid())

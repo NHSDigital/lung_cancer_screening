@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+from ..models.education_response import EducationValues
 from ..models.respiratory_conditions_response import RespiratoryConditionValues
 
 class ResponseSetPresenter:
@@ -74,7 +75,10 @@ class ResponseSetPresenter:
         if not hasattr(self.response_set, 'education_response'):
             return None
 
-        return self.response_set.education_response.get_value_display()
+        return self._list_to_sentence([
+            EducationValues(code).label
+            for code in self.response_set.education_response.value
+        ])
 
     @property
     def asbestos_exposure(self):

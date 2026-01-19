@@ -153,14 +153,21 @@ class TestResponseSetPresenter(TestCase):
         presenter = ResponseSetPresenter(self.response_set)
         self.assertEqual(presenter.education, None)
 
-
     def test_education_with_value(self):
         EducationResponseFactory(
             response_set=self.response_set,
-            value=EducationValues.GCSES
+            value=[
+                EducationValues.GCSES,
+                EducationValues.A_LEVELS,
+            ],
         )
         presenter = ResponseSetPresenter(self.response_set)
-        self.assertEqual(presenter.education, EducationValues.GCSES.label)
+        self.assertEqual(
+            presenter.education,
+            EducationValues.GCSES.label
+            + " and "
+            + EducationValues.A_LEVELS.label,
+        )
 
 
     def test_asbestos_exposure_with_no_value(self):
