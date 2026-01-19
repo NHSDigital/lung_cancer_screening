@@ -116,6 +116,15 @@ class ResponseSetPresenter:
         if not hasattr(self.response_set, 'respiratory_conditions_response'):
             return None
 
+        if RespiratoryConditionValues.NONE in self.response_set.respiratory_conditions_response.value:
+            values_sentence = self._list_to_sentence([
+                label
+                for label in RespiratoryConditionValues.labels
+                if label != RespiratoryConditionValues.NONE.label
+            ], final_separator = "or")
+
+            return f"No, I have not been diagnosed with {values_sentence}"
+
         return self._list_to_sentence([
             RespiratoryConditionValues(code).label
             for code in self.response_set.respiratory_conditions_response.value
@@ -209,15 +218,15 @@ class ResponseSetPresenter:
         return items
 
 
-    def _list_to_sentence(self, list):
+    def _list_to_sentence(self, list, final_separator = "and"):
         if len(list) == 0:
             return ''
         if len(list) == 1:
             return list[0]
         if len(list) == 2:
-            return '{} and {}'.format(list[0], list[1])
+            return f"{list[0]} {final_separator} {list[1]}"
 
-        return '{}, and {}'.format(', '.join(list[:-1]), list[-1])
+        return f"{', '.join(list[:-1])}, {final_separator} {list[-1]}"
 
 
     def _should_display_relatives_age_when_diagnosed(self):
