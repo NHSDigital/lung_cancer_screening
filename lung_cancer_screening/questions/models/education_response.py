@@ -13,7 +13,7 @@ class EducationValues(models.TextChoices):
     FURTHER_EDUCATION = "F", "Further education"
     BACHELORS_DEGREE = "B", "Bachelor's degree"
     POSTGRADUATE_DEGREE = "P", "Postgraduate degree"
-    PREFER_NOT_TO_SAY = "N", "I'd prefer not to say"
+    PREFER_NOT_TO_SAY = "N", "Prefer not to say"
 
 
 class EducationResponse(BaseModel):
