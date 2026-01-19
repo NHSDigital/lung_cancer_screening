@@ -1,4 +1,5 @@
 from decimal import Decimal
+from django.urls import reverse
 
 from ..models.education_response import EducationValues
 from ..models.respiratory_conditions_response import RespiratoryConditionValues
@@ -108,6 +109,7 @@ class ResponseSetPresenter:
 
         return self.response_set.relatives_age_when_diagnosed.get_value_display()
 
+
     @property
     def respiratory_conditions(self):
         if not hasattr(self.response_set, 'respiratory_conditions_response'):
@@ -119,6 +121,24 @@ class ResponseSetPresenter:
         ])
 
 
+    def family_history_responses_items(self):
+        items = [
+            self._check_your_answer_item(
+                "Have any of your parents, siblings or children ever been diagnosed with lung cancer?",
+                self.family_history_lung_cancer,
+                "questions:family_history_lung_cancer",
+            )
+        ]
+        if self._should_display_relatives_age_when_diagnosed():
+            items.append(self._check_your_answer_item(
+                "Were any of your relatives younger than 60 years old when they were diagnosed with lung cancer?",
+                self.relatives_age_when_diagnosed,
+                "questions:relatives_age_when_diagnosed",
+            ))
+
+        return items
+
+
     def _list_to_sentence(self, list):
         if len(list) == 0:
             return ''
@@ -128,3 +148,29 @@ class ResponseSetPresenter:
             return '{} and {}'.format(list[0], list[1])
 
         return '{}, and {}'.format(', '.join(list[:-1]), list[-1])
+
+
+    def _should_display_relatives_age_when_diagnosed(self):
+        if not hasattr(self.response_set, 'family_history_lung_cancer'):
+            return False
+
+        return self.response_set.family_history_lung_cancer != FamilyHistoryLungCancerValues.YES
+
+
+    def _change_query_params(self):
+        return { "change": "True" }
+
+
+    def _check_your_answer_item(self, question, value, url_lookup_name):
+        return {
+            "key": { "text": question },
+            "value": { "text": value },
+            "actions": {
+                "items": [
+                    {
+                        "href": reverse(url_lookup_name, query = self._change_query_params()),
+                        "text": "Change"
+                    }
+                ]
+            }
+        }

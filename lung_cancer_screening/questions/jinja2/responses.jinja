@@ -168,33 +168,9 @@
 
       <section>
       <h2 class="nhsuk-heading-m">Family history</h2>
+
         {{ summaryList({
-          "rows": [
-            {
-              "key": { "text": "Have any of your parents, siblings or children ever been diagnosed with lung cancer?" },
-              "value": { "text": response_set.family_history_lung_cancer },
-              "actions": {
-                "items": [
-                  {
-                    "href": url('questions:family_history_lung_cancer', query = change_query_params),
-                    "text": "Change"
-                  }
-                ]
-              }
-            },
-            {
-              "key": { "text": "Were any of your relatives younger than 60 years old when they were diagnosed with lung cancer?" },
-              "value": { "text": response_set.relatives_age_when_diagnosed },
-              "actions": {
-                "items": [
-                  {
-                    "href": url('questions:relatives_age_when_diagnosed', query = change_query_params),
-                    "text": "Change"
-                  }
-                ]
-              }
-            }
-          ]
+          "rows": response_set.family_history_responses_items()
         }) }}
       </section>
 
