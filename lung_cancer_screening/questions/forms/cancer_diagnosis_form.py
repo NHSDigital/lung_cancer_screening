@@ -8,14 +8,14 @@ class CancerDiagnosisForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields["value"] = TypedChoiceField(
-            choices=[(True, 'Yes'), (False, 'No')],
+            choices=[(True, "Yes"), (False, "No")],
             widget=forms.RadioSelect,
-            label="If you have ever been diagnosed with cancer",
+            label="Have you ever been diagnosed with cancer?",
             label_classes="nhsuk-fieldset__legend--m",
-            coerce=lambda x: x == 'True',
+            coerce=lambda x: x == "True",
             error_messages={
-                'required': 'Select if you have been diagnosed with cancer'
-            }
+                "required": "Select if you have been diagnosed with cancer"
+            },
         )
 
     class Meta:
