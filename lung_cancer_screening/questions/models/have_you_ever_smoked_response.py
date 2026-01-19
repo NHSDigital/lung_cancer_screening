@@ -14,3 +14,9 @@ class HaveYouEverSmokedValues(models.IntegerChoices):
 class HaveYouEverSmokedResponse(BaseModel):
     response_set = models.OneToOneField(ResponseSet, on_delete=models.CASCADE, related_name='have_you_ever_smoked_response')
     value = models.IntegerField(choices=HaveYouEverSmokedValues.choices)
+
+    def has_smoked_regularly(self):
+        return self.value in [
+            HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY.value,
+            HaveYouEverSmokedValues.YES_I_CURRENTLY_SMOKE.value
+        ]

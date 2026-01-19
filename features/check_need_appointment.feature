@@ -27,4 +27,10 @@ Feature: Check if you need an appointment page
     When I check "No, I can continue online" and submit
     Then I am on "/height"
 
+  Scenario: Checking responses and changing them
+    Given I am logged in
+    When I go to "/check-if-you-need-an-appointment"
+    And I check "No, I can continue online" and submit
+    When I click "Back"
+    Then I see "No, I can continue online" selected
 

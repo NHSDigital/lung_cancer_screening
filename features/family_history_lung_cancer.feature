@@ -1,3 +1,4 @@
+@FamilyHistoryLungCancer
 Feature: Family history of lung cancer page
   Scenario: The page is accessible
     Given I am logged in
@@ -31,6 +32,7 @@ Feature: Family history of lung cancer page
     And I see "/family-history-lung-cancer?change=True" as a link to change "Have any of your parents, siblings or children ever been diagnosed with lung cancer? " under "Family history"
     When I click the link to change "Have any of your parents, siblings or children ever been diagnosed with lung cancer? " under "Family history"
     Then I am on "/family-history-lung-cancer?change=True"
+    And I see "No" selected
     When I fill in and submit my family history lung cancer with "Yes"
     Then I am on "/relatives-age-when-diagnosed?change=True"
     When I fill in and submit my relatives age when diagnosed with "Yes, they were younger than 60"

@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, tag
 from django.urls import reverse
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
@@ -7,6 +7,7 @@ from lung_cancer_screening.questions.models.gender_response import GenderRespons
 from .helpers.authentication import login_user
 
 
+@tag("Gender")
 class TestGetGender(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
@@ -48,6 +49,7 @@ class TestGetGender(TestCase):
         self.assertContains(response, "Which of these best describes you?")
 
 
+@tag("Gender")
 class TestPostGender(TestCase):
     def setUp(self):
         self.user = login_user(self.client)

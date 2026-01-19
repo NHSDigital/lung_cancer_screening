@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, tag
 from django.urls import reverse
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
@@ -6,6 +6,7 @@ from django.utils import timezone
 from .helpers.authentication import login_user
 
 
+@tag("CancerDiagnosis")
 class TestGetCancerDiagnosis(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
@@ -42,6 +43,7 @@ class TestGetCancerDiagnosis(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+@tag("CancerDiagnosis")
 class TestPostCancerDiagnosis(TestCase):
     def setUp(self):
         self.user = login_user(self.client)

@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, tag
 
 from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.height_response_factory import HeightResponseFactory
@@ -6,6 +6,7 @@ from ...factories.height_response_factory import HeightResponseFactory
 from ....models.height_response import HeightResponse
 
 
+@tag("Height")
 class TestHeightResponse(TestCase):
     def setUp(self):
         self.response_set = ResponseSetFactory()

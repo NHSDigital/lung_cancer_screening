@@ -11,7 +11,7 @@ from ....models.family_history_lung_cancer_response import FamilyHistoryLungCanc
 from .helpers.authentication import login_user
 
 
-@tag("FamilyHistoryLungCancer")
+@tag("RelativesAgeWhenDiagnosed")
 class TestGetRelativesAgeWhenDiagnosed(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
@@ -70,6 +70,7 @@ class TestGetRelativesAgeWhenDiagnosed(TestCase):
         )
 
 
+@tag("RelativesAgeWhenDiagnosed")
 class TestPostRelativesAgeWhenDiagnosed(TestCase):
     def setUp(self):
         self.user = login_user(self.client)

@@ -1,10 +1,11 @@
-from django.test import TestCase
+from django.test import TestCase, tag
 
 from ...factories.response_set_factory import ResponseSetFactory
 from ....models.weight_response import WeightResponse
 from ....forms.imperial_weight_form import ImperialWeightForm
 
 
+@tag("Weight")
 class TestImperialWeightForm(TestCase):
     def setUp(self):
         self.response_set = ResponseSetFactory()

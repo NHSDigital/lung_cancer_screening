@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, tag
 
 from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.ethnicity_response_factory import EthnicityResponseFactory
@@ -6,6 +6,7 @@ from ...factories.ethnicity_response_factory import EthnicityResponseFactory
 from ....models.ethnicity_response import EthnicityResponse, EthnicityValues
 
 
+@tag("Ethnicity")
 class TestEthnicityResponse(TestCase):
     def setUp(self):
         self.response_set = ResponseSetFactory()

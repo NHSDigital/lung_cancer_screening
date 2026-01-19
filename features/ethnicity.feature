@@ -1,3 +1,4 @@
+@Ethnicity
 Feature: Ethnicity page
   Scenario: The page is accessible
     Given I am logged in
@@ -28,6 +29,7 @@ Feature: Ethnicity page
     And I see "/ethnicity?change=True" as a link to change "Ethnic group" under "About you"
     When I click the link to change "Ethnic group" under "About you"
     Then I am on "/ethnicity?change=True"
+    And I see "White" selected
     When I fill in and submit my ethnicity with "Black, African, Caribbean or Black British"
     Then I am on "/check-your-answers"
     And I see "Black, African, Caribbean or Black British" as a response to "Ethnic group" under "About you"

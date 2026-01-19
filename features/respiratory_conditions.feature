@@ -1,3 +1,4 @@
+@RespiratoryConditions
 Feature: Respiratory conditions page
   Scenario: The page is accessible
     Given I am logged in
@@ -31,6 +32,8 @@ Feature: Respiratory conditions page
     And I see "/respiratory-conditions?change=True" as a link to change "Diagnosed respiratory conditions" under "Your health"
     When I click the link to change "Diagnosed respiratory conditions" under "Your health"
     Then I am on "/respiratory-conditions?change=True"
+    And I see "Pneumonia" selected
+    And I see "Emphysema" selected
     When I fill in and submit my respiratory conditions with "Bronchitis" and "Tuberculosis (TB)"
     Then I am on "/check-your-answers"
     And I see "Pneumonia, Emphysema, Bronchitis, and Tuberculosis (TB)" as a response to "Diagnosed respiratory conditions" under "Your health"

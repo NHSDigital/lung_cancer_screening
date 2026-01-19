@@ -1,10 +1,11 @@
-from django.test import TestCase
+from django.test import TestCase, tag
 
 from ...factories.response_set_factory import ResponseSetFactory
 from ....models.height_response import HeightResponse
 from ....forms.metric_height_form import MetricHeightForm
 
 
+@tag("Height")
 class TestMetricHeightForm(TestCase):
     def setUp(self):
         self.response_set = ResponseSetFactory()

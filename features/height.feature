@@ -1,3 +1,4 @@
+@Height
 Feature: Height page
   Scenario: The page is accessible
     Given I am logged in
@@ -59,8 +60,17 @@ Feature: Height page
     And I see "/height?change=True" as a link to change "Height" under "About you"
     When I click the link to change "Height" under "About you"
     Then I am on "/height?change=True"
+    And I see "170.0" filled in for "Centimetres"
     When I click "Switch to feet and inches"
     And I fill in and submit my height with "5" feet and "7" inches
     Then I am on "/check-your-answers"
     And I see "5 feet 7 inches" as a response to "Height" under "About you"
+    When I click the link to change "Height" under "About you"
+    Then I am on "/height?change=True"
+    And I see "5" filled in for "Feet"
+    And I see "7" filled in for "Inches"
+    When I click "Switch to centimetres"
+    And I fill in and submit my height with "170.4"
+    Then I am on "/check-your-answers"
+    And I see "170.4 cm" as a response to "Height" under "About you"
 

@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, tag
 
 from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.sex_at_birth_response_factory import SexAtBirthResponseFactory
@@ -6,6 +6,7 @@ from ...factories.sex_at_birth_response_factory import SexAtBirthResponseFactory
 from ....models.sex_at_birth_response import SexAtBirthResponse, SexAtBirthValues
 
 
+@tag("SexAtBirth")
 class TestSexAtBirthResponse(TestCase):
     def setUp(self):
         self.response_set = ResponseSetFactory()
