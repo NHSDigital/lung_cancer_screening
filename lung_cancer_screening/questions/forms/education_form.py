@@ -35,6 +35,10 @@ class EducationForm(forms.ModelForm):
             "Previously Higher School Certificate (HSC)",
         )
         education_field.add_hint_for_choice(
+            EducationValues.FURTHER_EDUCATION,
+            "For example, apprenticeships or Higher National Certificates (HNC)",
+        )
+        education_field.add_hint_for_choice(
             EducationValues.BACHELORS_DEGREE,
             "A university degree, also known as an undergraduate degree",
         )
