@@ -3,6 +3,7 @@ from django.urls import reverse
 
 from ..models.education_response import EducationValues
 from ..models.respiratory_conditions_response import RespiratoryConditionValues
+from ..models.family_history_lung_cancer_response import FamilyHistoryLungCancerValues
 
 class ResponseSetPresenter:
     DATE_FORMAT = "%-d %B %Y" # eg 8 September 2000
@@ -119,6 +120,75 @@ class ResponseSetPresenter:
             RespiratoryConditionValues(code).label
             for code in self.response_set.respiratory_conditions_response.value
         ])
+
+
+    def eligibility_responses_items(self):
+        return [
+            self._check_your_answer_item(
+                "Have you ever smoked tobacco?",
+                self.have_you_ever_smoked,
+                "questions:have_you_ever_smoked",
+            ),
+            self._check_your_answer_item(
+                "Date of birth",
+                self.date_of_birth,
+                "questions:date_of_birth",
+            )
+        ]
+
+    def about_you_responses_items(self):
+        return [
+            self._check_your_answer_item(
+                "Height",
+                self.height,
+                "questions:height",
+            ),
+            self._check_your_answer_item(
+                "Weight",
+                self.weight,
+                "questions:weight",
+            ),
+            self._check_your_answer_item(
+                "Sex at birth",
+                self.sex_at_birth,
+                "questions:sex_at_birth",
+            ),
+            self._check_your_answer_item(
+                "Gender identity",
+                self.gender,
+                "questions:gender",
+            ),
+            self._check_your_answer_item(
+                "Ethnic background",
+                self.ethnicity,
+                "questions:ethnicity",
+            ),
+            self._check_your_answer_item(
+                "Education",
+                self.education,
+                "questions:education",
+            )
+        ]
+
+
+    def your_health_responses_items(self):
+        return [
+            self._check_your_answer_item(
+                "Diagnosed respiratory conditions",
+                self.respiratory_conditions,
+                "questions:respiratory_conditions",
+            ),
+            self._check_your_answer_item(
+                "Have you ever worked in a job where you were exposed to asbestos?",
+                self.asbestos_exposure,
+                "questions:asbestos_exposure",
+            ),
+            self._check_your_answer_item(
+                "Have you ever been diagnosed with cancer?",
+                self.cancer_diagnosis,
+                "questions:cancer_diagnosis",
+            )
+        ]
 
 
     def family_history_responses_items(self):
