@@ -35,3 +35,6 @@ class User(AbstractBaseUser):
     class Meta:
         verbose_name = 'user'
         verbose_name_plural = 'users'
+
+    def has_recently_submitted_responses(self):
+        return self.responseset_set.recently_submitted().exists()

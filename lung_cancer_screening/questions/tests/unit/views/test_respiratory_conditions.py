@@ -36,7 +36,7 @@ class TestGetRespiratoryConditions(TestCase):
             reverse("questions:respiratory_conditions")
         )
 
-        self.assertRedirects(response, reverse("questions:start"))
+        self.assertRedirects(response, reverse("questions:confirmation"))
 
     def test_get_responds_successfully(self):
         response = self.client.get(
@@ -156,7 +156,7 @@ class TestPostRespiratoryConditions(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:start"))
+        self.assertRedirects(response, reverse("questions:confirmation"))
 
     def test_post_stores_a_valid_response_for_the_user(self):
         self.client.post(

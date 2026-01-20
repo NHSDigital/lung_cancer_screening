@@ -40,7 +40,7 @@ class TestGetRelativesAgeWhenDiagnosed(TestCase):
             reverse("questions:relatives_age_when_diagnosed")
         )
 
-        self.assertRedirects(response, reverse("questions:start"))
+        self.assertRedirects(response, reverse("questions:confirmation"))
 
     def test_get_responds_successfully(self):
         FamilyHistoryLungCancerResponseFactory(
@@ -144,7 +144,7 @@ class TestPostRelativesAgeWhenDiagnosed(TestCase):
             reverse("questions:relatives_age_when_diagnosed")
         )
 
-        self.assertRedirects(response, reverse("questions:start"))
+        self.assertRedirects(response, reverse("questions:confirmation"))
 
     def test_post_redirects_to_responses(self):
         response = self.client.post(

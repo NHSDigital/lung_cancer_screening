@@ -31,7 +31,7 @@ class TestGetCheckNeedAppointment(TestCase):
             reverse("questions:check_need_appointment")
         )
 
-        self.assertRedirects(response, reverse("questions:start"))
+        self.assertRedirects(response, reverse("questions:confirmation"))
 
 
     def test_get_responds_successfully(self):
@@ -121,7 +121,7 @@ class TestPostCheckNeedAppointment(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:start"))
+        self.assertRedirects(response, reverse("questions:confirmation"))
 
 
     def test_post_redirects_to_the_next_page(self):

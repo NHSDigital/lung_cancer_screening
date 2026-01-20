@@ -34,7 +34,7 @@ class TestGetAgeRangeExit(TestCase):
             reverse("questions:age_range_exit")
         )
 
-        self.assertRedirects(response, reverse("questions:start"))
+        self.assertRedirects(response, reverse("questions:confirmation"))
 
     def test_get_responds_successfully(self):
         response = self.client.get(reverse("questions:age_range_exit"))

@@ -35,7 +35,7 @@ class TestGetCancerDiagnosis(TestCase):
             reverse("questions:cancer_diagnosis")
         )
 
-        self.assertRedirects(response, reverse("questions:start"))
+        self.assertRedirects(response, reverse("questions:confirmation"))
 
     def test_get_responds_successfully(self):
         response = self.client.get(reverse("questions:cancer_diagnosis"))
@@ -117,7 +117,7 @@ class TestPostCancerDiagnosis(TestCase):
             reverse("questions:cancer_diagnosis")
         )
 
-        self.assertRedirects(response, reverse("questions:start"))
+        self.assertRedirects(response, reverse("questions:confirmation"))
 
     def test_post_redirects_to_family_history_lung_cancer(self):
         response = self.client.post(

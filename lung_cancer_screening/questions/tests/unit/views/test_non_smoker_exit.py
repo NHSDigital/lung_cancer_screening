@@ -34,7 +34,7 @@ class TestGetNonSmokerExit(TestCase):
             reverse("questions:non_smoker_exit")
         )
 
-        self.assertRedirects(response, reverse("questions:start"))
+        self.assertRedirects(response, reverse("questions:confirmation"))
 
     def test_get_responds_successfully(self):
         response = self.client.get(reverse("questions:non_smoker_exit"))

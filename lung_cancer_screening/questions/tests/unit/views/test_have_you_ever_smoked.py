@@ -32,7 +32,7 @@ class TestGetHaveYouEverSmoked(TestCase):
             reverse("questions:have_you_ever_smoked")
         )
 
-        self.assertRedirects(response, reverse("questions:start"))
+        self.assertRedirects(response, reverse("questions:confirmation"))
 
 
     def test_get_responds_successfully(self):
@@ -117,7 +117,7 @@ class TestPostHaveYouEverSmoked(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:start"))
+        self.assertRedirects(response, reverse("questions:confirmation"))
 
 
     def test_post_redirects_to_date_of_birth(self):

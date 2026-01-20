@@ -1,0 +1,19 @@
+{% from "nhsuk/components/details/macro.jinja" import details %}
+
+{% call details({
+  "summaryText": "Smoking, anxiety and mood",
+  "classes": "nhsuk-expander"
+}) %}
+  <p>Quitting smoking can lift your mood, and ease stress, anxiety and depression.</p>
+  <p>Smokers often think that smoking helps them relax. But in reality, nicotine cravings increase anxiety and tension.</p>
+  <p>To manage cravings, try to:</p>
+  <ul>
+    <li>keep busy with hobbies and activities</li>
+    <li>relax with breathing techniques or meditation</li>
+    <li>seek support from friends, family, or support groups</li>
+    <li>use nicotine replacement therapy or medications</li>
+  </ul>
+  <p>The following links open in a new tab.</p>
+  <p>Read <a href="https://www.nhs.uk/live-well/quit-smoking/stopping-smoking-mental-health-benefits/" target="_blank">NHS guidance on smoking and mental health</a></p>
+  <p>Get your <a href="https://www.nhs.uk/every-mind-matters/mental-wellbeing-tips/your-mind-plan-quiz/" target="_blank">free Mind Plan</a></p>
+{% endcall %}
