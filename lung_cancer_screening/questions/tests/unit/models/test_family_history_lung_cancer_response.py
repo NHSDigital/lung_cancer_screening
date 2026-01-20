@@ -40,6 +40,22 @@ class TestFamilyHistoryLungCancerResponse(TestCase):
         self.assertIsInstance(response.value, str)
 
 
+    def test_is_truthy_returns_true_if_value_is_yes(self):
+        response = FamilyHistoryLungCancerResponseFactory(
+            value=FamilyHistoryLungCancerValues.YES
+        )
+
+        self.assertTrue(response.is_truthy())
+
+
+    def test_is_truthy_returns_false_if_value_is_no(self):
+        response = FamilyHistoryLungCancerResponseFactory(
+            value=FamilyHistoryLungCancerValues.NO
+        )
+
+        self.assertFalse(response.is_truthy())
+
+
     def test_deletes_family_age_when_diagnosed_if_response_is_no(self):
         RelativesAgeWhenDiagnosedResponseFactory.create(response_set=self.response_set)
 

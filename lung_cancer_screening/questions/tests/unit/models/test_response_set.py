@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, tag
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
@@ -9,7 +9,10 @@ from ...factories.user_factory import UserFactory
 from ...factories.response_set_factory import ResponseSetFactory
 from ....models.user import User
 from ....models.response_set import ResponseSet
+from ....models.family_history_lung_cancer_response import FamilyHistoryLungCancerValues
 
+
+@tag("ResponseSet")
 class TestResponseSet(TestCase):
     def setUp(self):
         self.user = UserFactory()
@@ -80,7 +83,16 @@ class TestResponseSet(TestCase):
             "Responses have already been submitted for this user"
         )
 
-# Query managers
+
+    def test_submitted_response_set_is_valid_on_update(self):
+        self.response_set.submitted_at = timezone.now()
+        self.response_set.save()
+
+        self.response_set.full_clean()
+
+
+    # Query managers
+
     def test_objects_returns_all_response_sets(self):
         unsubmitted_response_set = ResponseSetFactory()
         submitted_response_set = ResponseSetFactory(submitted_at=timezone.now())
@@ -94,6 +106,7 @@ class TestResponseSet(TestCase):
             submitted_response_set,
             response_sets,
         )
+
 
     def test_unsubmitted_returns_only_unsubmitted_response_sets(self):
         unsubmitted_response_set = ResponseSetFactory()
@@ -144,3 +157,29 @@ class TestResponseSet(TestCase):
             old_submitted_response,
             recently_submitted_response_sets,
         )
+
+
+    def test_is_complete_returns_true_if_all_questions_are_answered(self):
+        response_set = ResponseSetFactory.create(complete=True)
+
+        self.assertTrue(response_set.is_complete())
+
+
+    def test_is_complete_returns_false_if_a_single_question_is_not_answered(self):
+        response_set = ResponseSetFactory.create(complete=True)
+        response_set.asbestos_exposure_response.delete()
+        response_set.refresh_from_db()
+
+        self.assertFalse(response_set.is_complete())
+
+
+    def test_is_complete_returns_true_if_family_history_cancer_no_and_none_age_diagnosed(self):
+        response_set = ResponseSetFactory.create(complete=True)
+
+        family_history = response_set.family_history_lung_cancer
+        family_history.value = FamilyHistoryLungCancerValues.NO
+        family_history.save()
+
+        response_set.refresh_from_db()
+
+        self.assertTrue(response_set.is_complete())

@@ -15,11 +15,14 @@ class FamilyHistoryLungCancerResponse(BaseModel):
     response_set = models.OneToOneField(ResponseSet, on_delete=models.CASCADE, related_name='family_history_lung_cancer')
     value = models.CharField(max_length=1, choices=FamilyHistoryLungCancerValues.choices)
 
+    def is_truthy(self):
+        return self.value == FamilyHistoryLungCancerValues.YES
+
 
 @receiver(post_save, sender=FamilyHistoryLungCancerResponse)
 def remove_relatives_age_when_diagnosed_if_not_yes(sender, instance, **kwargs):
     if (
-        instance.value != FamilyHistoryLungCancerValues.YES
+        not instance.is_truthy()
         and instance.response_set
         and hasattr(instance.response_set, "relatives_age_when_diagnosed")
     ):

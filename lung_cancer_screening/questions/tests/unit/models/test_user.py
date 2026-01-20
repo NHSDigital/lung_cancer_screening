@@ -80,11 +80,13 @@ class TestUser(TestCase):
             context.exception.messages
         )
 
+
     def test_has_recently_submitted_responses_returns_true_if_has_recently_submitted_response_set(self):
         self.user.responseset_set.create(
             submitted_at=timezone.now() - timedelta(days=ResponseSet.RECENTLY_SUBMITTED_PERIOD_DAYS - 1)
         )
         self.assertTrue(self.user.has_recently_submitted_responses())
+
 
     def test_has_recently_submitted_responses_returns_false_if_has_no_recently_submitted_response_set(self):
         self.user.responseset_set.create(
