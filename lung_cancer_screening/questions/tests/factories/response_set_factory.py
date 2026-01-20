@@ -1,7 +1,21 @@
 import factory
+from datetime import timedelta
+from django.utils import timezone
 
 from .user_factory import UserFactory
 from ...models.response_set import ResponseSet
+
+
+def set_submitted_at_recently(response_set, create, extracted):
+    response_set.submitted_at = timezone.now() - timedelta(
+        days=ResponseSet.RECENTLY_SUBMITTED_PERIOD_DAYS - 1
+    )
+
+
+def set_submitted_at_not_recently(response_set, create, extracted):
+    response_set.submitted_at = timezone.now() - timedelta(
+        days=ResponseSet.RECENTLY_SUBMITTED_PERIOD_DAYS + 1
+    )
 
 
 class ResponseSetFactory(factory.django.DjangoModelFactory):
@@ -68,4 +82,14 @@ class ResponseSetFactory(factory.django.DjangoModelFactory):
                 "lung_cancer_screening.questions.tests.factories.weight_response_factory.WeightResponseFactory",
                 factory_related_name="response_set"
             ),
+        )
+
+        not_recently_submitted = factory.Trait(
+            complete=True,
+            submitted_at=factory.PostGeneration(set_submitted_at_not_recently)
+        )
+
+        recently_submitted = factory.Trait(
+            complete=True,
+            submitted_at=factory.PostGeneration(set_submitted_at_recently)
         )

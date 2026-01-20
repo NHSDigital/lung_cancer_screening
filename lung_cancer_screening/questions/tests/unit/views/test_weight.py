@@ -1,10 +1,9 @@
 from django.test import TestCase, tag
 from django.urls import reverse
-from dateutil.relativedelta import relativedelta
-from django.utils import timezone
 
 from .helpers.authentication import login_user
 from lung_cancer_screening.questions.models.weight_response import WeightResponse
+from ...factories.response_set_factory import ResponseSetFactory
 
 
 @tag("Weight")
@@ -28,8 +27,9 @@ class TestGetWeight(TestCase):
     def test_get_redirects_when_submitted_response_set_exists_within_last_year(
         self
     ):
-        self.user.responseset_set.create(
-            submitted_at=timezone.now() - relativedelta(days=364)
+        ResponseSetFactory.create(
+            user=self.user,
+            recently_submitted=True
         )
 
         response = self.client.get(
@@ -127,11 +127,12 @@ class TestPostWeight(TestCase):
         )
         self.assertEqual(response_set.user, self.user)
 
-    def test_post_creates_new_unsubmitted_response_set_when_submitted_exists_over_year_ago(  # noqa: E501
+    def test_post_creates_new_unsubmitted_response_set_when_not_recently_submitted_exists(  # noqa: E501
         self
     ):
-        self.user.responseset_set.create(
-            submitted_at=timezone.now() - relativedelta(years=1)
+        ResponseSetFactory.create(
+            user=self.user,
+            not_recently_submitted=True
         )
 
         self.client.post(
@@ -152,8 +153,9 @@ class TestPostWeight(TestCase):
     def test_post_redirects_when_submitted_response_set_exists_within_last_year(  # noqa: E501
         self
     ):
-        self.user.responseset_set.create(
-            submitted_at=timezone.now() - relativedelta(days=364)
+        ResponseSetFactory.create(
+            user=self.user,
+            recently_submitted=True
         )
 
         response = self.client.post(

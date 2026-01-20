@@ -1,6 +1,5 @@
 from django.test import TestCase, tag
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
 from django.core.exceptions import ValidationError
@@ -70,13 +69,10 @@ class TestResponseSet(TestCase):
         )
 
     def test_is_invalid_if_another_response_set_was_submitted_within_the_recently_submitted_period(self):
-        user = UserFactory()
-        user.responseset_set.create(
-            submitted_at=timezone.now() - relativedelta(days=ResponseSet.RECENTLY_SUBMITTED_PERIOD_DAYS - 1)
-        )
+        response_set = ResponseSetFactory.create(recently_submitted=True)
 
         with self.assertRaises(ValidationError) as context:
-            user.responseset_set.create()
+            response_set.user.responseset_set.create()
 
         self.assertEqual(
             context.exception.messages[0],
@@ -84,11 +80,23 @@ class TestResponseSet(TestCase):
         )
 
 
-    def test_submitted_response_set_is_valid_on_update(self):
-        self.response_set.submitted_at = timezone.now()
-        self.response_set.save()
+    def test_Saving_a_submitted_response_Set_does_not_included_itself_in_unsubmitted_response_sets_validation(self):
+        response_set = ResponseSetFactory.create(complete=True)
+        response_set.submitted_at = timezone.now()
 
-        self.response_set.full_clean()
+        response_set.full_clean()
+
+
+    def test_submitted_response_set_is_invalid_if_incomplete(self):
+        self.response_set.submitted_at = timezone.now()
+
+        with self.assertRaises(ValidationError) as context:
+            self.response_set.full_clean()
+
+        self.assertEqual(
+            context.exception.messages[0],
+            "Response set must be complete before it can be submitted"
+        )
 
 
     # Query managers
@@ -110,7 +118,7 @@ class TestResponseSet(TestCase):
 
     def test_unsubmitted_returns_only_unsubmitted_response_sets(self):
         unsubmitted_response_set = ResponseSetFactory()
-        submitted_response_set = ResponseSetFactory(submitted_at=timezone.now())
+        submitted_response_set = ResponseSetFactory(recently_submitted=True)
 
         unsubmitted_response_sets = ResponseSet.objects.unsubmitted().all()
         self.assertIn(
@@ -124,7 +132,7 @@ class TestResponseSet(TestCase):
 
     def test_submitted_returns_only_submitted_response_sets(self):
         unsubmitted_response_set = ResponseSetFactory()
-        submitted_response_set = ResponseSetFactory(submitted_at=timezone.now() - relativedelta(years=1))
+        submitted_response_set = ResponseSetFactory(not_recently_submitted=True)
 
         submitted_response_sets = ResponseSet.objects.submitted().all()
         self.assertIn(
@@ -138,14 +146,10 @@ class TestResponseSet(TestCase):
 
     def test_submitted_recently_returns_only_submitted_response_sets_in_the_recently_submitted_period(self):
         recently_submitted_response = ResponseSetFactory(
-            submitted_at=timezone.now() - relativedelta(
-                days=ResponseSet.RECENTLY_SUBMITTED_PERIOD_DAYS - 1
-            )
+            recently_submitted=True
         )
         old_submitted_response = ResponseSetFactory(
-            submitted_at=timezone.now() - relativedelta(
-                days=ResponseSet.RECENTLY_SUBMITTED_PERIOD_DAYS + 1
-            )
+            not_recently_submitted=True
         )
 
         recently_submitted_response_sets = ResponseSet.objects.recently_submitted().all()

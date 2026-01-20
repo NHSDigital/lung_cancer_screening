@@ -42,6 +42,7 @@ class ResponseSet(BaseModel):
     def clean(self):
         super().clean()
         self._validate_any_submitted_response_set_recently()
+        self._validate_complete_on_submission()
 
 
     def has_user_submitted_response_set_recently(self):
@@ -52,6 +53,13 @@ class ResponseSet(BaseModel):
         if self.has_user_submitted_response_set_recently():
             raise ValidationError(
                 "Responses have already been submitted for this user"
+            )
+
+
+    def _validate_complete_on_submission(self):
+        if self.submitted_at and not self.is_complete():
+            raise ValidationError(
+                "Response set must be complete before it can be submitted"
             )
 
 

@@ -1,7 +1,5 @@
 from django.test import TestCase, tag
 from django.urls import reverse
-from dateutil.relativedelta import relativedelta
-from django.utils import timezone
 
 from lung_cancer_screening.questions.models.relatives_age_when_diagnosed_response import RelativesAgeWhenDiagnosedValues
 from lung_cancer_screening.questions.tests.factories.family_history_lung_cancer_response_factory import FamilyHistoryLungCancerResponseFactory
@@ -32,8 +30,9 @@ class TestGetRelativesAgeWhenDiagnosed(TestCase):
     def test_get_redirects_when_submitted_response_set_exists_within_last_year(
         self
     ):
-        self.user.responseset_set.create(
-            submitted_at=timezone.now() - relativedelta(days=364)
+        ResponseSetFactory.create(
+            user=self.user,
+            recently_submitted=True
         )
 
         response = self.client.get(
@@ -115,11 +114,12 @@ class TestPostRelativesAgeWhenDiagnosed(TestCase):
         self.assertEqual(response_set.submitted_at, None)
         self.assertEqual(response_set.user, self.user)
 
-    def test_post_creates_new_unsubmitted_response_set_when_submitted_exists_over_year_ago(
+    def test_post_creates_new_unsubmitted_response_set_when_not_recently_submitted_exists(
         self
     ):
-        self.user.responseset_set.create(
-            submitted_at=timezone.now() - relativedelta(years=1)
+        ResponseSetFactory.create(
+            user=self.user,
+            not_recently_submitted=True
         )
 
         self.client.post(
@@ -136,8 +136,9 @@ class TestPostRelativesAgeWhenDiagnosed(TestCase):
     def test_post_redirects_when_submitted_response_set_exists_within_last_year(
         self
     ):
-        self.user.responseset_set.create(
-            submitted_at=timezone.now() - relativedelta(days=364)
+        ResponseSetFactory.create(
+            user=self.user,
+            recently_submitted=True
         )
 
         response = self.client.post(

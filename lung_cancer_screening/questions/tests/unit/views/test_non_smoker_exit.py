@@ -1,9 +1,8 @@
 from django.test import TestCase
 from django.urls import reverse
-from dateutil.relativedelta import relativedelta
-from django.utils import timezone
 
 from .helpers.authentication import login_user
+from ...factories.response_set_factory import ResponseSetFactory
 
 
 class TestGetNonSmokerExit(TestCase):
@@ -26,8 +25,9 @@ class TestGetNonSmokerExit(TestCase):
     def test_get_redirects_when_submitted_response_set_exists_within_last_year(
         self
     ):
-        self.user.responseset_set.create(
-            submitted_at=timezone.now() - relativedelta(days=364)
+        ResponseSetFactory.create(
+            user=self.user,
+            recently_submitted=True
         )
 
         response = self.client.get(
