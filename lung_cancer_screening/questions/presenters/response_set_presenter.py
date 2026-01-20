@@ -1,7 +1,9 @@
 from decimal import Decimal
+from django.urls import reverse
 
 from ..models.education_response import EducationValues
 from ..models.respiratory_conditions_response import RespiratoryConditionValues
+from ..models.family_history_lung_cancer_response import FamilyHistoryLungCancerValues
 
 class ResponseSetPresenter:
     DATE_FORMAT = "%-d %B %Y" # eg 8 September 2000
@@ -108,10 +110,20 @@ class ResponseSetPresenter:
 
         return self.response_set.relatives_age_when_diagnosed.get_value_display()
 
+
     @property
     def respiratory_conditions(self):
         if not hasattr(self.response_set, 'respiratory_conditions_response'):
             return None
+
+        if RespiratoryConditionValues.NONE in self.response_set.respiratory_conditions_response.value:
+            values_sentence = self._list_to_sentence([
+                label
+                for label in RespiratoryConditionValues.labels
+                if label != RespiratoryConditionValues.NONE.label
+            ], final_separator = "or")
+
+            return f"No, I have not been diagnosed with {values_sentence}"
 
         return self._list_to_sentence([
             RespiratoryConditionValues(code).label
@@ -119,12 +131,125 @@ class ResponseSetPresenter:
         ])
 
 
-    def _list_to_sentence(self, list):
+    def eligibility_responses_items(self):
+        return [
+            self._check_your_answer_item(
+                "Have you ever smoked tobacco?",
+                self.have_you_ever_smoked,
+                "questions:have_you_ever_smoked",
+            ),
+            self._check_your_answer_item(
+                "Date of birth",
+                self.date_of_birth,
+                "questions:date_of_birth",
+            )
+        ]
+
+    def about_you_responses_items(self):
+        return [
+            self._check_your_answer_item(
+                "Height",
+                self.height,
+                "questions:height",
+            ),
+            self._check_your_answer_item(
+                "Weight",
+                self.weight,
+                "questions:weight",
+            ),
+            self._check_your_answer_item(
+                "Sex at birth",
+                self.sex_at_birth,
+                "questions:sex_at_birth",
+            ),
+            self._check_your_answer_item(
+                "Gender identity",
+                self.gender,
+                "questions:gender",
+            ),
+            self._check_your_answer_item(
+                "Ethnic background",
+                self.ethnicity,
+                "questions:ethnicity",
+            ),
+            self._check_your_answer_item(
+                "Education",
+                self.education,
+                "questions:education",
+            )
+        ]
+
+
+    def your_health_responses_items(self):
+        return [
+            self._check_your_answer_item(
+                "Diagnosed respiratory conditions",
+                self.respiratory_conditions,
+                "questions:respiratory_conditions",
+            ),
+            self._check_your_answer_item(
+                "Have you ever worked in a job where you were exposed to asbestos?",
+                self.asbestos_exposure,
+                "questions:asbestos_exposure",
+            ),
+            self._check_your_answer_item(
+                "Have you ever been diagnosed with cancer?",
+                self.cancer_diagnosis,
+                "questions:cancer_diagnosis",
+            )
+        ]
+
+
+    def family_history_responses_items(self):
+        items = [
+            self._check_your_answer_item(
+                "Have any of your parents, siblings or children ever been diagnosed with lung cancer?",
+                self.family_history_lung_cancer,
+                "questions:family_history_lung_cancer",
+            )
+        ]
+        if self._should_display_relatives_age_when_diagnosed():
+            items.append(self._check_your_answer_item(
+                "Were any of your relatives younger than 60 years old when they were diagnosed with lung cancer?",
+                self.relatives_age_when_diagnosed,
+                "questions:relatives_age_when_diagnosed",
+            ))
+
+        return items
+
+
+    def _list_to_sentence(self, list, final_separator = "and"):
         if len(list) == 0:
             return ''
         if len(list) == 1:
             return list[0]
         if len(list) == 2:
-            return '{} and {}'.format(list[0], list[1])
+            return f"{list[0]} {final_separator} {list[1]}"
 
-        return '{}, and {}'.format(', '.join(list[:-1]), list[-1])
+        return f"{', '.join(list[:-1])}, {final_separator} {list[-1]}"
+
+
+    def _should_display_relatives_age_when_diagnosed(self):
+        if not hasattr(self.response_set, 'family_history_lung_cancer'):
+            return False
+
+        return self.response_set.family_history_lung_cancer != FamilyHistoryLungCancerValues.YES
+
+
+    def _change_query_params(self):
+        return { "change": "True" }
+
+
+    def _check_your_answer_item(self, question, value, url_lookup_name):
+        return {
+            "key": { "text": question },
+            "value": { "text": value },
+            "actions": {
+                "items": [
+                    {
+                        "href": reverse(url_lookup_name, query = self._change_query_params()),
+                        "text": "Change"
+                    }
+                ]
+            }
+        }

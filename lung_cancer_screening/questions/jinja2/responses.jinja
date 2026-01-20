@@ -13,188 +13,29 @@
       <section>
         <h2 class="nhsuk-heading-m">Eligibility</h2>
         {{ summaryList({
-          "rows": [
-            {
-              "key": { "text": "Have you ever smoked tobacco?" },
-              "value": { "text": response_set.have_you_ever_smoked },
-              "actions": {
-                "items": [
-                  {
-                    "href": url('questions:have_you_ever_smoked', query = change_query_params),
-                    "text": "Change"
-                  }
-                ]
-              }
-            },
-            {
-              "key": { "text": "Date of birth" },
-              "value": { "text": response_set.date_of_birth },
-              "actions": {
-                "items": [
-                  {
-                    "href": url('questions:date_of_birth', query = change_query_params),
-                    "text": "Change"
-                  }
-                ]
-              }
-            }
-          ]
+          "rows": response_set.eligibility_responses_items()
         }) }}
       </section>
 
       <section>
         <h2 class="nhsuk-heading-m">About you</h2>
         {{ summaryList({
-          "rows": [
-            {
-              "key": { "text": "Height" },
-              "value": { "text": response_set.height },
-              "actions": {
-                "items": [
-                  {
-                    "href": url('questions:height', query = change_query_params),
-                    "text": "Change"
-                  }
-                ]
-              }
-            },
-            {
-              "key": { "text": "Weight" },
-              "value": { "text": response_set.weight },
-              "actions": {
-                "items": [
-                  {
-                    "href": url('questions:weight', query = change_query_params),
-                    "text": "Change"
-                  }
-                ]
-              }
-            },
-            {
-              "key": { "text": "Sex at birth" },
-              "value": { "text": response_set.sex_at_birth },
-              "actions": {
-                "items": [
-                  {
-                    "href": url('questions:sex_at_birth', query = change_query_params),
-                    "text": "Change"
-                  }
-                ]
-              }
-            },
-            {
-              "key": { "text": "Gender identity" },
-              "value": { "text": response_set.gender },
-              "actions": {
-                "items": [
-                  {
-                    "href": url('questions:gender', query = change_query_params),
-                    "text": "Change"
-                  }
-                ]
-              }
-            },
-            {
-              "key": { "text": "Ethnic group" },
-              "value": { "text": response_set.ethnicity },
-              "actions": {
-                "items": [
-                  {
-                    "href": url('questions:ethnicity', query = change_query_params),
-                    "text": "Change"
-                  }
-                ]
-              }
-            },
-            {
-              "key": { "text": "Highest level of education" },
-              "value": { "text": response_set.education },
-              "actions": {
-                "items": [
-                  {
-                    "href": url('questions:education', query = change_query_params),
-                    "text": "Change"
-                  }
-                ]
-              }
-            },
-          ]
+          "rows": response_set.about_you_responses_items()
         }) }}
       </section>
 
       <section>
         <h2 class="nhsuk-heading-m">Your health</h2>
         {{ summaryList({
-          "rows": [
-            {
-              "key": { "text": "Diagnosed respiratory conditions" },
-              "value": { "text": response_set.respiratory_conditions },
-              "actions": {
-                "items": [
-                  {
-                    "href": url('questions:respiratory_conditions', query = change_query_params),
-                    "text": "Change"
-                  }
-                ]
-              }
-              },
-            {
-              "key": { "text": "Have you ever worked in a job where you were exposed to asbestos?" },
-              "value": { "text": response_set.asbestos_exposure },
-              "actions": {
-                "items": [
-                  {
-                    "href": url('questions:asbestos_exposure', query = change_query_params),
-                    "text": "Change"
-                  }
-                ]
-              }
-            },
-            {
-              "key": { "text": "Have you ever been diagnosed with cancer?" },
-              "value": { "text": response_set.cancer_diagnosis },
-              "actions": {
-                "items": [
-                  {
-                    "href": url('questions:cancer_diagnosis', query = change_query_params),
-                    "text": "Change"
-                  }
-                ]
-              }
-            }
-          ]
+          "rows": response_set.your_health_responses_items()
         }) }}
       </section>
 
       <section>
       <h2 class="nhsuk-heading-m">Family history</h2>
+
         {{ summaryList({
-          "rows": [
-            {
-              "key": { "text": "Have any of your parents, siblings or children ever been diagnosed with lung cancer?" },
-              "value": { "text": response_set.family_history_lung_cancer },
-              "actions": {
-                "items": [
-                  {
-                    "href": url('questions:family_history_lung_cancer', query = change_query_params),
-                    "text": "Change"
-                  }
-                ]
-              }
-            },
-            {
-              "key": { "text": "Were any of your relatives younger than 60 years old when they were diagnosed with lung cancer?" },
-              "value": { "text": response_set.relatives_age_when_diagnosed },
-              "actions": {
-                "items": [
-                  {
-                    "href": url('questions:relatives_age_when_diagnosed', query = change_query_params),
-                    "text": "Change"
-                  }
-                ]
-              }
-            }
-          ]
+          "rows": response_set.family_history_responses_items()
         }) }}
       </section>
 
