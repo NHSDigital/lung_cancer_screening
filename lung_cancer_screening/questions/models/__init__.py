@@ -2,6 +2,7 @@
 from .response_set import ResponseSet # noqa: F401
 from .user import User # noqa: F401
 
+from .age_when_started_smoking_response import AgeWhenStartedSmokingResponse # noqa: F401
 from .asbestos_exposure_response import AsbestosExposureResponse # noqa: F401
 from .cancer_diagnosis_response import CancerDiagnosisResponse # noqa: F401
 from .check_need_appointment_response import CheckNeedAppointmentResponse # noqa: F401

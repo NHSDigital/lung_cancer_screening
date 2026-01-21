@@ -11,7 +11,7 @@ class FamilyHistoryLungCancerView(QuestionBaseView):
     template_name = "family_history_lung_cancer.jinja"
     form_class = FamilyHistoryLungCancerForm
     model = FamilyHistoryLungCancerResponse
-    success_url = reverse_lazy("questions:responses")
+    success_url = reverse_lazy("questions:age_when_started_smoking")
     back_link_url = reverse_lazy("questions:cancer_diagnosis")
 
     def get_success_url(self):

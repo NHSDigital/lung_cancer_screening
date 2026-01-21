@@ -9,6 +9,11 @@ def when_i_check_value_and_submit(context, value):
     context.page.get_by_label(value, exact=True).check()
     when_i_submit_the_form(context)
 
+@when("I fill in \"{field}\" as \"{value}\" and submit")
+def when_i_enter_value_and_submit(context, field, value):
+    context.page.get_by_label(field).fill(value)
+    when_i_submit_the_form(context)
+
 @when("I take a screenshot")
 @when("I take a screenshot {value}")
 def screenshot(context, value=""):

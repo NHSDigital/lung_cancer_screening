@@ -16,7 +16,7 @@ class MetricHeightForm(forms.ModelForm):
         self.fields["metric"] = DecimalField(
             decimal_places=1,
             label="Centimetres",
-            classes="nhsuk-input--width-4",
+            classes="nhsuk-input--width-2",
             error_messages={
                 'required': 'Enter your height',
                 "max_decimal_places": (

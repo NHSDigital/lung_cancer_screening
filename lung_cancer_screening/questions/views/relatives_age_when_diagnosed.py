@@ -11,7 +11,7 @@ class RelativesAgeWhenDiagnosedView(QuestionBaseView):
     template_name = "relative_age_when_diagnosed.jinja"
     form_class = RelativesAgeWhenDiagnosedForm
     model = RelativesAgeWhenDiagnosedResponse
-    success_url = reverse_lazy("questions:responses")
+    success_url = reverse_lazy("questions:age_when_started_smoking")
     back_link_url = reverse_lazy("questions:family_history_lung_cancer")
 
     def get(self, request, *args, **kwargs):
