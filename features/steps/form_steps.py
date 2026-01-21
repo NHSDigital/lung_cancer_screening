@@ -110,6 +110,11 @@ def when_i_fill_in_and_submit_my_cancer_diagnosis(context, relatives_age_when_di
     context.page.get_by_label(relatives_age_when_diagnosed, exact=True).check()
     when_i_submit_the_form(context)
 
+@when(u'I fill in and submit my periods when you stopped smoking with "{periods_when_you_stopped_smoking}"')
+def when_i_fill_in_and_submit_my_periods_when_you_stopped_smoking(context, periods_when_you_stopped_smoking):
+    context.page.get_by_label(periods_when_you_stopped_smoking, exact=True).check()
+    when_i_submit_the_form(context)
+
 @when('I submit the form')
 def when_i_submit_the_form(context):
     when_i_click(context, "Continue")
@@ -134,3 +139,8 @@ def then_i_see_value_filled_in_for_label(context, value, label):
 @when('I check "{label}"')
 def when_i_check_label(context, label):
     context.page.get_by_label(label, exact=True).check()
+
+
+@when('I fill in "{label}" with "{value}"')
+def when_i_fill_in_label_with_value(context, label, value):
+    context.page.get_by_label(label, exact=True).fill(value)

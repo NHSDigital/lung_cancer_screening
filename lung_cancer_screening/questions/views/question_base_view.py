@@ -8,9 +8,12 @@ class QuestionBaseView(UpdateView):
     def should_redirect_to_responses(self, request):
         return bool(request.POST.get("change"))
 
+    def get_back_link_url(self):
+        return self.back_link_url
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["back_link_url"] = self.back_link_url
+        context["back_link_url"] = self.get_back_link_url()
         return context
 
     def get_success_url(self):

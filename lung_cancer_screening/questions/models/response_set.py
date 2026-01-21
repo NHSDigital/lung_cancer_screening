@@ -75,6 +75,7 @@ class ResponseSet(BaseModel):
             'gender_response',
             'have_you_ever_smoked_response',
             'height_response',
+            'periods_when_you_stopped_smoking_response',
             'respiratory_conditions_response',
             'sex_at_birth_response',
             'weight_response',

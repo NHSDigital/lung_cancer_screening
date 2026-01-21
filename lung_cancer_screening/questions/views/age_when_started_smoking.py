@@ -11,5 +11,5 @@ class AgeWhenStartedSmokingView(LoginRequiredMixin, EnsureResponseSet, EnsureEli
     template_name = "question_form.jinja"
     form_class = AgeWhenStartedSmokingForm
     model = AgeWhenStartedSmokingResponse
-    success_url = reverse_lazy("questions:responses")
+    success_url = reverse_lazy("questions:periods_when_you_stopped_smoking")
     back_link_url = reverse_lazy("questions:relatives_age_when_diagnosed")
