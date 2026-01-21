@@ -1,10 +1,8 @@
 from datetime import datetime
 from django.test import TestCase, tag
 from django.core.exceptions import ValidationError
-from django.utils import timezone
-from datetime import timedelta
 
-from lung_cancer_screening.questions.models.response_set import ResponseSet
+from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.user_factory import UserFactory
 
 
@@ -80,14 +78,18 @@ class TestUser(TestCase):
             context.exception.messages
         )
 
+
     def test_has_recently_submitted_responses_returns_true_if_has_recently_submitted_response_set(self):
-        self.user.responseset_set.create(
-            submitted_at=timezone.now() - timedelta(days=ResponseSet.RECENTLY_SUBMITTED_PERIOD_DAYS - 1)
+        ResponseSetFactory.create(
+            user=self.user,
+            recently_submitted=True
         )
         self.assertTrue(self.user.has_recently_submitted_responses())
 
+
     def test_has_recently_submitted_responses_returns_false_if_has_no_recently_submitted_response_set(self):
-        self.user.responseset_set.create(
-            submitted_at=timezone.now() - timedelta(days=ResponseSet.RECENTLY_SUBMITTED_PERIOD_DAYS)
+        ResponseSetFactory.create(
+            user=self.user,
+            not_recently_submitted=True
         )
         self.assertFalse(self.user.has_recently_submitted_responses())

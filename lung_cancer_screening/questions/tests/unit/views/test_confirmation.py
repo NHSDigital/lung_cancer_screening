@@ -1,6 +1,5 @@
 from django.test import TestCase, tag
 from django.urls import reverse
-from django.utils import timezone
 
 from ...factories.response_set_factory import ResponseSetFactory
 from .helpers.authentication import login_user
@@ -36,7 +35,7 @@ class TestGetConfirmation(TestCase):
         self.assertRedirects(response, reverse("questions:responses"))
 
     def test_get_responds_successfully_when_a_submitted_response_set_exists(self):
-        ResponseSetFactory.create(user=self.user, submitted_at=timezone.now())
+        ResponseSetFactory.create(user=self.user, recently_submitted=True)
 
         response = self.client.get(reverse("questions:confirmation"))
 

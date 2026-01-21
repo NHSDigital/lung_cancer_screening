@@ -42,7 +42,8 @@
       <form action="{{ request.path }}" method="post">
         {{ csrf_input }}
         {{ button({
-          "text": "Submit"
+          "text": "Submit",
+          "disabled": not response_set.is_complete()
         }) }}
       </form>
     </div>

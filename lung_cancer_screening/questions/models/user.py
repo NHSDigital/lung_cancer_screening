@@ -36,5 +36,10 @@ class User(AbstractBaseUser):
         verbose_name = 'user'
         verbose_name_plural = 'users'
 
-    def has_recently_submitted_responses(self):
-        return self.responseset_set.recently_submitted().exists()
+    def has_recently_submitted_responses(self, excluding=None):
+        query = self.responseset_set.recently_submitted()
+
+        if excluding:
+            query = query.exclude(id=excluding.id)
+
+        return query.exists()

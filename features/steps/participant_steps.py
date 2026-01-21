@@ -1,11 +1,14 @@
 from behave import given
 from django.utils import timezone
 
+from lung_cancer_screening.questions.tests.factories.response_set_factory import ResponseSetFactory
 
-@given('I have already submitted my responses')
+
+@given('I have recently submitted my responses')
 def given_i_have_already_submitted_my_responses(context):
-    context.current_user.responseset_set.create(
-        submitted_at=timezone.now()
+    ResponseSetFactory.create(
+        user=context.current_user,
+        recently_submitted=True
     )
 
 @given('I have started the questionnaire')

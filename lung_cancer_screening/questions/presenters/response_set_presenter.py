@@ -218,6 +218,11 @@ class ResponseSetPresenter:
         return items
 
 
+    def is_complete(self):
+        return self.response_set.is_complete()
+
+
+
     def _list_to_sentence(self, list, final_separator = "and"):
         if len(list) == 0:
             return ''

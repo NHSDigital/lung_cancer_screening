@@ -42,10 +42,11 @@ class ResponseSet(BaseModel):
     def clean(self):
         super().clean()
         self._validate_any_submitted_response_set_recently()
+        self._validate_complete_on_submission()
 
 
     def has_user_submitted_response_set_recently(self):
-        return self.user and self.user.has_recently_submitted_responses()
+        return self.user and self.user.has_recently_submitted_responses(excluding=self)
 
 
     def _validate_any_submitted_response_set_recently(self):
@@ -53,3 +54,37 @@ class ResponseSet(BaseModel):
             raise ValidationError(
                 "Responses have already been submitted for this user"
             )
+
+
+    def _validate_complete_on_submission(self):
+        if self.submitted_at and not self.is_complete():
+            raise ValidationError(
+                "Response set must be complete before it can be submitted"
+            )
+
+
+    def _response_attrs(self):
+        response_attrs = [
+            'asbestos_exposure_response',
+            'cancer_diagnosis_response',
+            'check_need_appointment_response',
+            'date_of_birth_response',
+            'education_response',
+            'ethnicity_response',
+            'family_history_lung_cancer',
+            'gender_response',
+            'have_you_ever_smoked_response',
+            'height_response',
+            'respiratory_conditions_response',
+            'sex_at_birth_response',
+            'weight_response',
+        ]
+
+        if hasattr(self, 'family_history_lung_cancer') and self.family_history_lung_cancer.is_truthy():
+            response_attrs.append('relatives_age_when_diagnosed')
+
+        return response_attrs
+
+
+    def is_complete(self):
+        return all(hasattr(self, attr) for attr in self._response_attrs())

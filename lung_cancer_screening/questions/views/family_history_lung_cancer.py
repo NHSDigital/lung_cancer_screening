@@ -3,8 +3,7 @@ from django.urls import reverse, reverse_lazy
 from .question_base_view import QuestionBaseView
 from ..forms.family_history_lung_cancer_form import FamilyHistoryLungCancerForm
 from ..models.family_history_lung_cancer_response import (
-    FamilyHistoryLungCancerResponse,
-    FamilyHistoryLungCancerValues
+    FamilyHistoryLungCancerResponse
 )
 
 
@@ -16,7 +15,7 @@ class FamilyHistoryLungCancerView(QuestionBaseView):
     back_link_url = reverse_lazy("questions:cancer_diagnosis")
 
     def get_success_url(self):
-        if self.object.value == FamilyHistoryLungCancerValues.YES:
+        if self.object.is_truthy():
             if self.should_redirect_to_responses(self.request):
                 return reverse(
                     "questions:relatives_age_when_diagnosed",
