@@ -7,6 +7,7 @@ from .response_set import ResponseSet
 class SexAtBirthValues(models.TextChoices):
     FEMALE = "F", 'Female'
     MALE = "M", 'Male'
+    INTERSEX = "I", 'Intersex'
 
 
 class SexAtBirthResponse(BaseModel):
