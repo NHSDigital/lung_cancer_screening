@@ -6,7 +6,7 @@ from ..models.ethnicity_response import EthnicityResponse
 
 
 class EthnicityView(QuestionBaseView):
-    template_name = "question_form.jinja"
+    template_name = "ethnicity.jinja"
     form_class = EthnicityForm
     model = EthnicityResponse
     success_url = reverse_lazy("questions:education")

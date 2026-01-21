@@ -13,12 +13,7 @@ class EthnicityForm(forms.ModelForm):
             choices=EthnicityValues.choices,
             label="What is your ethnic background?",
             widget=forms.RadioSelect,
-            label_classes="nhsuk-fieldset__legend--l",
-            label_is_page_heading=True,
-            hint=(
-                "Your ethnicity may impact your chances of "
-                "developing lung cancer."
-            ),
+            label_classes="nhsuk-fieldset__legend--m",
             error_messages={
                 'required': 'Select your ethnic background'
             }

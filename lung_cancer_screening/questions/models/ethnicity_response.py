@@ -10,7 +10,7 @@ class EthnicityValues(models.TextChoices):
     MIXED = "M", "Mixed or multiple ethnic groups"
     WHITE = "W", "White"
     OTHER = "O", "Other ethnic group"
-    PREFER_NOT_TO_SAY = "N", "I'd prefer not to say"
+    PREFER_NOT_TO_SAY = "N", "Prefer not to say"
 
 
 class EthnicityResponse(BaseModel):
