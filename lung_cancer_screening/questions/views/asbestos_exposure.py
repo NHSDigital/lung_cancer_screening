@@ -1,10 +1,12 @@
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 
+from .mixins.ensure_response_set import EnsureResponseSet
 from .question_base_view import QuestionBaseView
 from ..forms.asbestos_exposure_form import AsbestosExposureForm
 from ..models.asbestos_exposure_response import AsbestosExposureResponse
 
-class AsbestosExposureView(QuestionBaseView):
+class AsbestosExposureView(LoginRequiredMixin, EnsureResponseSet, QuestionBaseView):
     template_name = "asbestos_exposure.jinja"
     form_class = AsbestosExposureForm
     model = AsbestosExposureResponse

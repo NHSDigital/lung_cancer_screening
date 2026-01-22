@@ -1,11 +1,9 @@
 from django.urls import reverse
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import UpdateView
 
-from .mixins.ensure_response_set import EnsureResponseSet
 
 
-class QuestionBaseView(LoginRequiredMixin, EnsureResponseSet, UpdateView):
+class QuestionBaseView(UpdateView):
 
     def should_redirect_to_responses(self, request):
         return bool(request.POST.get("change"))

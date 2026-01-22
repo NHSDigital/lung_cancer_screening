@@ -1,5 +1,7 @@
 from django.urls import reverse, reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 
+from .mixins.ensure_response_set import EnsureResponseSet
 from .question_base_view import QuestionBaseView
 from ..forms.have_you_ever_smoked_form import HaveYouEverSmokedForm
 from ..models.have_you_ever_smoked_response import (
@@ -7,7 +9,7 @@ from ..models.have_you_ever_smoked_response import (
 )
 
 
-class HaveYouEverSmokedView(QuestionBaseView):
+class HaveYouEverSmokedView(LoginRequiredMixin, EnsureResponseSet, QuestionBaseView):
     template_name = "have_you_ever_smoked.jinja"
     form_class = HaveYouEverSmokedForm
     model = HaveYouEverSmokedResponse

@@ -1,5 +1,7 @@
 from django.urls import reverse, reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 
+from .mixins.ensure_response_set import EnsureResponseSet
 from .question_base_view import QuestionBaseView
 from ..forms.check_need_appointment_form import CheckNeedAppointmentForm
 from ..models.check_need_appointment_response import (
@@ -7,7 +9,7 @@ from ..models.check_need_appointment_response import (
 )
 
 
-class CheckNeedAppointmentView(QuestionBaseView):
+class CheckNeedAppointmentView(LoginRequiredMixin, EnsureResponseSet, QuestionBaseView):
     template_name = "check_need_appointment.jinja"
     form_class = CheckNeedAppointmentForm
     model = CheckNeedAppointmentResponse

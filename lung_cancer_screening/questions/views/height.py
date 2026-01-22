@@ -1,5 +1,7 @@
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 
+from .mixins.ensure_response_set import EnsureResponseSet
 from .question_base_view import QuestionBaseView
 from lung_cancer_screening.questions.forms.metric_height_form import (
     MetricHeightForm
@@ -10,7 +12,7 @@ from lung_cancer_screening.questions.forms.imperial_height_form import (
 from ..models.height_response import HeightResponse
 
 
-class HeightView(QuestionBaseView):
+class HeightView(LoginRequiredMixin, EnsureResponseSet, QuestionBaseView):
     template_name = "height.jinja"
     model = HeightResponse
     success_url = reverse_lazy("questions:weight")
