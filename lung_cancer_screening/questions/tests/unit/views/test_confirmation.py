@@ -32,7 +32,7 @@ class TestGetConfirmation(TestCase):
             reverse("questions:confirmation")
         )
 
-        self.assertRedirects(response, reverse("questions:responses"))
+        self.assertRedirects(response, reverse("questions:responses"), fetch_redirect_response=False)
 
     def test_get_responds_successfully_when_a_submitted_response_set_exists(self):
         ResponseSetFactory.create(user=self.user, recently_submitted=True)

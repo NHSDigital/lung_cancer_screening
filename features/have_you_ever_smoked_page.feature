@@ -30,6 +30,7 @@ Feature: Have you ever smoked page
 
   Scenario: Checking responses and changing them
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/have-you-ever-smoked"
     And I fill in and submit my smoking status with "Yes, I used to smoke"
     When I go to "/check-your-answers"

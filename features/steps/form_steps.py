@@ -14,11 +14,6 @@ def when_i_enter_value_and_submit(context, field, value):
     context.page.get_by_label(field).fill(value)
     when_i_submit_the_form(context)
 
-@when("I take a screenshot")
-@when("I take a screenshot {value}")
-def screenshot(context, value=""):
-    context.page.screenshot(full_page=True, path=f"screenshots/{datetime.now()}-{value}-screenshot.png")
-
 @when('I fill in and submit my smoking status with "{smoking_status}"')
 def when_i_fill_in_and_submit_my_smoking_status(context, smoking_status):
     context.page.get_by_label(smoking_status).check()

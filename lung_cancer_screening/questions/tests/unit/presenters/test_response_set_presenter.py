@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, tag
 
 from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.have_you_ever_smoked_response_factory import HaveYouEverSmokedResponseFactory
@@ -16,6 +16,7 @@ from ...factories.family_history_lung_cancer_response_factory import FamilyHisto
 from ...factories.relatives_age_when_diagnosed_response_factory import RelativesAgeWhenDiagnosedResponseFactory
 from ...factories.periods_when_you_stopped_smoking_response_factory import PeriodsWhenYouStoppedSmokingResponseFactory
 from ...factories.age_when_started_smoking_response_factory import AgeWhenStartedSmokingResponseFactory
+from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
 
 from ....models.have_you_ever_smoked_response import HaveYouEverSmokedValues
 from ....models.sex_at_birth_response import SexAtBirthValues
@@ -24,7 +25,7 @@ from ....models.ethnicity_response import EthnicityValues
 from ....models.education_response import EducationValues
 from ....models.family_history_lung_cancer_response import FamilyHistoryLungCancerValues
 from ....models.relatives_age_when_diagnosed_response import RelativesAgeWhenDiagnosedValues
-
+from ....models.tobacco_smoking_history import TobaccoSmokingHistoryTypes
 
 from ....models.respiratory_conditions_response import RespiratoryConditionValues
 
@@ -32,7 +33,7 @@ from ....presenters.response_set_presenter import ResponseSetPresenter
 
 class TestResponseSetPresenter(TestCase):
     def setUp(self):
-        self.response_set = ResponseSetFactory()
+        self.response_set = ResponseSetFactory.create()
 
 
     def test_have_you_ever_smoked_with_no_value(self):
@@ -259,3 +260,20 @@ class TestResponseSetPresenter(TestCase):
         )
         presenter = ResponseSetPresenter(self.response_set)
         self.assertEqual(presenter.relatives_age_when_diagnosed, RelativesAgeWhenDiagnosedValues.YES.label)
+
+    @tag("TypesTobaccoSmoking")
+    def test_types_tobacco_smoking(self):
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.SHISHA
+        )
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARS
+        )
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES
+        )
+        presenter = ResponseSetPresenter(self.response_set)
+        self.assertEqual(presenter.types_tobacco_smoking, "Cigarettes, Cigars, and Shisha")
