@@ -4,6 +4,7 @@ from django.urls import reverse
 from ..models.education_response import EducationValues
 from ..models.respiratory_conditions_response import RespiratoryConditionValues
 from ..models.family_history_lung_cancer_response import FamilyHistoryLungCancerValues
+from ..models.tobacco_smoking_history import TobaccoSmokingHistoryTypes
 
 class ResponseSetPresenter:
     DATE_FORMAT = "%-d %B %Y" # eg 8 September 2000
@@ -147,8 +148,20 @@ class ResponseSetPresenter:
         ])
 
 
+    @property
+    def types_tobacco_smoking(self):
+        types_smoked = self.response_set.tobacco_smoking_history.values_list('type', flat=True)
+
+        types_smoked_ordered = sorted(types_smoked, key=lambda x: TobaccoSmokingHistoryTypes.values.index(x))
+
+        return self._list_to_sentence([
+            TobaccoSmokingHistoryTypes(code).label
+            for code in types_smoked_ordered
+        ])
+
+
     def eligibility_responses_items(self):
-        return [
+        items = [
             self._check_your_answer_item(
                 "Have you ever smoked tobacco?",
                 self.have_you_ever_smoked,
@@ -158,9 +171,10 @@ class ResponseSetPresenter:
                 "Date of birth",
                 self.date_of_birth,
                 "questions:date_of_birth",
-            )
+            ),
         ]
 
+        return items
 
     def about_you_responses_items(self):
         return [
@@ -247,6 +261,11 @@ class ResponseSetPresenter:
                 self.periods_when_you_stopped_smoking,
                 "questions:periods_when_you_stopped_smoking",
             ),
+            self._check_your_answer_item(
+                "Types of tobacco smoked",
+                self.types_tobacco_smoking,
+                "questions:types_tobacco_smoking",
+            )
         ]
 
 
