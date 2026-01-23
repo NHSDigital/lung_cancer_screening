@@ -20,3 +20,9 @@ class HaveYouEverSmokedResponse(BaseModel):
             HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY.value,
             HaveYouEverSmokedValues.YES_I_CURRENTLY_SMOKE.value
         ]
+
+    def is_eligible(self):
+        return self.value in [
+            HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY.value,
+            HaveYouEverSmokedValues.YES_I_CURRENTLY_SMOKE.value
+        ]
