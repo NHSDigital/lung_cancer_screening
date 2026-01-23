@@ -28,7 +28,7 @@
   {% if field.errors %}
     {% set error_params = {
       "errorMessage": {
-        "text": field.errors | first
+        "html": field.errors | first
       }
     } %}
     {% set input_params = dict(input_params, **error_params) %}

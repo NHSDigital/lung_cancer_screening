@@ -16,7 +16,7 @@ class RelativesAgeWhenDiagnosedView(QuestionBaseView):
 
     def get(self, request, *args, **kwargs):
         if not (
-            hasattr(request.response_set, 'family_history_lung_cancer') and
+            hasattr(request.response_set, "family_history_lung_cancer") and
             request.response_set.family_history_lung_cancer.value ==
             FamilyHistoryLungCancerValues.YES
         ):

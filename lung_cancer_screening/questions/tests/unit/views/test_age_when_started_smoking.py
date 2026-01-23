@@ -33,15 +33,16 @@ class TestGetAgeWhenStartedSmoking(TestCase):
     def test_get_redirects_when_submitted_response_set_exists_within_last_year(
         self
     ):
-        self.user.responseset_set.create(
-            submitted_at=timezone.now() - relativedelta(days=364)
+        ResponseSetFactory.create(
+            user=self.user,
+            recently_submitted=True
         )
 
         response = self.client.get(
             reverse("questions:age_when_started_smoking")
         )
 
-        self.assertRedirects(response, reverse("questions:start"))
+        self.assertRedirects(response, reverse("questions:confirmation"))
 
     def test_get_responds_successfully(self):
         response = self.client.get(
@@ -49,7 +50,7 @@ class TestGetAgeWhenStartedSmoking(TestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-@tag("AgeWhenStartedSmoking","wip")
+@tag("AgeWhenStartedSmoking")
 class TestPostAgeWhenStartedSmoking(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
@@ -100,8 +101,9 @@ class TestPostAgeWhenStartedSmoking(TestCase):
     def test_post_creates_new_unsubmitted_response_set_when_submitted_exists_over_year_ago(
         self
     ):
-        self.user.responseset_set.create(
-            submitted_at=timezone.now() - relativedelta(years=1)
+        ResponseSetFactory.create(
+            user=self.user,
+            not_recently_submitted=True
         )
 
         self.client.post(
@@ -118,15 +120,16 @@ class TestPostAgeWhenStartedSmoking(TestCase):
     def test_post_redirects_when_submitted_response_set_exists_within_last_year(
         self
     ):
-        self.user.responseset_set.create(
-            submitted_at=timezone.now() - relativedelta(days=364)
+        ResponseSetFactory.create(
+            user=self.user,
+            recently_submitted=True
         )
 
         response = self.client.post(
             reverse("questions:age_when_started_smoking")
         )
 
-        self.assertRedirects(response, reverse("questions:start"))
+        self.assertRedirects(response, reverse("questions:confirmation"))
 
     def test_post_redirects_to_responses(self):
         self.response_set = ResponseSetFactory()

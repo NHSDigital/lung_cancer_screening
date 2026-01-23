@@ -17,7 +17,6 @@ Feature: Relatives age when diagnosed page
     And I see a form error "Select if your relatives were younger than 60 when they were diagnosed with lung cancer"
     And there are no accessibility violations
 
-  @AgeWhenStartedSmoking
   Scenario: Navigating backwards and forwards
     Given I am logged in
     When I go to "/family-history-lung-cancer"

@@ -39,6 +39,14 @@
         }) }}
       </section>
 
+      <section>
+      <h2 class="nhsuk-heading-m">Smoking history</h2>
+
+        {{ summaryList({
+          "rows": response_set.smoking_history_responses_items()
+        }) }}
+      </section>
+
       <form action="{{ request.path }}" method="post">
         {{ csrf_input }}
         {{ button({

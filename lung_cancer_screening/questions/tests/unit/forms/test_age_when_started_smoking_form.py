@@ -7,7 +7,6 @@ from ....models.age_when_started_smoking_response import AgeWhenStartedSmokingRe
 
 from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.date_of_birth_response_factory import DateOfBirthResponseFactory
-#from ...factories.age_when_started_smoking_response_factory import AgeWhenStartedSmokingResponseFactory
 from ....forms.age_when_started_smoking_form import AgeWhenStartedSmokingForm
 
 
@@ -19,9 +18,8 @@ class TestAgeWhenStartedSmokingForm(TestCase):
             response_set=self.response_set,
             value=timezone.now() - relativedelta(years=int(60))
         )
-        self.response = AgeWhenStartedSmokingResponse.objects.create(
-            response_set=self.response_set,
-            value=18
+        self.response = AgeWhenStartedSmokingResponse(
+            response_set=self.response_set
         )
 
     def test_is_valid_with_valid_input(self):
@@ -33,7 +31,7 @@ class TestAgeWhenStartedSmokingForm(TestCase):
         )
         self.assertTrue(form.is_valid())
         self.assertEqual(
-            form.cleaned_data['value'],
+            form.cleaned_data["value"],
             18
         )
 
@@ -76,10 +74,13 @@ class TestAgeWhenStartedSmokingForm(TestCase):
             ["The age you started smoking must be between 1 and your current age"]
         )
 
-    @tag("wip")
-    def test_is_invalid_when_age_entered_greater_than_current_age(self):
+    def test_is_invalid_if_no_date_of_birth(self):
+        response_set = ResponseSetFactory()
+        response = AgeWhenStartedSmokingResponse(
+            response_set=response_set
+        )
         form = AgeWhenStartedSmokingForm(
-            instance=self.response_set,
+            instance=response,
             data={
                 "value": 70
             }
@@ -88,5 +89,20 @@ class TestAgeWhenStartedSmokingForm(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(
             form.errors["value"],
-            ["The age you started smoking must be the same as, or younger than your current age"]
+            ["<a href=\"/date-of-birth\">Provide your date of birth</a> before answering this question"]
+        )
+
+    def test_is_invalid_when_age_entered_greater_than_current_age(self):
+        form = AgeWhenStartedSmokingForm(
+            instance=self.response,
+            data={
+                "value": 70
+            }
+        )
+
+        self.assertFalse(form.is_valid())
+
+        self.assertEqual(
+            form.errors["value"],
+            ["The age you started smoking must be the same as, or less than your current age"]
         )

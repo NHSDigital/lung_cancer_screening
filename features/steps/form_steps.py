@@ -1,4 +1,4 @@
-from behave import when
+from behave import when, then
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
