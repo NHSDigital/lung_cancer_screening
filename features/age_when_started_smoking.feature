@@ -2,12 +2,13 @@
 Feature: Age when started smoking
   Scenario: The page is accessible
     Given I am logged in
-    And I am 60 years old
+    And I have answered questions showing I am eligible
     When I go to "/age-when-started-smoking"
     Then there are no accessibility violations
 
   Scenario: Form errors
     Given I am logged in
+    And I have answered questions showing I am eligible
     And I am 60 years old
     When I go to "/age-when-started-smoking"
     And I click "Continue"
@@ -21,7 +22,7 @@ Feature: Age when started smoking
 
   Scenario: Navigating backwards and forwards
     Given I am logged in
-    And I am 60 years old
+    And I have answered questions showing I am eligible
     When I go to "/age-when-started-smoking"
     Then I see a back link to "/relatives-age-when-diagnosed"
     When I fill in "How old were you when you started smoking?" as "18" and submit
@@ -29,7 +30,7 @@ Feature: Age when started smoking
 
   Scenario: Checking responses and changing them
     Given I am logged in
-    And I am 60 years old
+    And I have answered questions showing I am eligible
     When I go to "/age-when-started-smoking"
     And I fill in "How old were you when you started smoking?" as "18" and submit
     When I go to "/check-your-answers"
