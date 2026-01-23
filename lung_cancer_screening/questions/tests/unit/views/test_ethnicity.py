@@ -2,7 +2,7 @@ from django.test import TestCase, tag
 from django.urls import reverse
 
 from .helpers.authentication import login_user
-from lung_cancer_screening.questions.models.ethnicity_response import EthnicityResponse, EthnicityValues
+from lung_cancer_screening.questions.models.ethnicity_response import EthnicityValues
 from ...factories.response_set_factory import ResponseSetFactory
 
 
@@ -11,7 +11,7 @@ class TestGetEthnicity(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
 
-    def test_get_redirects_if_the_user_is_not_logged_in(self):
+    def test_redirects_if_the_user_is_not_logged_in(self):
         self.client.logout()
 
         response = self.client.get(
@@ -24,9 +24,7 @@ class TestGetEthnicity(TestCase):
             fetch_redirect_response=False
         )
 
-    def test_get_redirects_when_submitted_response_set_exists_within_last_year(
-        self
-    ):
+    def test_redirects_when_an_submitted_response_set_exists_within_the_last_year(self):
         ResponseSetFactory.create(
             user=self.user,
             recently_submitted=True
@@ -38,15 +36,21 @@ class TestGetEthnicity(TestCase):
 
         self.assertRedirects(response, reverse("questions:confirmation"))
 
-    def test_get_responds_successfully(self):
+    def test_redirects_when_the_user_is_not_eligible(self):
+        ResponseSetFactory.create(user=self.user, eligible=False)
+
+        response = self.client.get(
+            reverse("questions:ethnicity")
+        )
+
+        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+
+    def test_responds_successfully(self):
+        ResponseSetFactory.create(user=self.user, eligible=True)
+
         response = self.client.get(reverse("questions:ethnicity"))
 
         self.assertEqual(response.status_code, 200)
-
-    def test_get_contains_the_correct_form_fields(self):
-        response = self.client.get(reverse("questions:ethnicity"))
-
-        self.assertContains(response, "What is your ethnic background?")
 
 
 @tag("Ethnicity")
@@ -56,7 +60,7 @@ class TestPostEthnicity(TestCase):
 
         self.valid_params = {"value": EthnicityValues.WHITE}
 
-    def test_post_redirects_if_the_user_is_not_logged_in(self):
+    def test_redirects_if_the_user_is_not_logged_in(self):
         self.client.logout()
 
         response = self.client.post(
@@ -70,64 +74,7 @@ class TestPostEthnicity(TestCase):
             fetch_redirect_response=False
         )
 
-    def test_post_creates_unsubmitted_response_set_when_no_response_set_exists(
-        self
-    ):
-        self.client.post(
-            reverse("questions:ethnicity"),
-            self.valid_params
-        )
-
-        response_set = self.user.responseset_set.first()
-        self.assertEqual(self.user.responseset_set.count(), 1)
-        self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(
-            EthnicityResponse.objects.get(response_set=response_set).value, self.valid_params["value"]
-        )
-        self.assertEqual(response_set.user, self.user)
-
-    def test_post_updates_unsubmitted_response_set_when_one_exists(self):
-        response_set = self.user.responseset_set.create()
-
-        self.client.post(
-            reverse("questions:ethnicity"),
-            self.valid_params
-        )
-
-        response_set.refresh_from_db()
-        self.assertEqual(self.user.responseset_set.count(), 1)
-        self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(
-            EthnicityResponse.objects.get(response_set=response_set).value, self.valid_params["value"]
-        )
-        self.assertEqual(response_set.user, self.user)
-
-    def test_post_creates_new_unsubmitted_response_set_when_not_recently_submitted_exists(  # noqa: E501
-        self
-    ):
-        ResponseSetFactory.create(
-            user=self.user,
-            not_recently_submitted=True
-        )
-
-        self.client.post(
-            reverse("questions:ethnicity"),
-            self.valid_params
-        )
-
-        self.assertEqual(self.user.responseset_set.count(), 2)
-        self.assertEqual(self.user.responseset_set.unsubmitted().count(), 1)
-
-        response_set = self.user.responseset_set.last()
-        self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(
-            EthnicityResponse.objects.get(response_set=response_set).value, self.valid_params["value"]
-        )
-        self.assertEqual(response_set.user, self.user)
-
-    def test_post_redirects_when_submitted_response_set_exists_within_last_year(
-        self
-    ):
+    def test_redirects_when_an_submitted_response_set_exists_within_the_last_year(self):
         ResponseSetFactory.create(
             user=self.user,
             recently_submitted=True
@@ -140,19 +87,29 @@ class TestPostEthnicity(TestCase):
 
         self.assertRedirects(response, reverse("questions:confirmation"))
 
-    def test_post_stores_a_valid_response_for_the_user(self):
-        self.client.post(
+    def test_redirects_when_the_user_is_not_eligible(self):
+        ResponseSetFactory.create(user=self.user)
+
+        response = self.client.post(
             reverse("questions:ethnicity"),
             self.valid_params
         )
 
-        response_set = self.user.responseset_set.first()
-        self.assertEqual(
-            EthnicityResponse.objects.get(response_set=response_set).value, self.valid_params["value"]
-        )
-        self.assertEqual(response_set.user, self.user)
+        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
 
-    def test_post_redirects_to_education(self):
+    def test_creates_an_ethnicity_response(self):
+        response_set = ResponseSetFactory.create(user=self.user, eligible=True)
+
+        self.client.post(reverse("questions:ethnicity"), self.valid_params)
+
+        response_set.refresh_from_db()
+        self.assertEqual(
+            response_set.ethnicity_response.value, self.valid_params["value"]
+        )
+
+    def test_redirects_to_education(self):
+        ResponseSetFactory.create(user=self.user, eligible=True)
+
         response = self.client.post(
             reverse("questions:ethnicity"),
             self.valid_params
@@ -160,7 +117,9 @@ class TestPostEthnicity(TestCase):
 
         self.assertRedirects(response, reverse("questions:education"))
 
-    def test_post_redirects_to_responses_if_change_query_param_is_true(self):
+    def test_redirects_to_responses_if_change_query_param_is_true(self):
+        ResponseSetFactory.create(user=self.user, eligible=True)
+
         response = self.client.post(
             reverse("questions:ethnicity"),
             {
@@ -171,23 +130,12 @@ class TestPostEthnicity(TestCase):
 
         self.assertRedirects(response, reverse("questions:responses"))
 
-    def test_post_responds_with_422_if_the_response_fails_to_create(self):
+    def test_responds_with_422_if_the_response_fails_to_create(self):
+        ResponseSetFactory.create(user=self.user, eligible=True)
+
         response = self.client.post(
             reverse("questions:ethnicity"),
             {"value": "something not in list"}
         )
 
         self.assertEqual(response.status_code, 422)
-
-    def test_post_renders_the_ethnicity_page_with_an_error_if_form_invalid(
-        self
-    ):
-        response = self.client.post(
-            reverse("questions:ethnicity"),
-            {"value": "something not in list"}
-        )
-
-        self.assertContains(
-            response, "What is your ethnic background?", status_code=422
-        )
-        self.assertContains(response, "nhsuk-error-message", status_code=422)

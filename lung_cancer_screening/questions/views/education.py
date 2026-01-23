@@ -2,12 +2,13 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .mixins.ensure_response_set import EnsureResponseSet
+from .mixins.ensure_eligible import EnsureEligibleMixin
 from .question_base_view import QuestionBaseView
 from ..forms.education_form import EducationForm
 from ..models.education_response import EducationResponse
 
 
-class EducationView(LoginRequiredMixin, EnsureResponseSet, QuestionBaseView):
+class EducationView(LoginRequiredMixin, EnsureResponseSet, EnsureEligibleMixin, QuestionBaseView):
     template_name = "education.jinja"
     form_class = EducationForm
     model = EducationResponse

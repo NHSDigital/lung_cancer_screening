@@ -22,7 +22,7 @@ class DateOfBirthView(LoginRequiredMixin, EnsureResponseSet, HaveYouEverSmokedRe
     back_link_url = reverse_lazy("questions:have_you_ever_smoked")
 
     def get_success_url(self):
-        if self.object.is_currently_in_age_range():
+        if self.object.is_eligible():
             return super().get_success_url()
         else:
             return reverse("questions:age_range_exit")

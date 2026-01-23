@@ -3,13 +3,14 @@ from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .mixins.ensure_response_set import EnsureResponseSet
+from .mixins.ensure_eligible import EnsureEligibleMixin
 from .question_base_view import QuestionBaseView
 from ..forms.relatives_age_when_diagnosed_form import RelativesAgeWhenDiagnosedForm
 from ..models.relatives_age_when_diagnosed_response import RelativesAgeWhenDiagnosedResponse
 from ..models.family_history_lung_cancer_response import FamilyHistoryLungCancerValues
 
 
-class RelativesAgeWhenDiagnosedView(LoginRequiredMixin, EnsureResponseSet, QuestionBaseView):
+class RelativesAgeWhenDiagnosedView(LoginRequiredMixin, EnsureResponseSet, EnsureEligibleMixin, QuestionBaseView):
     template_name = "relative_age_when_diagnosed.jinja"
     form_class = RelativesAgeWhenDiagnosedForm
     model = RelativesAgeWhenDiagnosedResponse

@@ -2,11 +2,13 @@
 Feature: Ethnicity page
   Scenario: The page is accessible
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/ethnicity"
     Then there are no accessibility violations
 
   Scenario: Form errors
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/ethnicity"
     And I click "Continue"
     Then I am on "/ethnicity"
@@ -15,6 +17,7 @@ Feature: Ethnicity page
 
   Scenario: Navigating backwards and forwards
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/ethnicity"
     Then I see a back link to "/gender"
     When I fill in and submit my ethnicity with "White"
@@ -22,6 +25,7 @@ Feature: Ethnicity page
 
   Scenario: Checking responses and changing them
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/ethnicity"
     And I fill in and submit my ethnicity with "White"
     When I go to "/check-your-answers"

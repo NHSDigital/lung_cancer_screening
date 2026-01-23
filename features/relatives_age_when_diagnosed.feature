@@ -2,6 +2,7 @@
 Feature: Relatives age when diagnosed page
   Scenario: The page is accessible
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/family-history-lung-cancer"
     And I fill in and submit my family history lung cancer with "Yes"
     Then I am on "/relatives-age-when-diagnosed"
@@ -9,6 +10,7 @@ Feature: Relatives age when diagnosed page
 
   Scenario: Form errors
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/family-history-lung-cancer"
     And I fill in and submit my family history lung cancer with "Yes"
     Then I am on "/relatives-age-when-diagnosed"
@@ -19,6 +21,7 @@ Feature: Relatives age when diagnosed page
 
   Scenario: Navigating backwards and forwards
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/family-history-lung-cancer"
     And I fill in and submit my family history lung cancer with "Yes"
     Then I am on "/relatives-age-when-diagnosed"
@@ -28,11 +31,13 @@ Feature: Relatives age when diagnosed page
 
   Scenario: Redirecting if they have no family history of lung cancer
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/relatives-age-when-diagnosed"
     Then I am on "/family-history-lung-cancer"
 
   Scenario: Checking responses and changing them
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/family-history-lung-cancer"
     And I fill in and submit my family history lung cancer with "Yes"
     And I fill in and submit my relatives age when diagnosed with "Yes, they were younger than 60"
