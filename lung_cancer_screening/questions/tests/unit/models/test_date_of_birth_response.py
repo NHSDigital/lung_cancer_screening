@@ -49,3 +49,10 @@ class TestDateOfBirthResponse(TestCase):
         )
 
         self.assertTrue(response.is_currently_in_age_range())
+
+    def test_age_in_year(self):
+        response = DateOfBirthResponse.objects.create(
+            response_set=self.response_set,
+            value=date.today() - relativedelta(years=60)
+        )
+        self.assertEqual(response.age_in_years(), 60)

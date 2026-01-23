@@ -1,13 +1,19 @@
 from django.test import TestCase, tag
 from django.urls import reverse
+from django.utils import timezone
+from dateutil.relativedelta import relativedelta
 
-from lung_cancer_screening.questions.models.family_history_lung_cancer_response import FamilyHistoryLungCancerValues
+
+
+from lung_cancer_screening.questions.tests.factories.date_of_birth_response_factory import DateOfBirthResponseFactory
+
 from ...factories.response_set_factory import ResponseSetFactory
+
+
 from .helpers.authentication import login_user
 
-
-@tag("FamilyHistoryLungCancer")
-class TestGetFamilyHistoryLungCancer(TestCase):
+@tag("AgeWhenStartedSmoking")
+class TestGetAgeWhenStartedSmoking(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
 
@@ -15,12 +21,12 @@ class TestGetFamilyHistoryLungCancer(TestCase):
         self.client.logout()
 
         response = self.client.get(
-            reverse("questions:family_history_lung_cancer")
+            reverse("questions:age_when_started_smoking")
         )
 
         self.assertRedirects(
             response,
-            "/oidc/authenticate/?next=/family-history-lung-cancer",
+            "/oidc/authenticate/?next=/age-when-started-smoking",
             fetch_redirect_response=False
         )
 
@@ -33,37 +39,35 @@ class TestGetFamilyHistoryLungCancer(TestCase):
         )
 
         response = self.client.get(
-            reverse("questions:family_history_lung_cancer")
+            reverse("questions:age_when_started_smoking")
         )
 
         self.assertRedirects(response, reverse("questions:confirmation"))
 
     def test_get_responds_successfully(self):
         response = self.client.get(
-            reverse("questions:family_history_lung_cancer")
+            reverse("questions:age_when_started_smoking")
         )
-
         self.assertEqual(response.status_code, 200)
 
-
-@tag("FamilyHistoryLungCancer")
-class TestPostFamilyHistoryLungCancer(TestCase):
+@tag("AgeWhenStartedSmoking")
+class TestPostAgeWhenStartedSmoking(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
 
-        self.valid_params = {"value": FamilyHistoryLungCancerValues.NO}
+        self.valid_params = {"value": 18}
 
     def test_post_redirects_if_the_user_is_not_logged_in(self):
         self.client.logout()
 
         response = self.client.post(
-            reverse("questions:family_history_lung_cancer"),
+            reverse("questions:age_when_started_smoking"),
             self.valid_params
         )
 
         self.assertRedirects(
             response,
-            "/oidc/authenticate/?next=/family-history-lung-cancer",
+            "/oidc/authenticate/?next=/age-when-started-smoking",
             fetch_redirect_response=False
         )
 
@@ -71,7 +75,7 @@ class TestPostFamilyHistoryLungCancer(TestCase):
         self
     ):
         self.client.post(
-            reverse("questions:family_history_lung_cancer")
+            reverse("questions:age_when_started_smoking")
         )
 
         response_set = self.user.responseset_set.first()
@@ -81,9 +85,12 @@ class TestPostFamilyHistoryLungCancer(TestCase):
 
     def test_post_updates_unsubmitted_response_set_when_one_exists(self):
         response_set = self.user.responseset_set.create()
+        DateOfBirthResponseFactory(
+            response_set=response_set
+        )
 
         self.client.post(
-            reverse("questions:family_history_lung_cancer")
+            reverse("questions:age_when_started_smoking")
         )
 
         response_set.refresh_from_db()
@@ -91,7 +98,7 @@ class TestPostFamilyHistoryLungCancer(TestCase):
         self.assertEqual(response_set.submitted_at, None)
         self.assertEqual(response_set.user, self.user)
 
-    def test_post_creates_new_unsubmitted_response_set_when_not_recently_submitted_exists(
+    def test_post_creates_new_unsubmitted_response_set_when_submitted_exists_over_year_ago(
         self
     ):
         ResponseSetFactory.create(
@@ -100,7 +107,7 @@ class TestPostFamilyHistoryLungCancer(TestCase):
         )
 
         self.client.post(
-            reverse("questions:family_history_lung_cancer")
+            reverse("questions:age_when_started_smoking")
         )
 
         self.assertEqual(self.user.responseset_set.count(), 2)
@@ -119,22 +126,36 @@ class TestPostFamilyHistoryLungCancer(TestCase):
         )
 
         response = self.client.post(
-            reverse("questions:family_history_lung_cancer")
+            reverse("questions:age_when_started_smoking")
         )
 
         self.assertRedirects(response, reverse("questions:confirmation"))
 
-    def test_post_redirects_to_responses_path(self):
+    def test_post_redirects_to_responses(self):
+        self.response_set = ResponseSetFactory()
+        DateOfBirthResponseFactory(
+            response_set=self.response_set,
+            value=timezone.now() - relativedelta(years=int(60))
+        )
+        self.user.responseset_set.set({self.response_set})
+
         response = self.client.post(
-            reverse("questions:family_history_lung_cancer"),
+            reverse("questions:age_when_started_smoking"),
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:age_when_started_smoking"))
+        self.assertRedirects(response, reverse("questions:responses"))
 
-    def test_post_redirects_to_responses_path_when_change_query_param_is_true(self):
+    def test_post_redirects_to_responses_if_change_query_param_is_true(self):
+        self.response_set = ResponseSetFactory()
+        DateOfBirthResponseFactory(
+            response_set=self.response_set,
+            value=timezone.now() - relativedelta(years=int(60))
+        )
+        self.user.responseset_set.set({self.response_set})
+
         response = self.client.post(
-            reverse("questions:family_history_lung_cancer"),
+            reverse("questions:age_when_started_smoking"),
             {
                 **self.valid_params,
                 "change": "True"
@@ -142,28 +163,3 @@ class TestPostFamilyHistoryLungCancer(TestCase):
         )
 
         self.assertRedirects(response, reverse("questions:responses"))
-
-    def test_post_redirects_to_relatives_age_when_diagnosed_path_when_response_is_yes(self):
-        response = self.client.post(
-            reverse("questions:family_history_lung_cancer"),
-            {"value": FamilyHistoryLungCancerValues.YES}
-        )
-
-        self.assertRedirects(response, reverse("questions:relatives_age_when_diagnosed"))
-
-    def test_post_redirects_to_relatives_age_when_diagnosed_path_with_query_params_when_response_is_yes_and_change_true(self):
-        response = self.client.post(
-            reverse("questions:family_history_lung_cancer"),
-            {
-                "value": FamilyHistoryLungCancerValues.YES,
-                "change": "True"
-            }
-        )
-
-        self.assertRedirects(
-            response,
-            reverse(
-                "questions:relatives_age_when_diagnosed",
-                query={"change": "True"}
-            )
-        )

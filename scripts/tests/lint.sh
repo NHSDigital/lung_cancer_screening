@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo Running Lint Tests
+
 set -euo pipefail
 
 cd "$(git rev-parse --show-toplevel)"

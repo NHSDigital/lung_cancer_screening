@@ -10,12 +10,14 @@
     "label": {
       "text": field.label,
       "html": label_html if label_html,
-      "classes": unbound_field.label_classes if unbound_field.label_classes
+      "classes": unbound_field.label_classes if unbound_field.label_classes,
+      "isPageHeading": unbound_field.label_is_page_heading if unbound_field.label_is_page_heading
     },
     "hint": {
       "text": unbound_field.hint
     } if unbound_field.hint,
     "suffix": unbound_field.suffix if unbound_field.suffix,
+    "prefix": unbound_field.prefix if unbound_field.prefix,
     "id": field.auto_id,
     "name": field.html_name,
     "value": field.value() or "",
@@ -26,7 +28,7 @@
   {% if field.errors %}
     {% set error_params = {
       "errorMessage": {
-        "text": field.errors | first
+        "html": field.errors | first
       }
     } %}
     {% set input_params = dict(input_params, **error_params) %}

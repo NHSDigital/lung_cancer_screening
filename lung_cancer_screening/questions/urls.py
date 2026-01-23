@@ -18,6 +18,7 @@ from django.urls import path
 from django.views.generic import RedirectView
 
 from .views.age_range_exit import AgeRangeExitView
+from .views.age_when_started_smoking import AgeWhenStartedSmokingView
 from .views.asbestos_exposure import AsbestosExposureView
 from .views.book_an_appointment import BookAnAppointmentExitView
 from .views.cancer_diagnosis import CancerDiagnosisView
@@ -41,6 +42,7 @@ from .views.confirmation import ConfirmationView
 urlpatterns = [
     path('', RedirectView.as_view(url='/start'), name='root'),
     path('age-range-exit', AgeRangeExitView.as_view(), name='age_range_exit'),
+    path('age-when-started-smoking', AgeWhenStartedSmokingView.as_view(), name='age_when_started_smoking'),
     path('asbestos-exposure', AsbestosExposureView.as_view(), name='asbestos_exposure'),
     path('call-us-to-book-an-appointment', BookAnAppointmentExitView.as_view(), name='book_an_appointment'),
     path('cancer-diagnosis', CancerDiagnosisView.as_view(), name='cancer_diagnosis'),

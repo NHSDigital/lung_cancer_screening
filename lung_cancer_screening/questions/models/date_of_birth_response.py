@@ -15,3 +15,9 @@ class DateOfBirthResponse(BaseModel):
         seventy_five_years_ago = date.today() - relativedelta(years=75)
 
         return seventy_five_years_ago < self.value <= fifty_five_years_ago
+
+    def age_in_years(self):
+        today = date.today()
+        born = self.value
+        age = int(today.year - born.year - ((today.month, today.day) < (born.month, born.day)))
+        return age

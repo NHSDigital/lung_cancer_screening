@@ -110,6 +110,12 @@ class ResponseSetPresenter:
 
         return self.response_set.relatives_age_when_diagnosed.get_value_display()
 
+    @property
+    def age_when_started_smoking(self):
+        if not hasattr(self.response_set, 'age_when_started_smoking_response'):
+            return None
+
+        return str(self.response_set.age_when_started_smoking_response.value)
 
     @property
     def respiratory_conditions(self):
@@ -216,6 +222,15 @@ class ResponseSetPresenter:
             ))
 
         return items
+
+    def smoking_history_responses_items(self):
+        return [
+            self._check_your_answer_item(
+                "Age you started smoking",
+                self.age_when_started_smoking,
+                "questions:age_when_started_smoking",
+            )
+        ]
 
 
     def is_complete(self):
