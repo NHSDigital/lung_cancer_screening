@@ -25,7 +25,7 @@ class TestGetEducation(TestCase):
             fetch_redirect_response=False
         )
 
-    def test_redirects_when_an_submitted_response_set_exists_within_the_last_year(self):
+    def test_redirects_when_a_submitted_response_set_exists_within_the_last_year(self):
         ResponseSetFactory.create(
             user=self.user,
             recently_submitted=True
@@ -76,7 +76,7 @@ class TestPostEducation(TestCase):
             fetch_redirect_response=False
         )
 
-    def test_redirects_when_an_submitted_response_set_exists_within_the_last_year(self):
+    def test_redirects_when_a_submitted_response_set_exists_within_the_last_year(self):
         ResponseSetFactory.create(
             user=self.user,
             recently_submitted=True
