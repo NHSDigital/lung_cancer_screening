@@ -1,5 +1,8 @@
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 
+from .mixins.ensure_response_set import EnsureResponseSet
+from .mixins.ensure_eligible import EnsureEligibleMixin
 from .question_base_view import QuestionBaseView
 from lung_cancer_screening.questions.forms.metric_weight_form import (
     MetricWeightForm
@@ -10,7 +13,7 @@ from lung_cancer_screening.questions.forms.imperial_weight_form import (
 from ..models.weight_response import WeightResponse
 
 
-class WeightView(QuestionBaseView):
+class WeightView(LoginRequiredMixin, EnsureResponseSet, EnsureEligibleMixin, QuestionBaseView):
     template_name = "weight.jinja"
     model = WeightResponse
     success_url = reverse_lazy("questions:sex_at_birth")

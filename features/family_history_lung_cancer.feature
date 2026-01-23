@@ -2,11 +2,13 @@
 Feature: Family history of lung cancer page
   Scenario: The page is accessible
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/family-history-lung-cancer"
     Then there are no accessibility violations
 
   Scenario: Form errors
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/family-history-lung-cancer"
     And I click "Continue"
     Then I am on "/family-history-lung-cancer"
@@ -15,6 +17,7 @@ Feature: Family history of lung cancer page
 
   Scenario: Navigating backwards and forwards
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/family-history-lung-cancer"
     Then I see a back link to "/cancer-diagnosis"
     When I fill in and submit my family history lung cancer with "No"
@@ -25,6 +28,7 @@ Feature: Family history of lung cancer page
 
   Scenario: Checking responses and changing them
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/family-history-lung-cancer"
     And I fill in and submit my family history lung cancer with "No"
     When I go to "/check-your-answers"

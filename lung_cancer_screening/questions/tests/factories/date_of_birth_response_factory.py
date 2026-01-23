@@ -10,3 +10,12 @@ class DateOfBirthResponseFactory(factory.django.DjangoModelFactory):
 
     response_set = factory.SubFactory(ResponseSetFactory)
     value = factory.Faker('date_of_birth')
+
+    class Params:
+        eligible = factory.Trait(
+            value=factory.Faker('date_of_birth', minimum_age=55, maximum_age=74)
+        )
+
+        ineligible = factory.Trait(
+            value=factory.Faker('date_of_birth', maximum_age=54)
+        )

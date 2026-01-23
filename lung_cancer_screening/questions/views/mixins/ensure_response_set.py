@@ -3,6 +3,7 @@ from django.urls import reverse
 
 from lung_cancer_screening.questions.models.response_set import ResponseSet
 
+
 class EnsureResponseSet:
 
     def dispatch(self, request, *args, **kwargs):

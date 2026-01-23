@@ -1,5 +1,8 @@
 from django.urls import reverse, reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 
+from .mixins.ensure_response_set import EnsureResponseSet
+from .mixins.ensure_eligible import EnsureEligibleMixin
 from .question_base_view import QuestionBaseView
 from ..forms.family_history_lung_cancer_form import FamilyHistoryLungCancerForm
 from ..models.family_history_lung_cancer_response import (
@@ -7,7 +10,7 @@ from ..models.family_history_lung_cancer_response import (
 )
 
 
-class FamilyHistoryLungCancerView(QuestionBaseView):
+class FamilyHistoryLungCancerView(LoginRequiredMixin, EnsureResponseSet, EnsureEligibleMixin, QuestionBaseView):
     template_name = "family_history_lung_cancer.jinja"
     form_class = FamilyHistoryLungCancerForm
     model = FamilyHistoryLungCancerResponse

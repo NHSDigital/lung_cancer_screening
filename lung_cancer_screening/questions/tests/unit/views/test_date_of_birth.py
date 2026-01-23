@@ -4,8 +4,11 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from .helpers.authentication import login_user
-from lung_cancer_screening.questions.models.date_of_birth_response import DateOfBirthResponse
+from lung_cancer_screening.questions.models.have_you_ever_smoked_response import (
+    HaveYouEverSmokedValues,
+)
 from ...factories.response_set_factory import ResponseSetFactory
+from ...factories.have_you_ever_smoked_response_factory import HaveYouEverSmokedResponseFactory
 
 
 @tag("DateOfBirth")
@@ -13,7 +16,15 @@ class TestGetDateOfBirth(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
 
-    def test_get_redirects_if_the_user_is_not_logged_in(self):
+        self.response_set = ResponseSetFactory.create(
+            user=self.user,
+        )
+        self.response = HaveYouEverSmokedResponseFactory.create(
+            response_set=self.response_set,
+            value=HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY,
+        )
+
+    def test_redirects_if_the_user_is_not_logged_in(self):
         self.client.logout()
 
         response = self.client.get(
@@ -26,9 +37,10 @@ class TestGetDateOfBirth(TestCase):
             fetch_redirect_response=False
         )
 
-    def test_get_redirects_when_submitted_response_set_exists_within_last_year(
+    def test_redirects_when_submitted_response_set_exists_within_last_year(
         self
     ):
+        self.response_set.delete()
         ResponseSetFactory.create(
             user=self.user,
             recently_submitted=True
@@ -40,7 +52,24 @@ class TestGetDateOfBirth(TestCase):
 
         self.assertRedirects(response, reverse("questions:confirmation"))
 
-    def test_get_responds_successfully(self):
+
+    def test_redirects_to_have_you_ever_smoked_if_the_user_hasnt_answered_have_you_ever_smoked(self):
+        self.response.delete()
+        response = self.client.get(reverse("questions:date_of_birth"))
+
+        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+
+
+    def test_redirects_to_have_you_ever_smoked_if_the_user_has_answered_have_you_ever_smoked_with_no(self):
+        self.response.value = HaveYouEverSmokedValues.NO_I_HAVE_NEVER_SMOKED
+        self.response.save()
+
+        response = self.client.get(reverse("questions:date_of_birth"))
+
+        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+
+
+    def test_responds_successfully(self):
         response = self.client.get(reverse("questions:date_of_birth"))
 
         self.assertEqual(response.status_code, 200)
@@ -50,6 +79,14 @@ class TestGetDateOfBirth(TestCase):
 class TestPostDateOfBirth(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
+
+        self.response_set = ResponseSetFactory.create(
+            user=self.user,
+        )
+        self.response = HaveYouEverSmokedResponseFactory.create(
+            response_set=self.response_set,
+            value=HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY,
+        )
 
         self.valid_age = date.today() - relativedelta(years=55)
         self.valid_params = {
@@ -79,79 +116,45 @@ class TestPostDateOfBirth(TestCase):
             fetch_redirect_response=False
         )
 
-    def test_post_creates_unsubmitted_response_set_when_no_response_set_exists(
-        self
-    ):
-        self.client.post(
-            reverse("questions:date_of_birth"),
-            self.valid_params
-        )
 
-        response_set = self.user.responseset_set.first()
-        self.assertEqual(self.user.responseset_set.count(), 1)
-        self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(DateOfBirthResponse.objects.get(response_set=response_set).value, self.valid_age)
-        self.assertEqual(response_set.user, self.user)
+    def test_redirects_when_submitted_response_set_exists_within_last_year(self):
+        self.response_set.delete()
+        ResponseSetFactory.create(user=self.user, recently_submitted=True)
 
-    def test_post_updates_unsubmitted_response_set_when_one_exists(self):
-        response_set = self.user.responseset_set.create()
-
-        self.client.post(
-            reverse("questions:date_of_birth"),
-            self.valid_params
-        )
-
-        response_set.refresh_from_db()
-        self.assertEqual(self.user.responseset_set.count(), 1)
-        self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(DateOfBirthResponse.objects.get(response_set=response_set).value, self.valid_age)
-        self.assertEqual(response_set.user, self.user)
-
-    def test_post_creates_new_unsubmitted_response_set_when_not_recently_submitted_exists(  # noqa: E501
-        self
-    ):
-        ResponseSetFactory.create(
-            user=self.user,
-            not_recently_submitted=True
-        )
-
-        self.client.post(
-            reverse("questions:date_of_birth"),
-            self.valid_params
-        )
-
-        self.assertEqual(self.user.responseset_set.count(), 2)
-        self.assertEqual(self.user.responseset_set.unsubmitted().count(), 1)
-
-        response_set = self.user.responseset_set.last()
-        self.assertEqual(response_set.submitted_at, None)
-        self.assertEqual(DateOfBirthResponse.objects.get(response_set=response_set).value, self.valid_age)
-        self.assertEqual(response_set.user, self.user)
-
-    def test_post_redirects_when_submitted_response_set_exists_within_last_year(
-        self
-    ):
-        ResponseSetFactory.create(
-            user=self.user,
-            recently_submitted=True
-        )
-
-        response = self.client.post(
-            reverse("questions:date_of_birth"),
-            self.valid_params
-        )
+        response = self.client.post(reverse("questions:date_of_birth"), self.valid_params)
 
         self.assertRedirects(response, reverse("questions:confirmation"))
 
-    def test_post_stores_a_valid_response_set_for_the_user(self):
+
+    def test_redirects_to_have_you_ever_smoked_if_the_user_hasnt_answered_have_you_ever_smoked(
+        self,
+    ):
+        self.response.delete()
+        response = self.client.post(reverse("questions:date_of_birth"), self.valid_params)
+
+        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+
+
+    def test_redirects_to_have_you_ever_smoked_if_the_user_has_answered_have_you_ever_smoked_with_no(
+        self,
+    ):
+        self.response.value = HaveYouEverSmokedValues.NO_I_HAVE_NEVER_SMOKED
+        self.response.save()
+
+        response = self.client.get(reverse("questions:date_of_birth"))
+
+        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+
+
+    def test_creates_a_date_of_birth_response(self):
         self.client.post(
             reverse("questions:date_of_birth"),
             self.valid_params
         )
 
-        response_set = self.user.responseset_set.first()
-        self.assertEqual(DateOfBirthResponse.objects.get(response_set=response_set).value, self.valid_age)
-        self.assertEqual(response_set.user, self.user)
+        self.response_set.refresh_from_db()
+        self.assertEqual(self.response_set.date_of_birth_response.value, self.valid_age)
+
 
     def test_post_redirects_to_height(self):
         response = self.client.post(

@@ -25,6 +25,24 @@ class ResponseSetFactory(factory.django.DjangoModelFactory):
     user = factory.SubFactory(UserFactory)
 
     class Params:
+        eligible = factory.Trait(
+            have_you_ever_smoked_response=factory.RelatedFactory(
+                "lung_cancer_screening.questions.tests.factories.have_you_ever_smoked_response_factory.HaveYouEverSmokedResponseFactory",
+                factory_related_name="response_set",
+                eligible=True
+            ),
+            date_of_birth_response=factory.RelatedFactory(
+                "lung_cancer_screening.questions.tests.factories.date_of_birth_response_factory.DateOfBirthResponseFactory",
+                factory_related_name="response_set",
+                eligible=True
+            ),
+            check_need_appointment_response=factory.RelatedFactory(
+                "lung_cancer_screening.questions.tests.factories.check_need_appointment_response_factory.CheckNeedAppointmentResponseFactory",
+                factory_related_name="response_set",
+                eligible=True
+            ),
+        )
+
         complete = factory.Trait(
             asbestos_exposure_response=factory.RelatedFactory(
                 "lung_cancer_screening.questions.tests.factories.asbestos_exposure_response_factory.AsbestosExposureResponseFactory",

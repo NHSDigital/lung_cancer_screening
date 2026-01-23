@@ -10,7 +10,7 @@ class DateOfBirthResponse(BaseModel):
     response_set = models.OneToOneField(ResponseSet, on_delete=models.CASCADE, related_name='date_of_birth_response')
     value = models.DateField()
 
-    def is_currently_in_age_range(self):
+    def is_eligible(self):
         fifty_five_years_ago = date.today() - relativedelta(years=55)
         seventy_five_years_ago = date.today() - relativedelta(years=75)
 

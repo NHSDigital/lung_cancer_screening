@@ -43,3 +43,6 @@ class User(AbstractBaseUser):
             query = query.exclude(id=excluding.id)
 
         return query.exists()
+
+    def most_recent_response_set(self):
+        return self.responseset_set.order_by('-submitted_at').first()

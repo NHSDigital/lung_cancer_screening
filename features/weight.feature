@@ -2,6 +2,7 @@
 Feature: Weight page
   Scenario: The page is accessible
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/weight"
     Then there are no accessibility violations
     When I click "Switch to stone and pounds"
@@ -9,6 +10,7 @@ Feature: Weight page
 
   Scenario: Metric form errors
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/weight"
     And I click "Continue"
     Then I am on "/weight"
@@ -23,6 +25,7 @@ Feature: Weight page
 
   Scenario: Imperial form errors
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/weight?unit=imperial"
     And I click "Continue"
     Then I am on "/weight?unit=imperial"
@@ -43,6 +46,7 @@ Feature: Weight page
 
   Scenario: Navigating backwards and forwards
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/weight"
     Then I see a back link to "/height"
     When I fill in and submit my weight with "70"
@@ -56,6 +60,7 @@ Feature: Weight page
 
   Scenario: Checking responses and changing them
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/weight"
     And I fill in and submit my weight with "70"
     When I go to "/check-your-answers"

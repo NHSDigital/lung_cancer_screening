@@ -1,5 +1,8 @@
 from django.urls import reverse, reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
 
+from .mixins.ensure_response_set import EnsureResponseSet
 from .question_base_view import QuestionBaseView
 from ..forms.check_need_appointment_form import CheckNeedAppointmentForm
 from ..models.check_need_appointment_response import (
@@ -7,7 +10,18 @@ from ..models.check_need_appointment_response import (
 )
 
 
-class CheckNeedAppointmentView(QuestionBaseView):
+class EnsureAgeEligible:
+    def dispatch(self, request, *args, **kwargs):
+        if (
+            not hasattr(request.response_set, "date_of_birth_response")
+            or not request.response_set.date_of_birth_response.is_eligible()
+        ):
+            return redirect(reverse("questions:date_of_birth"))
+        else:
+            return super().dispatch(request, *args, **kwargs)
+
+
+class CheckNeedAppointmentView(LoginRequiredMixin, EnsureResponseSet, EnsureAgeEligible, QuestionBaseView):
     template_name = "check_need_appointment.jinja"
     form_class = CheckNeedAppointmentForm
     model = CheckNeedAppointmentResponse

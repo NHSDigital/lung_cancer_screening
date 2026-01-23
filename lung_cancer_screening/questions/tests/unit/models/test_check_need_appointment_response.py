@@ -32,3 +32,21 @@ class TestCheckNeedAppointmentResponse(TestCase):
         )
 
         self.assertIsInstance(response.value, bool)
+
+
+    def test_is_eligible_returns_true_when_value_is_false(self):
+        response = CheckNeedAppointmentResponse.objects.create(
+            response_set=self.response_set,
+            value=False
+        )
+
+        self.assertTrue(response.is_eligible())
+
+
+    def test_is_eligible_returns_false_when_value_is_true(self):
+        response = CheckNeedAppointmentResponse.objects.create(
+            response_set=self.response_set,
+            value=True
+        )
+
+        self.assertFalse(response.is_eligible())

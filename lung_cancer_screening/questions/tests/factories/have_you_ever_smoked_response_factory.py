@@ -10,3 +10,12 @@ class HaveYouEverSmokedResponseFactory(factory.django.DjangoModelFactory):
 
     response_set = factory.SubFactory(ResponseSetFactory)
     value = factory.Iterator(HaveYouEverSmokedValues)
+
+    class Params:
+        eligible = factory.Trait(
+            value=factory.Iterator(HaveYouEverSmokedResponse.ELIGIBLE_VALUES)
+        )
+
+        ineligible = factory.Trait(
+            value=factory.Iterator(HaveYouEverSmokedResponse.INELIGIBLE_VALUES)
+        )

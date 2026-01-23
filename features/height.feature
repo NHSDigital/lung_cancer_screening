@@ -2,6 +2,7 @@
 Feature: Height page
   Scenario: The page is accessible
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/height"
     Then there are no accessibility violations
     When I click "Switch to feet and inches"
@@ -9,6 +10,7 @@ Feature: Height page
 
   Scenario: Metric form errors
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/height"
     And I click "Continue"
     Then I am on "/height"
@@ -23,6 +25,7 @@ Feature: Height page
 
   Scenario: Imperial form errors
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/height?unit=imperial"
     And I click "Continue"
     Then I am on "/height?unit=imperial"
@@ -40,6 +43,7 @@ Feature: Height page
 
   Scenario: Navigating backwards and forwards
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/height"
     Then I see a back link to "/check-if-you-need-an-appointment"
     When I fill in and submit my height with "170"
@@ -53,6 +57,7 @@ Feature: Height page
 
   Scenario: Checking responses and changing them
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/height"
     And I fill in and submit my height with "170"
     When I go to "/check-your-answers"

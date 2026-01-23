@@ -88,3 +88,20 @@ class ResponseSet(BaseModel):
 
     def is_complete(self):
         return all(hasattr(self, attr) for attr in self._response_attrs())
+
+
+    def is_eligible(self):
+        if not all(
+            hasattr(self, attr) for attr in [
+                'have_you_ever_smoked_response',
+                'date_of_birth_response',
+                'check_need_appointment_response'
+            ]
+        ):
+            return False
+
+        return all([
+            self.have_you_ever_smoked_response.is_eligible(),
+            self.date_of_birth_response.is_eligible(),
+            self.check_need_appointment_response.is_eligible()
+        ])

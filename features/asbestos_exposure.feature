@@ -2,11 +2,13 @@
 Feature: Asbestos exposure page
   Scenario: The page is accessible
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/asbestos-exposure"
     Then there are no accessibility violations
 
   Scenario: Form errors
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/asbestos-exposure"
     And I click "Continue"
     Then I am on "/asbestos-exposure"
@@ -15,6 +17,7 @@ Feature: Asbestos exposure page
 
   Scenario: Navigating backwards and forwards
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/asbestos-exposure"
     Then I see a back link to "/respiratory-conditions"
     When I fill in and submit my asbestos exposure with "No"
@@ -22,6 +25,7 @@ Feature: Asbestos exposure page
 
   Scenario: Checking responses and changing them
     Given I am logged in
+    And I have answered questions showing I am eligible
     When I go to "/asbestos-exposure"
     And I fill in and submit my asbestos exposure with "No"
     When I go to "/check-your-answers"
@@ -33,3 +37,8 @@ Feature: Asbestos exposure page
     When I fill in and submit my asbestos exposure with "Yes"
     Then I am on "/check-your-answers"
     And I see "Yes" as a response to "Have you ever worked in a job where you were exposed to asbestos?" under "Your health"
+
+  Scenario: Cannot answer when ineligible
+    Given I am logged in
+    When I go to "/asbestos-exposure"
+    Then I am on "/have-you-ever-smoked"

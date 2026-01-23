@@ -34,21 +34,21 @@ class TestDateOfBirthResponse(TestCase):
 
         self.assertIsInstance(response.value, date)
 
-    def test_is_currently_in_age_range_returns_true_when_in_range(self):
+    def test_is_eligible_returns_true_when_in_range(self):
         fifty_five_years_ago = date.today() - relativedelta(years=55)
         response = DateOfBirthResponseFactory.build(
             value=fifty_five_years_ago
         )
 
-        self.assertTrue(response.is_currently_in_age_range())
+        self.assertTrue(response.is_eligible())
 
-    def test_is_currently_in_age_range_returns_false_when_too_old(self):
+    def test_is_eligible_returns_false_when_too_old(self):
         fifty_five_years_ago = date.today() - relativedelta(years=55)
         response = DateOfBirthResponseFactory.build(
             value=fifty_five_years_ago
         )
 
-        self.assertTrue(response.is_currently_in_age_range())
+        self.assertTrue(response.is_eligible())
 
     def test_age_in_year(self):
         response = DateOfBirthResponse.objects.create(
@@ -56,3 +56,4 @@ class TestDateOfBirthResponse(TestCase):
             value=date.today() - relativedelta(years=60)
         )
         self.assertEqual(response.age_in_years(), 60)
+

@@ -12,6 +12,15 @@ class HaveYouEverSmokedValues(models.IntegerChoices):
 
 
 class HaveYouEverSmokedResponse(BaseModel):
+    ELIGIBLE_VALUES = [
+        HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY.value,
+        HaveYouEverSmokedValues.YES_I_CURRENTLY_SMOKE.value
+    ]
+    INELIGIBLE_VALUES = [
+        HaveYouEverSmokedValues.YES_BUT_ONLY_A_FEW_TIMES.value,
+        HaveYouEverSmokedValues.NO_I_HAVE_NEVER_SMOKED.value
+    ]
+
     response_set = models.OneToOneField(ResponseSet, on_delete=models.CASCADE, related_name='have_you_ever_smoked_response')
     value = models.IntegerField(choices=HaveYouEverSmokedValues.choices)
 
@@ -20,3 +29,6 @@ class HaveYouEverSmokedResponse(BaseModel):
             HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY.value,
             HaveYouEverSmokedValues.YES_I_CURRENTLY_SMOKE.value
         ]
+
+    def is_eligible(self):
+        return self.value in self.ELIGIBLE_VALUES
