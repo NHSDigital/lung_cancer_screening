@@ -1,4 +1,4 @@
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .mixins.ensure_response_set import EnsureResponseSet
@@ -13,3 +13,12 @@ class AgeWhenStartedSmokingView(LoginRequiredMixin, EnsureResponseSet, EnsureEli
     model = AgeWhenStartedSmokingResponse
     success_url = reverse_lazy("questions:periods_when_you_stopped_smoking")
     back_link_url = reverse_lazy("questions:relatives_age_when_diagnosed")
+
+    def get_success_url(self):
+        if self.should_redirect_to_responses(self.request):
+            return reverse(
+                "questions:periods_when_you_stopped_smoking",
+                query={"change": "True"}
+            )
+        else:
+            return super().get_success_url()

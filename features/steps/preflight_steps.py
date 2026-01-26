@@ -1,6 +1,12 @@
 from behave import given
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
+
+from features.steps.form_steps import (
+    when_i_fill_in_and_submit_my_date_of_birth_as_x_years_ago,
+    when_i_submit_the_form,
+    when_i_check_label,
+    when_i_fill_in_label_with_value
+)
+
 from lung_cancer_screening.questions.tests.factories.have_you_ever_smoked_response_factory import (
     ResponseSetFactory,
 )
@@ -22,6 +28,7 @@ def get_or_create_response_set(context):
             user=context.current_user,
         )
     )
+
 
 @given('I have answered have you ever smoked with an eligible response')
 def given_i_have_answered_have_your_ever_smoked_with_an_eligible_response(context):
@@ -57,3 +64,16 @@ def given_i_have_answered_questions_showing_i_have_smoked_for_years_years(contex
         response_set=response_set,
         value=response_set.date_of_birth_response.age_in_years() - int(years),
     )
+
+@given('I have answered questions showing I am aged "{years}" years old')
+def given_i_have_answered_questions_showing_i_am_aged_60_years_old(context, years):
+    context.page.goto(f"{context.live_server_url}/date-of-birth")
+    when_i_fill_in_and_submit_my_date_of_birth_as_x_years_ago(context, years)
+
+
+@given('I have answered questions showing I stopped smoking for "{years}" years')
+def given_i_have_answered_questions_showing_i_stopped_smoking_for_years_years(context, years):
+    context.page.goto(f"{context.live_server_url}/periods-when-you-stopped-smoking")
+    when_i_check_label(context, "Yes")
+    when_i_fill_in_label_with_value(context, "Enter the total number of years you stopped smoking for", years)
+    when_i_submit_the_form(context)

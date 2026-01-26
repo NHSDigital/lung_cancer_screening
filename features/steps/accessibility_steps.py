@@ -9,5 +9,4 @@ def then_there_are_no_accessibility_violations(context):
         f"Found the following accessibility violations: \n"
         f"{axe_results.generate_snapshot()}"
     )
-    print(axe_results)
     assert axe_results.violations_count == 0, violations_msg

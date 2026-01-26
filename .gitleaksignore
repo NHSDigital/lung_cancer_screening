@@ -29,8 +29,8 @@ infrastructure/bootstrap/main.bicep:generic-api-key:32
 infrastructure/bootstrap/modules/storage.bicep:generic-api-key:59
 infrastructure/bootstrap/modules/keyVault.bicep:generic-api-key:10
 infrastructure/bootstrap/modules/storage.bicep:generic-api-key:59
-infrastructure/terraform/hub/data.tf:generic-api-key:18
-infrastructure/terraform/hub/data.tf:generic-api-key:22
+infrastructure/terraform/hub/data.tf:generic-api-key:19
+infrastructure/terraform/hub/data.tf:generic-api-key:23
 infrastructure/terraform/resource_group_init/core.bicep:generic-api-key:11
 infrastructure/terraform/resource_group_init/keyVault.bicep:generic-api-key:10
 infrastructure/terraform/resource_group_init/main.bicep:generic-api-key:30

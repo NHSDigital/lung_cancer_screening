@@ -22,7 +22,7 @@ Feature: Periods when you stopped smoking page
     And I have answered questions showing I am eligible
     And I have answered questions showing I have smoked for "10" years
     When I go to "/periods-when-you-stopped-smoking"
-    Then I see a back link to "/family-history-lung-cancer"
+    Then I see a back link to "/age-when-started-smoking"
     When I check "Yes"
     And I fill in "Enter the total number of years you stopped smoking for" with "1"
     And I submit the form

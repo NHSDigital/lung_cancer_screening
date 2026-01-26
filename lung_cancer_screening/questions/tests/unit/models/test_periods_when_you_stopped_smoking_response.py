@@ -18,7 +18,7 @@ class TestPeriodsWhenYouStoppedSmokingResponse(TestCase):
 
         # Following responses required by validator
         self.date_of_birth_response = DateOfBirthResponseFactory.create(response_set=self.response_set)
-        self.age_when_started_smoking_response = q.create(response_set=self.response_set)
+        self.age_when_started_smoking_response = AgeWhenStartedSmokingResponseFactory.create(response_set=self.response_set)
 
 
     def test_has_a_valid_factory(self):

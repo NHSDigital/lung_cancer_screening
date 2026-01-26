@@ -10,3 +10,4 @@ class PeriodsWhenYouStoppedSmokingResponseFactory(factory.django.DjangoModelFact
 
     response_set = factory.SubFactory(ResponseSetFactory)
     value = False
+    duration_years = None
