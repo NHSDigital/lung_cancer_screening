@@ -10,7 +10,7 @@ from ...factories.date_of_birth_response_factory import DateOfBirthResponseFacto
 
 from ....models.age_when_started_smoking_response import AgeWhenStartedSmokingResponse
 
-@tag("AgeWhenStartedSmoking")
+@tag("AgeWhenStartedSmoking", "models")
 class TestAgeWhenStartedSmokingResponse(TestCase):
     def setUp(self):
         self.response_set = ResponseSetFactory()
@@ -51,4 +51,16 @@ class TestAgeWhenStartedSmokingResponse(TestCase):
         self.assertEqual(
             context.exception.messages[0],
             "age started smoking must be less than current age"
+        )
+
+
+    def test_years_smoked_including_stopped(self):
+        age_started = AgeWhenStartedSmokingResponseFactory.create(
+            response_set=self.response_set,
+            value=18
+        )
+
+        self.assertEqual(
+            age_started.years_smoked_including_stopped(),
+            self.date_of_birth_response.age_in_years() - age_started.value,
         )

@@ -20,22 +20,24 @@ Feature: Periods when you stopped smoking page
   Scenario: Navigating backwards and forwards
     Given I am logged in
     And I have answered questions showing I am eligible
+    And I have answered questions showing I have smoked for "10" years
     When I go to "/periods-when-you-stopped-smoking"
     Then I see a back link to "/family-history-lung-cancer"
     When I check "Yes"
-    And I fill in "Enter the total number of years you stopped smoking for" with "10"
+    And I fill in "Enter the total number of years you stopped smoking for" with "1"
     And I submit the form
     Then I am on "/check-your-answers"
 
   Scenario: Checking responses and changing them
     Given I am logged in
     And I have answered questions showing I am eligible
+    And I have answered questions showing I have smoked for "10" years
     When I go to "/periods-when-you-stopped-smoking"
     And I check "Yes"
-    And I fill in "Enter the total number of years you stopped smoking for" with "10"
+    And I fill in "Enter the total number of years you stopped smoking for" with "1"
     And I submit the form
     When I go to "/check-your-answers"
-    Then I see "Yes (10 years)" as a response to "Have you ever stopped smoking for periods of 1 year or longer?" under "Smoking history"
+    Then I see "Yes (1 years)" as a response to "Have you ever stopped smoking for periods of 1 year or longer?" under "Smoking history"
     And I see "/periods-when-you-stopped-smoking?change=True" as a link to change "Have you ever stopped smoking for periods of 1 year or longer?" under "Smoking history"
     When I click the link to change "Have you ever stopped smoking for periods of 1 year or longer?" under "Smoking history"
     Then I am on "/periods-when-you-stopped-smoking?change=True"

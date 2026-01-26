@@ -84,6 +84,10 @@ class ResponseSetFactory(factory.django.DjangoModelFactory):
                 "lung_cancer_screening.questions.tests.factories.height_response_factory.HeightResponseFactory",
                 factory_related_name="response_set"
             ),
+            age_when_started_smoking_response=factory.RelatedFactory(
+                "lung_cancer_screening.questions.tests.factories.age_when_started_smoking_response_factory.AgeWhenStartedSmokingResponseFactory",
+                factory_related_name="response_set"
+            ),
             periods_when_you_stopped_smoking_response=factory.RelatedFactory(
                 "lung_cancer_screening.questions.tests.factories.periods_when_you_stopped_smoking_response_factory.PeriodsWhenYouStoppedSmokingResponseFactory",
                 factory_related_name="response_set"

@@ -7,14 +7,11 @@ from lung_cancer_screening.questions.tests.factories.have_you_ever_smoked_respon
 from lung_cancer_screening.questions.tests.factories.have_you_ever_smoked_response_factory import (
     HaveYouEverSmokedResponseFactory,
 )
-from lung_cancer_screening.questions.models.have_you_ever_smoked_response import (
-    HaveYouEverSmokedValues,
-)
 from lung_cancer_screening.questions.tests.factories.date_of_birth_response_factory import (
     DateOfBirthResponseFactory,
 )
-from lung_cancer_screening.questions.tests.factories.check_need_appointment_response_factory import (
-    CheckNeedAppointmentResponseFactory,
+from lung_cancer_screening.questions.tests.factories.age_when_started_smoking_response_factory import (
+    AgeWhenStartedSmokingResponseFactory,
 )
 
 
@@ -46,9 +43,17 @@ def given_i_have_answered_date_of_birth_with_an_eligible_date_of_birth(context):
 
 
 @given("I have answered questions showing I am eligible")
-def step_impl(context):
+def given_i_have_answered_questions_showing_i_am_eligible(context):
     ResponseSetFactory.create(
         user=context.current_user,
         eligible=True,
     )
 
+@given('I have answered questions showing I have smoked for "{years}" years')
+def given_i_have_answered_questions_showing_i_have_smoked_for_years_years(context, years):
+    response_set = get_or_create_response_set(context)
+
+    AgeWhenStartedSmokingResponseFactory.create(
+        response_set=response_set,
+        value=response_set.date_of_birth_response.age_in_years() - int(years),
+    )

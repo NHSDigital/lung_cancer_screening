@@ -13,6 +13,8 @@ class PeriodsWhenYouStoppedSmokingResponse(BaseModel):
     def clean(self):
         super().clean()
         self._validate_duration_years()
+        self._validate_has_answered_age_started_smoking()
+        self._validate_duration_years_is_less_than_time_they_have_smoked()
 
 
     def _validate_duration_years(self):
@@ -20,5 +22,25 @@ class PeriodsWhenYouStoppedSmokingResponse(BaseModel):
             raise ValidationError(
                 {
                     "duration_years": "Enter the total number of years you stopped smoking for"
+                }
+            )
+
+    def _validate_has_answered_age_started_smoking(self):
+        if self.value and not hasattr(self.response_set, "age_when_started_smoking_response"):
+            raise ValidationError({
+                "value": ValidationError(
+                    "age started smoking not set",
+                    code="no_age_started_smoking"
+                )
+            })
+
+    def _validate_duration_years_is_less_than_time_they_have_smoked(self):
+        if not self.value:
+            return None
+
+        if self.duration_years > self.response_set.age_when_started_smoking_response.years_smoked_including_stopped():
+            raise ValidationError(
+                {
+                    "duration_years": "The number of years you stopped smoking must be fewer than the total number of years you have been smoking"
                 }
             )
