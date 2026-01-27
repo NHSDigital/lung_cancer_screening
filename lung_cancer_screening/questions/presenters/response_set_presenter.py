@@ -251,15 +251,25 @@ class ResponseSetPresenter:
 
 
     def smoking_history_types_responses_items(self):
-        return [*[
-            self._check_your_answer_item(
+        results = []
+        for type_history in self.response_set.tobacco_smoking_history.in_form_order():
+            results.extend(self.smoking_history_summary_items_for_type(type_history))
+        return results
+
+    def smoking_history_summary_items_for_type(self, type_history):
+        return [self._check_your_answer_item(
+                f"Do you currently smoke {type_history.human_type().lower()}?",
+                ("Yes" if type_history.smoking_current_response.value else "No") if hasattr(type_history, 'smoking_current_response') else self.NOT_ANSWERED_TEXT,
+                "questions:smoking_current",
+                kwargs = { "tobacco_type": humps.kebabize(type_history.type) }
+            ),
+            (self._check_your_answer_item(
                 f"Total number of years you have smoked {type_history.human_type().lower()}",
-                type_history.smoked_total_years_response.value if hasattr(type_history, 'smoked_total_years_response') else None,
+                type_history.smoked_total_years_response.value if hasattr(type_history, 'smoked_total_years_response') else self.NOT_ANSWERED_TEXT,
                 "questions:smoked_total_years",
-                kwargs = { "tobacco_type": humps.kebabize(type_history.type) },
-            )
-            for type_history in self.response_set.tobacco_smoking_history.in_form_order()
-        ]]
+                kwargs = { "tobacco_type": humps.kebabize(type_history.type) }
+            ))]
+
 
     def smoking_history_responses_items(self):
         return [
@@ -278,7 +288,7 @@ class ResponseSetPresenter:
                 self.types_tobacco_smoking,
                 "questions:types_tobacco_smoking",
             ),
-            *self.smoking_history_types_responses_items()
+            *self.smoking_history_types_responses_items(),
         ]
 
 

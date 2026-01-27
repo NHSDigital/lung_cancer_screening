@@ -33,7 +33,7 @@ class TypesTobaccoSmokingView(
 
     def get_success_url(self):
         return reverse(
-            "questions:smoked_total_years",
+            "questions:smoking_current",
             kwargs={
                 "tobacco_type": humps.kebabize(
                     self.request.response_set.tobacco_smoking_history.first().type
