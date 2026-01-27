@@ -20,6 +20,7 @@ locals {
   )
 }
 
+# Once issues with the Data Reader is resolved this will be re-added.
 # data "azuread_service_principal" "avd" {
 #   application_id = local.principal_id
 # }
@@ -53,35 +54,27 @@ module "virtual-desktop-blue" {
   host_pool_name        = module.config[each.key].names.avd-host-pool
   location              = each.key
 
-  # entra_users_group_id = (
-  #   local.blue_avd_primary
-  #   ? data.azuread_group.avd_users.id
-  #   : data.azuread_group.avd_users.id
-  # )
-
   entra_users_group_id = var.ENTRA_USERS_GROUP_ID
-
-  # entra_admins_group_id = (
-  #   local.blue_avd_primary
-  #   ? data.azuread_group.avd_admins.id
-  #   : data.azuread_group.avd_admins.id
-  # )
-
   entra_admins_group_id = var.ENTRA_ADMINS_GROUP_ID
 
   maximum_sessions_allowed  = var.avd_maximum_sessions_allowed
   resource_group_name       = azurerm_resource_group.avd_blue[each.key].name
   resource_group_id         = azurerm_resource_group.avd_blue[each.key].id
   scaling_plan_name         = module.config[each.key].names.avd-scaling-plan
+
+  source_image_id           = var.AVD_SOURCE_IMAGE_ID
+  # left as example of source image reference Example 1
   # source_image_reference = {
   #   publisher = "MicrosoftWindowsDesktop"
   #   offer     = "windows-11"
   #   sku       = "win11-23h2-avd"
   #   version   = "latest"
   # }
-  source_image_id           = var.AVD_SOURCE_IMAGE_ID
+
+  # left as example of source image reference Example 2
   # source_image_reference    = var.avd_source_image_reference
   # source_image_from_gallery = var.avd_source_image_from_gallery
+
   subnet_id                 = module.subnets_hub["${module.config[each.key].names.subnet}-virtual-desktop"].id
   vm_count                  = local.blue_avd_primary || local.equal_vm_counts ? var.avd_vm_count : 1
   vm_name_prefix            = module.config[each.key].names.avd-host
@@ -115,23 +108,8 @@ module "virtual-desktop-green" {
   dag_name              = module.config[each.key].names.avd-dag
   host_pool_name        = "${module.config[each.key].names.avd-host-pool}-v2"
   location              = each.key
-
-  # entra_users_group_id = (
-  #   local.green_avd_primary
-  #   ? data.azuread_group.avd_users.id
-  #   : data.azuread_group.avd_users.id
-  # )
-
-  entra_users_group_id = var.ENTRA_USERS_GROUP_ID
-
-  # entra_admins_group_id = (
-  #   local.green_avd_primary
-  #   ? data.azuread_group.avd_admins.id
-  #   : data.azuread_group.avd_admins.id
-  # )
-
+  entra_users_group_id  = var.ENTRA_USERS_GROUP_ID
   entra_admins_group_id = var.ENTRA_ADMINS_GROUP_ID
-
   maximum_sessions_allowed  = var.avd_maximum_sessions_allowed
   resource_group_name       = azurerm_resource_group.avd_green[each.key].name
   resource_group_id         = azurerm_resource_group.avd_green[each.key].id
@@ -146,7 +124,6 @@ module "virtual-desktop-green" {
   vm_size                   = var.avd_vm_size
   vm_license_type           = "Windows_Client"
   workspace_name            = "lungcs-${each.key}"
-  # workspace_name            = module.config[each.key].names.avd-workspace
 
   principal_id              = var.AVD_OBJECT_ID
   tags = var.tags

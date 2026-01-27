@@ -17,10 +17,8 @@
 
 targetScope = 'subscription'
 
-// param devopsInfrastructureId string
 param devopsSubnetAddressPrefix string
 param privateEndpointSubnetAddressPrefix string
-// param enableSoftDelete bool
 param hubType string // live / nonlive
 param region string = 'uksouth'
 param regionShortName string = 'uks'
@@ -80,7 +78,6 @@ module virtualNetwork 'modules/virtualNetwork.bicep' = {
 module managedDevopsPool 'modules/managedDevopsPool.bicep' = {
   scope: bootstrapRG
   params: {
-    //adoOrg: 'nhse-pps-1'
     adoOrg: 'nhse-dtos'
     agentProfileMaxAgentLifetime: '00.04:00:00'
     devCenterName: devCenterName

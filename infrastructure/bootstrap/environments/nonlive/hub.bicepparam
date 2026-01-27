@@ -7,4 +7,3 @@ param vnetAddressPrefixes = [
 param devopsSubnetAddressPrefix = '10.11.1.0/24'
 param privateEndpointSubnetAddressPrefix = '10.11.2.0/24'
 param enableSoftDelete = true
-// param devopsInfrastructureId = ''

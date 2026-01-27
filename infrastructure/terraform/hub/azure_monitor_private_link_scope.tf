@@ -26,8 +26,6 @@ module "private_endpoint_ampls" {
       module.private_dns_zones["${each.key}-automation"].id,
       module.private_dns_zones["${each.key}-operations_data_store"].id,
       module.private_dns_zones["${each.key}-operations_management_suite"].id,
-      # created in the bootstrap
-      # module.private_dns_zones["${each.key}-storage_blob"].id
     ]
   }
 

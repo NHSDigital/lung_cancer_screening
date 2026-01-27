@@ -4,11 +4,6 @@ variable "AVD_SOURCE_IMAGE_ID" {
   default     = null
 }
 
-# variable "HUB_BACKEND_AZURE_STORAGE_ACCOUNT_NAME" {
-#   description = "Storage account for certbot state"
-#   type        = string
-# }
-
 variable "GITHUB_ORG_DATABASE_ID" {
   description = "GitHub Organization Database ID, specified via TF_VAR env var"
   type        = string
@@ -131,16 +126,6 @@ variable "firewall_config" {
   default = {}
 }
 
-# variable "key_vault" {
-#   description = "Configuration for the key vault"
-#   type = object({
-#     disk_encryption   = optional(bool, true)
-#     soft_del_ret_days = optional(number, 7)
-#     purge_prot        = optional(bool, false)
-#     sku_name          = optional(string, "standard")
-#   })
-# }
-
 variable "law" {
   description = "Configuration of the Log Analytics Workspace"
   type = object({
@@ -249,7 +234,6 @@ variable "AVD_APPLICATION_ID" {
   description = "AVD Application ID for role assignments"
   type        = string
 }
-
 
 variable "virtual_desktop_group_active" {
   description = <<-EOT

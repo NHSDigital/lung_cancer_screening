@@ -1,8 +1,4 @@
 locals {
-  # APIM
-  monitor_diagnostic_setting_apim_enabled_logs = ["GatewayLogs", "WebSocketConnectionLogs", "DeveloperPortalAuditLogs"]
-  monitor_diagnostic_setting_apim_metrics      = ["AllMetrics"]
-
   # FRONTDOOR
   monitor_diagnostic_setting_frontdoor_enabled_logs = ["FrontDoorAccessLog", "FrontDoorHealthProbeLog", "FrontDoorWebApplicationFirewallLog"]
   monitor_diagnostic_setting_frontdoor_metrics      = ["AllMetrics"]

@@ -40,8 +40,6 @@ module "private_dns_resolver" {
 
 locals {
   private_dns_zones = {
-    # national_screening          = var.dns_zone_name_private.nationalscreening
-    # screening                   = var.dns_zone_name_private.screening
     container_registry          = "privatelink.azurecr.io"
     app_insights                = var.private_dns_zones.is_app_insights_private_dns_zone_enabled ? "privatelink.monitor.azure.com" : null
     automation                  = var.private_dns_zones.is_app_insights_private_dns_zone_enabled ? "privatelink.agentsvc.azure-automation.net" : null
@@ -52,8 +50,6 @@ locals {
     event_grid                  = var.private_dns_zones.is_event_grid_enabled_dns_zone_enabled ? "privatelink.eventgrid.azure.net" : null
     azure_sql                   = var.private_dns_zones.is_azure_sql_private_dns_zone_enabled ? "privatelink.database.windows.net" : null
     postgres_sql                = var.private_dns_zones.is_postgres_sql_private_dns_zone_enabled ? "privatelink.postgres.database.azure.com" : null
-    # key_vault                   = var.private_dns_zones.is_key_vault_private_dns_zone_enabled ? "privatelink.vaultcore.azure.net" : null
-    # storage_blob                = var.private_dns_zones.is_storage_private_dns_zone_enabled ? "privatelink.blob.core.windows.net" : null
     storage_queue               = var.private_dns_zones.is_storage_private_dns_zone_enabled ? "privatelink.queue.core.windows.net" : null
     storage_table               = var.private_dns_zones.is_storage_private_dns_zone_enabled ? "privatelink.table.core.windows.net" : null
     event_hub                   = var.private_dns_zones.is_event_hub_private_dns_zone_enabled ? "privatelink.servicebus.windows.net" : null

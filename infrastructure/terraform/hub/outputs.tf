@@ -30,10 +30,6 @@ output "private_endpoint_rg_name" {
   value = { for k, v in azurerm_resource_group.rg_private_endpoints : k => v.name }
 }
 
-# output "public_dns_zone_rg_name" {
-#   value = var.dns_zone_rg_name_public
-# }
-
 output "subnets_hub" {
   value = module.subnets_hub
 }

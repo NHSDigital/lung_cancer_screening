@@ -27,13 +27,6 @@ resource vnet 'Microsoft.Network/virtualNetworks@2024-01-01' existing = {
   scope: vnetRG
 }
 
-// Retrieve the existing Subnet within the vnet
-// resource subnet 'Microsoft.Network/virtualNetworks/subnets@2024-01-01' = {
-//   parent: vnet
-//   name: subnetName
-//   region: region
-// }
-
 resource privateEndpointSubnet 'Microsoft.Network/virtualNetworks/subnets@2025-01-01' = {
   name: '${virtualNetworkName}/${privateEndpointSubnetName}'
   properties: {

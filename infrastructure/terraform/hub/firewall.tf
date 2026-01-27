@@ -4,7 +4,6 @@ module "firewall" {
   source = "../../../../dtos-devops-templates/infrastructure/modules/firewall"
 
   firewall_name       = module.config[each.key].names.firewall
-  # resource_group_name = azurerm_resource_group.rg_hub[each.key].name
   resource_group_name = var.vnet_resource_group
   location            = each.key
 

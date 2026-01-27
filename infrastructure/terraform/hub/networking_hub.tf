@@ -46,7 +46,6 @@ module "subnets_hub" {
   network_security_group_name       = each.value.nsg_name
   network_security_group_nsg_rules  = each.value.nsg_rules
   create_nsg                        = coalesce(each.value.create_nsg, true)
-  # resource_group_name               = azurerm_resource_group.rg_hub[each.value.vnet_key].name
   resource_group_name               = var.vnet_resource_group
   vnet_name                         = var.vnet_name
   address_prefixes                  = [each.value.address_prefixes]
