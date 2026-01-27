@@ -6,6 +6,7 @@ from .age_when_started_smoking_response import AgeWhenStartedSmokingResponse # n
 from .asbestos_exposure_response import AsbestosExposureResponse # noqa: F401
 from .cancer_diagnosis_response import CancerDiagnosisResponse # noqa: F401
 from .check_need_appointment_response import CheckNeedAppointmentResponse # noqa: F401
+from .currently_smoking_cigarettes_response import CurrentlySmokingCigarettesResponse # noqa: F401
 from .date_of_birth_response import DateOfBirthResponse # noqa: F401
 from .ethnicity_response import EthnicityResponse # noqa: F401
 from .family_history_lung_cancer_response import FamilyHistoryLungCancerResponse # noqa: F401

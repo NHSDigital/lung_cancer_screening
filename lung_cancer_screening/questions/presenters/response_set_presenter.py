@@ -118,6 +118,13 @@ class ResponseSetPresenter:
         return str(self.response_set.age_when_started_smoking_response.value)
 
     @property
+    def currently_smoking_cigarettes(self):
+        if not hasattr(self.response_set, 'currently_smoking_cigarettes_response'):
+            return None
+
+        return "Yes" if self.response_set.currently_smoking_cigarettes_response.value else "No"
+
+    @property
     def respiratory_conditions(self):
         if not hasattr(self.response_set, 'respiratory_conditions_response'):
             return None
@@ -229,6 +236,11 @@ class ResponseSetPresenter:
                 "Age you started smoking",
                 self.age_when_started_smoking,
                 "questions:age_when_started_smoking",
+            ),
+            self._check_your_answer_item(
+                "Do you currently smoke cigarettes?",
+                self.currently_smoking_cigarettes,
+                "questions:currently_smoking_cigarettes",
             )
         ]
 
