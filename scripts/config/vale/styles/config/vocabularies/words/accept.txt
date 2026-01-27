@@ -1,4 +1,5 @@
 [A-Z]+s
+(?i)a(?i)z
 Bitwarden
 bot
 Cyber
@@ -12,9 +13,15 @@ onboarding
 Podman
 Python
 sed
+(?i)dev
+Preprod
 Syft
-Terraform
+(?i)Terraform
 toolchain
 Trufflehog
 Structurizr
 sigterm
+config
+(?i)Entra
+lung_cancer_screening
+yaml

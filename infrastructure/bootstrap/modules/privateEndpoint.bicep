@@ -4,10 +4,11 @@ param privateDNSZoneID string
 param name string
 param resourceID string
 param resourceServiceType string
-
-var RGName = 'rg-hub-${hub}-uks-hub-networking'
-var vnetName = 'VNET-${toUpper(hub)}-UKS-HUB'
-var subnetName = 'SN-${toUpper(hub)}-UKS-HUB-pep'
+param RGName string
+param vnetName string
+param privateEndpointSubnetName string
+param virtualNetworkName string
+param privateEndpointSubnetAddressPrefix string
 
 var groupID = {
   storage: 'blob'
@@ -26,11 +27,14 @@ resource vnet 'Microsoft.Network/virtualNetworks@2024-01-01' existing = {
   scope: vnetRG
 }
 
-// Retrieve the existing Subnet within the vnet
-resource subnet 'Microsoft.Network/virtualNetworks/subnets@2024-01-01' existing = {
-  parent: vnet
-  name: subnetName
+resource privateEndpointSubnet 'Microsoft.Network/virtualNetworks/subnets@2025-01-01' = {
+  name: '${virtualNetworkName}/${privateEndpointSubnetName}'
+  properties: {
+    addressPrefix: privateEndpointSubnetAddressPrefix
+    privateEndpointNetworkPolicies: 'Disabled'
+  }
 }
+
 
 // Create the private endpoint for the storage account
 resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-01-01' = {
@@ -38,7 +42,7 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-01-01' = {
   location: region
   properties: {
     subnet: {
-      id: subnet.id
+      id: privateEndpointSubnet.id
     }
     privateLinkServiceConnections: [
       {

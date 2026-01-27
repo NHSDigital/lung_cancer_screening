@@ -1,0 +1,256 @@
+variable "AVD_SOURCE_IMAGE_ID" {
+  description = "Source OS image for AVD Session Hosts, allows deployment from an Azure Compute Gallery in a remote subscription. Remember to grant 'Compute Gallery Image Reader' RBAC role."
+  type        = string
+  default     = null
+}
+
+variable "GITHUB_ORG_DATABASE_ID" {
+  description = "GitHub Organization Database ID, specified via TF_VAR env var"
+  type        = string
+  default     = "DEV"
+}
+
+variable "TARGET_SUBSCRIPTION_ID" {
+  description = "ID of a subscription to deploy infrastructure"
+  type        = string
+}
+
+variable "regions" {
+  type = map(object({
+    address_space     = string
+    is_primary_region = bool
+    subnets = map(object({
+      cidr_newbits               = string
+      cidr_offset                = string
+      create_nsg                 = optional(bool)   # defaults to true
+      name                       = optional(string) # Optional name override
+      delegation_name            = optional(string)
+      service_delegation_name    = optional(string)
+      service_delegation_actions = optional(list(string))
+    }))
+  }))
+}
+
+variable "application" {
+  description = "Project/Application code for deployment"
+  type        = string
+  default     = "hub"
+}
+
+variable "avd_users_group_name" {
+  description = "Entra ID group containing AVD users"
+  type        = string
+}
+
+variable "avd_admins_group_name" {
+  description = "Entra ID group containing AVD admins"
+  type        = string
+}
+
+variable "avd_maximum_sessions_allowed" {
+  description = "The maximum number of sessions per host, in this host pool"
+  type        = number
+}
+
+variable "avd_source_image_reference" {
+  description = "Specifies a standard Azure Virtual Machine OS image, replaces var.avd_source_image_from_gallery"
+  type = object({
+    offer     = string
+    publisher = string
+    sku       = string
+    version   = string
+  })
+  default = null
+}
+
+variable "avd_source_image_from_gallery" {
+  description = "Specifies a shared OS image from an Azure Compute Gallery, replaces var.avd_source_image_reference"
+  type = object({
+    image_name      = string
+    gallery_name    = string
+    gallery_rg_name = string
+  })
+  default = null
+}
+
+variable "avd_vm_count" {
+  type    = number
+  default = 1
+}
+
+variable "avd_vm_size" {
+  type    = string
+  default = "Standard_D2as_v5"
+}
+
+variable "diagnostic_settings" {
+  description = "Configuration for the diagnostic settings"
+  type = object({
+    metric_enabled = optional(bool, false)
+  })
+}
+
+variable "environment" {
+  description = "Environment code for deployments"
+  type        = string
+}
+
+variable "env_type" {
+  description = "Environment grouping for shared hub (live/non-live)"
+  type        = string
+}
+
+
+variable "features" {
+  description = "Feature flags for the deployment"
+  type        = map(bool)
+}
+
+variable "firewall_config" {
+  description = "Configuration for the firewall"
+
+  type = object({
+    firewall_sku_name = optional(string)
+    firewall_sku_tier = optional(string)
+    public_ip_addresses = optional(map(object({
+      name_suffix          = string
+      allocation_method    = string
+      ddos_protection_mode = string
+      sku                  = string
+    })))
+    policy_sku                      = optional(string)
+    policy_threat_intelligence_mode = optional(string)
+    policy_dns_proxy_enabled        = optional(bool)
+    zones                           = optional(list(string))
+  })
+  default = {}
+}
+
+variable "law" {
+  description = "Configuration of the Log Analytics Workspace"
+  type = object({
+    name               = optional(string, "hub")
+    export_enabled     = optional(bool, false)
+    law_sku            = optional(string, "PerGB2018")
+    retention_days     = optional(number, 30)
+    export_table_names = optional(list(string))
+  })
+}
+
+variable "network_security_group_rules" {
+  description = "The network security group rules."
+  default     = {}
+  type = map(list(object({
+    name                         = string
+    priority                     = number
+    direction                    = string
+    access                       = string
+    protocol                     = string
+    source_port_range            = optional(string)
+    source_port_ranges           = optional(list(string))
+    destination_port_range       = optional(string)
+    destination_port_ranges      = optional(list(string))
+    source_address_prefix        = optional(string)
+    source_address_prefixes      = optional(list(string))
+    destination_address_prefix   = optional(string)
+    destination_address_prefixes = optional(list(string))
+  })))
+}
+
+variable "private_dns_zones" {
+  description = "Configuration for private DNS zones"
+  type = object({
+    is_app_services_enabled                    = optional(bool, false)
+    is_azure_sql_private_dns_zone_enabled      = optional(bool, false)
+    is_postgres_sql_private_dns_zone_enabled   = optional(bool, false)
+    is_storage_private_dns_zone_enabled        = optional(bool, false)
+    is_acr_private_dns_zone_enabled            = optional(bool, false)
+    is_app_insights_private_dns_zone_enabled   = optional(bool, false)
+    is_apim_private_dns_zone_enabled           = optional(bool, false)
+    is_key_vault_private_dns_zone_enabled      = optional(bool, false)
+    is_event_hub_private_dns_zone_enabled      = optional(bool, false)
+    is_event_grid_enabled_dns_zone_enabled     = optional(bool, false)
+    is_container_apps_enabled_dns_zone_enabled = optional(bool, false)
+  })
+}
+
+variable "projects" {
+  description = "Project code for deployment"
+  type = map(object({
+    full_name  = string
+    short_name = string
+    acr = optional(object({
+      sku                           = string
+      admin_enabled                 = bool
+      uai_name                      = string
+      public_network_access_enabled = bool
+    }), null)
+    frontdoor_profile = optional(object({
+      secrets  = optional(list(string), []) # Keys from var.acme_certificates
+      sku_name = string
+      identity = optional(object({
+        type         = string                 # "SystemAssigned", "UserAssigned", or "SystemAssigned, UserAssigned".
+        identity_ids = optional(list(string)) # only required if using UserAssigned identity
+      }), null)
+    }))
+    tags = map(string)
+  }))
+}
+
+variable "vnet_name" {
+  description = "Name of the hub virtual network"
+  type        = string
+  default     = "vnet-hub-nonlive-uks"
+}
+
+variable "vnet_resource_group" {
+  description = "Resource group name of the hub virtual network"
+  type        = string
+  default     = "rg-hub-nonlive-uks-bootstrap"
+}
+
+variable "tags" {
+  description = "Tags to be applied to resources"
+  type        = map(string)
+  default     = {}
+}
+
+variable "ENTRA_USERS_GROUP_ID" {
+  description = "Entra ID group ID containing users who can access the hub resources"
+  type        = string
+}
+
+variable "ENTRA_ADMINS_GROUP_ID" {
+  description = "Entra ID group ID containing users who can access the hub resources"
+  type        = string
+}
+
+variable "AVD_OBJECT_ID" {
+  description = "AVD Object ID for role assignments"
+  type        = string
+}
+
+variable "AVD_APPLICATION_ID" {
+  description = "AVD Application ID for role assignments"
+  type        = string
+}
+
+variable "virtual_desktop_group_active" {
+  description = <<-EOT
+    This can either be 'blue', 'green', 'both-with-blue-primary',  'both-with-green-primary', 'both-with-blue-primary-but-equal-vms' or 'both-with-green-primary-but-equal-vms'.
+    blue means only virtual desktop blue is deployed whilst virtual desktop green is removed.
+    green means only virtual desktop green is deployed whilst virtual desktop blue is removed. Users are directed to group green.
+    both-blue-primary means both virtual desktop groups are deployed, but ONLY the platform users can see group green. All other users will be directed to group blue.
+    both-green-primary means both virtual desktop groups are deployed, but ONLY the platform users can see group blue. All other users will be directed to group green.
+    both-with-blue-primary-but-equal-vms means both virtual desktop groups are deployed with equal VM counts, but ONLY the platform users can see group green. All other users will be directed to group blue.
+    both-with-green-primary-but-equal-vms means both virtual desktop groups are deployed with equal VM counts, but ONLY the platform users can see group blue. All other users will be directed to group green.
+
+  EOT
+
+  type = string
+
+  validation {
+    condition     = contains(["blue", "green", "both-with-blue-primary", "both-with-green-primary", "both-with-blue-primary-but-equal-vms", "both-with-green-primary-but-equal-vms"], var.virtual_desktop_group_active)
+    error_message = "The virtual_desktop_group_active variable must be blue of: 'blue', 'green', 'both-with-blue-primary', 'both-with-green-primary', 'both-with-blue-primary-but-equal-vms', 'both-with-green-primary-but-equal-vms'."
+  }
+}

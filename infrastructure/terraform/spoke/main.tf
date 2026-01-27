@@ -1,7 +1,7 @@
 module "infra" {
   count = var.deploy_infra ? 1 : 0
 
-  source = "../modules/infra"
+  source = "../../modules/infra"
 
   providers = {
     azurerm     = azurerm
@@ -23,7 +23,7 @@ module "infra" {
 module "container-apps" {
   count = var.deploy_container_apps ? 1 : 0
 
-  source = "../modules/container-apps"
+  source = "../../modules/container-apps"
 
   providers = {
     azurerm     = azurerm

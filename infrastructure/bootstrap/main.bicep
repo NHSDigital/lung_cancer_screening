@@ -59,7 +59,7 @@ module managedIdentiyADOtoAZ 'modules/managedIdentity.bicep' = {
   }
 }
 
-// Create the managed identity assumed by Github actions to trigger Azure devops pipelines
+// Create the managed identity assumed by GitHub actions to trigger Azure devops pipelines
 module managedIdentiyGHtoADO 'modules/managedIdentity.bicep' = {
   scope: managedIdentityRG
   params: {
