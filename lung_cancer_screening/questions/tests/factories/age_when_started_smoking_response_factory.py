@@ -13,8 +13,20 @@ class AgeWhenStartedSmokingResponseFactory(factory.django.DjangoModelFactory):
     response_set = factory.SubFactory(ResponseSetFactory)
     value = factory.Faker('pyint', min_value=15, max_value=50)
 
-    # Create a DateOfBirthResponse linked to the same response_set
-    date_of_birth_response = factory.RelatedFactory(
-        DateOfBirthResponseFactory,
-        factory_related_name="value",
-    )
+    @factory.post_generation
+    def date_of_birth_response(obj, create, extracted, **kwargs):
+        """Create a DateOfBirthResponse linked to the same response_set if one doesn't exist."""
+        if extracted:
+            # Use the provided DateOfBirthResponse
+            return extracted
+
+        # Check if response_set already has a date_of_birth_response
+        if hasattr(obj.response_set, 'date_of_birth_response'):
+            return obj.response_set.date_of_birth_response
+
+        if create:
+            # Create a DateOfBirthResponse with the same response_set
+            DateOfBirthResponseFactory.create(response_set=obj.response_set, **kwargs)
+        else:
+            # Build a DateOfBirthResponse with the same response_set
+            DateOfBirthResponseFactory.build(response_set=obj.response_set, **kwargs)

@@ -1,4 +1,3 @@
-@AgeWhenStartedSmoking
 Feature: Questionnaire
   Scenario: Cannot change responses once submitted
     Given I am logged in
@@ -59,8 +58,11 @@ Feature: Questionnaire
     Then I am on "/age-when-started-smoking"
     When I fill in "How old were you when you started smoking?" as "18" and submit
 
+    Then I am on "/currently-smoking-cigarettes"
+    When I check "Yes" and submit
+
     Then I am on "/check-your-answers"
-    And I see a back link to "/age-when-started-smoking"
+    And I see a back link to "/currently-smoking-cigarettes"
 
     And I see "Yes, I used to smoke" as a response to "Have you ever smoked tobacco?" under "Eligibility"
     And I see a date 55 years ago as a response to "Date of birth" under "Eligibility"

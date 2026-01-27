@@ -23,6 +23,7 @@ from .views.asbestos_exposure import AsbestosExposureView
 from .views.book_an_appointment import BookAnAppointmentExitView
 from .views.cancer_diagnosis import CancerDiagnosisView
 from .views.check_need_appointment import CheckNeedAppointmentView
+from .views.currently_smoking_cigarettes import CurrentlySmokingCigarettesView
 from .views.date_of_birth import DateOfBirthView
 from .views.education import EducationView
 from .views.ethnicity import EthnicityView
@@ -47,6 +48,7 @@ urlpatterns = [
     path('call-us-to-book-an-appointment', BookAnAppointmentExitView.as_view(), name='book_an_appointment'),
     path('cancer-diagnosis', CancerDiagnosisView.as_view(), name='cancer_diagnosis'),
     path('check-if-you-need-an-appointment', CheckNeedAppointmentView.as_view(), name='check_need_appointment'),
+    path('currently-smoking-cigarettes', CurrentlySmokingCigarettesView.as_view(), name='currently_smoking_cigarettes'),
     path('date-of-birth', DateOfBirthView.as_view(), name='date_of_birth'),
     path('education', EducationView.as_view(), name='education'),
     path('ethnicity', EthnicityView.as_view(), name='ethnicity'),
