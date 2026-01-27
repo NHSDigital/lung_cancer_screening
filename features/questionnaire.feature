@@ -59,8 +59,14 @@ Feature: Questionnaire
     Then I am on "/age-when-started-smoking"
     When I fill in "How old were you when you started smoking?" as "18" and submit
 
+
+    Then I am on "/periods-when-you-stopped-smoking"
+    When I check "Yes"
+    And I fill in "Enter the total number of years you stopped smoking for" with "10"
+    And I submit the form
+
     Then I am on "/check-your-answers"
-    And I see a back link to "/age-when-started-smoking"
+    And I see a back link to "/periods-when-you-stopped-smoking"
 
     And I see "Yes, I used to smoke" as a response to "Have you ever smoked tobacco?" under "Eligibility"
     And I see a date 55 years ago as a response to "Date of birth" under "Eligibility"
@@ -77,6 +83,9 @@ Feature: Questionnaire
 
     And I see "Yes" as a response to "Have any of your parents, siblings or children ever been diagnosed with lung cancer?" under "Family history"
     And I see "Yes, they were younger than 60" as a response to "Were any of your relatives younger than 60 years old when they were diagnosed with lung cancer?" under "Family history"
+
+    And I see "18" as a response to "Age you started smoking" under "Smoking history"
+    And I see "Yes (10 years)" as a response to "Have you ever stopped smoking for periods of 1 year or longer?" under "Smoking history"
 
     When I click "Submit"
     Then I am on "/confirmation"

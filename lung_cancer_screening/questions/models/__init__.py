@@ -12,6 +12,7 @@ from .family_history_lung_cancer_response import FamilyHistoryLungCancerResponse
 from .gender_response import GenderResponse # noqa: F401
 from .have_you_ever_smoked_response import HaveYouEverSmokedResponse # noqa: F401
 from .height_response import HeightResponse # noqa: F401
+from .periods_when_you_stopped_smoking_response import PeriodsWhenYouStoppedSmokingResponse # noqa: F401
 from .relatives_age_when_diagnosed_response import RelativesAgeWhenDiagnosedResponse # noqa: F401
 from .respiratory_conditions_response import RespiratoryConditionsResponse # noqa: F401
 from .sex_at_birth_response import SexAtBirthResponse # noqa: F401

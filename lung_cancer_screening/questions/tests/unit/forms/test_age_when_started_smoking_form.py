@@ -8,6 +8,8 @@ from ....models.age_when_started_smoking_response import AgeWhenStartedSmokingRe
 from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.date_of_birth_response_factory import DateOfBirthResponseFactory
 from ....forms.age_when_started_smoking_form import AgeWhenStartedSmokingForm
+from ...factories.periods_when_you_stopped_smoking_response_factory import PeriodsWhenYouStoppedSmokingResponseFactory
+from ....models.periods_when_you_stopped_smoking_response import PeriodsWhenYouStoppedSmokingResponse
 
 
 @tag("AgeWhenStartedSmoking")
@@ -106,3 +108,43 @@ class TestAgeWhenStartedSmokingForm(TestCase):
             form.errors["value"],
             ["The age you started smoking must be the same as, or less than your current age"]
         )
+
+
+    def test_deletes_periods_when_stopped_smoking_response_if_age_started_smoking_is_changed(self):
+        self.response.value = 17
+        self.response.save()
+
+        PeriodsWhenYouStoppedSmokingResponseFactory.create(
+            response_set=self.response_set,
+            value=True,
+            duration_years=self.response.years_smoked_including_stopped() - 1
+        )
+        form = AgeWhenStartedSmokingForm(
+            instance=self.response,
+            data={
+                "value": 18
+            }
+        )
+        form.save()
+
+        self.assertFalse(PeriodsWhenYouStoppedSmokingResponse.objects.filter(response_set=self.response_set).exists())
+
+
+    def test_does_not_delete_periods_when_stopped_smoking_response_if_age_started_smoking_is_not_changed(self):
+        self.response.value = 18
+        self.response.save()
+
+        PeriodsWhenYouStoppedSmokingResponseFactory.create(
+            response_set=self.response_set,
+            value=True,
+            duration_years=self.response.years_smoked_including_stopped() - 1
+        )
+        form = AgeWhenStartedSmokingForm(
+            instance=self.response,
+            data={
+                "value": 18
+            }
+        )
+        form.save()
+
+        self.assertTrue(PeriodsWhenYouStoppedSmokingResponse.objects.filter(response_set=self.response_set).exists())

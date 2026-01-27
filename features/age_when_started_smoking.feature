@@ -26,7 +26,7 @@ Feature: Age when started smoking
     When I go to "/age-when-started-smoking"
     Then I see a back link to "/relatives-age-when-diagnosed"
     When I fill in "How old were you when you started smoking?" as "18" and submit
-    Then I am on "/check-your-answers"
+    Then I am on "/periods-when-you-stopped-smoking"
 
   Scenario: Checking responses and changing them
     Given I am logged in
@@ -40,5 +40,4 @@ Feature: Age when started smoking
     Then I am on "/age-when-started-smoking?change=True"
     And I see "18" filled in for "How old were you when you started smoking?"
     When I fill in "How old were you when you started smoking?" as "22" and submit
-    Then I am on "/check-your-answers"
-    And I see "22" as a response to "Age you started smoking" under "Smoking history"
+    Then I am on "/periods-when-you-stopped-smoking?change=True"

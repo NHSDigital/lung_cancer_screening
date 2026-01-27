@@ -14,6 +14,8 @@ from ...factories.respiratory_conditions_response_factory import RespiratoryCond
 from ...factories.cancer_diagnosis_response_factory import CancerDiagnosisResponseFactory
 from ...factories.family_history_lung_cancer_response_factory import FamilyHistoryLungCancerResponseFactory
 from ...factories.relatives_age_when_diagnosed_response_factory import RelativesAgeWhenDiagnosedResponseFactory
+from ...factories.periods_when_you_stopped_smoking_response_factory import PeriodsWhenYouStoppedSmokingResponseFactory
+from ...factories.age_when_started_smoking_response_factory import AgeWhenStartedSmokingResponseFactory
 
 from ....models.have_you_ever_smoked_response import HaveYouEverSmokedValues
 from ....models.sex_at_birth_response import SexAtBirthValues
@@ -48,6 +50,28 @@ class TestResponseSetPresenter(TestCase):
         self.assertEqual(
             presenter.have_you_ever_smoked,
             HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY.label
+        )
+
+    def test_periods_when_you_stopped_smoking_with_no_value(self):
+        presenter = ResponseSetPresenter(self.response_set)
+        self.assertEqual(presenter.periods_when_you_stopped_smoking, None)
+
+
+    def test_periods_when_you_stopped_smoking_with_value(self):
+        # Create required dependencies
+        DateOfBirthResponseFactory(response_set=self.response_set)
+        age_when_started_smoking_response = AgeWhenStartedSmokingResponseFactory(response_set=self.response_set)
+
+        periods_when_you_stopped_smoking_response = PeriodsWhenYouStoppedSmokingResponseFactory(
+            response_set=self.response_set,
+            value=True,
+            duration_years=age_when_started_smoking_response.years_smoked_including_stopped() - 1
+        )
+        presenter = ResponseSetPresenter(self.response_set)
+
+        self.assertEqual(
+            presenter.periods_when_you_stopped_smoking,
+            f"Yes ({periods_when_you_stopped_smoking_response.duration_years} years)",
         )
 
 

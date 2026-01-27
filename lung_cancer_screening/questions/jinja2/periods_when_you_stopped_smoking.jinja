@@ -1,0 +1,37 @@
+{% extends 'layout.jinja' %}
+
+{% from 'nhsuk/components/button/macro.jinja' import button %}
+
+{% if error %}
+  {% set error_message = { "text": error } %}
+{% endif %}
+
+{% block page_content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      <form action="{{ request.path }}" method="POST">
+        {{ csrf_input }}
+
+        {% if request.GET.get("change") == "True" %}
+          <input type="hidden" name="change" value="True">
+        {% endif %}
+
+        <h1 class="nhsuk-heading-l">Periods when you stopped smoking</h1>
+
+        <p>There may have been periods when you stopped or quit smoking.</p>
+        <p>If you stopped smoking for periods of 1 year or longer, tell us the total number of years you stopped smoking.</p>
+
+        {% do form.value.add_conditional_html(
+          True,
+          form.duration_years.as_field_group()
+        ) %}
+
+        {{ form.value.as_field_group() }}
+
+        {{ button({
+          "text": "Continue"
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

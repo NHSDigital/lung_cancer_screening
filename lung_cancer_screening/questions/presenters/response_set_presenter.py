@@ -19,6 +19,16 @@ class ResponseSetPresenter:
         return self.response_set.have_you_ever_smoked_response.get_value_display()
 
     @property
+    def periods_when_you_stopped_smoking(self):
+        if not hasattr(self.response_set, 'periods_when_you_stopped_smoking_response'):
+            return None
+
+        if self.response_set.periods_when_you_stopped_smoking_response.value:
+            return f"Yes ({self.response_set.periods_when_you_stopped_smoking_response.duration_years} years)"
+        else:
+            return "No"
+
+    @property
     def date_of_birth(self):
         if not hasattr(self.response_set, 'date_of_birth_response'):
             return None
@@ -151,6 +161,7 @@ class ResponseSetPresenter:
             )
         ]
 
+
     def about_you_responses_items(self):
         return [
             self._check_your_answer_item(
@@ -223,13 +234,19 @@ class ResponseSetPresenter:
 
         return items
 
+
     def smoking_history_responses_items(self):
         return [
             self._check_your_answer_item(
                 "Age you started smoking",
                 self.age_when_started_smoking,
                 "questions:age_when_started_smoking",
-            )
+            ),
+            self._check_your_answer_item(
+                "Have you ever stopped smoking for periods of 1 year or longer?",
+                self.periods_when_you_stopped_smoking,
+                "questions:periods_when_you_stopped_smoking",
+            ),
         ]
 
 

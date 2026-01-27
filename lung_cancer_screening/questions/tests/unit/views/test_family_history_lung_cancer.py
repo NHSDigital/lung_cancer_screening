@@ -89,6 +89,7 @@ class TestPostFamilyHistoryLungCancer(TestCase):
 
         self.assertRedirects(response, reverse("questions:confirmation"))
 
+
     def test_redirects_when_the_user_is_not_eligible(self):
         ResponseSetFactory.create(user=self.user)
 
@@ -98,6 +99,7 @@ class TestPostFamilyHistoryLungCancer(TestCase):
         )
 
         self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+
 
     def test_creates_a_family_history_lung_cancer_response(self):
         response_set = ResponseSetFactory.create(user=self.user, eligible=True)
@@ -109,40 +111,46 @@ class TestPostFamilyHistoryLungCancer(TestCase):
             response_set.family_history_lung_cancer.value, self.valid_params["value"]
         )
 
-    def test_redirects_to_responses_path(self):
+    def test_redirects_to_age_when_started_smoking_when_response_is_no(self):
         ResponseSetFactory.create(user=self.user, eligible=True)
 
         response = self.client.post(
             reverse("questions:family_history_lung_cancer"),
-            self.valid_params
+            { "value": FamilyHistoryLungCancerValues.NO }
         )
 
         self.assertRedirects(response, reverse("questions:age_when_started_smoking"))
 
-    def test_redirects_to_responses_path_when_change_query_param_is_true(self):
+
+    def test_redirects_to_age_when_diagnosed_when_response_is_yes(self):
+        ResponseSetFactory.create(user=self.user, eligible=True)
+
+        response = self.client.post(
+            reverse("questions:family_history_lung_cancer"),
+            { "value": FamilyHistoryLungCancerValues.YES }
+        )
+
+        self.assertRedirects(
+            response, reverse("questions:relatives_age_when_diagnosed")
+        )
+
+
+    def test_redirects_to_responses_path_when_change_query_param_is_true_an_response_is_no(self):
         ResponseSetFactory.create(user=self.user, eligible=True)
 
         response = self.client.post(
             reverse("questions:family_history_lung_cancer"),
             {
-                **self.valid_params,
+                "value": FamilyHistoryLungCancerValues.NO,
                 "change": "True"
             }
         )
 
         self.assertRedirects(response, reverse("questions:responses"))
 
-    def test_redirects_to_relatives_age_when_diagnosed_path_when_response_is_yes(self):
-        ResponseSetFactory.create(user=self.user, eligible=True)
-
-        response = self.client.post(
-            reverse("questions:family_history_lung_cancer"),
-            {"value": FamilyHistoryLungCancerValues.YES}
-        )
-
-        self.assertRedirects(response, reverse("questions:relatives_age_when_diagnosed"))
-
-    def test_redirects_to_relatives_age_when_diagnosed_path_with_query_params_when_response_is_yes_and_change_true(self):
+    def test_redirects_to_responses_path_when_change_query_param_is_true_an_response_is_yes(
+        self,
+    ):
         ResponseSetFactory.create(user=self.user, eligible=True)
 
         response = self.client.post(
@@ -155,8 +163,15 @@ class TestPostFamilyHistoryLungCancer(TestCase):
 
         self.assertRedirects(
             response,
-            reverse(
-                "questions:relatives_age_when_diagnosed",
-                query={"change": "True"}
-            )
+            reverse("questions:relatives_age_when_diagnosed", query={"change": "True"}),
         )
+
+    def test_responds_with_422_if_the_response_fails_to_create(self):
+        ResponseSetFactory.create(user=self.user, eligible=True)
+
+        response = self.client.post(
+            reverse("questions:family_history_lung_cancer"),
+            {"value": "something not in list"}
+        )
+
+        self.assertEqual(response.status_code, 422)

@@ -31,7 +31,7 @@ def render_template(request, response_set, status=200):
         "responses.jinja",
         {
             "response_set": ResponseSetPresenter(request.response_set),
-            "back_link_url": reverse("questions:age_when_started_smoking"),
+            "back_link_url": reverse("questions:periods_when_you_stopped_smoking")
         },
         status=status,
     )

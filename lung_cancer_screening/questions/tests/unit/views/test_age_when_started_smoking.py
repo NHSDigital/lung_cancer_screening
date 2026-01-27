@@ -105,7 +105,7 @@ class TestPostAgeWhenStartedSmoking(TestCase):
             response_set.age_when_started_smoking_response.value, self.valid_params["value"]
         )
 
-    def test_redirects_to_responses(self):
+    def test_redirects_to_periods_when_you_stopped_smoking(self):
         ResponseSetFactory.create(user=self.user, eligible=True)
 
         response = self.client.post(
@@ -113,9 +113,9 @@ class TestPostAgeWhenStartedSmoking(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:responses"))
+        self.assertRedirects(response, reverse("questions:periods_when_you_stopped_smoking"))
 
-    def test_redirects_to_responses_if_change_query_param_is_true(self):
+    def test_redirects_to_periods_when_you_stopped_smoking_if_change_query_param_is_true(self):
         ResponseSetFactory.create(user=self.user, eligible=True)
 
         response = self.client.post(
@@ -126,7 +126,11 @@ class TestPostAgeWhenStartedSmoking(TestCase):
             }
         )
 
-        self.assertRedirects(response, reverse("questions:responses"))
+        self.assertRedirects(
+            response,
+            reverse("questions:periods_when_you_stopped_smoking", query={"change": "True"})
+        )
+
 
     def test_responds_with_422_if_the_response_fails_to_create(self):
         ResponseSetFactory.create(user=self.user, eligible=True)

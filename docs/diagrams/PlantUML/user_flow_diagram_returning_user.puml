@@ -1,0 +1,20 @@
+@startuml
+
+entity "In Health" as InHealth
+actor "Participant" as Participant
+entity "LCS App" as LCS_App
+entity "NHS Login" as NHS_Login
+entity "NHS Incentivisation system" as NHS_Incentivisation_System
+
+' Participant flow
+InHealth -> Participant: Initial contact via letter or SMS
+Participant -> LCS_App
+LCS_App -> NHS_Login: Participant clicks start and is redirected to NHS Login
+NHS_Login -> LCS_App: NHS Login shares profile, email address and NHS Number (scopes "openid profile email")
+Participant -> LCS_App: Completes questionnaire and submits
+
+' In Health flow
+LCS_App -> InHealth: Completed digital participant NHS Numbers shared with InHealth
+InHealth -> LCS_App: In Health shared completed telephone responses corresponding to digital NHS number responses
+LCS_App -> NHS_Incentivisation_System: Eligible participant's email addresses shared with NHS Incentivisation system
+NHS_Incentivisation_System -> Participant: Participant is incentivised

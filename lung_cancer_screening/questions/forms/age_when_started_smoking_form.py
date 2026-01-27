@@ -28,3 +28,18 @@ class AgeWhenStartedSmokingForm(forms.ModelForm):
     class Meta:
         model = AgeWhenStartedSmokingResponse
         fields = ["value"]
+
+
+    def save(self, commit=True):
+        instance = super(AgeWhenStartedSmokingForm, self).save(commit=False)
+
+        self._cleanup_periods_stopped_smoking_if_value_changed()
+
+        if commit:
+            instance.save()
+
+        return instance
+
+    def _cleanup_periods_stopped_smoking_if_value_changed(self):
+        if 'value' in self.changed_data and hasattr(self.instance.response_set, 'periods_when_you_stopped_smoking_response'):
+            self.instance.response_set.periods_when_you_stopped_smoking_response.delete()

@@ -134,7 +134,7 @@ class TestPostRelativesAgeWhenDiagnosed(TestCase):
             response_set.relatives_age_when_diagnosed.value, self.valid_params["value"]
         )
 
-    def test_redirects_to_responses(self):
+    def test_redirects_to_age_when_started_smoking(self):
         response_set = ResponseSetFactory.create(user=self.user, eligible=True)
         FamilyHistoryLungCancerResponseFactory(
             response_set=response_set,

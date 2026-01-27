@@ -10,8 +10,7 @@ class AgeWhenStartedSmokingResponse(BaseModel):
     response_set = models.OneToOneField(ResponseSet, on_delete=models.CASCADE, related_name="age_when_started_smoking_response")
     value = models.PositiveIntegerField(validators=[
         MinValueValidator(1, message="The age you started smoking must be between 1 and your current age")
-    ]
-    )
+    ])
 
     def clean(self):
         super().clean()
@@ -25,8 +24,13 @@ class AgeWhenStartedSmokingResponse(BaseModel):
                 )
         else:
             raise ValidationError({
-                    "value":ValidationError(
-                        "date of birth not set",
-                        code="no_date_of_birth")
-                }
-                )
+                "value":ValidationError(
+                    "date of birth not set",
+                    code="no_date_of_birth")
+            })
+
+    def years_smoked_including_stopped(self):
+        return (
+            self.response_set.date_of_birth_response.age_in_years() -
+            self.value
+        )
