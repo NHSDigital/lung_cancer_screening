@@ -27,6 +27,7 @@ class LiveServer(StaticLiveServerTestCase):
 def before_all(context):
     """Set up before all tests run."""
     # Set up live server (behave-django handles test database)
+    os.system('rm screenshots/*')
     LiveServer.setUpClass()
     context.live_server_url = LiveServer.live_server_url
     context.live_server_class = LiveServer

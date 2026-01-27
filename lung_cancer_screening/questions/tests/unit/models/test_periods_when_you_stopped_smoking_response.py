@@ -65,8 +65,6 @@ class TestPeriodsWhenYouStoppedSmokingResponse(TestCase):
             "Enter the total number of years you stopped smoking for"
         )
 
-
-    @tag("wip")
     def test_is_invalid_if_duration_years_is_less_than_1(self):
         response = PeriodsWhenYouStoppedSmokingResponse(
             response_set=self.response_set,
