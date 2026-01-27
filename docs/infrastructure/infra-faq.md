@@ -1,0 +1,277 @@
+# Infra FAQ
+
+- [Terraform](#terraform)
+
+- [GitHub action triggering Azure devops pipeline](#github-action-triggering-azure-devops-pipeline)
+- [Bicep errors](#bicep-errors)
+- [Front door](#front-door)
+- [Smoke Testing](#smoke-testing)
+
+## Terraform
+
+### Import into terraform state file
+
+To import Azure resources into the Terraform state file, you can use the following command. If you're working on an AVD machine, you may need to set the environment variables:
+
+- `ARM_USE_AZUREAD` to use Azure AD instead of a shared key
+- `MSYS_NO_PATHCONV` to stop git bash from expanding file paths
+
+Below is an example of how to do it.
+
+```shell
+export ARM_USE_AZUREAD=true
+export MSYS_NO_PATHCONV=true
+
+terraform -chdir=infrastructure/terraform/spoke import  -var-file ../environments/${ENV_CONFIG}/variables.tfvars module.infra[0].module.postgres_subnet.azurerm_subnet.subnet  /subscriptions/xxx/resourceGroups/rg-lungcs-review-uks/providers/Microsoft.Network/virtualNetworks/vnet-review-uks-lungcs/subnets/snet-postgres
+```
+
+### Error: Failed to load state
+
+This happens when running terraform commands accessing the state file like [import](#import-into-terraform-state-file), `state list` or `force-unlock`.
+
+```shell
+Failed to load state: blobs.Client#Get: Failure responding to request: StatusCode=403 -- Original Error: autorest/azure: Service returned an error. Status=403 Code="KeyBasedAuthenticationNotPermitted" Message="Key based authentication is not permitted on this storage account.
+```
+
+By default terraform tries using a shared key, which is not allowed. To force using Entra ID, use `ARM_USE_AZUREAD`.
+
+```shell
+ARM_USE_AZUREAD=true terraform force-unlock xxx-yyy
+```
+
+## GitHub action triggering Azure devops pipeline
+
+### Application with identifier '\*\*\*' was not found in the directory
+
+Example:
+
+```shell
+Running Azure CLI Login.
+...
+Attempting Azure CLI login by using OIDC...
+Error: AADSTS700016: Application with identifier '***' was not found in the directory 'NHS Strategic Tenant'. This can happen if the application has not been installed by the administrator of the tenant or consented to by any user in the tenant. You may have sent your authentication request to the wrong tenant. Trace ID: xxx Correlation ID: xxx Timestamp: xxx
+
+Error: Interactive authentication is needed. Please run:
+az login
+```
+
+The managed identity does not exist or GitHub secrets are not set correctly
+
+### The client '\*\*\*' has no configured federated identity credentials
+
+Example:
+
+```shell
+Running Azure CLI Login.
+...
+Attempting Azure CLI login by using OIDC...
+Error: AADSTS70025: The client '***'(mi-lungcs-ado-review-temp) has no configured federated identity credentials. Trace ID: xxx Correlation ID: xxx Timestamp: xxx
+
+Error: Interactive authentication is needed. Please run:
+az login
+```
+
+Federated credentials are not configured.
+
+### No subscriptions found for \*\*\*
+
+Example:
+
+```shell
+Running Azure CLI Login.
+...
+Attempting Azure CLI login by using OIDC...
+Error: No subscriptions found for ***.
+```
+
+Give the managed identity Reader role on a subscription (normally Devops)
+
+### Pipeline permissions
+
+Examples:
+
+```shell
+ERROR: TF401444: Please sign-in at least once as ***\***\xxx in a web browser to enable access to the service.
+Error: Process completed with exit code 1.
+```
+
+Or
+
+```shell
+ERROR: TF400813: The user 'xxx' is not authorized to access this resource.
+Error: Process completed with exit code 1.
+```
+
+Or
+
+```shell
+ERROR: VS800075: The project with id 'vstfs:///Classification/TeamProject/' does not exist, or you do not have permission to access it.
+Error: Process completed with exit code 1.
+```
+
+The GitHub secret must reflect the right managed identity, the managed identity must have the following permissions on the pipeline, via its ADO group:
+
+- Edit queue build configuration
+- Queue builds
+- View build pipeline
+
+The ADO group must have the "View project-level information" permission.
+
+### The service connection does not exist
+
+Example:
+
+```shell
+The pipeline is not valid. Job DeployApp: Step input azureSubscription references service connection lungcs-review which could not be found. The service connection does not exist, has been disabled or has not been authorized for use. For authorization details, refer to https://aka.ms/yamlauthz. Job DeployApp: Step input azureSubscription references service connection lungcs-review which could not be found. The service connection does not exist, has been disabled or has not been authorized for use. For authorization details, refer to https://aka.ms/yamlauthz.
+```
+
+The Azure service connection lungcs-[environment] is missing
+
+## Bicep errors
+
+### RoleAssignmentUpdateNotPermitted
+
+Example:
+
+```shell
+ERROR: {"status":"Failed","error":{"code":"DeploymentFailed","target":"/subscriptions/xxx/providers/Microsoft.Resources/deployments/main","message":"At least one reson failed. Please list deployment operations for details. Please see https://aka.ms/arm-deployment-operations for usage details.","details":[{"code":"RoleAssignmentUpdateNotPermitted","message":"Tenprincipal ID, and scope are not allowed to be updated."},{"code":"RoleAssignmentUpdateNotPermitted","message":"Tenant ID, application ID, principal ID, and scope are not allowed to be updated."},{"cteNotPermitted","message":"Tenant ID, application ID, principal ID, and scope are not allowed to be updated."}]}}
+```
+
+When deleting a MI, its role assignment is not deleted. When recreating the MI, bicep tries to update the role assignment and is not allowed to. Solution:
+
+- Find the role assignment id. Here: abcd-123
+- Navigate to subscriptions and resource group IAM and search for the role assignment id
+- Delete the role assignment via the portal
+
+If you can't find the right scope, follow this process:
+
+- Find the role assignment id. Here: abcd-123
+
+```shell
+ ~ Microsoft.Authorization/roleAssignments/abcd-123 [2022-04-01]
+    ~ properties.principalId: "xxx" => "[reference('/subscriptions/xxx/resourceGroups/rg-mi-review-uks/providers/Microsoft.ManagedIdentity/userAssignedIdentities/mi-lungcs-ado-review-uks', '2024-11-30').principalId]"
+```
+
+- Get the subscription id
+- List role assignments: `az role assignment list --scope "/subscriptions/[subscription id]"`
+- Look for the role assignment id abcd-123 to retrieve the other details. It may named: Unknown.
+- Delete the role assignment via the portal
+
+### PrincipalNotFound
+
+Example:
+
+```shell
+ERROR: {"status":"Failed","error":{"code":"DeploymentFailed","target":"/subscriptions/exxx/providers/Microsoft.Resources/deployments/main","message":"At least one reson failed. Please list deployment operations for details. Please see https://aka.ms/arm-deployment-operations for usage details.","details":[{"code":"PrincipalNotFound","message":"Principal xxx does not exist in the directory xxx. Check that you have the correct principal ID. If you are creating this principal and then immediately assigning a role, this era replication delay. In this case, set the role assignment principalType property to a value, such as ServicePrincipal, User, or Group.  See https://aka.ms/docs-principaltype"}...
+```
+
+Race condition: the managed identity is not created in time for the resources that depend on it. Solution: rerun the command.
+
+### The client does not have permission
+
+```shell
+{"code": "InvalidTemplateDeployment", "message": "Deployment failed with multiple errors: 'Authorization failed for template resource 'xxx' of type 'Microsoft.Authorization/roleAssignments'. The client 'xxx' with object id 'xxx' does not have permission to perform action 'Microsoft.Authorization/roleAssignments/write' at scope '/subscriptions/xxx/providers/Microsoft.Authorization/roleAssignments/xxx'...
+```
+
+Request Owner role on subscriptions via PIM.
+
+## Front door
+
+### Error 504
+
+When an environment is freshly created, accessing the app via front door may result in a blank page and 504 HTTP error.
+
+This is because the private link between front door and the container app environment must be manually approved:
+
+- Navigate to the container app environment, Settings, Networking, Private Endpoints
+- It should show "1 Private Endpoint". Click on it.
+- You should see a connection with Connection State = "Pending"
+- Click on the connection name (a long ID in black, not the blue private endpoint link)
+- Click "✔️ Approve" at the top
+- Wait a few minutes until Connection State shows Approved
+
+### Private link not created
+
+When an origin is created, it must create a unique private link between front door and the container app environment. The private link automatically creates a private endpoint associated with the container app environment. When more origins are added, the same link is used.
+
+If the private endpoint is deleted, for example if container app environment is deleted, the private link is gone and the origins are silently orphans. When the container app environment is recreated, even if the apps and origins are redeployed, azure will not recreate the private link.
+
+All the deployed apps show a blank page and 504 HTTP error.
+
+The solution is to delete all the origins to this particular container app environment. Then when the first origin is re-added, the private link will be created. Recreate the other origins and they will use the same link.
+
+### Unable to write state file to blob storage
+
+When initially creating the terraform; the pipeline will try to create a state file on the blob storage. Sometimes you will get an error like this: -
+
+Example:
+
+```shell
+Failed to get existing workspaces: containers.Client#ListBlobs: Failure sending request: StatusCode=0 -- Original Error: Get "https://salungcspreprodtfstate.blob.core.windows.net/terraform-state?comp=list&prefix=preprod.tfstateenv%3A&restype=container": dial tcp: lookup salungcspreprodtfstate.blob.core.windows.net on *.*.*.*:53: no such host
+```
+
+You can check to see if the blobstorage is accessible via logging into the VDI machine and trying to do an nslookup on the blob storage account: -
+
+```shell
+$ nslookup salungcspreprodtfstate.blob.core.windows.net
+Server: UnKnown
+Address: _._._._
+
+Non-authoritative answer:
+Name: salungcspreprodtfstate.privatelink.blob.core.windows.net
+Address: _._._._
+Aliases: salungcspreprodtfstate.blob.core.windows.net
+```
+
+In the above example it was discoverd that the pipeline pool was on the wrong ADO management pool, i.e on the private-pool-dev-uks instead of the private-pool-prod-uks.
+
+## Smoke Testing
+
+### Smoke test failing with 404 or timeout
+
+The smoke test verifies the deployed application is accessible and serving the correct version.
+
+**Common causes:**
+
+1. **Apex domain misconfiguration**
+   - Production uses apex domain (`manage-breast-screening.nhs.uk`)
+   - Other environments use subdomain (`{env}.manage-breast-screening.nhs.uk`)
+   - Ensure `use_apex_domain = true` is set in `infrastructure/environments/prod/variables.tfvars`
+
+2. **Front Door not approved**
+   - See [Error 504](#error-504) for private link approval steps
+
+3. **Container app not ready**
+   - The test waits up to 5 minutes for the app to become available
+   - Check container app logs in Azure Portal
+
+4. **Wrong SHA deployed**
+   - Verify the correct docker image tag was used in deployment
+   - Check the `/sha` endpoint manually from AVD
+
+**Script location:** `scripts/bash/container_app_smoke_test.sh`
+
+### InsufficientCoreQuota
+
+InsufficientCoreQuota
+Cores needed: 4
+Current limit: 0
+SKU family: standardDSv4Family
+Region: uksouth
+
+This means:
+Your subscription currently has ZERO cores approved for DSv4 VMs in UK South
+Managed DevOps Pools try to allocate 4 cores minimum
+Azure blocks the request before any VM is created
+This is quota, not permissions, not config, not DevOps.
+
+Request quota (correct long-term fix)
+Follow the link Azure gave you (this is the right one):
+
+[Azure Portal](https://portal.azure.com/#view/Microsoft_Azure_Support/NewSupportRequestV3Blade/issueType/quota/%E2%80%A6)
+
+Request:
+   Region: UK South
+   SKU family: Standard DSv4
+   Requested cores: at least 8 (don’t ask for 4 — ask for headroom)
+   Reason: “Azure DevOps Managed DevOps Pool – build agents”

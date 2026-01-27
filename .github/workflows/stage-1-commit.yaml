@@ -77,7 +77,7 @@ jobs:
           fetch-depth: 0 # Full history is needed to compare branches
       - name: "Check English usage"
         uses: ./.github/actions/check-english-usage
-  # Github actiuons dont have terrafomr installed at the moment
+  # GitHub actions dont have terraform installed at the moment
   # lint-terraform:
   #   name: "Lint Terraform"
   #   runs-on: ubuntu-latest

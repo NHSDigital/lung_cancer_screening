@@ -17,11 +17,6 @@ infrastructure/bootstrap/core.bicep:generic-api-key:13
 infrastructure/bootstrap/core.bicep:generic-api-key:14
 infrastructure/bootstrap/hub.bicep:generic-api-key:55
 infrastructure/bootstrap/hub.bicep:generic-api-key:56
-infrastructure/bootstrap/hub.bicep:generic-api-key:57
-infrastructure/bootstrap/hub.bicep:generic-api-key:58
-infrastructure/bootstrap/hub.bicep:generic-api-key:59
-infrastructure/bootstrap/hub.bicep:generic-api-key:60
-infrastructure/bootstrap/hub.bicep:generic-api-key:61
 infrastructure/bootstrap/main.bicep:generic-api-key:29
 infrastructure/bootstrap/main.bicep:generic-api-key:30
 infrastructure/bootstrap/main.bicep:generic-api-key:31
@@ -34,3 +29,8 @@ infrastructure/terraform/hub/data.tf:generic-api-key:23
 infrastructure/terraform/resource_group_init/core.bicep:generic-api-key:11
 infrastructure/terraform/resource_group_init/keyVault.bicep:generic-api-key:10
 infrastructure/terraform/resource_group_init/main.bicep:generic-api-key:30
+# infrastructure/bootstrap/hub.bicep:generic-api-key:57
+# infrastructure/bootstrap/hub.bicep:generic-api-key:58
+# infrastructure/bootstrap/hub.bicep:generic-api-key:59
+# infrastructure/bootstrap/hub.bicep:generic-api-key:60
+# infrastructure/bootstrap/hub.bicep:generic-api-key:61

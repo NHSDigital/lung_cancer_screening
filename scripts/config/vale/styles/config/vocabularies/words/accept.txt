@@ -1,4 +1,5 @@
 [A-Z]+s
+(?i)a(?i)z
 Bitwarden
 bot
 Cyber
@@ -21,4 +22,6 @@ Trufflehog
 Structurizr
 sigterm
 config
-Entra
+(?i)Entra
+lung_cancer_screening
+yaml
