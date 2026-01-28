@@ -8,12 +8,12 @@ param storageAccountName string
 param appShortName string
 
 var hubMap = {
-  dev:                  'dev'
-  int:                  'dev'
-  review:               'dev'
-  nft:                  'dev'
-  preprod:              'prod'
-  prd:                  'prod'
+  dev:                  'nonlive-hub'
+  int:                  'nonlive-hub'
+  review:               'nonlive-hub'
+  nft:                  'nonlive-hub'
+  preprod:              'prod-hub'
+  prd:                  'prod-hub'
 }
 var privateEndpointRGName = 'rg-hub-${envConfig}-uks-hub-private-endpoints'
 var privateDNSZoneRGName = 'rg-hub-${hubMap[envConfig]}-uks-private-dns-zones'
@@ -96,7 +96,7 @@ module terraformStateStorageAccount 'modules/storage.bicep' = {
 }
 
 // Retrieve storage private DNS zone
-module storagePrivateDNSZone 'modules/dns.bicep' = {
+module storagePrivateDNSZone 'modules/dns-spoke.bicep' = {
   scope: privateDNSZoneRG
   params: {
     resourceServiceType: 'storage'
@@ -104,7 +104,7 @@ module storagePrivateDNSZone 'modules/dns.bicep' = {
 }
 
 // Retrieve key vault private DNS zone
-module keyVaultPrivateDNSZone 'modules/dns.bicep' = {
+module keyVaultPrivateDNSZone 'modules/dns-spoke.bicep' = {
   scope: privateDNSZoneRG
   params: {
     resourceServiceType: 'keyVault'
@@ -112,7 +112,7 @@ module keyVaultPrivateDNSZone 'modules/dns.bicep' = {
 }
 
 // Create private endpoint and register DNS
-module storageAccountPrivateEndpoint 'modules/privateEndpoint.bicep' = {
+module storageAccountPrivateEndpoint 'modules/privateEndpoint-spoke.bicep' = {
   scope: privateEndpointResourceGroup
   params: {
     hub: hubMap[envConfig]
@@ -141,7 +141,7 @@ resource infraRG 'Microsoft.Resources/resourceGroups@2024-11-01' = {
 }
 
 // Private endpoint for infra key vault
-module kvPrivateEndpoint 'modules/privateEndpoint.bicep' = {
+module kvPrivateEndpoint 'modules/privateEndpoint-spoke.bicep' = {
   scope: resourceGroup(infraResourceGroupName)
   params: {
     hub: hubMap[envConfig]
