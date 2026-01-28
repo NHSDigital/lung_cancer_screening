@@ -54,10 +54,10 @@ module "virtual-desktop-blue" {
   host_pool_name        = module.config[each.key].names.avd-host-pool
   location              = each.key
 
-  # entra_users_group_id = data.azuread_group.avd_users.id
-  # entra_admins_group_id = data.azuread_group.avd_admins.id
-  entra_users_group_id  = var.ENTRA_USERS_GROUP_ID
-  entra_admins_group_id = var.ENTRA_ADMINS_GROUP_ID
+  entra_users_group_id = data.azuread_group.avd_users.id
+  entra_admins_group_id = data.azuread_group.avd_admins.id
+  # entra_users_group_id  = var.ENTRA_USERS_GROUP_ID
+  # entra_admins_group_id = var.ENTRA_ADMINS_GROUP_ID
 
   maximum_sessions_allowed = var.avd_maximum_sessions_allowed
   resource_group_name      = azurerm_resource_group.avd_blue[each.key].name
@@ -110,10 +110,10 @@ module "virtual-desktop-green" {
   dag_name              = module.config[each.key].names.avd-dag
   host_pool_name        = "${module.config[each.key].names.avd-host-pool}-v2"
   location              = each.key
-  entra_users_group_id  = var.ENTRA_USERS_GROUP_ID
-  entra_admins_group_id = var.ENTRA_ADMINS_GROUP_ID
-  # entra_users_group_id = data.azuread_group.avd_users.id
-  # entra_admins_group_id = data.azuread_group.avd_admins.id
+  # entra_users_group_id  = var.ENTRA_USERS_GROUP_ID
+  # entra_admins_group_id = var.ENTRA_ADMINS_GROUP_ID
+  entra_users_group_id = data.azuread_group.avd_users.id
+  entra_admins_group_id = data.azuread_group.avd_admins.id
   maximum_sessions_allowed  = var.avd_maximum_sessions_allowed
   resource_group_name       = azurerm_resource_group.avd_green[each.key].name
   resource_group_id         = azurerm_resource_group.avd_green[each.key].id
