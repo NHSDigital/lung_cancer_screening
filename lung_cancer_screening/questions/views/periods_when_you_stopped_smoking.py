@@ -12,5 +12,5 @@ class PeriodsWhenYouStoppedSmokingView(LoginRequiredMixin, EnsureResponseSet, En
     template_name = "periods_when_you_stopped_smoking.jinja"
     form_class = PeriodsWhenYouStoppedSmokingForm
     model = PeriodsWhenYouStoppedSmokingResponse
-    success_url = reverse_lazy("questions:responses")
+    success_url = reverse_lazy("questions:types_tobacco_smoking")
     back_link_url = reverse_lazy("questions:age_when_started_smoking")

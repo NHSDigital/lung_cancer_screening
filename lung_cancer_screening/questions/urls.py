@@ -36,6 +36,7 @@ from .views.relatives_age_when_diagnosed import RelativesAgeWhenDiagnosedView
 from .views.respiratory_conditions import RespiratoryConditionsView
 from .views.responses import ResponsesView
 from .views.sex_at_birth import SexAtBirthView
+from .views.types_tobacco_smoking import TypesTobaccoSmokingView
 from .views.start import StartView
 from .views.weight import WeightView
 from .views.confirmation import ConfirmationView
@@ -59,6 +60,7 @@ urlpatterns = [
     path('relatives-age-when-diagnosed', RelativesAgeWhenDiagnosedView.as_view(), name='relatives_age_when_diagnosed'),
     path('respiratory-conditions', RespiratoryConditionsView.as_view(), name='respiratory_conditions'),
     path('periods-when-you-stopped-smoking', PeriodsWhenYouStoppedSmokingView.as_view(), name='periods_when_you_stopped_smoking'),
+    path('types-tobacco-smoking', TypesTobaccoSmokingView.as_view(), name='types_tobacco_smoking'),
     path('check-your-answers', ResponsesView.as_view(), name='responses'),
     path('sex-at-birth', SexAtBirthView.as_view(), name='sex_at_birth'),
     path('start', StartView.as_view(), name='start'),

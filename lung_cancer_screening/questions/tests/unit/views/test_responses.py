@@ -40,34 +40,46 @@ class TestGetResponses(TestCase):
             response, reverse("questions:confirmation")
         )
 
-    def test_get_responds_successfully(self):
-        response = self.client.get(reverse("questions:responses"))
 
-        self.assertEqual(response.status_code, 200)
-
-    def test_get_contains_the_users_responses(self):
-        response_set = ResponseSetFactory.create(user=self.user)
-        DateOfBirthResponseFactory.create(
-            response_set=response_set,
-            value=date(2000, 9, 8)
-        )
+    def test_redirects_when_the_user_is_not_eligible(self):
+        ResponseSetFactory.create(user=self.user, eligible=False)
 
         response = self.client.get(
             reverse("questions:responses")
         )
 
-        self.assertContains(response, "8 September 2000")
+        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+
+
+    def test_get_responds_successfully(self):
+        ResponseSetFactory.create(user=self.user, eligible=True)
+
+        response = self.client.get(reverse("questions:responses"))
+
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_get_contains_the_users_responses(self):
+        response_set = ResponseSetFactory.create(user=self.user, eligible=True)
+
+        response = self.client.get(
+            reverse("questions:responses")
+        )
+
+        self.assertContains(response, response_set.date_of_birth_response.value.strftime("%-d %B %Y"))
+
 
     def test_get_does_not_contain_responses_for_other_users(self):
-        response_set = ResponseSetFactory.create(user=self.user)
-        DateOfBirthResponseFactory.create(response_set=response_set, value=date(2000, 9, 8))
+        ResponseSetFactory.create(user=self.user, eligible=True)
 
         other_response_set = ResponseSetFactory.create()
         DateOfBirthResponseFactory.create(response_set=other_response_set, value=date(1990, 1, 1))
 
         response = self.client.get(reverse("questions:responses"))
 
-        self.assertNotContains(response, "1 January 1990")
+        self.assertNotContains(
+            response, other_response_set.date_of_birth_response.value.strftime("%-d %B %Y")
+        )
 
 
 class TestPostResponses(TestCase):
@@ -103,8 +115,16 @@ class TestPostResponses(TestCase):
         self.assertRedirects(response, reverse("questions:confirmation"))
 
 
+    def test_redirects_when_the_user_is_not_eligible(self):
+        ResponseSetFactory.create(user=self.user, eligible=False)
+
+        response = self.client.post(reverse("questions:responses"))
+
+        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+
+
     def test_post_responds_with_422_if_the_response_set_is_not_complete(self):
-        ResponseSetFactory.create(user=self.user)
+        ResponseSetFactory.create(user=self.user, eligible=True)
 
         response = self.client.post(reverse("questions:responses"))
 
