@@ -1,8 +1,8 @@
-api_oauth_token_url                   = "https://int.api.service.nhs.uk/oauth2/token"
-dns_zone_name                         = "check-if-you-need-a-lung-scan.non-live.screening.nhs.uk"
-enable_entra_id_authentication        = false
-fetch_secrets_from_app_key_vault      = false
-front_door_profile                    = "afd-nonlive-hub-lungcs"
+api_oauth_token_url              = "https://int.api.service.nhs.uk/oauth2/token"
+dns_zone_name                    = "check-if-you-need-a-lung-scan.non-live.screening.nhs.uk"
+enable_entra_id_authentication   = false
+fetch_secrets_from_app_key_vault = false
+front_door_profile               = "afd-nonlive-hub-lungcs"
 # github_mi_name                        = "mi-lungcs-poc-ghtoaz-uks"
 postgres_backup_retention_days        = 7
 postgres_geo_redundant_backup_enabled = false
