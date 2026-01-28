@@ -47,8 +47,8 @@ avd_vm_count                 = 1
 avd_maximum_sessions_allowed = 1 # per session host
 avd_vm_size                  = "Standard_D2ads_v5"
 
-avd_users_group_name         = "screening-lungcs-nonlive-virtual-desktop-user-login"
-avd_admins_group_name        = "screening-lungcs-nonlive-virtual-desktop-admin-login"
+avd_users_group_name  = "screening-lungcs-nonlive-virtual-desktop-user-login"
+avd_admins_group_name = "screening-lungcs-nonlive-virtual-desktop-admin-login"
 
 avd_source_image_from_gallery = {
   image_name      = "gi_wvd"
