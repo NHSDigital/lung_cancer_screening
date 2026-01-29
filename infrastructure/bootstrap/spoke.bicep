@@ -6,6 +6,7 @@ param region string
 param storageAccountRGName string
 param storageAccountName string
 param appShortName string
+param userGroupPrincipalID string
 
 var hubMap = {
   dev:                  'nonlive-hub'
@@ -23,6 +24,7 @@ var keyVaultName = 'kv-lungcs-${envConfig}-inf'
 
 var miADOtoAZname = 'mi-${appShortName}-${envConfig}-adotoaz-uks'
 var miGHtoADOname = 'mi-${appShortName}-${envConfig}-ghtoado-uks'
+var userGroupName = 'screening_${appShortName}_${envConfig}'
 
 // See: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
 var roleID = {
@@ -92,6 +94,8 @@ module terraformStateStorageAccount 'modules/storage.bicep' = {
     enableSoftDelete: enableSoftDelete
     miPrincipalID: managedIdentiyADOtoAZ.outputs.miPrincipalID
     miName: miADOtoAZname
+    userGroupPrincipalID: userGroupPrincipalID
+    userGroupName: userGroupName
   }
 }
 
@@ -163,6 +167,8 @@ module keyVaultModule 'modules/keyVault.bicep' = {
     miName: miADOtoAZname
     miPrincipalId: managedIdentiyADOtoAZ.outputs.miPrincipalID
     region: region
+    userGroupPrincipalID: userGroupPrincipalID
+    userGroupName: userGroupName
   }
 }
 
