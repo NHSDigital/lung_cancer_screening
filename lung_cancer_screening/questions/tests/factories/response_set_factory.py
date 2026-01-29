@@ -44,20 +44,13 @@ class ResponseSetFactory(factory.django.DjangoModelFactory):
         )
 
         complete = factory.Trait(
+            eligible=True,
             asbestos_exposure_response=factory.RelatedFactory(
                 "lung_cancer_screening.questions.tests.factories.asbestos_exposure_response_factory.AsbestosExposureResponseFactory",
                 factory_related_name="response_set"
             ),
             cancer_diagnosis_response=factory.RelatedFactory(
                 "lung_cancer_screening.questions.tests.factories.cancer_diagnosis_response_factory.CancerDiagnosisResponseFactory",
-                factory_related_name="response_set"
-            ),
-            check_need_appointment_response=factory.RelatedFactory(
-                "lung_cancer_screening.questions.tests.factories.check_need_appointment_response_factory.CheckNeedAppointmentResponseFactory",
-                factory_related_name="response_set"
-            ),
-            date_of_birth_response=factory.RelatedFactory(
-                "lung_cancer_screening.questions.tests.factories.date_of_birth_response_factory.DateOfBirthResponseFactory",
                 factory_related_name="response_set"
             ),
             education_response=factory.RelatedFactory(
@@ -74,10 +67,6 @@ class ResponseSetFactory(factory.django.DjangoModelFactory):
             ),
             gender_response=factory.RelatedFactory(
                 "lung_cancer_screening.questions.tests.factories.gender_response_factory.GenderResponseFactory",
-                factory_related_name="response_set"
-            ),
-            have_you_ever_smoked_response=factory.RelatedFactory(
-                "lung_cancer_screening.questions.tests.factories.have_you_ever_smoked_response_factory.HaveYouEverSmokedResponseFactory",
                 factory_related_name="response_set"
             ),
             height_response=factory.RelatedFactory(

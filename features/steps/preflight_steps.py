@@ -77,3 +77,14 @@ def given_i_have_answered_questions_showing_i_stopped_smoking_for_years_years(co
     when_i_check_label(context, "Yes")
     when_i_fill_in_label_with_value(context, "Enter the total number of years you stopped smoking for", years)
     when_i_submit_the_form(context)
+
+
+@given('I have answered questions showing I have smoked "{tobacco_types}"')
+def given_i_have_answered_questions_showing_i_have_smoked_tobacco_type(
+    context, tobacco_types
+):
+    context.page.goto(f"{context.live_server_url}/types-tobacco-smoking")
+
+    for tobacco_type in tobacco_types.split(","):
+        when_i_check_label(context, tobacco_type.strip())
+    when_i_submit_the_form(context)
