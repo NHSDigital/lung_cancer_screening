@@ -22,7 +22,7 @@ Feature: Types tobacco smoking page
     Then I see a back link to "/periods-when-you-stopped-smoking"
     When I check "Cigarettes"
     And I submit the form
-    Then I am on "/check-your-answers"
+    Then I am on "/cigarettes-smoked-total-years"
 
   Scenario: Checking responses and changing them
     Given I am logged in
@@ -41,5 +41,6 @@ Feature: Types tobacco smoking page
     And I see "Cigars" selected
     When I check "Pipe"
     And I click "Continue"
-    Then I am on "/check-your-answers"
-    And I see "Cigarettes, Pipe, and Cigars" as a response to "Types of tobacco smoked" under "Smoking history"
+    Then I am on "/cigarettes-smoked-total-years"
+    When I go to "/check-your-answers"
+    Then I see "Cigarettes, Pipe, and Cigars" as a response to "Types of tobacco smoked" under "Smoking history"

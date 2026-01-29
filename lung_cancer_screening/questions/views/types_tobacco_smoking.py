@@ -1,4 +1,6 @@
-from django.urls import reverse_lazy
+import humps
+
+from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormView
 
@@ -12,7 +14,6 @@ class TypesTobaccoSmokingView(
 ):
     template_name = "types_tobacco_smoking.jinja"
     form_class = TypesTobaccoSmokingForm
-    success_url = reverse_lazy("questions:responses")
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -21,7 +22,7 @@ class TypesTobaccoSmokingView(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["back_link_url"] = reverse_lazy("questions:periods_when_you_stopped_smoking")
+        context["back_link_url"] = reverse("questions:periods_when_you_stopped_smoking")
         return context
 
     def form_valid(self, form):
@@ -29,3 +30,13 @@ class TypesTobaccoSmokingView(
             form.save()
 
         return super(TypesTobaccoSmokingView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse(
+            "questions:smoked_total_years",
+            kwargs={
+                "tobacco_type": humps.kebabize(
+                    self.request.response_set.tobacco_smoking_history.first().type
+                )
+            },
+        )

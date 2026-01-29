@@ -1,6 +1,7 @@
 from django.db import models
+from django.db.models import Case, Value, When
 
-from .base import BaseModel
+from .base import BaseModel, BaseQuerySet
 from .response_set import ResponseSet
 
 
@@ -13,6 +14,16 @@ class TobaccoSmokingHistoryTypes(models.TextChoices):
     SHISHA = "Shisha", "Shisha"
 
 
+class TobaccoSmokingHistoryQuerySet(BaseQuerySet):
+    def in_form_order(self):
+        form_order = [choice[0] for choice in TobaccoSmokingHistoryTypes.choices]
+        order = Case(
+            *[When(type=type_val, then=Value(i)) for i, type_val in enumerate(form_order)],
+            default=Value(len(form_order)),
+        )
+        return self.order_by(order)
+
+
 class TobaccoSmokingHistory(BaseModel):
     response_set = models.ForeignKey(
         ResponseSet,
@@ -23,6 +34,8 @@ class TobaccoSmokingHistory(BaseModel):
         choices=TobaccoSmokingHistoryTypes.choices
     )
 
+    objects = TobaccoSmokingHistoryQuerySet.as_manager()
+
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -31,3 +44,6 @@ class TobaccoSmokingHistory(BaseModel):
                 violation_error_message="A tobacco smoking history already exists for this response set and type"
             )
         ]
+
+    def human_type(self):
+        return TobaccoSmokingHistoryTypes(self.type).label

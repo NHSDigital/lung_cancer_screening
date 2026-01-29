@@ -1,4 +1,7 @@
+import humps
+
 from django.test import TestCase, tag
+from django.urls import reverse
 
 from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.have_you_ever_smoked_response_factory import HaveYouEverSmokedResponseFactory
@@ -17,6 +20,7 @@ from ...factories.relatives_age_when_diagnosed_response_factory import Relatives
 from ...factories.periods_when_you_stopped_smoking_response_factory import PeriodsWhenYouStoppedSmokingResponseFactory
 from ...factories.age_when_started_smoking_response_factory import AgeWhenStartedSmokingResponseFactory
 from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
+from ...factories.smoked_total_years_response_factory import SmokedTotalYearsResponseFactory
 
 from ....models.have_you_ever_smoked_response import HaveYouEverSmokedValues
 from ....models.sex_at_birth_response import SexAtBirthValues
@@ -277,3 +281,63 @@ class TestResponseSetPresenter(TestCase):
         )
         presenter = ResponseSetPresenter(self.response_set)
         self.assertEqual(presenter.types_tobacco_smoking, "Cigarettes, Cigars, and Shisha")
+
+
+    def test_smoking_history_types_responses_items_sets_the_correct_key(self):
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES
+        )
+
+        presenter = ResponseSetPresenter(self.response_set)
+
+        response_items = presenter.smoking_history_types_responses_items()
+        cigarettes_response_item = response_items[0]
+
+        self.assertEqual(
+            cigarettes_response_item.get("key").get("text"),
+            "Total number of years you have smoked cigarettes"
+        )
+
+
+    def test_smoking_history_types_responses_items_sets_the_correct_value(self):
+        cigarettes = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set, type=TobaccoSmokingHistoryTypes.CIGARETTES
+        )
+        smoked_total_years_response = SmokedTotalYearsResponseFactory.create(
+            tobacco_smoking_history=cigarettes,
+        )
+
+        presenter = ResponseSetPresenter(self.response_set)
+
+        response_items = presenter.smoking_history_types_responses_items()
+        cigarettes_response_item = response_items[0]
+
+        self.assertEqual(
+            cigarettes_response_item.get("value").get("text"),
+            smoked_total_years_response.value,
+        )
+
+
+    def test_smoking_history_types_responses_items_sets_the_correct_change_link(self):
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set, type=TobaccoSmokingHistoryTypes.CIGARETTES
+        )
+
+        presenter = ResponseSetPresenter(self.response_set)
+
+        response_items = presenter.smoking_history_types_responses_items()
+        cigarettes_response_item = response_items[0]
+
+        self.assertEqual(
+            cigarettes_response_item.get("actions").get("items")[0].get("href"),
+            reverse(
+                "questions:smoked_total_years",
+                kwargs={
+                    "tobacco_type": humps.kebabize(
+                        TobaccoSmokingHistoryTypes.CIGARETTES
+                    )
+                },
+                query={"change": "True"},
+            ),
+        )
