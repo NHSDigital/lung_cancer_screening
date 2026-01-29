@@ -1,8 +1,6 @@
-import humps
-import inflection
-
 from decimal import Decimal
 from django.urls import reverse
+from inflection import dasherize, singularize
 
 from ..models.education_response import EducationValues
 from ..models.respiratory_conditions_response import RespiratoryConditionValues
@@ -250,11 +248,10 @@ class ResponseSetPresenter:
 
         return items
 
-
     def smoking_history_types_responses_items(self):
         items = []
         for type_history in self.response_set.tobacco_smoking_history.in_form_order():
-            tobacco_type_kwargs = {"tobacco_type": humps.kebabize(type_history.type)}
+            tobacco_type_kwargs = {"tobacco_type": dasherize(type_history.type).lower()}
             type_label = type_history.human_type().lower()
 
             items.append(self._check_your_answer_item(
@@ -264,7 +261,7 @@ class ResponseSetPresenter:
                 kwargs=tobacco_type_kwargs,
             ))
             items.append(self._check_your_answer_item(
-                f"Current {inflection.singularize(type_label)} smoking",
+                f"Current {singularize(type_label)} smoking",
                 f"{type_history.smoked_amount_response.value} {type_label} per day" if hasattr(type_history, 'smoked_amount_response') else None,
                 "questions:smoked_amount",
                 kwargs=tobacco_type_kwargs,
