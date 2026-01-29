@@ -462,7 +462,7 @@ class TestResponseSetPresenter(TestCase):
             response_set=self.response_set, type=TobaccoSmokingHistoryTypes.CIGARETTES
         )
         smoked_total_years_response = SmokedTotalYearsResponseFactory.create(
-            tobacco_smoking_history=cigarettes
+            tobacco_smoking_history=cigarettes,
         )
 
         presenter = ResponseSetPresenter(self.response_set)
