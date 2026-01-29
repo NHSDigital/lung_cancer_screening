@@ -1,3 +1,4 @@
+@SmokingHistory
 @PeriodsWhenYouStoppedSmoking
 Feature: Periods when you stopped smoking page
   Scenario: The page is accessible

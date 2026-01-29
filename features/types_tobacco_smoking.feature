@@ -1,3 +1,4 @@
+@SmokingHistory
 @TypesTobaccoSmoking
 Feature: Types tobacco smoking page
   Scenario: The page is accessible

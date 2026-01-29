@@ -1,4 +1,4 @@
-import humps
+from inflection import dasherize, singularize
 
 from decimal import Decimal
 from django.urls import reverse
@@ -261,30 +261,36 @@ class ResponseSetPresenter:
         return results
 
     def smoking_history_summary_items_for_type(self, type_history):
-        return [self._check_your_answer_item(
-                f"Do you currently smoke {type_history.human_type().lower()}?",
+        type_label = type_history.human_type().lower()
+        tobacco_type_kwargs = {"tobacco_type": dasherize(type_history.type).lower()}
+
+        return [
+            self._check_your_answer_item(
+                f"Do you currently smoke {type_label}?",
                 self._boolean_response_to_yes_no(type_history, "smoking_current_response"),
                 "questions:smoking_current",
-                kwargs = { "tobacco_type": humps.kebabize(type_history.type) }
+                kwargs=tobacco_type_kwargs
             ),
-            (self._check_your_answer_item(
-                f"Total number of years you have smoked {type_history.human_type().lower()}",
+            self._check_your_answer_item(
+                f"Total number of years you have smoked {type_label}",
                 type_history.smoked_total_years_response.value if hasattr(type_history, 'smoked_total_years_response') else self.NOT_ANSWERED_TEXT,
                 "questions:smoked_total_years",
-                kwargs = { "tobacco_type": humps.kebabize(type_history.type) }
-            )),
-            (self._check_your_answer_item(
-                f"Current {type_history.human_type().lower()} smoking",
+                kwargs = tobacco_type_kwargs
+            ),
+            self._check_your_answer_item(
+                f"Current {singularize(type_label)} smoking",
                 self._smoking_type_to_text(type_history),
                 "questions:smoking_frequency",
-                kwargs = { "tobacco_type": humps.kebabize(type_history.type) }
-            ))
+                kwargs = tobacco_type_kwargs
+            )
         ]
 
+
     def _smoking_type_to_text(self, type_history):
-        if not hasattr(type_history, 'smoking_frequency_response'):
+        if not hasattr(type_history, 'smoking_frequency_response') or not hasattr(type_history, 'smoked_amount_response'):
             return self.NOT_ANSWERED_TEXT
-        return f"{type_history.human_type()} a {self._frequency_response_to_text(type_history.smoking_frequency_response)}"
+
+        return f"{type_history.smoked_amount_response.value} {type_history.human_type().lower()} a {self._frequency_response_to_text(type_history.smoking_frequency_response)}"
 
     def _frequency_response_to_text(self, frequency_response):
         if frequency_response.value == SmokingFrequencyValues.DAILY:

@@ -1,3 +1,4 @@
+@SmokingHistory
 @SmokingCurrent
 Feature: Smoking current page
   Scenario: The page is accessible
@@ -39,5 +40,6 @@ Feature: Smoking current page
     Then I am on "/cigarettes-smoking-current?change=True"
     And I see "Yes" selected
     When I check "No" and submit
-    Then I am on "/check-your-answers"
-    And I see "No" as a response to "Do you currently smoke cigarettes?" under "Smoking history"
+    Then I am on "/cigarettes-smoked-total-years?change=True"
+    When I go to "/check-your-answers"
+    Then I see "No" as a response to "Do you currently smoke cigarettes?" under "Smoking history"

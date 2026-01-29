@@ -1,7 +1,6 @@
-import humps
-
 from django.test import TestCase, tag
 from django.urls import reverse
+from inflection import dasherize
 
 from lung_cancer_screening.questions.models.tobacco_smoking_history import TobaccoSmokingHistoryTypes
 from lung_cancer_screening.questions.tests.factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
@@ -143,10 +142,11 @@ class TestPostSmokingCurrent(TestCase):
         )
 
         self.assertRedirects(response, reverse("questions:smoked_total_years", kwargs={
-            "tobacco_type": humps.kebabize(TobaccoSmokingHistoryTypes.CIGARETTES.value)
+            "tobacco_type": dasherize(TobaccoSmokingHistoryTypes.CIGARETTES.value).lower()
         }), fetch_redirect_response=False)
 
-    def test_redirects_to_responses_if_change_query_param_is_true(self):
+
+    def test_redirects_to_next_question_forwarding_the_change_query_param(self):
         response = self.client.post(
             reverse("questions:smoking_current", kwargs = {
                 "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
@@ -157,7 +157,12 @@ class TestPostSmokingCurrent(TestCase):
             }
         )
 
-        self.assertRedirects(response, reverse("questions:responses"))
+        self.assertRedirects(response, reverse("questions:smoked_total_years",
+            kwargs={
+                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+            },
+            query={"change": "True"}
+        ), fetch_redirect_response=False)
 
 
     def test_responds_with_422_if_the_response_fails_to_create(self):
