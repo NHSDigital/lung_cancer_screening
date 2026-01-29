@@ -120,6 +120,8 @@ module terraformStateStorageAccount 'modules/storage.bicep' = {
     enableSoftDelete: true
     miPrincipalID: managedIdentiyHub.outputs.miPrincipalID
     miName: miHub
+    userGroupPrincipalID: userGroupPrincipalID
+    userGroupName: userGroupName
   }
 }
 

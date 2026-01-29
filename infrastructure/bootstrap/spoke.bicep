@@ -36,20 +36,24 @@ var roleID = {
 }
 
 // Retrieve existing terraform state resource group
-resource storageAccountRG 'Microsoft.Resources/resourceGroups@2024-11-01' existing = {
+resource storageAccountRG 'Microsoft.Resources/resourceGroups@2024-11-01' = {
   name: storageAccountRGName
+  location: region
 }
 // Retrieve existing private endpoint resource group
-resource privateEndpointResourceGroup 'Microsoft.Resources/resourceGroups@2024-11-01' existing = {
+resource privateEndpointResourceGroup 'Microsoft.Resources/resourceGroups@2024-11-01' = {
   name: privateEndpointRGName
+  location: region
 }
 // Retrieve existing private DNS zone resource group
-resource privateDNSZoneRG 'Microsoft.Resources/resourceGroups@2024-11-01' existing = {
+resource privateDNSZoneRG 'Microsoft.Resources/resourceGroups@2024-11-01' = {
   name: privateDNSZoneRGName
+  location: region
 }
 // Retrieve existing managed identity resource group
-resource managedIdentityRG 'Microsoft.Resources/resourceGroups@2024-11-01' existing = {
+resource managedIdentityRG 'Microsoft.Resources/resourceGroups@2024-11-01'  = {
   name: managedIdentityRGName
+  location: region
 }
 
 // Create the managed identity assumed by Azure devops to connect to Azure
