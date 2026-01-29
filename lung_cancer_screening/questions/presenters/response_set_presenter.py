@@ -1,4 +1,5 @@
 import humps
+import inflection
 
 from decimal import Decimal
 from django.urls import reverse
@@ -251,15 +252,25 @@ class ResponseSetPresenter:
 
 
     def smoking_history_types_responses_items(self):
-        return [*[
-            self._check_your_answer_item(
-                f"Total number of years you have smoked {type_history.human_type().lower()}",
+        items = []
+        for type_history in self.response_set.tobacco_smoking_history.in_form_order():
+            tobacco_type_kwargs = {"tobacco_type": humps.kebabize(type_history.type)}
+            type_label = type_history.human_type().lower()
+
+            items.append(self._check_your_answer_item(
+                f"Total number of years you have smoked {type_label}",
                 type_history.smoked_total_years_response.value if hasattr(type_history, 'smoked_total_years_response') else None,
                 "questions:smoked_total_years",
-                kwargs = { "tobacco_type": humps.kebabize(type_history.type) },
-            )
-            for type_history in self.response_set.tobacco_smoking_history.in_form_order()
-        ]]
+                kwargs=tobacco_type_kwargs,
+            ))
+            items.append(self._check_your_answer_item(
+                f"Current {inflection.singularize(type_label)} smoking",
+                f"{type_history.smoked_amount_response.value} {type_label} per day" if hasattr(type_history, 'smoked_amount_response') else None,
+                "questions:smoked_amount",
+                kwargs=tobacco_type_kwargs,
+            ))
+
+        return items
 
     def smoking_history_responses_items(self):
         return [
