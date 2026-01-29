@@ -43,7 +43,7 @@ Feature: Date of birth page
 
   Scenario: Checking responses and changing them
     Given I am logged in
-    And I have answered have you ever smoked with an eligible response
+    And I have answered questions showing I am eligible
     When I go to "/date-of-birth"
     And I fill in and submit my date of birth as 55 years ago
     When I go to "/check-your-answers"

@@ -118,7 +118,7 @@ class TestPostPeriodsWhenYouStoppedSmoking(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:responses"))
+        self.assertRedirects(response, reverse("questions:types_tobacco_smoking"))
 
 
     def test_redirects_to_responses_if_change_query_param_is_true(self):
