@@ -26,7 +26,7 @@ Feature: Periods when you stopped smoking page
     When I check "Yes"
     And I fill in "Enter the total number of years you stopped smoking for" with "1"
     And I submit the form
-    Then I am on "/check-your-answers"
+    Then I am on "/types-tobacco-smoking"
 
   Scenario: Checking responses and changing them
     Given I am logged in

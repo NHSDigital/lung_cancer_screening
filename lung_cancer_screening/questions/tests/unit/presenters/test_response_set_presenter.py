@@ -1,4 +1,6 @@
-from django.test import TestCase
+from django.test import TestCase, tag
+from django.urls import reverse
+from inflection import dasherize
 
 from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.have_you_ever_smoked_response_factory import HaveYouEverSmokedResponseFactory
@@ -16,6 +18,8 @@ from ...factories.family_history_lung_cancer_response_factory import FamilyHisto
 from ...factories.relatives_age_when_diagnosed_response_factory import RelativesAgeWhenDiagnosedResponseFactory
 from ...factories.periods_when_you_stopped_smoking_response_factory import PeriodsWhenYouStoppedSmokingResponseFactory
 from ...factories.age_when_started_smoking_response_factory import AgeWhenStartedSmokingResponseFactory
+from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
+from ...factories.smoked_total_years_response_factory import SmokedTotalYearsResponseFactory
 
 from ....models.have_you_ever_smoked_response import HaveYouEverSmokedValues
 from ....models.sex_at_birth_response import SexAtBirthValues
@@ -24,7 +28,7 @@ from ....models.ethnicity_response import EthnicityValues
 from ....models.education_response import EducationValues
 from ....models.family_history_lung_cancer_response import FamilyHistoryLungCancerValues
 from ....models.relatives_age_when_diagnosed_response import RelativesAgeWhenDiagnosedValues
-
+from ....models.tobacco_smoking_history import TobaccoSmokingHistoryTypes
 
 from ....models.respiratory_conditions_response import RespiratoryConditionValues
 
@@ -32,7 +36,7 @@ from ....presenters.response_set_presenter import ResponseSetPresenter
 
 class TestResponseSetPresenter(TestCase):
     def setUp(self):
-        self.response_set = ResponseSetFactory()
+        self.response_set = ResponseSetFactory.create()
 
 
     def test_have_you_ever_smoked_with_no_value(self):
@@ -259,3 +263,80 @@ class TestResponseSetPresenter(TestCase):
         )
         presenter = ResponseSetPresenter(self.response_set)
         self.assertEqual(presenter.relatives_age_when_diagnosed, RelativesAgeWhenDiagnosedValues.YES.label)
+
+    @tag("TypesTobaccoSmoking")
+    def test_types_tobacco_smoking(self):
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.SHISHA
+        )
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARS
+        )
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES
+        )
+        presenter = ResponseSetPresenter(self.response_set)
+        self.assertEqual(presenter.types_tobacco_smoking, "Cigarettes, Cigars, and Shisha")
+
+
+    def test_smoking_history_types_responses_items_sets_the_correct_key(self):
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES
+        )
+
+        presenter = ResponseSetPresenter(self.response_set)
+
+        response_items = presenter.smoking_history_types_responses_items()
+        cigarettes_response_item = response_items[0]
+
+        self.assertEqual(
+            cigarettes_response_item.get("key").get("text"),
+            "Total number of years you have smoked cigarettes"
+        )
+
+
+    def test_smoking_history_types_responses_items_sets_the_correct_value(self):
+        cigarettes = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set, type=TobaccoSmokingHistoryTypes.CIGARETTES
+        )
+        smoked_total_years_response = SmokedTotalYearsResponseFactory.create(
+            tobacco_smoking_history=cigarettes,
+        )
+
+        presenter = ResponseSetPresenter(self.response_set)
+
+        response_items = presenter.smoking_history_types_responses_items()
+        cigarettes_response_item = response_items[0]
+
+        self.assertEqual(
+            cigarettes_response_item.get("value").get("text"),
+            smoked_total_years_response.value,
+        )
+
+
+    def test_smoking_history_types_responses_items_sets_the_correct_change_link(self):
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set, type=TobaccoSmokingHistoryTypes.CIGARETTES
+        )
+
+        presenter = ResponseSetPresenter(self.response_set)
+
+        response_items = presenter.smoking_history_types_responses_items()
+        cigarettes_response_item = response_items[0]
+
+        self.assertEqual(
+            cigarettes_response_item.get("actions").get("items")[0].get("href"),
+            reverse(
+                "questions:smoked_total_years",
+                kwargs={
+                    "tobacco_type": dasherize(
+                        TobaccoSmokingHistoryTypes.CIGARETTES
+                    ).lower()
+                },
+                query={"change": "True"},
+            ),
+        )
