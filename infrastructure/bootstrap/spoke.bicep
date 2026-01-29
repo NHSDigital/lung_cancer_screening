@@ -9,12 +9,12 @@ param appShortName string
 param userGroupPrincipalID string
 
 var hubMap = {
-  dev:                  'nonlive-hub'
-  int:                  'nonlive-hub'
-  review:               'nonlive-hub'
-  nft:                  'nonlive-hub'
-  preprod:              'prod-hub'
-  prd:                  'prod-hub'
+  dev:                  'nonlive'
+  int:                  'nonlive'
+  review:               'nonlive'
+  nft:                  'nonlive'
+  preprod:              'live'
+  prd:                  'live'
 }
 var privateEndpointRGName = 'rg-hub-${envConfig}-uks-hub-private-endpoints'
 var privateDNSZoneRGName = 'rg-hub-${hubMap[envConfig]}-uks-private-dns-zones'
