@@ -1,5 +1,5 @@
-from django.http import Http404
 from inflection import camelize
+from django.http import Http404
 
 class EnsureSmokingHistoryForTypeMixin:
 

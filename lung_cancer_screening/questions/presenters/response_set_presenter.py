@@ -1,7 +1,6 @@
-from inflection import dasherize, singularize
-
 from decimal import Decimal
 from django.urls import reverse
+from inflection import dasherize, singularize
 
 from ..models.respiratory_conditions_response import RespiratoryConditionValues
 
@@ -253,11 +252,11 @@ class ResponseSetPresenter:
 
         return items
 
-
     def smoking_history_types_responses_items(self):
         results = []
         for type_history in self.response_set.tobacco_smoking_history.in_form_order():
             results.extend(self.smoking_history_summary_items_for_type(type_history))
+
         return results
 
     def smoking_history_summary_items_for_type(self, type_history):
