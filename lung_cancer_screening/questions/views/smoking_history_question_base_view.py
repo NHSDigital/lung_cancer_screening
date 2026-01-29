@@ -1,5 +1,4 @@
 from inflection import camelize
-
 from .question_base_view import QuestionBaseView
 
 class SmokingHistoryQuestionBaseView(QuestionBaseView):

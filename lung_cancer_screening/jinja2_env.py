@@ -1,3 +1,5 @@
+import inflection
+
 from django.conf import settings
 from django.templatetags.static import static
 from django.urls import reverse
@@ -36,6 +38,10 @@ def environment(**options):
 
     env.filters.update(
         {"singularize": singularize}
+    )
+
+    env.filters.update(
+        {"singularize": inflection.singularize}
     )
 
     return env
