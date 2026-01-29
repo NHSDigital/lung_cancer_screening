@@ -1,5 +1,5 @@
 application = "hub"
-environment = "nonlive-hub"
+environment = "nonlive"
 env_type    = "nonlive"
 
 features = {

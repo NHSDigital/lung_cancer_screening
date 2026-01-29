@@ -23,7 +23,7 @@ variables:
   - name: TF_PLAN_ARTIFACT
     value: tf_plan_hub_art_NONLIVE_dev
   - name: ENVIRONMENT
-    value: nonlive-hub
+    value: nonlive
 
 stages:
   - stage: terraform_plan
