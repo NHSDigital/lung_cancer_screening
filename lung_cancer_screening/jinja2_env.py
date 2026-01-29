@@ -1,8 +1,7 @@
-import inflection
-
 from django.conf import settings
 from django.templatetags.static import static
 from django.urls import reverse
+from inflection import singularize
 from jinja2 import ChoiceLoader, Environment, PackageLoader
 
 
@@ -31,7 +30,7 @@ def environment(**options):
     )
 
     env.filters.update(
-        {"singularize": inflection.singularize}
+        {"singularize": singularize}
     )
 
     return env
