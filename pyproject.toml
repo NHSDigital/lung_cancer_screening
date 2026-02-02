@@ -24,7 +24,7 @@ package-mode = false
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.14.14"
-playwright = "^1.57.0"
+playwright = "^1.58.0"
 axe-playwright-python = "^0.1.7"
 behave-django = "^1.8.0"
 factory-boy = "^3.3.3"
