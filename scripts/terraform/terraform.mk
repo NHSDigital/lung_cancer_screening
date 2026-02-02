@@ -102,3 +102,29 @@ terraform-validate: terraform-init-no-backend # Validate Terraform changes - mak
 
 terraform-fmt:
 	terraform -chdir=infrastructure/terraform/spoke fmt
+
+
+# TODO: Delete these once we are in production like environments
+poc-terraform-init: set-azure-account get-subscription-ids # Initialise Terraform - make <env> terraform-init
+	$(eval STORAGE_ACCOUNT_NAME=sa${APP_SHORT_NAME}${ENV_CONFIG}tfstate)
+	$(eval export ARM_USE_AZUREAD=true)
+
+	rm -rf infrastructure/modules/dtos-devops-templates
+	git -c advice.detachedHead=false clone --depth=1 --single-branch --branch ${TERRAFORM_MODULES_REF} \
+		https://github.com/NHSDigital/dtos-devops-templates.git infrastructure/modules/dtos-devops-templates
+
+	terraform -chdir=infrastructure/terraform/spoke init -upgrade -reconfigure \
+		-backend-config=subscription_id=${HUB_SUBSCRIPTION_ID} \
+		-backend-config=resource_group_name=${STORAGE_ACCOUNT_RG} \
+		-backend-config=storage_account_name=${STORAGE_ACCOUNT_NAME} \
+		-backend-config=key=${ENVIRONMENT}.tfstate
+
+	$(eval export TF_VAR_app_short_name=${APP_SHORT_NAME})
+	$(eval export TF_VAR_docker_image=${DOCKER_IMAGE}:${DOCKER_IMAGE_TAG})
+	$(eval export TF_VAR_environment=${ENVIRONMENT})
+	$(eval export TF_VAR_env_config=${ENV_CONFIG})
+	$(eval export TF_VAR_hub=${HUB})
+	$(eval export TF_VAR_hub_subscription_id=${HUB_SUBSCRIPTION_ID})
+
+poc-terraform-apply: poc-terraform-init # Apply Terraform changes - make <env> terraform-apply DOCKER_IMAGE_TAG=abcd123
+	terraform -chdir=infrastructure/terraform/spoke apply -var-file ../../environments/${ENV_CONFIG}/variables.tfvars ${AUTO_APPROVE}
