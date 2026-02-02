@@ -16,4 +16,5 @@ from .periods_when_you_stopped_smoking_response import PeriodsWhenYouStoppedSmok
 from .relatives_age_when_diagnosed_response import RelativesAgeWhenDiagnosedResponse # noqa: F401
 from .respiratory_conditions_response import RespiratoryConditionsResponse # noqa: F401
 from .sex_at_birth_response import SexAtBirthResponse # noqa: F401
+from .tobacco_smoking_history import TobaccoSmokingHistory # noqa: F401
 from .weight_response import WeightResponse # noqa: F401

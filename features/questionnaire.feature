@@ -65,9 +65,12 @@ Feature: Questionnaire
     And I fill in "Enter the total number of years you stopped smoking for" with "10"
     And I submit the form
 
-    Then I am on "/check-your-answers"
-    And I see a back link to "/periods-when-you-stopped-smoking"
+    Then I am on "/types-tobacco-smoking"
+    When I check "Cigarettes"
+    And I check "Pipe"
+    And I submit the form
 
+    Then I am on "/check-your-answers"
     And I see "Yes, I used to smoke" as a response to "Have you ever smoked tobacco?" under "Eligibility"
     And I see a date 55 years ago as a response to "Date of birth" under "Eligibility"
 

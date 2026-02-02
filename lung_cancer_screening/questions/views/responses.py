@@ -6,10 +6,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 
 from .mixins.ensure_response_set import EnsureResponseSet
+from .mixins.ensure_eligible import EnsureEligibleMixin
 from ..presenters.response_set_presenter import ResponseSetPresenter
 
 
-class ResponsesView(LoginRequiredMixin, EnsureResponseSet, View):
+class ResponsesView(LoginRequiredMixin, EnsureResponseSet, EnsureEligibleMixin, View):
     def get(self, request):
         return render_template(request, request.response_set)
 
@@ -31,7 +32,7 @@ def render_template(request, response_set, status=200):
         "responses.jinja",
         {
             "response_set": ResponseSetPresenter(request.response_set),
-            "back_link_url": reverse("questions:periods_when_you_stopped_smoking")
+            "back_link_url": reverse("questions:types_tobacco_smoking")
         },
         status=status,
     )
