@@ -39,12 +39,16 @@ class TestResponseSetPresenter(TestCase):
     def setUp(self):
         self.response_set = ResponseSetFactory.create()
 
-
+    @tag("HaveYouEverSmoked")
     def test_have_you_ever_smoked_with_no_value(self):
         presenter = ResponseSetPresenter(self.response_set)
-        self.assertEqual(presenter.have_you_ever_smoked, None)
+        self.assertEqual(
+            presenter.have_you_ever_smoked,
+            ResponseSetPresenter.NOT_ANSWERED_TEXT
+        )
 
 
+    @tag("HaveYouEverSmoked")
     def test_have_you_ever_smoked_with_yes_value(self):
         HaveYouEverSmokedResponseFactory(
             response_set=self.response_set,
@@ -57,13 +61,17 @@ class TestResponseSetPresenter(TestCase):
             HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY.label
         )
 
+    @tag("PeriodsWhenYouStoppedSmoking")
     def test_periods_when_you_stopped_smoking_with_no_value(self):
         presenter = ResponseSetPresenter(self.response_set)
-        self.assertEqual(presenter.periods_when_you_stopped_smoking, None)
+        self.assertEqual(
+            presenter.periods_when_you_stopped_smoking,
+            ResponseSetPresenter.NOT_ANSWERED_TEXT
+        )
 
 
+    @tag("PeriodsWhenYouStoppedSmoking")
     def test_periods_when_you_stopped_smoking_with_value(self):
-        # Create required dependencies
         DateOfBirthResponseFactory(response_set=self.response_set)
         age_when_started_smoking_response = AgeWhenStartedSmokingResponseFactory(response_set=self.response_set)
 
@@ -79,12 +87,16 @@ class TestResponseSetPresenter(TestCase):
             f"Yes ({periods_when_you_stopped_smoking_response.duration_years} years)",
         )
 
-
+    @tag("DateOfBirth")
     def test_what_is_your_date_of_birth_with_no_value(self):
         presenter = ResponseSetPresenter(self.response_set)
-        self.assertEqual(presenter.date_of_birth, None)
+        self.assertEqual(
+            presenter.date_of_birth,
+            ResponseSetPresenter.NOT_ANSWERED_TEXT
+        )
 
 
+    @tag("DateOfBirth")
     def test_what_is_your_date_of_birth_with_value(self):
         DateOfBirthResponseFactory(
             response_set=self.response_set,
@@ -93,11 +105,17 @@ class TestResponseSetPresenter(TestCase):
         presenter = ResponseSetPresenter(self.response_set)
         self.assertEqual(presenter.date_of_birth, "1 January 1990")
 
+
+    @tag("Height")
     def test_what_is_your_height_with_no_value(self):
         presenter = ResponseSetPresenter(self.response_set)
-        self.assertEqual(presenter.height, None)
+        self.assertEqual(
+            presenter.height,
+            ResponseSetPresenter.NOT_ANSWERED_TEXT
+        )
 
 
+    @tag("Height")
     def test_what_is_your_height_with_metric_value(self):
         HeightResponseFactory(
             response_set=self.response_set,
@@ -107,6 +125,7 @@ class TestResponseSetPresenter(TestCase):
         self.assertEqual(presenter.height, "180 cm")
 
 
+    @tag("Height")
     def test_what_is_your_height_with_imperial_value(self):
         HeightResponseFactory(
             response_set=self.response_set,
@@ -116,11 +135,15 @@ class TestResponseSetPresenter(TestCase):
         self.assertEqual(presenter.height, "5 feet 11 inches")
 
 
+    @tag("Weight")
     def test_what_is_your_weight_with_no_value(self):
         presenter = ResponseSetPresenter(self.response_set)
-        self.assertEqual(presenter.weight, None)
+        self.assertEqual(
+            presenter.weight,
+            ResponseSetPresenter.NOT_ANSWERED_TEXT
+        )
 
-
+    @tag("Weight")
     def test_what_is_your_weight_with_value(self):
         WeightResponseFactory(
             response_set=self.response_set,
@@ -130,6 +153,7 @@ class TestResponseSetPresenter(TestCase):
         self.assertEqual(presenter.weight, "70 kg")
 
 
+    @tag("Weight")
     def test_what_is_your_weight_with_imperial_value(self):
         WeightResponseFactory(
             response_set=self.response_set,
@@ -138,10 +162,17 @@ class TestResponseSetPresenter(TestCase):
         presenter = ResponseSetPresenter(self.response_set)
         self.assertEqual(presenter.weight, "11 stone 2 pounds")
 
+
+    @tag("SexAtBirth")
     def test_sex_at_birth_with_no_value(self):
         presenter = ResponseSetPresenter(self.response_set)
-        self.assertEqual(presenter.sex_at_birth, None)
+        self.assertEqual(
+            presenter.sex_at_birth,
+            ResponseSetPresenter.NOT_ANSWERED_TEXT
+        )
 
+
+    @tag("SexAtBirth")
     def test_sex_at_birth_with_value(self):
         SexAtBirthResponseFactory(
             response_set=self.response_set,
@@ -151,11 +182,16 @@ class TestResponseSetPresenter(TestCase):
         self.assertEqual(presenter.sex_at_birth, SexAtBirthValues.MALE.label)
 
 
+    @tag("Gender")
     def test_gender_with_no_value(self):
         presenter = ResponseSetPresenter(self.response_set)
-        self.assertEqual(presenter.gender, None)
+        self.assertEqual(
+            presenter.gender,
+            ResponseSetPresenter.NOT_ANSWERED_TEXT
+        )
 
 
+    @tag("Gender")
     def test_gender_with_value(self):
         GenderResponseFactory(
             response_set=self.response_set,
@@ -165,11 +201,16 @@ class TestResponseSetPresenter(TestCase):
         self.assertEqual(presenter.gender, GenderValues.MALE.label)
 
 
+    @tag("Ethnicity")
     def test_ethnicity_with_no_value(self):
         presenter = ResponseSetPresenter(self.response_set)
-        self.assertEqual(presenter.ethnicity, None)
+        self.assertEqual(
+            presenter.ethnicity,
+            ResponseSetPresenter.NOT_ANSWERED_TEXT
+        )
 
 
+    @tag("Ethnicity")
     def test_ethnicity_with_value(self):
         EthnicityResponseFactory(
             response_set=self.response_set,
@@ -178,10 +219,17 @@ class TestResponseSetPresenter(TestCase):
         presenter = ResponseSetPresenter(self.response_set)
         self.assertEqual(presenter.ethnicity, EthnicityValues.WHITE.label)
 
+
+    @tag("Education")
     def test_education_with_no_value(self):
         presenter = ResponseSetPresenter(self.response_set)
-        self.assertEqual(presenter.education, None)
+        self.assertEqual(
+            presenter.education,
+            ResponseSetPresenter.NOT_ANSWERED_TEXT
+        )
 
+
+    @tag("Education")
     def test_education_with_value(self):
         EducationResponseFactory(
             response_set=self.response_set,
@@ -199,10 +247,16 @@ class TestResponseSetPresenter(TestCase):
         )
 
 
+    @tag("AsbestosExposure")
     def test_asbestos_exposure_with_no_value(self):
         presenter = ResponseSetPresenter(self.response_set)
-        self.assertEqual(presenter.asbestos_exposure, None)
+        self.assertEqual(
+            presenter.asbestos_exposure,
+            ResponseSetPresenter.NOT_ANSWERED_TEXT
+        )
 
+
+    @tag("AsbestosExposure")
     def test_asbestos_exposure_with_value(self):
         AsbestosExposureResponseFactory(
             response_set=self.response_set,
@@ -212,11 +266,16 @@ class TestResponseSetPresenter(TestCase):
         self.assertEqual(presenter.asbestos_exposure, "Yes")
 
 
+    @tag("RespiratoryConditions")
     def test_respiratory_conditions_with_no_value(self):
         presenter = ResponseSetPresenter(self.response_set)
-        self.assertEqual(presenter.respiratory_conditions, None)
+        self.assertEqual(
+            presenter.respiratory_conditions,
+            ResponseSetPresenter.NOT_ANSWERED_TEXT
+        )
 
 
+    @tag("RespiratoryConditions")
     def test_respiratory_conditions_with_value(self):
         RespiratoryConditionsResponseFactory(
             response_set=self.response_set,
@@ -225,11 +284,17 @@ class TestResponseSetPresenter(TestCase):
         presenter = ResponseSetPresenter(self.response_set)
         self.assertEqual(presenter.respiratory_conditions, RespiratoryConditionValues.COPD.label + " and " + RespiratoryConditionValues.BRONCHITIS.label)
 
+
+    @tag("CancerDiagnosis")
     def test_cancer_diagnosis_with_no_value(self):
         presenter = ResponseSetPresenter(self.response_set)
-        self.assertEqual(presenter.cancer_diagnosis, None)
+        self.assertEqual(
+            presenter.cancer_diagnosis,
+            ResponseSetPresenter.NOT_ANSWERED_TEXT
+        )
 
 
+    @tag("CancerDiagnosis")
     def test_cancer_diagnosis_with_value(self):
         CancerDiagnosisResponseFactory(
             response_set=self.response_set,
@@ -239,11 +304,16 @@ class TestResponseSetPresenter(TestCase):
         self.assertEqual(presenter.cancer_diagnosis, "Yes")
 
 
+    @tag("FamilyHistoryLungCancer")
     def test_family_history_lung_cancer_with_no_value(self):
         presenter = ResponseSetPresenter(self.response_set)
-        self.assertEqual(presenter.family_history_lung_cancer, None)
+        self.assertEqual(
+            presenter.family_history_lung_cancer,
+            ResponseSetPresenter.NOT_ANSWERED_TEXT
+        )
 
 
+    @tag("FamilyHistoryLungCancer")
     def test_family_history_lung_cancer_with_value(self):
         FamilyHistoryLungCancerResponseFactory(
             response_set=self.response_set,
@@ -255,11 +325,16 @@ class TestResponseSetPresenter(TestCase):
         self.assertEqual(presenter.family_history_lung_cancer, FamilyHistoryLungCancerValues.YES.label)
 
 
+    @tag("RelativesAgeWhenDiagnosed")
     def test_relative_age_when_diagnosed_with_no_value(self):
         presenter = ResponseSetPresenter(self.response_set)
-        self.assertEqual(presenter.relatives_age_when_diagnosed, None)
+        self.assertEqual(
+            presenter.relatives_age_when_diagnosed,
+            ResponseSetPresenter.NOT_ANSWERED_TEXT
+        )
 
 
+    @tag("RelativesAgeWhenDiagnosed")
     def test_relative_age_when_diagnosed_with_value(self):
         RelativesAgeWhenDiagnosedResponseFactory(
             response_set=self.response_set,
@@ -314,6 +389,35 @@ class TestResponseSetPresenter(TestCase):
                 for item in presenter.family_history_responses_items()
             ],
         )
+
+
+    @tag("AgeWhenStartedSmoking")
+    def test_age_when_started_smoking_with_no_value(self):
+        presenter = ResponseSetPresenter(self.response_set)
+        self.assertEqual(
+            presenter.age_when_started_smoking,
+            ResponseSetPresenter.NOT_ANSWERED_TEXT
+        )
+
+
+    @tag("AgeWhenStartedSmoking")
+    def test_age_when_started_smoking_with_value(self):
+        AgeWhenStartedSmokingResponseFactory(
+            response_set=self.response_set,
+            value=10
+        )
+        presenter = ResponseSetPresenter(self.response_set)
+        self.assertEqual(presenter.age_when_started_smoking, "10")
+
+
+    @tag("TypesTobaccoSmoking")
+    def test_types_tobacco_smoking_with_no_response(self):
+        presenter = ResponseSetPresenter(self.response_set)
+        self.assertEqual(
+            presenter.types_tobacco_smoking,
+            ResponseSetPresenter.NOT_ANSWERED_TEXT
+        )
+
 
     @tag("TypesTobaccoSmoking")
     def test_types_tobacco_smoking(self):

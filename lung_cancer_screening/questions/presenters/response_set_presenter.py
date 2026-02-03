@@ -8,6 +8,7 @@ from ..models.respiratory_conditions_response import RespiratoryConditionValues
 from ..models.family_history_lung_cancer_response import FamilyHistoryLungCancerValues
 
 class ResponseSetPresenter:
+    NOT_ANSWERED_TEXT = "Not answered"
     DATE_FORMAT = "%-d %B %Y" # eg 8 September 2000
 
     def __init__(self, response_set):
@@ -16,14 +17,14 @@ class ResponseSetPresenter:
     @property
     def have_you_ever_smoked(self):
         if not hasattr(self.response_set, 'have_you_ever_smoked_response'):
-            return None
+            return self.NOT_ANSWERED_TEXT
 
         return self.response_set.have_you_ever_smoked_response.get_value_display()
 
     @property
     def periods_when_you_stopped_smoking(self):
         if not hasattr(self.response_set, 'periods_when_you_stopped_smoking_response'):
-            return None
+            return self.NOT_ANSWERED_TEXT
 
         if self.response_set.periods_when_you_stopped_smoking_response.value:
             return f"Yes ({self.response_set.periods_when_you_stopped_smoking_response.duration_years} years)"
@@ -33,14 +34,14 @@ class ResponseSetPresenter:
     @property
     def date_of_birth(self):
         if not hasattr(self.response_set, 'date_of_birth_response'):
-            return None
+            return self.NOT_ANSWERED_TEXT
 
         return self.response_set.date_of_birth_response.value.strftime(self.DATE_FORMAT)
 
     @property
     def height(self):
         if not hasattr(self.response_set, 'height_response'):
-            return None
+            return self.NOT_ANSWERED_TEXT
 
         if self.response_set.height_response.metric:
             return f"{Decimal(self.response_set.height_response.metric) / 10} cm"
@@ -53,7 +54,7 @@ class ResponseSetPresenter:
     @property
     def weight(self):
         if not hasattr(self.response_set, 'weight_response'):
-            return None
+            return self.NOT_ANSWERED_TEXT
 
         if self.response_set.weight_response.metric:
             return f"{Decimal(self.response_set.weight_response.metric) / 10} kg"
@@ -66,28 +67,28 @@ class ResponseSetPresenter:
     @property
     def sex_at_birth(self):
         if not hasattr(self.response_set, 'sex_at_birth_response'):
-            return None
+            return self.NOT_ANSWERED_TEXT
 
         return self.response_set.sex_at_birth_response.get_value_display()
 
     @property
     def gender(self):
         if not hasattr(self.response_set, 'gender_response'):
-            return None
+            return self.NOT_ANSWERED_TEXT
 
         return self.response_set.gender_response.get_value_display()
 
     @property
     def ethnicity(self):
         if not hasattr(self.response_set, 'ethnicity_response'):
-            return None
+            return self.NOT_ANSWERED_TEXT
 
         return self.response_set.ethnicity_response.get_value_display()
 
     @property
     def education(self):
         if not hasattr(self.response_set, 'education_response'):
-            return None
+            return self.NOT_ANSWERED_TEXT
 
         return self._list_to_sentence([
             EducationValues(code).label
@@ -97,42 +98,42 @@ class ResponseSetPresenter:
     @property
     def asbestos_exposure(self):
         if not hasattr(self.response_set, 'asbestos_exposure_response'):
-            return None
+            return self.NOT_ANSWERED_TEXT
 
         return "Yes" if self.response_set.asbestos_exposure_response.value else "No"
 
     @property
     def cancer_diagnosis(self):
         if not hasattr(self.response_set, 'cancer_diagnosis_response'):
-            return None
+            return self.NOT_ANSWERED_TEXT
 
         return "Yes" if self.response_set.cancer_diagnosis_response.value else "No"
 
     @property
     def family_history_lung_cancer(self):
         if not hasattr(self.response_set, 'family_history_lung_cancer'):
-            return None
+            return self.NOT_ANSWERED_TEXT
 
         return self.response_set.family_history_lung_cancer.get_value_display()
 
     @property
     def relatives_age_when_diagnosed(self):
         if not hasattr(self.response_set, 'relatives_age_when_diagnosed'):
-            return None
+            return self.NOT_ANSWERED_TEXT
 
         return self.response_set.relatives_age_when_diagnosed.get_value_display()
 
     @property
     def age_when_started_smoking(self):
         if not hasattr(self.response_set, 'age_when_started_smoking_response'):
-            return None
+            return self.NOT_ANSWERED_TEXT
 
         return str(self.response_set.age_when_started_smoking_response.value)
 
     @property
     def respiratory_conditions(self):
         if not hasattr(self.response_set, 'respiratory_conditions_response'):
-            return None
+            return self.NOT_ANSWERED_TEXT
 
         if RespiratoryConditionValues.NONE in self.response_set.respiratory_conditions_response.value:
             values_sentence = self._list_to_sentence([
@@ -151,6 +152,9 @@ class ResponseSetPresenter:
 
     @property
     def types_tobacco_smoking(self):
+        if self.response_set.tobacco_smoking_history.count() < 1:
+            return self.NOT_ANSWERED_TEXT
+
         return self._list_to_sentence([
             tobacco_smoking_history.human_type()
             for tobacco_smoking_history in self.response_set.tobacco_smoking_history.in_form_order()
