@@ -8,7 +8,7 @@ from ...models.age_when_started_smoking_response import AgeWhenStartedSmokingRes
 def calculate_value(instance):
     if not hasattr(instance.response_set, 'date_of_birth_response'):
         return None
-    return random.randint(1, instance.response_set.date_of_birth_response.age_in_years())
+    return random.randint(10, instance.response_set.date_of_birth_response.age_in_years())
 
 
 class AgeWhenStartedSmokingResponseFactory(factory.django.DjangoModelFactory):

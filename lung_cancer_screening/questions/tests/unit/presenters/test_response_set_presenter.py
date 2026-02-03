@@ -301,11 +301,15 @@ class TestResponseSetPresenter(TestCase):
 
 
     def test_smoking_history_types_responses_items_sets_the_correct_value(self):
+        AgeWhenStartedSmokingResponseFactory.create(
+            response_set=self.response_set,
+            value=10
+        )
         cigarettes = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set, type=TobaccoSmokingHistoryTypes.CIGARETTES
         )
         smoked_total_years_response = SmokedTotalYearsResponseFactory.create(
-            tobacco_smoking_history=cigarettes,
+            tobacco_smoking_history=cigarettes
         )
 
         presenter = ResponseSetPresenter(self.response_set)

@@ -3,12 +3,14 @@ Feature: Types tobacco smoking page
   Scenario: The page is accessible
     Given I am logged in
     And I have answered questions showing I am eligible
+    And I have answered questions showing I have smoked for "10" years
     When I go to "/types-tobacco-smoking"
     Then there are no accessibility violations
 
   Scenario: Form errors
     Given I am logged in
     And I have answered questions showing I am eligible
+    And I have answered questions showing I have smoked for "10" years
     When I go to "/types-tobacco-smoking"
     And I click "Continue"
     Then I am on "/types-tobacco-smoking"
@@ -18,6 +20,7 @@ Feature: Types tobacco smoking page
   Scenario: Navigating backwards and forwards
     Given I am logged in
     And I have answered questions showing I am eligible
+    And I have answered questions showing I have smoked for "10" years
     When I go to "/types-tobacco-smoking"
     Then I see a back link to "/periods-when-you-stopped-smoking"
     When I check "Cigarettes"
@@ -27,6 +30,7 @@ Feature: Types tobacco smoking page
   Scenario: Checking responses and changing them
     Given I am logged in
     And I have answered questions showing I am eligible
+    And I have answered questions showing I have smoked for "10" years
     When I go to "/types-tobacco-smoking"
     And I check "Cigarettes"
     And I check "Cigars"

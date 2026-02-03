@@ -128,4 +128,4 @@ class TestPostTypesTobaccoSmoking(TestCase):
 
         self.assertRedirects(response, reverse("questions:smoked_total_years", kwargs={
             "tobacco_type": humps.kebabize(TobaccoSmokingHistoryTypes.CIGARETTES.value)
-        }))
+        }), fetch_redirect_response=False)

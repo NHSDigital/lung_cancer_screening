@@ -9,4 +9,4 @@ class SmokedTotalYearsResponseFactory(factory.django.DjangoModelFactory):
         model = SmokedTotalYearsResponse
 
     tobacco_smoking_history = factory.SubFactory(TobaccoSmokingHistoryFactory)
-    value = 10
+    value = 1
