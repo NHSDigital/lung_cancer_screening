@@ -22,3 +22,6 @@ lung_cancer_screening/assets/compiled/*
 tests/TEST-*.xml
 node_modules
 screenshots
+
+.coverage
+coverage.xml
