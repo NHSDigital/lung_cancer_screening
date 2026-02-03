@@ -238,9 +238,11 @@ class TestResponseSetPresenter(TestCase):
         presenter = ResponseSetPresenter(self.response_set)
         self.assertEqual(presenter.cancer_diagnosis, "Yes")
 
+
     def test_family_history_lung_cancer_with_no_value(self):
         presenter = ResponseSetPresenter(self.response_set)
         self.assertEqual(presenter.family_history_lung_cancer, None)
+
 
     def test_family_history_lung_cancer_with_value(self):
         FamilyHistoryLungCancerResponseFactory(
@@ -251,6 +253,7 @@ class TestResponseSetPresenter(TestCase):
         presenter = ResponseSetPresenter(self.response_set)
 
         self.assertEqual(presenter.family_history_lung_cancer, FamilyHistoryLungCancerValues.YES.label)
+
 
     def test_relative_age_when_diagnosed_with_no_value(self):
         presenter = ResponseSetPresenter(self.response_set)
@@ -264,6 +267,53 @@ class TestResponseSetPresenter(TestCase):
         )
         presenter = ResponseSetPresenter(self.response_set)
         self.assertEqual(presenter.relatives_age_when_diagnosed, RelativesAgeWhenDiagnosedValues.YES.label)
+
+
+    @tag("FamilyHistoryLungCancer")
+    @tag("RelativesAgeWhenDiagnosed")
+    def test_family_history_responses_when_no_family_history_response_set(self):
+        presenter = ResponseSetPresenter(self.response_set)
+        self.assertNotIn(
+            "Were any of your relatives younger than 60 years old when they were diagnosed with lung cancer?",
+            [
+                item.get("key").get("text")
+                for item in presenter.family_history_responses_items()
+            ],
+        )
+
+
+    @tag("FamilyHistoryLungCancer")
+    @tag("RelativesAgeWhenDiagnosed")
+    def test_family_history_responses_when_no_family_history(self):
+        FamilyHistoryLungCancerResponseFactory(
+            response_set=self.response_set,
+            value=FamilyHistoryLungCancerValues.NO
+        )
+        presenter = ResponseSetPresenter(self.response_set)
+        self.assertNotIn(
+            "Were any of your relatives younger than 60 years old when they were diagnosed with lung cancer?",
+            [
+                item.get("key").get("text")
+                for item in presenter.family_history_responses_items()
+            ],
+        )
+
+
+    @tag("FamilyHistoryLungCancer")
+    @tag("RelativesAgeWhenDiagnosed")
+    def test_family_history_responses_when_family_history(self):
+        FamilyHistoryLungCancerResponseFactory(
+            response_set=self.response_set,
+            value=FamilyHistoryLungCancerValues.YES
+        )
+        presenter = ResponseSetPresenter(self.response_set)
+        self.assertIn(
+            "Were any of your relatives younger than 60 years old when they were diagnosed with lung cancer?",
+            [
+                item.get("key").get("text")
+                for item in presenter.family_history_responses_items()
+            ],
+        )
 
     @tag("TypesTobaccoSmoking")
     def test_types_tobacco_smoking(self):
