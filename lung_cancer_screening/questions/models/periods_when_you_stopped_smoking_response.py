@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator
 
 from .base import BaseModel
 from .response_set import ResponseSet
@@ -8,7 +9,13 @@ from .response_set import ResponseSet
 class PeriodsWhenYouStoppedSmokingResponse(BaseModel):
     response_set = models.OneToOneField(ResponseSet, on_delete=models.CASCADE, related_name='periods_when_you_stopped_smoking_response')
     value = models.BooleanField()
-    duration_years = models.IntegerField(null=True, blank=True)
+    duration_years = models.IntegerField(
+        null=True,
+        blank=True,
+        validators=[
+            MinValueValidator(1, message="The number of years you stopped smoking for must be at least 1")
+        ]
+    )
 
     def clean(self):
         super().clean()
