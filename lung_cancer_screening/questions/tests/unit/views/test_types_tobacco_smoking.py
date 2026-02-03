@@ -1,3 +1,5 @@
+import humps
+
 from django.test import TestCase, tag
 from django.urls import reverse
 
@@ -104,7 +106,7 @@ class TestPostTypesTobaccoSmoking(TestCase):
         self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
 
 
-    def creates_a_tobacco_smoking_type_parent_model_for_each_type_given(self):
+    def test_creates_a_tobacco_smoking_type_parent_model_for_each_type_given(self):
         response_set = ResponseSetFactory.create(user=self.user, eligible=True)
 
         self.client.post(
@@ -117,25 +119,13 @@ class TestPostTypesTobaccoSmoking(TestCase):
         self.assertEqual(response_set.tobacco_smoking_history.first().type, TobaccoSmokingHistoryTypes.CIGARETTES.value)
 
 
-    def test_post_redirects_to_responses(self):
+    def test_post_redirects_to_the_first_type_of_tobacco_smoking_history_question(self):
         ResponseSetFactory.create(user=self.user, eligible=True)
         response = self.client.post(
             reverse("questions:types_tobacco_smoking"),
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:responses"))
-
-
-    def test_post_redirects_to_responses_if_change_query_param_is_true(self):
-        ResponseSetFactory.create(user=self.user, eligible=True)
-
-        response = self.client.post(
-            reverse("questions:types_tobacco_smoking"),
-            {
-                **self.valid_params,
-                "change": "True"
-            }
-        )
-
-        self.assertRedirects(response, reverse("questions:responses"))
+        self.assertRedirects(response, reverse("questions:smoked_total_years", kwargs={
+            "tobacco_type": humps.kebabize(TobaccoSmokingHistoryTypes.CIGARETTES.value)
+        }), fetch_redirect_response=False)

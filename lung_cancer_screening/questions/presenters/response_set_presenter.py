@@ -1,10 +1,11 @@
+import humps
+
 from decimal import Decimal
 from django.urls import reverse
 
 from ..models.education_response import EducationValues
 from ..models.respiratory_conditions_response import RespiratoryConditionValues
 from ..models.family_history_lung_cancer_response import FamilyHistoryLungCancerValues
-from ..models.tobacco_smoking_history import TobaccoSmokingHistoryTypes
 
 class ResponseSetPresenter:
     DATE_FORMAT = "%-d %B %Y" # eg 8 September 2000
@@ -150,13 +151,9 @@ class ResponseSetPresenter:
 
     @property
     def types_tobacco_smoking(self):
-        types_smoked = self.response_set.tobacco_smoking_history.values_list('type', flat=True)
-
-        types_smoked_ordered = sorted(types_smoked, key=lambda x: TobaccoSmokingHistoryTypes.values.index(x))
-
         return self._list_to_sentence([
-            TobaccoSmokingHistoryTypes(code).label
-            for code in types_smoked_ordered
+            tobacco_smoking_history.human_type()
+            for tobacco_smoking_history in self.response_set.tobacco_smoking_history.in_form_order()
         ])
 
 
@@ -249,6 +246,17 @@ class ResponseSetPresenter:
         return items
 
 
+    def smoking_history_types_responses_items(self):
+        return [*[
+            self._check_your_answer_item(
+                f"Total number of years you have smoked {type_history.human_type().lower()}",
+                type_history.smoked_total_years_response.value if hasattr(type_history, 'smoked_total_years_response') else None,
+                "questions:smoked_total_years",
+                kwargs = { "tobacco_type": humps.kebabize(type_history.type) },
+            )
+            for type_history in self.response_set.tobacco_smoking_history.in_form_order()
+        ]]
+
     def smoking_history_responses_items(self):
         return [
             self._check_your_answer_item(
@@ -265,7 +273,8 @@ class ResponseSetPresenter:
                 "Types of tobacco smoked",
                 self.types_tobacco_smoking,
                 "questions:types_tobacco_smoking",
-            )
+            ),
+            *self.smoking_history_types_responses_items()
         ]
 
 
@@ -296,14 +305,14 @@ class ResponseSetPresenter:
         return { "change": "True" }
 
 
-    def _check_your_answer_item(self, question, value, url_lookup_name):
+    def _check_your_answer_item(self, question, value, url_lookup_name, kwargs = {}):
         return {
             "key": { "text": question },
             "value": { "text": value },
             "actions": {
                 "items": [
                     {
-                        "href": reverse(url_lookup_name, query = self._change_query_params()),
+                        "href": reverse(url_lookup_name, kwargs = kwargs, query = self._change_query_params()),
                         "text": "Change"
                     }
                 ]
