@@ -11,7 +11,7 @@ class AgeWhenStartedSmokingForm(forms.ModelForm):
 
         self.fields["value"] = IntegerField(
             label="How old were you when you started smoking?",
-            label_classes="nhsuk-fieldset__legend--l",
+            label_classes="nhsuk-label--l",
             label_is_page_heading=True,
             classes="nhsuk-input--width-2",
             hint="Give an estimate if you are not sure",
