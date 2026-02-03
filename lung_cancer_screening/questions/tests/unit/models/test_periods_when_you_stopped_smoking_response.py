@@ -66,6 +66,22 @@ class TestPeriodsWhenYouStoppedSmokingResponse(TestCase):
         )
 
 
+    @tag("wip")
+    def test_is_invalid_if_duration_years_is_less_than_1(self):
+        response = PeriodsWhenYouStoppedSmokingResponse(
+            response_set=self.response_set,
+            value=True,
+            duration_years=0
+        )
+        with self.assertRaises(ValidationError) as context:
+            response.full_clean()
+
+        self.assertIn(
+            "The number of years you stopped smoking for must be at least 1",
+            context.exception.message_dict["duration_years"],
+        )
+
+
     def test_is_valid_if_duration_years_is_set_and_value_is_true(self):
         response = PeriodsWhenYouStoppedSmokingResponse(
             response_set=self.response_set,
