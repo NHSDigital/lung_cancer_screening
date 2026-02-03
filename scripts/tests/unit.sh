@@ -35,8 +35,9 @@ else
   TEST_MODULE=""
 fi
 
-env UID="$(id -u)" docker compose run --rm web \
-  poetry run python manage.py test $TEST_MODULE $TAG \
+env UID="$(id -u)" docker compose run --rm web sh -c " \
+  poetry run coverage run manage.py test $TEST_MODULE $TAG \
   --settings=lung_cancer_screening.settings_test \
-  --exclude-tag=accessibility
-
+  --exclude-tag=accessibility && \
+  coverage report -m --skip-covered \
+"
