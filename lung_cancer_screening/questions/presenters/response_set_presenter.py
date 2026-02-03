@@ -282,7 +282,6 @@ class ResponseSetPresenter:
         return self.response_set.is_complete()
 
 
-
     def _list_to_sentence(self, list, final_separator = "and"):
         if len(list) == 0:
             return ''
@@ -295,10 +294,10 @@ class ResponseSetPresenter:
 
 
     def _should_display_relatives_age_when_diagnosed(self):
-        if not hasattr(self.response_set, 'family_history_lung_cancer'):
-            return False
-
-        return self.response_set.family_history_lung_cancer != FamilyHistoryLungCancerValues.YES
+        return (
+            hasattr(self.response_set, "family_history_lung_cancer")
+            and self.response_set.family_history_lung_cancer.value == FamilyHistoryLungCancerValues.YES
+        )
 
 
     def _change_query_params(self):
