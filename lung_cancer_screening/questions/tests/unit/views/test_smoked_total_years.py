@@ -94,7 +94,7 @@ class TestPostSmokedTotalYears(TestCase):
             response_set=self.response_set,
             type=TobaccoSmokingHistoryTypes.CIGARETTES.value
         )
-        self.valid_params = {"value": 10}
+        self.valid_params = {"value": 1}
 
 
     def test_redirects_if_the_user_is_not_logged_in(self):
