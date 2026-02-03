@@ -9,7 +9,7 @@ class DateOfBirthResponseFactory(factory.django.DjangoModelFactory):
         model = DateOfBirthResponse
 
     response_set = factory.SubFactory(ResponseSetFactory)
-    value = factory.Faker('date_of_birth', minimum_age=10, maximum_age=74)
+    value = factory.Faker('date_of_birth', minimum_age=55, maximum_age=74)
 
     class Params:
         eligible = factory.Trait(
