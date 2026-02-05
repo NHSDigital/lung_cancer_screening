@@ -1,4 +1,7 @@
 @AgeWhenStartedSmoking
+@SmokedTotalYears
+@SmokedAmount
+@Questionnaire
 Feature: Questionnaire
   Scenario: Cannot change responses once submitted
     Given I am logged in
@@ -74,6 +77,10 @@ Feature: Questionnaire
     When I fill in "Roughly how many years have you smoked cigarettes?" with "10"
     And I submit the form
 
+    Then I am on "/cigarettes-smoked-amount"
+    When I fill in "Roughly how many cigarettes do you smoke in a normal day?" with "15"
+    And I submit the form
+
     Then I am on "/check-your-answers"
     And I see "Yes, I used to smoke" as a response to "Have you ever smoked tobacco?" under "Eligibility"
     And I see a date 55 years ago as a response to "Date of birth" under "Eligibility"
@@ -95,6 +102,7 @@ Feature: Questionnaire
     And I see "Yes (10 years)" as a response to "Have you ever stopped smoking for periods of 1 year or longer?" under "Smoking history"
 
     And I see "10" as a response to "Total number of years you have smoked cigarettes" under "Smoking history"
+    And I see "15 cigarettes per day" as a response to "Current cigarette smoking" under "Smoking history"
 
     When I click "Submit"
     Then I am on "/confirmation"

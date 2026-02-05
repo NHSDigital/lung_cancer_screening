@@ -187,7 +187,10 @@ class TestPostSmokedTotalYears(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:responses"))
+        self.assertRedirects(
+            response,
+            reverse("questions:smoked_amount", kwargs={"tobacco_type": "cigarettes"})
+        )
 
 
     def test_redirects_to_responses_if_change_query_param_is_true(self):

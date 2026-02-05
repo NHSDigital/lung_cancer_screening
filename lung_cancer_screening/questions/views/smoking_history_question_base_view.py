@@ -1,4 +1,5 @@
-import humps
+from inflection import camelize
+
 from .question_base_view import QuestionBaseView
 
 class SmokingHistoryQuestionBaseView(QuestionBaseView):
@@ -9,5 +10,5 @@ class SmokingHistoryQuestionBaseView(QuestionBaseView):
 
     def _get_history_item_for_type(self):
         return self.request.response_set.tobacco_smoking_history.filter(
-            type=humps.pascalize(self.kwargs["tobacco_type"])
+            type=camelize(self.kwargs["tobacco_type"])
         ).first()

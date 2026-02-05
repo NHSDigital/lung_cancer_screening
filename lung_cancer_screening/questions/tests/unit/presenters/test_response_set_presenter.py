@@ -1,7 +1,6 @@
-import humps
-
 from django.test import TestCase, tag
 from django.urls import reverse
+from inflection import dasherize
 
 from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.have_you_ever_smoked_response_factory import HaveYouEverSmokedResponseFactory
@@ -463,7 +462,7 @@ class TestResponseSetPresenter(TestCase):
             response_set=self.response_set, type=TobaccoSmokingHistoryTypes.CIGARETTES
         )
         smoked_total_years_response = SmokedTotalYearsResponseFactory.create(
-            tobacco_smoking_history=cigarettes
+            tobacco_smoking_history=cigarettes,
         )
 
         presenter = ResponseSetPresenter(self.response_set)
@@ -492,9 +491,9 @@ class TestResponseSetPresenter(TestCase):
             reverse(
                 "questions:smoked_total_years",
                 kwargs={
-                    "tobacco_type": humps.kebabize(
+                    "tobacco_type": dasherize(
                         TobaccoSmokingHistoryTypes.CIGARETTES
-                    )
+                    ).lower()
                 },
                 query={"change": "True"},
             ),

@@ -1,5 +1,5 @@
-from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .mixins.ensure_response_set import EnsureResponseSet
@@ -26,5 +26,10 @@ class SmokedTotalYearsView(
     template_name = "question_form.jinja"
     form_class = SmokedTotalYearsForm
     model = SmokedTotalYearsResponse
-    success_url = reverse_lazy("questions:responses")
     back_link_url = reverse_lazy("questions:types_tobacco_smoking")
+
+    def get_success_url(self):
+        if self.should_redirect_to_responses(self.request):
+            return reverse("questions:responses")
+
+        return reverse("questions:smoked_amount", kwargs={"tobacco_type": self.kwargs["tobacco_type"]})

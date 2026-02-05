@@ -1,12 +1,14 @@
 from django.conf import settings
 from django.templatetags.static import static
 from django.urls import reverse
+from inflection import singularize
 from jinja2 import ChoiceLoader, Environment, PackageLoader
 
 
 def environment(**options):
 
     env = Environment(**options, extensions=["jinja2.ext.do"])
+
     if env.loader:
         env.loader = ChoiceLoader(
             [
@@ -25,6 +27,10 @@ def environment(**options):
 
     env.globals.update(
         {"static": static, "url": reverse, "STATIC_URL": settings.STATIC_URL}
+    )
+
+    env.filters.update(
+        {"singularize": singularize}
     )
 
     return env
