@@ -23,7 +23,7 @@
           "href": url("questions:logout")
         }
       ]
-    }
+    } if request.user.is_authenticated else None
   }) }}
 {% endblock header %}
 
