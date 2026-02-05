@@ -8,7 +8,7 @@ RUN npm ci
 RUN npm run compile
 
 
-FROM python:3.14.2-slim AS python_base
+FROM python:3.15.0a5-slim AS python_base
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -33,7 +33,7 @@ RUN pip install poetry
 RUN poetry install --without dev --no-root && rm -rf $POETRY_CACHE_DIR
 
 # Alpine doesn't support playwright
-FROM python:3.14.2-slim AS development
+FROM python:3.15.0a5-slim AS development
 
 ARG UID=1000
 ENV USER=app
