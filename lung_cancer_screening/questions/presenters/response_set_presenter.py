@@ -259,7 +259,7 @@ class ResponseSetPresenter:
     def smoking_history_summary_items_for_type(self, type_history):
         return [self._check_your_answer_item(
                 f"Do you currently smoke {type_history.human_type().lower()}?",
-                ("Yes" if type_history.smoking_current_response.value else "No") if hasattr(type_history, 'smoking_current_response') else self.NOT_ANSWERED_TEXT,
+                self._boolean_response_to_yes_no(type_history, "smoking_current_response"),
                 "questions:smoking_current",
                 kwargs = { "tobacco_type": humps.kebabize(type_history.type) }
             ),
@@ -331,3 +331,13 @@ class ResponseSetPresenter:
                 ]
             }
         }
+
+    def _boolean_response_to_yes_no(self, response, attribute_name, yes_text = "Yes", no_text = "No"):
+        if hasattr(response, attribute_name):
+            result = getattr(response, attribute_name)
+            if result is True:
+                return yes_text
+            elif result is False:
+                return no_text
+        else:
+            return self.NOT_ANSWERED_TEXT
