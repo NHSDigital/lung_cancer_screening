@@ -1,4 +1,3 @@
-@AgeWhenStartedSmoking
 Feature: Questionnaire
   Scenario: Cannot change responses once submitted
     Given I am logged in
@@ -59,7 +58,6 @@ Feature: Questionnaire
     Then I am on "/age-when-started-smoking"
     When I fill in "How old were you when you started smoking?" as "18" and submit
 
-
     Then I am on "/periods-when-you-stopped-smoking"
     When I check "Yes"
     And I fill in "Enter the total number of years you stopped smoking for" with "10"
@@ -69,6 +67,9 @@ Feature: Questionnaire
     When I check "Cigarettes"
     And I check "Pipe"
     And I submit the form
+
+    Then I am on "/cigarettes-smoking-current"
+    When I check "Yes" and submit
 
     Then I am on "/cigarettes-smoked-total-years"
     When I fill in "Roughly how many years have you smoked cigarettes?" with "10"
