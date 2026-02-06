@@ -215,16 +215,6 @@ variable "tags" {
   default     = {}
 }
 
-variable "ENTRA_USERS_GROUP_ID" {
-  description = "Entra ID group ID containing users who can access the hub resources"
-  type        = string
-}
-
-variable "ENTRA_ADMINS_GROUP_ID" {
-  description = "Entra ID group ID containing users who can access the hub resources"
-  type        = string
-}
-
 variable "AVD_OBJECT_ID" {
   description = "AVD Object ID for role assignments"
   type        = string

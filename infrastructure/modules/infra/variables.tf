@@ -54,5 +54,6 @@ variable "protect_keyvault" {
 }
 
 locals {
-  hub_vnet_rg_name = "rg-hub-${var.hub}-uks-hub-networking"
+  hub_vnet_rg_name = "rg-hub-${var.hub}-uks-bootstrap"
+  hub_vnet_name    = "vnet-hub-${var.hub}-uks"
 }

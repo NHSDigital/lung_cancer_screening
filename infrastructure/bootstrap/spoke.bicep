@@ -6,14 +6,13 @@ param region string
 param storageAccountRGName string
 param storageAccountName string
 param appShortName string
+param userGroupPrincipalID string
 
 var hubMap = {
-  dev:                  'dev'
-  int:                  'dev'
-  review:               'dev'
-  nft:                  'dev'
-  preprod:              'prod'
-  prd:                  'prod'
+  dev:                  'nonlive'
+  review:               'nonlive'
+  preprod:              'live'
+  prd:                  'live'
 }
 var privateEndpointRGName = 'rg-hub-${envConfig}-uks-hub-private-endpoints'
 var privateDNSZoneRGName = 'rg-hub-${hubMap[envConfig]}-uks-private-dns-zones'
@@ -23,6 +22,7 @@ var keyVaultName = 'kv-lungcs-${envConfig}-inf'
 
 var miADOtoAZname = 'mi-${appShortName}-${envConfig}-adotoaz-uks'
 var miGHtoADOname = 'mi-${appShortName}-${envConfig}-ghtoado-uks'
+var userGroupName = 'screening_${appShortName}_${envConfig}'
 
 // See: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
 var roleID = {
@@ -34,20 +34,24 @@ var roleID = {
 }
 
 // Retrieve existing terraform state resource group
-resource storageAccountRG 'Microsoft.Resources/resourceGroups@2024-11-01' existing = {
+resource storageAccountRG 'Microsoft.Resources/resourceGroups@2024-11-01' = {
   name: storageAccountRGName
+  location: region
 }
 // Retrieve existing private endpoint resource group
-resource privateEndpointResourceGroup 'Microsoft.Resources/resourceGroups@2024-11-01' existing = {
+resource privateEndpointResourceGroup 'Microsoft.Resources/resourceGroups@2024-11-01' = {
   name: privateEndpointRGName
+  location: region
 }
 // Retrieve existing private DNS zone resource group
-resource privateDNSZoneRG 'Microsoft.Resources/resourceGroups@2024-11-01' existing = {
+resource privateDNSZoneRG 'Microsoft.Resources/resourceGroups@2024-11-01' = {
   name: privateDNSZoneRGName
+  location: region
 }
 // Retrieve existing managed identity resource group
-resource managedIdentityRG 'Microsoft.Resources/resourceGroups@2024-11-01' existing = {
+resource managedIdentityRG 'Microsoft.Resources/resourceGroups@2024-11-01'  = {
   name: managedIdentityRGName
+  location: region
 }
 
 // Create the managed identity assumed by Azure devops to connect to Azure
@@ -92,11 +96,13 @@ module terraformStateStorageAccount 'modules/storage.bicep' = {
     enableSoftDelete: enableSoftDelete
     miPrincipalID: managedIdentiyADOtoAZ.outputs.miPrincipalID
     miName: miADOtoAZname
+    userGroupPrincipalID: userGroupPrincipalID
+    userGroupName: userGroupName
   }
 }
 
 // Retrieve storage private DNS zone
-module storagePrivateDNSZone 'modules/dns.bicep' = {
+module storagePrivateDNSZone 'modules/dns-spoke.bicep' = {
   scope: privateDNSZoneRG
   params: {
     resourceServiceType: 'storage'
@@ -104,15 +110,16 @@ module storagePrivateDNSZone 'modules/dns.bicep' = {
 }
 
 // Retrieve key vault private DNS zone
-module keyVaultPrivateDNSZone 'modules/dns.bicep' = {
+module keyVaultPrivateDNSZone 'modules/dns-spoke.bicep' = {
   scope: privateDNSZoneRG
   params: {
     resourceServiceType: 'keyVault'
   }
 }
 
+
 // Create private endpoint and register DNS
-module storageAccountPrivateEndpoint 'modules/privateEndpoint.bicep' = {
+module storageAccountPrivateEndpoint 'modules/privateEndpoint-spoke.bicep' = {
   scope: privateEndpointResourceGroup
   params: {
     hub: hubMap[envConfig]
@@ -140,19 +147,6 @@ resource infraRG 'Microsoft.Resources/resourceGroups@2024-11-01' = {
   location: region
 }
 
-// Private endpoint for infra key vault
-module kvPrivateEndpoint 'modules/privateEndpoint.bicep' = {
-  scope: resourceGroup(infraResourceGroupName)
-  params: {
-    hub: hubMap[envConfig]
-    region: region
-    name: keyVaultName
-    resourceServiceType: 'keyVault'
-    resourceID: keyVaultModule.outputs.keyVaultID
-    privateDNSZoneID: keyVaultPrivateDNSZone.outputs.privateDNSZoneID
-  }
-}
-
 // Use a module to deploy Key Vault into the infra RG
 module keyVaultModule 'modules/keyVault.bicep' = {
   name: 'keyVaultDeployment'
@@ -163,6 +157,21 @@ module keyVaultModule 'modules/keyVault.bicep' = {
     miName: miADOtoAZname
     miPrincipalId: managedIdentiyADOtoAZ.outputs.miPrincipalID
     region: region
+    userGroupPrincipalID: userGroupPrincipalID
+    userGroupName: userGroupName
+  }
+}
+
+// Private endpoint for infra key vault
+module kvPrivateEndpoint 'modules/privateEndpoint-spoke.bicep' = {
+  scope: resourceGroup(infraResourceGroupName)
+  params: {
+    hub: hubMap[envConfig]
+    region: region
+    name: keyVaultName
+    resourceServiceType: 'keyVault'
+    resourceID: keyVaultModule.outputs.keyVaultID
+    privateDNSZoneID: keyVaultPrivateDNSZone.outputs.privateDNSZoneID
   }
 }
 

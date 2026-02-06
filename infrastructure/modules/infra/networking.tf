@@ -49,7 +49,7 @@ data "azurerm_virtual_network" "hub" {
 
   provider = azurerm.hub
 
-  name                = "VNET-${var.hub}-uks-hub"
+  name                = local.hub_vnet_name
   resource_group_name = local.hub_vnet_rg_name
 }
 
@@ -131,4 +131,3 @@ data "azurerm_private_dns_zone" "key-vault" {
   name                = "privatelink.vaultcore.azure.net"
   resource_group_name = "rg-hub-${var.hub}-uks-private-dns-zones"
 }
-

@@ -5,6 +5,7 @@ bot
 Cyber
 Dependabot
 Gitleaks
+Github
 Grype
 idempotence
 OAuth
@@ -25,3 +26,6 @@ config
 (?i)Entra
 lung_cancer_screening
 yaml
+(?i)sha
+jq
+choco

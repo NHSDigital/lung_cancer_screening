@@ -220,7 +220,7 @@ module managedIdentiyGHtoADO 'modules/managedIdentity.bicep' = {
     fedCredProperties: {
       audiences: [ 'api://AzureADTokenExchange' ]
       issuer: 'https://token.actions.githubusercontent.com'
-      subject: 'repo:NHSDigital/dtos-manage-breast-screening:environment:${hubType}'
+      subject: 'repo:NHSDigital/lung_cancer_screening:environment:${hubType}'
     }
     region: region
   }
@@ -258,7 +258,6 @@ module keyVaultPrivateDNSZone 'modules/dns.bicep' = {
     location: region
   }
 }
-
 
 module computeGallery 'modules/computeGallery.bicep' = {
   scope: resourceGroup(resourceGroupName)

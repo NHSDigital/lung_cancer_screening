@@ -23,7 +23,7 @@ fi
 echo "Found group Object ID: $userGroupPrincipalID"
 
 echo "Deploy to hub subscription $HUB_SUBSCRIPTION_ID..."
-az deployment sub create --location "$REGION" --template-file infrastructure/bootstrap/main.bicep \
+az deployment sub create --location "$REGION" --template-file infrastructure/bootstrap/spoke.bicep \
   --subscription "$HUB_SUBSCRIPTION_ID" \
   --parameters enableSoftDelete="$ENABLE_SOFT_DELETE" envConfig="$ENV_CONFIG" region="$REGION" \
     storageAccountRGName="$STORAGE_ACCOUNT_RG" storageAccountName="$STORAGE_ACCOUNT_NAME" \
@@ -32,7 +32,7 @@ az deployment sub create --location "$REGION" --template-file infrastructure/boo
 read -r -p "Are you sure you want to execute the deployment? (y/n): " confirm
 [[ "$confirm" != "y" ]] && exit 0
 
-output=$(az deployment sub create --location "$REGION" --template-file infrastructure/bootstrap/main.bicep \
+output=$(az deployment sub create --location "$REGION" --template-file infrastructure/bootstrap/spoke.bicep \
   --subscription "$HUB_SUBSCRIPTION_ID" \
   --parameters enableSoftDelete="$ENABLE_SOFT_DELETE" envConfig="$ENV_CONFIG" region="$REGION" \
     storageAccountRGName="$STORAGE_ACCOUNT_RG" storageAccountName="$STORAGE_ACCOUNT_NAME" \

@@ -14,8 +14,8 @@ else
     ENV=pr-${PR_NUMBER}
 fi
 
-JOB_NAME=manbrs-${JOB_SHORT_NAME}-${ENV}
-RG_NAME=rg-manbrs-${ENV}-container-app-uks
+JOB_NAME=lungcs-${JOB_SHORT_NAME}-${ENV}
+RG_NAME=rg-lungcs-${ENV}-container-app-uks
 TIMEOUT=300
 WAIT=5
 count=0

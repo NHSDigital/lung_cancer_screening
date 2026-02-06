@@ -67,7 +67,14 @@ terraform-init: set-azure-account get-subscription-ids # Initialise Terraform - 
 		-backend-config=storage_account_name=${STORAGE_ACCOUNT_NAME} \
 		-backend-config=key=${ENVIRONMENT}.tfstate
 
-	terraform-hub-init: set-azure-account get-subscription-ids # Initialise Terraform - make <env> terraform-init
+	$(eval export TF_VAR_app_short_name=${APP_SHORT_NAME})
+	$(eval export TF_VAR_docker_image=${DOCKER_IMAGE}:${DOCKER_IMAGE_TAG})
+	$(eval export TF_VAR_environment=${ENVIRONMENT})
+	$(eval export TF_VAR_env_config=${ENV_CONFIG})
+	$(eval export TF_VAR_hub=${HUB})
+	$(eval export TF_VAR_hub_subscription_id=${HUB_SUBSCRIPTION_ID})
+
+terraform-hub-init: set-azure-account get-subscription-ids # Initialise Terraform - make <env> terraform-init
 	$(eval STORAGE_ACCOUNT_NAME=sa${APP_SHORT_NAME}${ENV_CONFIG}tfstate)
 	$(eval export ARM_USE_AZUREAD=true)
 
@@ -89,13 +96,13 @@ terraform-init: set-azure-account get-subscription-ids # Initialise Terraform - 
 	$(eval export TF_VAR_hub_subscription_id=${HUB_SUBSCRIPTION_ID})
 
 terraform-plan: terraform-init # Plan Terraform changes - make <env> terraform-plan DOCKER_IMAGE_TAG=abcd123
-	terraform -chdir=infrastructure/terraform/spoke plan -var-file ../environments/${ENV_CONFIG}/variables.tfvars
+	terraform -chdir=infrastructure/terraform/spoke plan -var-file ../../environments/${ENV_CONFIG}/variables.tfvars
 
 terraform-apply: terraform-init # Apply Terraform changes - make <env> terraform-apply DOCKER_IMAGE_TAG=abcd123
-	terraform -chdir=infrastructure/terraform/spoke apply -var-file ../environments/${ENV_CONFIG}/variables.tfvars ${AUTO_APPROVE}
+	terraform -chdir=infrastructure/terraform/spoke apply -var-file ../../environments/${ENV_CONFIG}/variables.tfvars ${AUTO_APPROVE}
 
 terraform-destroy: terraform-init # Destroy Terraform resources - make <env> terraform-destroy
-	terraform -chdir=infrastructure/terraform/spoke destroy -var-file ../environments/${ENV_CONFIG}/variables.tfvars ${AUTO_APPROVE}
+	terraform -chdir=infrastructure/terraform/spoke destroy -var-file ../../environments/${ENV_CONFIG}/variables.tfvars ${AUTO_APPROVE}
 
 terraform-validate: terraform-init-no-backend # Validate Terraform changes - make <env> terraform-validate
 	terraform -chdir=infrastructure/terraform/spoke validate
