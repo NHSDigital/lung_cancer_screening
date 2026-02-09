@@ -1,3 +1,4 @@
+@Basic
 Feature: Questionnaire
   Scenario: Cannot change responses once submitted
     Given I am logged in
@@ -74,6 +75,9 @@ Feature: Questionnaire
     Then I am on "/cigarettes-smoked-total-years"
     When I fill in "Roughly how many years have you smoked cigarettes?" with "10"
     And I submit the form
+
+    Then I am on "/cigarettes-smoking-frequency"
+    When I check "Daily" and submit
 
     Then I am on "/check-your-answers"
     And I see "Yes, I used to smoke" as a response to "Have you ever smoked tobacco?" under "Eligibility"

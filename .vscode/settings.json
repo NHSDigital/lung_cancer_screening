@@ -17,6 +17,7 @@
     "fieldset",
     "gunicorn",
     "jinja",
+    "kebabize",
     "makemigrations",
     "nhsuk",
     "novalidate",

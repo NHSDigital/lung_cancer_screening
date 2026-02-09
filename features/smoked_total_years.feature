@@ -28,7 +28,7 @@ Feature: Smoked total years page
     Then I see a back link to "/types-tobacco-smoking"
     When I fill in "Roughly how many years have you smoked cigarettes?" with "9"
     And I submit the form
-    Then I am on "/check-your-answers"
+    Then I am on "/cigarettes-smoking-frequency"
 
   Scenario: Checking responses and changing them
     Given I am logged in

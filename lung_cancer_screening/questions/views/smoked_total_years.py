@@ -26,5 +26,7 @@ class SmokedTotalYearsView(
     template_name = "question_form.jinja"
     form_class = SmokedTotalYearsForm
     model = SmokedTotalYearsResponse
-    success_url = reverse_lazy("questions:responses")
+    success_url = reverse_lazy("questions:smoking_frequency", kwargs={
+        "tobacco_type": "cigarettes"
+    })
     back_link_url = reverse_lazy("questions:types_tobacco_smoking")
