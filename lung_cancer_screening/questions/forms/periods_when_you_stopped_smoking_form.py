@@ -6,6 +6,10 @@ from ..models.periods_when_you_stopped_smoking_response import PeriodsWhenYouSto
 
 
 class PeriodsWhenYouStoppedSmokingForm(forms.ModelForm):
+    class Meta:
+        model = PeriodsWhenYouStoppedSmokingResponse
+        fields = ["value", "duration_years"]
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -35,6 +39,10 @@ class PeriodsWhenYouStoppedSmokingForm(forms.ModelForm):
             },
         )
 
-    class Meta:
-        model = PeriodsWhenYouStoppedSmokingResponse
-        fields = ["value", "duration_years"]
+    def clean_duration_years(self):
+        if self.cleaned_data.get("value") is False:
+            return None
+
+        return self.cleaned_data.get("duration_years")
+
+

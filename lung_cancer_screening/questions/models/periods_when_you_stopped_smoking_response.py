@@ -19,9 +19,19 @@ class PeriodsWhenYouStoppedSmokingResponse(BaseModel):
 
     def clean(self):
         super().clean()
+        self._validate_duration_years_not_set_if_value_is_false()
         self._validate_duration_years()
         self._validate_has_answered_age_started_smoking()
         self._validate_duration_years_is_less_than_time_they_have_smoked()
+
+
+    def _validate_duration_years_not_set_if_value_is_false(self):
+        if self.value is False and self.duration_years is not None:
+            raise ValidationError(
+                {
+                    "duration_years": "duration_years must not be present if value is false"
+                }
+            )
 
 
     def _validate_duration_years(self):

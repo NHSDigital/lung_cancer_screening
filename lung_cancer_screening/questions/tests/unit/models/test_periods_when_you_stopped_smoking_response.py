@@ -65,6 +65,22 @@ class TestPeriodsWhenYouStoppedSmokingResponse(TestCase):
             "Enter the total number of years you stopped smoking"
         )
 
+
+    def test_is_invalid_if_it_has_duration_years_and_value_is_false(self):
+        response = PeriodsWhenYouStoppedSmokingResponseFactory.build(
+            response_set=self.response_set,
+            value=False,
+            duration_years=10
+        )
+        with self.assertRaises(ValidationError) as context:
+            response.full_clean()
+
+        self.assertEqual(
+            context.exception.messages[0],
+            "duration_years must not be present if value is false",
+        )
+
+
     def test_is_invalid_if_duration_years_is_less_than_1(self):
         response = PeriodsWhenYouStoppedSmokingResponse(
             response_set=self.response_set,
