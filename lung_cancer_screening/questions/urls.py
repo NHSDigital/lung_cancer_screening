@@ -37,6 +37,7 @@ from .views.respiratory_conditions import RespiratoryConditionsView
 from .views.responses import ResponsesView
 from .views.sex_at_birth import SexAtBirthView
 from .views.types_tobacco_smoking import TypesTobaccoSmokingView
+from .views.smoking_current import SmokingCurrentView
 from .views.smoked_total_years import SmokedTotalYearsView
 from .views.start import StartView
 from .views.weight import WeightView
@@ -51,6 +52,7 @@ urlpatterns = [
     path('call-us-to-book-an-appointment', BookAnAppointmentExitView.as_view(), name='book_an_appointment'),
     path('cancer-diagnosis', CancerDiagnosisView.as_view(), name='cancer_diagnosis'),
     path('check-if-you-need-an-appointment', CheckNeedAppointmentView.as_view(), name='check_need_appointment'),
+    path('<tobacco_type>-smoking-current', SmokingCurrentView.as_view(), name='smoking_current'),
     path('date-of-birth', DateOfBirthView.as_view(), name='date_of_birth'),
     path('education', EducationView.as_view(), name='education'),
     path('ethnicity', EthnicityView.as_view(), name='ethnicity'),

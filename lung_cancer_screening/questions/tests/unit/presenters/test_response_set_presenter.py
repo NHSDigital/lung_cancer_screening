@@ -436,7 +436,6 @@ class TestResponseSetPresenter(TestCase):
         presenter = ResponseSetPresenter(self.response_set)
         self.assertEqual(presenter.types_tobacco_smoking, "Cigarettes, Cigars, and Shisha")
 
-
     def test_smoking_history_types_responses_items_sets_the_correct_key(self):
         TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
@@ -446,7 +445,7 @@ class TestResponseSetPresenter(TestCase):
         presenter = ResponseSetPresenter(self.response_set)
 
         response_items = presenter.smoking_history_types_responses_items()
-        cigarettes_response_item = response_items[0]
+        cigarettes_response_item = response_items[1]
 
         self.assertEqual(
             cigarettes_response_item.get("key").get("text"),
@@ -469,7 +468,7 @@ class TestResponseSetPresenter(TestCase):
         presenter = ResponseSetPresenter(self.response_set)
 
         response_items = presenter.smoking_history_types_responses_items()
-        cigarettes_response_item = response_items[0]
+        cigarettes_response_item = response_items[1]
 
         self.assertEqual(
             cigarettes_response_item.get("value").get("text"),
@@ -485,7 +484,7 @@ class TestResponseSetPresenter(TestCase):
         presenter = ResponseSetPresenter(self.response_set)
 
         response_items = presenter.smoking_history_types_responses_items()
-        cigarettes_response_item = response_items[0]
+        cigarettes_response_item = response_items[1]
 
         self.assertEqual(
             cigarettes_response_item.get("actions").get("items")[0].get("href"),
