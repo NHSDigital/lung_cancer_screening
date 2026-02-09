@@ -3,8 +3,12 @@ import humps
 from decimal import Decimal
 from django.urls import reverse
 
-from ..models.education_response import EducationValues
 from ..models.respiratory_conditions_response import RespiratoryConditionValues
+
+from ..models.education_response import EducationValues
+
+from ..models.smoking_frequency_response import SmokingFrequencyValues
+
 from ..models.family_history_lung_cancer_response import FamilyHistoryLungCancerValues
 
 class ResponseSetPresenter:
@@ -268,8 +272,27 @@ class ResponseSetPresenter:
                 type_history.smoked_total_years_response.value if hasattr(type_history, 'smoked_total_years_response') else self.NOT_ANSWERED_TEXT,
                 "questions:smoked_total_years",
                 kwargs = { "tobacco_type": humps.kebabize(type_history.type) }
-            ))]
+            )),
+            (self._check_your_answer_item(
+                f"Current {type_history.human_type().lower()} smoking",
+                self._smoking_type_to_text(type_history),
+                "questions:smoking_frequency",
+                kwargs = { "tobacco_type": humps.kebabize(type_history.type) }
+            ))
+        ]
 
+    def _smoking_type_to_text(self, type_history):
+        if not hasattr(type_history, 'smoking_frequency_response'):
+            return self.NOT_ANSWERED_TEXT
+        return f"{type_history.human_type()} a {self._frequency_response_to_text(type_history.smoking_frequency_response)}"
+
+    def _frequency_response_to_text(self, frequency_response):
+        if frequency_response.value == SmokingFrequencyValues.DAILY:
+            return "day"
+        elif frequency_response.value == SmokingFrequencyValues.WEEKLY:
+            return "week"
+        elif frequency_response.value == SmokingFrequencyValues.MONTHLY:
+            return "month"
 
     def smoking_history_responses_items(self):
         return [
