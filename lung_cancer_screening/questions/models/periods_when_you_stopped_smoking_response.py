@@ -28,7 +28,7 @@ class PeriodsWhenYouStoppedSmokingResponse(BaseModel):
         if self.value and not self.duration_years:
             raise ValidationError(
                 {
-                    "duration_years": "Enter the total number of years you stopped smoking for"
+                    "duration_years": "Enter the total number of years you stopped smoking"
                 }
             )
 

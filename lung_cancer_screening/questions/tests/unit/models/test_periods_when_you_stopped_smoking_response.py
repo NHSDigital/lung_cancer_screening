@@ -62,7 +62,7 @@ class TestPeriodsWhenYouStoppedSmokingResponse(TestCase):
 
         self.assertEqual(
             context.exception.messages[0],
-            "Enter the total number of years you stopped smoking for"
+            "Enter the total number of years you stopped smoking"
         )
 
     def test_is_invalid_if_duration_years_is_less_than_1(self):

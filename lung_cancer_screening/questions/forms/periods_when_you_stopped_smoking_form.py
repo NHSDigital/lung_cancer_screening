@@ -24,14 +24,14 @@ class PeriodsWhenYouStoppedSmokingForm(forms.ModelForm):
         )
 
         self.fields["duration_years"] = IntegerField(
-            label="Enter the total number of years you stopped smoking for",
+            label="Enter the total number of years you stopped smoking",
             label_classes="nhsuk-fieldset__legend--s",
             classes="nhsuk-input--width-4",
             hint="Give an estimate if you are not sure",
             required=False,
             suffix="years",
             error_messages={
-                "required": "Enter the total number of years you stopped smoking for"
+                "required": "Enter the total number of years you stopped smoking"
             },
         )
 

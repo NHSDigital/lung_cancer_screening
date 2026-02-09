@@ -17,7 +17,7 @@ Feature: Periods when you stopped smoking page
     Then I am on "/periods-when-you-stopped-smoking"
     And I see a form error "Select if you ever stopped smoking for periods of 1 year or longer"
     When I check "Yes"
-    And I fill in "Enter the total number of years you stopped smoking for" with "1000"
+    And I fill in "Enter the total number of years you stopped smoking" with "1000"
     And I submit the form
     Then I see "Yes" selected
     And I see a form error "The number of years you stopped smoking must be fewer than the total number of years you have been smoking"
@@ -31,7 +31,7 @@ Feature: Periods when you stopped smoking page
     When I go to "/periods-when-you-stopped-smoking"
     Then I see a back link to "/age-when-started-smoking"
     When I check "Yes"
-    And I fill in "Enter the total number of years you stopped smoking for" with "1"
+    And I fill in "Enter the total number of years you stopped smoking" with "1"
     And I submit the form
     Then I am on "/types-tobacco-smoking"
 
@@ -41,7 +41,7 @@ Feature: Periods when you stopped smoking page
     And I have answered questions showing I have smoked for "10" years
     When I go to "/periods-when-you-stopped-smoking"
     And I check "Yes"
-    And I fill in "Enter the total number of years you stopped smoking for" with "1"
+    And I fill in "Enter the total number of years you stopped smoking" with "1"
     And I submit the form
     When I go to "/check-your-answers"
     Then I see "Yes (1 years)" as a response to "Have you ever stopped smoking for periods of 1 year or longer?" under "Smoking history"
