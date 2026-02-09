@@ -60,7 +60,7 @@ Feature: Questionnaire
 
     Then I am on "/periods-when-you-stopped-smoking"
     When I check "Yes"
-    And I fill in "Enter the total number of years you stopped smoking for" with "10"
+    And I fill in "Enter the total number of years you stopped smoking" with "10"
     And I submit the form
 
     Then I am on "/types-tobacco-smoking"

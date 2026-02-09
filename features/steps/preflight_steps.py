@@ -75,7 +75,7 @@ def given_i_have_answered_questions_showing_i_am_aged_60_years_old(context, year
 def given_i_have_answered_questions_showing_i_stopped_smoking_for_years_years(context, years):
     context.page.goto(f"{context.live_server_url}/periods-when-you-stopped-smoking")
     when_i_check_label(context, "Yes")
-    when_i_fill_in_label_with_value(context, "Enter the total number of years you stopped smoking for", years)
+    when_i_fill_in_label_with_value(context, "Enter the total number of years you stopped smoking", years)
     when_i_submit_the_form(context)
 
 

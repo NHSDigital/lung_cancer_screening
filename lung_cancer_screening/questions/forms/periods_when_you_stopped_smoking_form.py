@@ -6,11 +6,18 @@ from ..models.periods_when_you_stopped_smoking_response import PeriodsWhenYouSto
 
 
 class PeriodsWhenYouStoppedSmokingForm(forms.ModelForm):
+    class Meta:
+        model = PeriodsWhenYouStoppedSmokingResponse
+        fields = ["value", "duration_years"]
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        if self.instance and self.instance.pk and self.instance.value is not None:
+            self.initial["value"] = "True" if self.instance.value else "False"
+
         self.fields["value"] = TypedChoiceField(
-            choices=[(True, "Yes"), (False, "No")],
+            choices=[("True", "Yes"), ("False", "No")],
             widget=forms.RadioSelect,
             label="Have you ever stopped smoking for periods of 1 year or longer?",
             label_classes="nhsuk-fieldset__legend--m",
@@ -21,17 +28,21 @@ class PeriodsWhenYouStoppedSmokingForm(forms.ModelForm):
         )
 
         self.fields["duration_years"] = IntegerField(
-            label="Enter the total number of years you stopped smoking for",
+            label="Enter the total number of years you stopped smoking",
             label_classes="nhsuk-fieldset__legend--s",
             classes="nhsuk-input--width-4",
             hint="Give an estimate if you are not sure",
             required=False,
             suffix="years",
             error_messages={
-                "required": "Enter the total number of years you stopped smoking for"
+                "required": "Enter the total number of years you stopped smoking"
             },
         )
 
-    class Meta:
-        model = PeriodsWhenYouStoppedSmokingResponse
-        fields = ["value", "duration_years"]
+    def clean_duration_years(self):
+        if self.cleaned_data.get("value") is False:
+            return None
+
+        return self.cleaned_data.get("duration_years")
+
+
