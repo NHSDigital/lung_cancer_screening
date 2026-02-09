@@ -8,7 +8,6 @@ Feature: Date of birth page
 
   Scenario: Form errors
     Given I am logged in
-    And I have started the questionnaire
     And I have answered have you ever smoked with an eligible response
     When I go to "/date-of-birth"
     When I click "Continue"

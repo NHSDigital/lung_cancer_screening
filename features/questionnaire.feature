@@ -3,13 +3,13 @@ Feature: Questionnaire
     Given I am logged in
     And I have recently submitted my responses
     When I go to "/start"
-    And I click "Start now"
+    And I click "Continue"
     Then I am on "/confirmation"
 
   Scenario: The user can complete the full questionnaire
     Given I am logged in
     When I go to "/start"
-    And I click "Start now"
+    And I click "Continue"
 
     Then I am on "/have-you-ever-smoked"
     When I fill in and submit my smoking status with "Yes, I used to smoke"
