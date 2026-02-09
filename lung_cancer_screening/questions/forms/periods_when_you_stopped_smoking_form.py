@@ -9,8 +9,11 @@ class PeriodsWhenYouStoppedSmokingForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        if self.instance and self.instance.pk and self.instance.value is not None:
+            self.initial["value"] = "True" if self.instance.value else "False"
+
         self.fields["value"] = TypedChoiceField(
-            choices=[(True, "Yes"), (False, "No")],
+            choices=[("True", "Yes"), ("False", "No")],
             widget=forms.RadioSelect,
             label="Have you ever stopped smoking for periods of 1 year or longer?",
             label_classes="nhsuk-fieldset__legend--m",
