@@ -334,7 +334,7 @@ class ResponseSetPresenter:
 
     def _boolean_response_to_yes_no(self, response, attribute_name, yes_text = "Yes", no_text = "No"):
         if hasattr(response, attribute_name):
-            result = getattr(response, attribute_name)
+            result = getattr(response, attribute_name).value
             if result is True:
                 return yes_text
             elif result is False:
