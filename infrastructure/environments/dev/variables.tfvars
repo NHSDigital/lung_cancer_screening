@@ -1,4 +1,4 @@
-dns_zone_name                    = "dev.digital-lung-cancer-screening.nhs.uk"
+dns_zone_name                    = "dev.non-live.digital-lung-cancer-screening.nhs.uk"
 enable_entra_id_authentication   = false
 fetch_secrets_from_app_key_vault = true
 front_door_profile               = "afd-nonlive-hub-lungcs"
