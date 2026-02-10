@@ -3,11 +3,7 @@ from django.urls import reverse
 from inflection import dasherize, singularize
 
 from ..models.respiratory_conditions_response import RespiratoryConditionValues
-
 from ..models.education_response import EducationValues
-
-from ..models.smoking_frequency_response import SmokingFrequencyValues
-
 from ..models.family_history_lung_cancer_response import FamilyHistoryLungCancerValues
 
 class ResponseSetPresenter:
@@ -289,15 +285,8 @@ class ResponseSetPresenter:
         if not hasattr(type_history, 'smoking_frequency_response') or not hasattr(type_history, 'smoked_amount_response'):
             return self.NOT_ANSWERED_TEXT
 
-        return f"{type_history.smoked_amount_response.value} {type_history.human_type().lower()} a {self._frequency_response_to_text(type_history.smoking_frequency_response)}"
+        return f"{type_history.smoked_amount_response.value} {type_history.human_type().lower()} a {type_history.smoking_frequency_response.get_value_display_as_singleton_text()}"
 
-    def _frequency_response_to_text(self, frequency_response):
-        if frequency_response.value == SmokingFrequencyValues.DAILY:
-            return "day"
-        elif frequency_response.value == SmokingFrequencyValues.WEEKLY:
-            return "week"
-        elif frequency_response.value == SmokingFrequencyValues.MONTHLY:
-            return "month"
 
     def smoking_history_responses_items(self):
         return [

@@ -5,6 +5,7 @@ Feature: Smoked amount page
     Given I am logged in
     And I have answered questions showing I am eligible
     And I have answered questions showing I have smoked "Cigarettes"
+    And I have answered questions showing I have smoked "Cigarettes" daily
     When I go to "/cigarettes-smoked-amount"
     Then there are no accessibility violations
 
@@ -12,6 +13,7 @@ Feature: Smoked amount page
     Given I am logged in
     And I have answered questions showing I am eligible
     And I have answered questions showing I have smoked "Cigarettes"
+    And I have answered questions showing I have smoked "Cigarettes" daily
     When I go to "/cigarettes-smoked-amount"
     And I click "Continue"
     Then I am on "/cigarettes-smoked-amount"
@@ -22,6 +24,7 @@ Feature: Smoked amount page
     Given I am logged in
     And I have answered questions showing I am eligible
     And I have answered questions showing I have smoked "Cigarettes"
+    And I have answered questions showing I have smoked "Cigarettes" daily
     When I go to "/cigarettes-smoked-amount"
     Then I see a back link to "/cigarettes-smoked-total-years"
     When I fill in "Roughly how many cigarettes do you smoke in a normal day?" with "20"

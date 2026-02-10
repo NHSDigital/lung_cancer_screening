@@ -97,9 +97,3 @@ def given_i_have_answered_questions_showing_i_have_smoked_tobacco_type_frequency
     context.page.goto(f"{context.live_server_url}/{tobacco_type.lower()}-smoking-frequency")
     when_i_check_label(context, humanize(frequency))
     when_i_submit_the_form(context)
-
-@given('I have answered questions showing I have smoked {amount} "{tobacco_type}" as the amount')
-def given_i_have_answered_questions_showing_i_have_smoked_amount_tobacco_type(context, amount, tobacco_type):
-    context.page.goto(f"{context.live_server_url}/{tobacco_type.lower()}-smoked-amount")
-    when_i_fill_in_label_with_value(context, f"Roughly how many {tobacco_type.lower()} do you smoke in a normal day?", amount)
-    when_i_submit_the_form(context)

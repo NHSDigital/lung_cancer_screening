@@ -28,15 +28,15 @@ Feature: Smoking frequency page
     When I check "Daily" and submit
     Then I am on "/cigarettes-smoked-amount"
 
-  @wip
   Scenario: Checking responses and changing them
     Given I am logged in
     And I have answered questions showing I am eligible
     And I have answered questions showing I have smoked for "10" years
     And I have answered questions showing I have smoked "Cigarettes"
-    And I have answered questions showing I have smoked 10 "Cigarettes" as the amount
     When I go to "/cigarettes-smoking-frequency"
-    When I check "Daily" and submit
+    And I check "Daily" and submit
+    And I fill in "Roughly how many cigarettes do you smoke in a normal day?" with "10"
+    And I submit the form
     When I go to "/check-your-answers"
     Then I see "10 cigarettes a day" as a response to "Current cigarette smoking" under "Smoking history"
     And I see "/cigarettes-smoking-frequency?change=True" as a link to change "Current cigarette smoking" under "Smoking history"

@@ -33,3 +33,26 @@ class TestSmokingFrequencyResponse(TestCase):
         )
 
         self.assertIsInstance(response.value, str)
+
+    def test_get_value_display_as_singleton_text_returns_the_correct_text_daily(self):
+        response = SmokingFrequencyResponseFactory.build(
+            tobacco_smoking_history=self.tobacco_smoking_history,
+            value=SmokingFrequencyValues.DAILY.value
+        )
+        self.assertEqual(response.get_value_display_as_singleton_text(), "day")
+
+
+    def test_get_value_display_as_singleton_text_returns_the_correct_text_weekly(self):
+        response = SmokingFrequencyResponseFactory.build(
+            tobacco_smoking_history=self.tobacco_smoking_history,
+            value=SmokingFrequencyValues.WEEKLY.value
+        )
+        self.assertEqual(response.get_value_display_as_singleton_text(), "week")
+
+
+    def test_get_value_display_as_singleton_text_returns_the_correct_text_monthly(self):
+        response = SmokingFrequencyResponseFactory.build(
+            tobacco_smoking_history=self.tobacco_smoking_history,
+            value=SmokingFrequencyValues.MONTHLY.value
+        )
+        self.assertEqual(response.get_value_display_as_singleton_text(), "month")
