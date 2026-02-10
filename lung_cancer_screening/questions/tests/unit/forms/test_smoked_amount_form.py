@@ -79,3 +79,19 @@ class TestSmokedAmountForm(TestCase):
         )
 
         self.assertIn("my frequency", form.fields["value"].label)
+
+
+    def test_min_value_validation_has_the_correct_message(self):
+        self.smoking_history.type = TobaccoSmokingHistoryTypes.CIGARS.value
+        self.smoking_history.save()
+
+        form = SmokedAmountForm(
+            instance=self.response,
+            data={"value": 0}
+        )
+        form.full_clean()
+        self.assertIn("value", form.errors)
+        self.assertIn(
+            "The number of cigars you smoke must be at least 1",
+            form.errors["value"],
+        )

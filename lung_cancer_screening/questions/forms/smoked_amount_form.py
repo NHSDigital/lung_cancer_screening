@@ -19,7 +19,8 @@ class SmokedAmountForm(forms.ModelForm):
             suffix=self._type_suffix(),
             required=True,
             error_messages={
-                "required": self._type_required_error_message()
+                "required": self._type_required_error_message(),
+                "min_value": self._type_min_value_error_message()
             },
         )
 
@@ -31,6 +32,9 @@ class SmokedAmountForm(forms.ModelForm):
 
     def _type_required_error_message(self):
         return f"Enter how many {self.type_string()} you currently smoke in a normal {self.frequency_text}"
+
+    def _type_min_value_error_message(self):
+        return f"The number of {self.type_string()} you smoke must be at least 1"
 
     def _type_suffix(self):
         return self.type_string()
