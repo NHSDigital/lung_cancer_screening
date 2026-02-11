@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import Case, Value, When
+from django.core.exceptions import ValidationError
 
 from .base import BaseModel, BaseQuerySet
 from .response_set import ResponseSet
@@ -23,6 +24,7 @@ class TobaccoSmokingHistoryQuerySet(BaseQuerySet):
         return self.order_by(order)
 
 
+NO_CHANGE_VALUE = "no_change"
 class TobaccoSmokingHistory(BaseModel):
     class Levels(models.TextChoices):
         NORMAL = "normal", "Normal"
@@ -31,7 +33,7 @@ class TobaccoSmokingHistory(BaseModel):
 
         # Only used to populate values in the form
         STOPPED = "stopped", "Yes, I stopped smoking for a period of 1 year or longer"
-        NO_CHANGE = "no_change", "No, it has not changed"
+        NO_CHANGE = NO_CHANGE_VALUE, "No, it has not changed"
 
 
     response_set = models.ForeignKey(
@@ -55,9 +57,26 @@ class TobaccoSmokingHistory(BaseModel):
             models.UniqueConstraint(
                 fields=["response_set", "type", "level"],
                 name="unique_tobacco_smoking_history_per_response_set_and_type_and_level",
-                violation_error_message="A tobacco smoking history already exists for this response set, type and level"
-            )
+                violation_error_message="A tobacco smoking history already exists for this response set, type and level",
+            ),
         ]
+
+    def clean(self):
+        super().clean()
+        self._validate_no_change_and_other_levels()
+
+    def _validate_no_change_and_other_levels(self):
+        others = self.response_set.tobacco_smoking_history.filter(type=self.type).exclude(pk=self.pk)
+        if self.level == NO_CHANGE_VALUE:
+            if others.exclude(level__in=[NO_CHANGE_VALUE, self.Levels.NORMAL]).exists():
+                raise ValidationError(
+                    {"level": "Cannot have both no change and other levels selected"}
+                )
+        elif self.level != self.Levels.NORMAL:
+            if others.filter(level=NO_CHANGE_VALUE).exists():
+                raise ValidationError(
+                    {"level": "Cannot have both no change and other levels selected"}
+                )
 
     def human_type(self):
         return TobaccoSmokingHistoryTypes(self.type).label
