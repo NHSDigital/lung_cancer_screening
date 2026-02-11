@@ -32,7 +32,12 @@ class SmokingChangeForm(forms.Form):
         )
 
     def choices(self):
-        return list(set(TobaccoSmokingHistory.Levels.choices) - set([TobaccoSmokingHistory.Levels.NORMAL]))
+        return [
+            (value, label)
+            for value, label in TobaccoSmokingHistory.Levels.choices
+            if value != TobaccoSmokingHistory.Levels.NORMAL
+        ]
+
 
     def _required_error_message(self):
         return "Select if the number of cigarettes you smoke has changed over time"

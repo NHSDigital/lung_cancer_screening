@@ -37,7 +37,6 @@ Feature: Types tobacco smoking page
     And I check "Cigars"
     And I submit the form
     When I go to "/check-your-answers"
-    Then I take a screenshot
     Then I see "Cigarettes and Cigars" as a response to "Types of tobacco smoked" under "Smoking history"
     And I see "/types-tobacco-smoking?change=True" as a link to change "Types of tobacco smoked" under "Smoking history"
     When I click the link to change "Types of tobacco smoked" under "Smoking history"
