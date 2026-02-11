@@ -2,7 +2,7 @@
 @AgeWhenStartedSmoking
 @SmokedTotalYears
 @SmokedAmount
-@SmokedChanged
+@SmokingChange
 @Questionnaire
 Feature: Questionnaire
   Scenario: Cannot change responses once submitted
@@ -87,6 +87,9 @@ Feature: Questionnaire
     Then I am on "/cigarettes-smoked-amount"
     When I fill in "Roughly how many cigarettes do you smoke in a normal day?" with "15"
     And I submit the form
+
+    Then I am on "/cigarettes-smoking-change"
+    When I check "No, it has not changed" and submit
 
     Then I am on "/check-your-answers"
     And I see "Yes, I used to smoke" as a response to "Have you ever smoked tobacco?" under "Eligibility"

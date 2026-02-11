@@ -1,7 +1,10 @@
 import factory
 
 from .response_set_factory import ResponseSetFactory
-from ...models.tobacco_smoking_history import TobaccoSmokingHistory, TobaccoSmokingHistoryTypes
+from ...models.tobacco_smoking_history import (
+    TobaccoSmokingHistory,
+    TobaccoSmokingHistoryTypes,
+)
 
 
 class TobaccoSmokingHistoryFactory(factory.django.DjangoModelFactory):

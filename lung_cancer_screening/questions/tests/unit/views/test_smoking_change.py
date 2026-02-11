@@ -1,0 +1,151 @@
+from django.test import TestCase, tag
+from django.urls import reverse
+
+from .helpers.authentication import login_user
+from lung_cancer_screening.questions.models.tobacco_smoking_history import (
+    TobaccoSmokingHistoryTypes,
+    TobaccoSmokingHistory,
+)
+from ...factories.response_set_factory import ResponseSetFactory
+from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
+
+
+@tag("SmokingChange")
+class TestGetSmokingChange(TestCase):
+    def setUp(self):
+        self.user = login_user(self.client)
+        self.response_set = ResponseSetFactory.create(user=self.user, eligible=True)
+        self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
+        )
+
+    def test_redirects_if_the_user_is_not_logged_in(self):
+        self.client.logout()
+        response = self.client.get(
+            reverse("questions:smoking_change", kwargs={"tobacco_type": "cigarettes"})
+        )
+        self.assertRedirects(
+            response,
+            "/oidc/authenticate/?next=/cigarettes-smoking-change",
+            fetch_redirect_response=False,
+        )
+
+
+    def test_redirects_when_a_submitted_response_set_exists_within_the_last_year(self):
+        self.response_set.delete()
+        ResponseSetFactory.create(user=self.user, recently_submitted=True)
+
+        response = self.client.get(
+            reverse(
+                "questions:smoking_change",
+                kwargs={
+                    "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+                },
+            )
+        )
+
+        self.assertRedirects(response, reverse("questions:confirmation"))
+
+
+    def test_redirects_when_the_user_is_not_eligible(self):
+        self.response_set.delete()
+        ResponseSetFactory.create(user=self.user, eligible=False)
+
+        response = self.client.get(
+            reverse(
+                "questions:smoking_change",
+                kwargs={
+                    "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+                },
+            )
+        )
+
+        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+
+
+    def test_responds_successfully(self):
+        response = self.client.get(
+            reverse("questions:smoking_change", kwargs={"tobacco_type": "cigarettes"})
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+
+@tag("SmokingChange")
+class TestPostSmokingChange(TestCase):
+    def setUp(self):
+        self.user = login_user(self.client)
+        self.response_set = ResponseSetFactory.create(user=self.user, eligible=True)
+        self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
+        )
+        self.valid_params = {
+            "value": [TobaccoSmokingHistory.Levels.INCREASED],
+        }
+
+
+    def test_redirects_if_the_user_is_not_logged_in(self):
+        self.client.logout()
+
+        response = self.client.post(
+            reverse("questions:smoking_change", kwargs={"tobacco_type": "cigarettes"}),
+            self.valid_params
+        )
+
+        self.assertRedirects(response, "/oidc/authenticate/?next=/cigarettes-smoking-change", fetch_redirect_response=False)
+
+
+    def test_redirects_when_a_submitted_response_set_exists_within_the_last_year(self):
+        self.response_set.delete()
+        ResponseSetFactory.create(
+            user=self.user,
+            recently_submitted=True
+        )
+
+        response = self.client.post(
+            reverse("questions:smoking_change", kwargs = {
+                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+            }),
+            self.valid_params
+        )
+
+        self.assertRedirects(response, reverse("questions:confirmation"))
+
+
+    def test_redirects_when_the_user_is_not_eligible(self):
+        self.response_set.delete()
+        ResponseSetFactory.create(user=self.user, eligible=False)
+
+        response = self.client.post(
+            reverse("questions:smoking_change", kwargs = {
+                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+            }),
+            self.valid_params
+        )
+
+        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+
+
+    def test_redirects_to_the_next_question(self):
+        response = self.client.post(
+            reverse("questions:smoking_change", kwargs = {
+                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+            }),
+            self.valid_params
+        )
+
+        self.assertRedirects(response, reverse("questions:responses"))
+
+
+    def test_creates_a_smoking_change_response(self):
+        self.client.post(
+            reverse("questions:smoking_change", kwargs = {
+                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+            }),
+            self.valid_params
+        )
+
+        self.assertEqual(self.response_set.tobacco_smoking_history.count(), 2)
+        self.assertEqual(self.response_set.tobacco_smoking_history.last().level, TobaccoSmokingHistory.Levels.INCREASED)
