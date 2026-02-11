@@ -62,7 +62,7 @@ module "container-app-environment" {
     azurerm.dns = azurerm.hub
   }
 
-  name                           = "cae-${var.envi}-uks-${var.app_short_name}"
+  name                           = "cae-${var.environment}-uks-${var.app_short_name}"
   resource_group_name            = azurerm_resource_group.main.name
   internal_load_balancer_enabled = var.features.private_networking
   log_analytics_workspace_id     = module.log_analytics_workspace_audit.id
