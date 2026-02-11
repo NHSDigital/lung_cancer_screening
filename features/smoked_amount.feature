@@ -4,7 +4,6 @@ Feature: Smoked amount page
   Scenario: The page is accessible
     Given I am logged in
     And I have answered questions showing I am eligible
-    And I have answered questions showing I have smoked "Cigarettes"
     And I have answered questions showing I have smoked "Cigarettes" daily
     When I go to "/cigarettes-smoked-amount"
     Then there are no accessibility violations
@@ -12,7 +11,6 @@ Feature: Smoked amount page
   Scenario: Form errors
     Given I am logged in
     And I have answered questions showing I am eligible
-    And I have answered questions showing I have smoked "Cigarettes"
     And I have answered questions showing I have smoked "Cigarettes" daily
     When I go to "/cigarettes-smoked-amount"
     And I click "Continue"
@@ -23,7 +21,6 @@ Feature: Smoked amount page
   Scenario: Navigating backwards and forwards
     Given I am logged in
     And I have answered questions showing I am eligible
-    And I have answered questions showing I have smoked "Cigarettes"
     And I have answered questions showing I have smoked "Cigarettes" daily
     When I go to "/cigarettes-smoked-amount"
     Then I see a back link to "/cigarettes-smoked-total-years"
@@ -34,7 +31,6 @@ Feature: Smoked amount page
   Scenario: Checking responses and changing them
     Given I am logged in
     And I have answered questions showing I am eligible
-    And I have answered questions showing I have smoked "Cigarettes"
     And I have answered questions showing I have smoked "Cigarettes" daily
     When I go to "/cigarettes-smoked-amount"
     When I fill in "Roughly how many cigarettes do you smoke in a normal day?" with "20"
