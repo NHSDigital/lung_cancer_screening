@@ -1,3 +1,9 @@
+
+/*
+  Subscription pre-requisites:
+   - az provider register --namespace 'Microsoft.App'
+*/
+
 targetScope='subscription'
 
 param enableSoftDelete bool
