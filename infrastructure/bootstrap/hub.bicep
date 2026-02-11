@@ -9,6 +9,7 @@
   Subscription pre-requisites:
     - az provider register --namespace 'Microsoft.DevOpsInfrastructure'
     - az provider register --namespace 'Microsoft.DevCenter'
+    - az provider register --namespace 'Microsoft.Compute'
 
   Run once, deployment of the Managed DevOps Pool will fail.
   Manually Grant 'Reader' and 'Network Contributor' RBAC roles to the Service Principal 'DevopsInfrastructure' on the VNet resource.
@@ -41,7 +42,7 @@ var miHub = 'mi-hub-${hubType}-${regionShortName}'
 var privateDNSZoneRGName = 'rg-hub-${hubType}-${regionShortName}-private-dns-zones'
 var keyVaultName = 'kv-${appShortName}-${hubType}-inf'
 var privateEndpointSubnetName = 'sn-hub-${hubType}-${regionShortName}-private-endpoint'
-var storageAccountName = 'sa${appShortName}${regionShortName}state'
+var storageAccountName = 'sa${appShortName}${hubType}${regionShortName}state'
 var computeGalleryName = '${appShortName}_hub_compute_gallery'
 
 var miADOtoAZname = 'mi-${appShortName}-${hubType}-adotoaz-${regionShortName}'

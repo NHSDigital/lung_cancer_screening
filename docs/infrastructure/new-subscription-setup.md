@@ -66,3 +66,7 @@ Once the feature 'EncryptionAtHost' is registered, invoking 'az provider registe
   },
   "type": "Microsoft.Features/providers/features"
 }`
+
+
+
+DevOpsInfrastructure
