@@ -1,8 +1,7 @@
-import humps
-
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormView
+from inflection import dasherize
 
 from .mixins.ensure_response_set import EnsureResponseSet
 from .mixins.ensure_eligible import EnsureEligibleMixin
@@ -35,8 +34,8 @@ class TypesTobaccoSmokingView(
         return reverse(
             "questions:smoking_current",
             kwargs={
-                "tobacco_type": humps.kebabize(
+                "tobacco_type": dasherize(
                     self.request.response_set.tobacco_smoking_history.first().type
-                )
+                ).lower()
             },
         )

@@ -8,6 +8,12 @@ class QuestionBaseView(UpdateView):
     def should_redirect_to_responses(self, request):
         return bool(request.POST.get("change"))
 
+    def get_change_query_params(self):
+        if not self.should_redirect_to_responses(self.request):
+            return {}
+
+        return {"change": "True"}
+
     def get_back_link_url(self):
         return self.back_link_url
 

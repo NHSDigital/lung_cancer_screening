@@ -1,7 +1,6 @@
-import humps
-
 from django.test import TestCase, tag
 from django.urls import reverse
+from inflection import dasherize
 
 from .helpers.authentication import login_user
 from ...factories.response_set_factory import ResponseSetFactory
@@ -127,5 +126,5 @@ class TestPostTypesTobaccoSmoking(TestCase):
         )
 
         self.assertRedirects(response, reverse("questions:smoking_current", kwargs={
-            "tobacco_type": humps.kebabize(TobaccoSmokingHistoryTypes.CIGARETTES.value)
+            "tobacco_type": dasherize(TobaccoSmokingHistoryTypes.CIGARETTES.value).lower()
         }), fetch_redirect_response=False)

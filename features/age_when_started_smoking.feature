@@ -1,3 +1,4 @@
+@SmokingHistory
 @AgeWhenStartedSmoking
 Feature: Age when started smoking
   Scenario: The page is accessible

@@ -192,18 +192,28 @@ class TestPostSmokedTotalYears(TestCase):
         }))
 
 
-    def test_redirects_to_responses_if_change_query_param_is_true(self):
+    def test_redirects_to_next_question_forwarding_the_change_query_param(self):
         response = self.client.post(
-            reverse("questions:smoked_total_years", kwargs = {
-                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
-            }),
-            {
-                **self.valid_params,
-                "change": "True"
-            }
+            reverse(
+                "questions:smoked_total_years",
+                kwargs={
+                    "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+                },
+            ),
+            {**self.valid_params, "change": "True"},
         )
 
-        self.assertRedirects(response, reverse("questions:responses"))
+        self.assertRedirects(
+            response,
+            reverse(
+                "questions:smoking_frequency",
+                kwargs={
+                    "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+                },
+                query={"change": "True"},
+            ),
+            fetch_redirect_response=False,
+        )
 
 
     def test_responds_with_422_if_the_response_fails_to_create(self):
