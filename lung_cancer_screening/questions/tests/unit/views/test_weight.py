@@ -164,6 +164,7 @@ class TestPostWeight(TestCase):
 
         self.assertRedirects(response, reverse("questions:responses"))
 
+
     def test_responds_with_422_if_the_response_fails_to_create(self):
         ResponseSetFactory.create(user=self.user, eligible=True)
 

@@ -1,8 +1,10 @@
 from django import forms
 
 from ...nhsuk_forms.choice_field import MultipleChoiceField
-from ..models.tobacco_smoking_history import TobaccoSmokingHistoryTypes, TobaccoSmokingHistory
-
+from ..models.tobacco_smoking_history import (
+    TobaccoSmokingHistory,
+    TobaccoSmokingHistoryTypes,
+)
 
 
 class TypesTobaccoSmokingForm(forms.Form):
@@ -49,10 +51,17 @@ class TypesTobaccoSmokingForm(forms.Form):
 
     def _create_types_selected(self):
         instances = [
-            TobaccoSmokingHistory(response_set=self.response_set, type=kind)
+            TobaccoSmokingHistory(
+                response_set=self.response_set,
+                type=kind,
+                level=TobaccoSmokingHistory.Levels.NORMAL,
+            )
             for kind in self.cleaned_data["value"]
             if kind not in self.existing_types
         ]
+
+        for instance in instances:
+            instance.full_clean()
 
         TobaccoSmokingHistory.objects.bulk_create(instances)
 

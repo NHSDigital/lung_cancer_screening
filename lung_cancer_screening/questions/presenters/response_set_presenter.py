@@ -5,6 +5,7 @@ from inflection import dasherize, singularize
 from ..models.respiratory_conditions_response import RespiratoryConditionValues
 from ..models.education_response import EducationValues
 from ..models.family_history_lung_cancer_response import FamilyHistoryLungCancerValues
+from ..models.tobacco_smoking_history import TobaccoSmokingHistory
 
 class ResponseSetPresenter:
     NOT_ANSWERED_TEXT = "Not answered"
@@ -151,12 +152,14 @@ class ResponseSetPresenter:
 
     @property
     def types_tobacco_smoking(self):
-        if self.response_set.tobacco_smoking_history.count() < 1:
+        normal_history = self.response_set.tobacco_smoking_history.filter(
+            level=TobaccoSmokingHistory.Levels.NORMAL
+        )
+        if normal_history.count() < 1:
             return self.NOT_ANSWERED_TEXT
 
         return self._list_to_sentence([
-            tobacco_smoking_history.human_type()
-            for tobacco_smoking_history in self.response_set.tobacco_smoking_history.in_form_order()
+            h.human_type() for h in normal_history.in_form_order()
         ])
 
 
@@ -250,7 +253,10 @@ class ResponseSetPresenter:
 
     def smoking_history_types_responses_items(self):
         results = []
-        for type_history in self.response_set.tobacco_smoking_history.in_form_order():
+        normal_history = self.response_set.tobacco_smoking_history.filter(
+            level=TobaccoSmokingHistory.Levels.NORMAL
+        )
+        for type_history in normal_history.in_form_order():
             results.extend(self.smoking_history_summary_items_for_type(type_history))
 
         return results
@@ -276,8 +282,14 @@ class ResponseSetPresenter:
                 f"Current {singularize(type_label)} smoking",
                 self._smoking_type_to_text(type_history),
                 "questions:smoking_frequency",
-                kwargs = tobacco_type_kwargs
-            )
+                kwargs=tobacco_type_kwargs
+            ),
+            self._check_your_answer_item(
+                f"Has the number of {type_label} you normally smoke changed over time?",
+                self._smoking_change_to_text(type_history),
+                "questions:smoking_change",
+                kwargs=tobacco_type_kwargs
+            ),
         ]
 
 
@@ -286,6 +298,16 @@ class ResponseSetPresenter:
             return self.NOT_ANSWERED_TEXT
 
         return f"{type_history.smoked_amount_response.value} {type_history.human_type().lower()} a {type_history.smoking_frequency_response.get_value_display_as_singleton_text()}"
+
+    def _smoking_change_to_text(self, type_history):
+        history_for_type = self.response_set.tobacco_smoking_history.filter(
+            type=type_history.type
+        )
+        if history_for_type.filter(level=TobaccoSmokingHistory.Levels.INCREASED).exists():
+            return "Yes, I used to smoke more"
+        if history_for_type.filter(level=TobaccoSmokingHistory.Levels.DECREASED).exists():
+            return "Yes, I used to smoke fewer"
+        return "No, it has not changed"
 
 
     def smoking_history_responses_items(self):

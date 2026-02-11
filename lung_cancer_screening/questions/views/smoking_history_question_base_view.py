@@ -1,6 +1,8 @@
 from inflection import camelize
 
+from ..models.tobacco_smoking_history import TobaccoSmokingHistory
 from .question_base_view import QuestionBaseView
+
 
 class SmokingHistoryQuestionBaseView(QuestionBaseView):
     def get_object(self):
@@ -8,8 +10,8 @@ class SmokingHistoryQuestionBaseView(QuestionBaseView):
             tobacco_smoking_history=self.get_smoking_history_item()
         )[0]
 
-
     def get_smoking_history_item(self):
         return self.request.response_set.tobacco_smoking_history.filter(
-            type=camelize(self.kwargs["tobacco_type"])
+            type=camelize(self.kwargs["tobacco_type"]),
+            level=TobaccoSmokingHistory.Levels.NORMAL,
         ).first()

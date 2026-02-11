@@ -13,7 +13,6 @@ class TobaccoSmokingHistoryTypes(models.TextChoices):
     CIGARILLOS = "Cigarillos", "Cigarillos"
     SHISHA = "Shisha", "Shisha"
 
-
 class TobaccoSmokingHistoryQuerySet(BaseQuerySet):
     def in_form_order(self):
         form_order = [choice[0] for choice in TobaccoSmokingHistoryTypes.choices]
@@ -25,6 +24,16 @@ class TobaccoSmokingHistoryQuerySet(BaseQuerySet):
 
 
 class TobaccoSmokingHistory(BaseModel):
+    class Levels(models.TextChoices):
+        NORMAL = "normal", "Normal"
+        INCREASED = "increased", "Yes, I used to smoke more"
+        DECREASED = "decreased", "Yes, I used to smoke fewer"
+
+        # Only used to populate values in the form
+        STOPPED = "stopped", "Yes, I stopped smoking for a period of 1 year or longer"
+        NO_CHANGE = "no_change", "No, it has not changed"
+
+
     response_set = models.ForeignKey(
         ResponseSet,
         on_delete=models.CASCADE,
@@ -33,15 +42,20 @@ class TobaccoSmokingHistory(BaseModel):
     type = models.CharField(
         choices=TobaccoSmokingHistoryTypes.choices
     )
+    level = models.CharField(
+        choices=Levels.choices,
+        default=Levels.NORMAL,
+        max_length=20,
+    )
 
     objects = TobaccoSmokingHistoryQuerySet.as_manager()
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["response_set", "type"],
-                name="unique_tobacco_smoking_history_per_response_set",
-                violation_error_message="A tobacco smoking history already exists for this response set and type"
+                fields=["response_set", "type", "level"],
+                name="unique_tobacco_smoking_history_per_response_set_and_type_and_level",
+                violation_error_message="A tobacco smoking history already exists for this response set, type and level"
             )
         ]
 
