@@ -18,7 +18,7 @@ class NHSLoginOIDCBackend(OIDCAuthenticationBackend):
     """
     Custom OIDC authentication backend that uses private key JWT
     for client authentication instead of client secret.
-    Uses NHS number as the username field.
+    Uses sub as the username field.
     """
 
     def filter_users_by_claims(self, claims):
@@ -34,21 +34,27 @@ class NHSLoginOIDCBackend(OIDCAuthenticationBackend):
     def create_user(self, claims):
         user_class = get_user_model()
 
-        nhs_number = claims.get('nhs_number')
-        if not nhs_number:
-            raise ValueError("Missing 'nhs_number' claim in OIDC token")
+        sub = claims.get('sub')
+        if not sub:
+            raise ValueError("Missing 'sub' claim in OIDC token")
 
-        email = claims.get('email')
         return user_class.objects.create_user(
-            nhs_number=nhs_number,
-            email=email
+            sub=claims.get('sub'),
+            nhs_number=claims.get('nhs_number'),
+            email=claims.get('email'),
+            given_name=claims.get('given_name'),
+            family_name=claims.get('family_name'),
         )
 
     def update_user(self, user, claims):
-        email = claims.get('email')
-        if email and user.email != email:
-            user.email = email
-            user.save()
+        user.sub = claims.get('sub'),
+        user.nhs_number = claims.get('nhs_number')
+        user.email = claims.get('email')
+        user.given_name = claims.get('given_name')
+        user.family_name = claims.get('family_name')
+
+        user.save()
+
         return user
 
     def _create_client_assertion(self):
