@@ -19,10 +19,14 @@
     "account": {
       "items": [
         {
+          "text": request.user.full_name,
+          "icon": True
+        },
+        {
           "text": "Log out",
           "href": url("questions:logout")
         }
-      ]
+      ] if request.user.is_authenticated else []
     }
   }) }}
 {% endblock header %}
