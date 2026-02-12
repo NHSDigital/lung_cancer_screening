@@ -19,6 +19,8 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser):
     nhs_number = models.CharField(max_length=10, unique=True)
+    given_name = models.CharField(max_length=255, blank=False, null=False)
+    family_name = models.CharField(max_length=255, blank=False, null=False)
     email = models.EmailField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -46,3 +48,7 @@ class User(AbstractBaseUser):
 
     def most_recent_response_set(self):
         return self.responseset_set.order_by('-submitted_at').first()
+
+    @property
+    def full_name(self):
+        return f"{self.given_name} {self.family_name}"
