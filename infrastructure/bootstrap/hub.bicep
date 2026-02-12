@@ -25,7 +25,6 @@ param regionShortName string = 'uks'
 param vnetAddressPrefixes array
 param enableSoftDelete bool
 
-
 // removed when generalised
 var appShortName = 'lungcs'
 
