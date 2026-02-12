@@ -235,6 +235,7 @@ OIDC_OP_JWKS_ENDPOINT = f"{OIDC_OP_FQDN}/.well-known/jwks.json"
 OIDC_RP_SIGN_ALGO = "RS512"
 OIDC_RP_SCOPES = "openid profile profile_extended"
 OIDC_RP_REDIRECT_URI = "/oidc/callback/"
+NHS_LOGIN_SETTINGS_URL = environ.get("NHS_LOGIN_SETTINGS_URL")
 
 # Authentication backends
 AUTHENTICATION_BACKENDS = [
