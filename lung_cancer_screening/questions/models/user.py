@@ -48,3 +48,7 @@ class User(AbstractBaseUser):
 
     def most_recent_response_set(self):
         return self.responseset_set.order_by('-submitted_at').first()
+
+    @property
+    def full_name(self):
+        return f"{self.given_name} {self.family_name}"
