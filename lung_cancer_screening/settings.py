@@ -254,6 +254,8 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 
+LOGIN_REDIRECT_URL_FAILURE = "/agree-to-share-information"
+
 # Additional security settings for production
 if not DEBUG:
     SECURE_SSL_REDIRECT = False

@@ -1,0 +1,34 @@
+{% extends 'layout.jinja' %}
+{% from 'nhsuk/components/back-link/macro.jinja' import backLink %}
+{% from 'nhsuk/components/button/macro.jinja' import button %}
+
+{% block beforeContent %}
+<nav>
+  {{
+    backLink({
+    "href": url("questions:start"),
+    "text": "Back"
+    })
+  }}
+</nav>
+{% endblock beforeContent %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      <h1 class="nhsuk-heading-l">Sorry, you cannot test the online service</h1>
+
+      <p>To test the online service, we need to confirm who you are. To do this, you need to agree to let NHS login share your information with us.</p>
+      <p>If you do not agree to share your NHS login information, you should complete your NHS lung cancer screening by phone.</p>
+      <p>Call us on <a href="tel:0200000000">0200 000 000</a></p>
+      <p><strong>Phone lines are open:</strong>
+      <br />Monday to Friday 8am to 8pm
+      <br />Saturdays 8am to 1pm</p>
+
+      {{button({
+        "text":"Back to start page",
+        "href":url("questions:start")
+      })}}
+    </div>
+  </div>
+{% endblock %}
