@@ -98,15 +98,15 @@ class NHSLoginOIDCBackend(OIDCAuthenticationBackend):
 
     def get_token(self, token_payload):
         token_endpoint = settings.OIDC_OP_TOKEN_ENDPOINT
-        redirect_uri = token_payload.get('redirect_uri')
         authorization_code = token_payload.get('code')
-
-        if not redirect_uri:
-            redirect_uri = settings.OIDC_RP_REDIRECT_URI
 
         client_assertion = self._create_client_assertion()
         if not client_assertion:
             return super().get_token(token_payload)
+
+        # Always use OIDC_RP_REDIRECT_URI so token request matches the auth
+        # request (important when behind a proxy where request Host is internal).
+        redirect_uri = settings.OIDC_RP_REDIRECT_URI
 
         token_payload_updated = {
             'grant_type': 'authorization_code',

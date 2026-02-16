@@ -234,7 +234,12 @@ OIDC_OP_JWKS_ENDPOINT = f"{OIDC_OP_FQDN}/.well-known/jwks.json"
 # See: https://auth.sandpit.signin.nhs.uk/.well-known/openid-configuration
 OIDC_RP_SIGN_ALGO = "RS512"
 OIDC_RP_SCOPES = "openid profile profile_extended email"
-OIDC_RP_REDIRECT_URI = "/oidc/callback/"
+OIDC_RP_REDIRECT_URI = f"{environ.get('BASE_URL')}/oidc/callback/"
+# Use custom auth request view so redirect_uri is BASE_URL, not request Host
+# (fixes post-login redirect to instance URL when behind Front Door / proxy).
+OIDC_AUTHENTICATE_CLASS = (
+    "lung_cancer_screening.questions.views.oidc_auth.NHSLoginAuthenticationRequestView"
+)
 NHS_LOGIN_SETTINGS_URL = environ.get("NHS_LOGIN_SETTINGS_URL")
 
 # Authentication backends
