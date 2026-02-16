@@ -89,6 +89,7 @@ jobs:
       python_version: "${{ needs.metadata.outputs.python_version }}"
       terraform_version: "${{ needs.metadata.outputs.terraform_version }}"
       version: "${{ needs.metadata.outputs.version }}"
+      commit_sha: '${{ github.sha }}'
     secrets: inherit
 
   deploy-stage:
@@ -98,20 +99,6 @@ jobs:
       id-token: write
     uses: ./.github/workflows/stage-4-deploy.yaml
     with:
-      environments: '["dev"]'
+      environments: '["review","dev"]'
       commit_sha: ${{ github.sha }}
-    secrets: inherit
-
-  acceptance-stage: # Recommended maximum execution time is 10 minutes
-    name: "Acceptance stage"
-    needs: [metadata, build-stage]
-    uses: ./.github/workflows/stage-4-acceptance.yaml
-    with:
-      build_datetime: "${{ needs.metadata.outputs.build_datetime }}"
-      build_timestamp: "${{ needs.metadata.outputs.build_timestamp }}"
-      build_epoch: "${{ needs.metadata.outputs.build_epoch }}"
-      nodejs_version: "${{ needs.metadata.outputs.nodejs_version }}"
-      python_version: "${{ needs.metadata.outputs.python_version }}"
-      terraform_version: "${{ needs.metadata.outputs.terraform_version }}"
-      version: "${{ needs.metadata.outputs.version }}"
     secrets: inherit
