@@ -99,6 +99,16 @@ class TestNHSLoginOIDCBackend(TestCase):
         self.assertEqual(user.nhs_number, '1234567890')
 
 
+
+    def test_get_token_raisees_if_private_key_not_parsable(self):
+        settings.OIDC_RP_CLIENT_PRIVATE_KEY = "invalid"
+
+        with self.assertRaises(ValueError) as context:
+            self.backend.get_token({'code': 'auth-code-123'})
+
+        self.assertIn("Failed to load private key", str(context.exception))
+
+
     @patch('lung_cancer_screening.questions.auth.requests.post')
     def test_get_token_success(self, mock_post):
         settings.OIDC_RP_CLIENT_PRIVATE_KEY = self.test_private_key_pem
