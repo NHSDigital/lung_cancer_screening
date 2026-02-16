@@ -25,11 +25,11 @@ class NHSLoginOIDCBackend(OIDCAuthenticationBackend):
         """Find users by NHS number from OIDC claims."""
         user_class = get_user_model()
 
-        nhs_number = claims.get('nhs_number')
-        if not nhs_number:
+        sub = claims.get('sub')
+        if not sub:
             return user_class.objects.none()
 
-        return user_class.objects.filter(nhs_number=nhs_number)
+        return user_class.objects.filter(sub=sub)
 
     def create_user(self, claims):
         user_class = get_user_model()

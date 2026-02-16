@@ -41,15 +41,16 @@ class TestNHSLoginOIDCBackend(TestCase):
         }
 
     def test_filter_users_by_claims_for_existing_user(self):
+        claims = { "sub": self.claims.get('sub') }
         user = User.objects.create_user(**self.claims)
 
-        result = self.backend.filter_users_by_claims(self.claims)
+        result = self.backend.filter_users_by_claims(claims)
 
         self.assertEqual(result.count(), 1)
         self.assertEqual(result.first(), user)
 
     def test_filter_users_by_claims_for_non_existent_user(self):
-        claims = {**self.claims, "sub": "other-sub-456"}
+        claims = {"sub": "other-sub-456"}
         result = self.backend.filter_users_by_claims(claims)
 
         self.assertEqual(result.count(), 0)
