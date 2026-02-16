@@ -133,7 +133,27 @@ class TestSmokingChangeForm(TestCase):
             level=TobaccoSmokingHistory.Levels.NORMAL
         ).count(), 1)
 
-    @tag("wip")
+    def test_prevents_both_no_change_and_other_levels_selected(self):
+        TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            level=TobaccoSmokingHistory.Levels.NORMAL,
+        )
+
+        form = SmokingChangeForm(
+            response_set=self.response_set,
+            tobacco_type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            data={
+                "value": [TobaccoSmokingHistory.Levels.NO_CHANGE, TobaccoSmokingHistory.Levels.INCREASED]
+            }
+        )
+        form.save()
+
+        self.assertEqual(self.response_set.tobacco_smoking_history.filter(
+            level=TobaccoSmokingHistory.Levels.NORMAL
+        ).count(), 1)
+        self.assertEqual(self.response_set.tobacco_smoking_history.all().count(), 1)
+
     def test_initializes_the_form_based_on_existing_smoking_histories(self):
         TobaccoSmokingHistoryFactory(
             response_set=self.response_set,

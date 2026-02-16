@@ -16,6 +16,7 @@ Feature: Smoking change page
     Then I see a form error "Select if the number of cigarettes you smoke has changed over time"
     When I check "Yes, I used to smoke more"
     And I check "No, it has not changed"
+    And I submit the form
     Then I see a form error "Select if the number of cigarettes you smoke has changed over time, or select 'no, it has not changed'"
     Then there are no accessibility violations
 

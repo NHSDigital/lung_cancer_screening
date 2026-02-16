@@ -51,6 +51,15 @@ class SmokingChangeForm(forms.Form):
         return self._create_levels_selected()
 
 
+    def is_valid(self):
+        if not super().is_valid() :
+            return False
+        if (self.cleaned_data["value"].count(TobaccoSmokingHistory.Levels.NO_CHANGE) > 0
+            and len(self.cleaned_data["value"]) > 1):
+                self.add_error( "value", forms.ValidationError("Select if the number of cigarettes you smoke has changed over time, or select 'no, it has not changed'"))
+                return False
+        return True
+
     def _delete_levels_not_selected(self):
         for level in self._existing_levels():
             if level not in self.cleaned_data["value"]:
