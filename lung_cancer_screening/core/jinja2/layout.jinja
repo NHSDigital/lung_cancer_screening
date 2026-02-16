@@ -19,10 +19,15 @@
     "account": {
       "items": [
         {
+          "text": request.user.full_name,
+          "href": NHS_LOGIN_SETTINGS_URL,
+          "icon": True
+        },
+        {
           "text": "Log out",
           "href": url("questions:logout")
         }
-      ]
+      ] if request.user.is_authenticated else []
     }
   }) }}
 {% endblock header %}

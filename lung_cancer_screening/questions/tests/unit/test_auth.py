@@ -6,6 +6,7 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
 
 from ...auth import NHSLoginOIDCBackend
+from ...tests.factories.user_factory import UserFactory
 
 User = get_user_model()
 
@@ -31,44 +32,45 @@ class TestNHSLoginOIDCBackend(TestCase):
             encryption_algorithm=serialization.NoEncryption()
         ).decode('utf-8')
 
-    def test_filter_users_by_claims_for_existing_user(self):
-        user = User.objects.create_user(nhs_number='1234567890')
+        self.claims = {
+            "nhs_number": "1234567890",
+            "email": "test@example.com",
+            "given_name": "Jane",
+            "family_name": "Smith",
+        }
 
-        claims = {'nhs_number': '1234567890'}
-        result = self.backend.filter_users_by_claims(claims)
+    def test_filter_users_by_claims_for_existing_user(self):
+        user = User.objects.create_user(**self.claims)
+
+        result = self.backend.filter_users_by_claims(self.claims)
 
         self.assertEqual(result.count(), 1)
         self.assertEqual(result.first(), user)
 
     def test_filter_users_by_claims_for_non_existent_user(self):
-        claims = {'nhs_number': '1111111111'}
+        claims = {**self.claims, "nhs_number": "1111111111"}
         result = self.backend.filter_users_by_claims(claims)
 
         self.assertEqual(result.count(), 0)
 
     def test_filter_users_by_claims_when_no_claim_is_provided(self):
-        claims = {}
-        result = self.backend.filter_users_by_claims(claims)
+        result = self.backend.filter_users_by_claims({})
 
         self.assertEqual(result.count(), 0)
 
     def test_create_user_when_nhs_number_claim_is_provided(self):
-        claims = {'nhs_number': '1234567890'}
+        user = self.backend.create_user(self.claims)
 
-        user = self.backend.create_user(claims)
+        self.assertEqual(user.nhs_number, self.claims["nhs_number"])
+        self.assertEqual(user.email, self.claims["email"])
 
-        self.assertEqual(user.nhs_number, '1234567890')
 
-    def test_create_user_with_email_claim(self):
-        claims = {
-            'nhs_number': '1234567890',
-            'email': 'test@example.com'
-        }
+    def test_create_user_with_name_claims_sets_given_name_and_family_name(self):
+        user = self.backend.create_user(self.claims)
 
-        user = self.backend.create_user(claims)
+        self.assertEqual(user.given_name, 'Jane')
+        self.assertEqual(user.family_name, 'Smith')
 
-        self.assertEqual(user.nhs_number, '1234567890')
-        self.assertEqual(user.email, 'test@example.com')
 
     def test_create_user_without_nhs_number_raises_error(self):
         claims = {}
@@ -80,7 +82,7 @@ class TestNHSLoginOIDCBackend(TestCase):
 
 
     def test_update_user_returns_user(self):
-        user = User.objects.create_user(nhs_number='1234567890')
+        user = UserFactory.create(nhs_number='1234567890')
         claims = {'nhs_number': '1234567890', 'email': 'test@example.com'}
 
         result = self.backend.update_user(user, claims)
@@ -89,7 +91,7 @@ class TestNHSLoginOIDCBackend(TestCase):
         self.assertEqual(user.email, 'test@example.com')
 
     def test_update_user_updates_email_when_provided(self):
-        user = User.objects.create_user(
+        user = UserFactory.create(
             nhs_number='1234567890',
             email='old@example.com'
         )
@@ -102,7 +104,7 @@ class TestNHSLoginOIDCBackend(TestCase):
         self.assertEqual(result, user)
 
     def test_update_user_does_not_update_email_when_not_provided(self):
-        user = User.objects.create_user(
+        user = UserFactory.create(
             nhs_number='1234567890',
             email='existing@example.com'
         )
@@ -113,6 +115,27 @@ class TestNHSLoginOIDCBackend(TestCase):
         user.refresh_from_db()
         self.assertEqual(user.email, 'existing@example.com')
         self.assertEqual(result, user)
+
+
+    def test_update_user_updates_given_name_and_family_name_when_provided(self):
+        user = UserFactory.create(
+            nhs_number='1234567890',
+            given_name='Old',
+            family_name='Name',
+        )
+        claims = {
+            'nhs_number': '1234567890',
+            'given_name': 'Jane',
+            'family_name': 'Smith',
+        }
+
+        result = self.backend.update_user(user, claims)
+
+        user.refresh_from_db()
+        self.assertEqual(user.given_name, 'Jane')
+        self.assertEqual(user.family_name, 'Smith')
+        self.assertEqual(result, user)
+
 
     @patch('lung_cancer_screening.questions.auth.requests.post')
     def test_get_token_success(self, mock_post):

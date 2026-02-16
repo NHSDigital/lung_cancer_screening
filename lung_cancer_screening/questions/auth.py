@@ -39,16 +39,36 @@ class NHSLoginOIDCBackend(OIDCAuthenticationBackend):
             raise ValueError("Missing 'nhs_number' claim in OIDC token")
 
         email = claims.get('email')
+        given_name = claims.get('given_name')
+        family_name = claims.get('family_name')
         return user_class.objects.create_user(
             nhs_number=nhs_number,
-            email=email
+            email=email,
+            given_name=given_name,
+            family_name=family_name,
         )
 
     def update_user(self, user, claims):
+        changed = False
         email = claims.get('email')
+        given_name = claims.get("given_name")
+        family_name = claims.get("family_name")
+
         if email and user.email != email:
             user.email = email
+            changed = True
+
+        if given_name and user.given_name != given_name:
+            user.given_name = given_name
+            changed = True
+
+        if family_name and user.family_name != family_name:
+            user.family_name = family_name
+            changed = True
+
+        if changed:
             user.save()
+
         return user
 
     def _create_client_assertion(self):

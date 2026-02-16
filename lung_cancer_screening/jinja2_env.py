@@ -26,7 +26,12 @@ def environment(**options):
         )
 
     env.globals.update(
-        {"static": static, "url": reverse, "STATIC_URL": settings.STATIC_URL}
+        {
+            "static": static,
+            "url": reverse,
+            "STATIC_URL": settings.STATIC_URL,
+            "NHS_LOGIN_SETTINGS_URL": settings.NHS_LOGIN_SETTINGS_URL,
+        }
     )
 
     env.filters.update(
