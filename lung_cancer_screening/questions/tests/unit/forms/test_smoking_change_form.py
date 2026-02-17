@@ -10,12 +10,18 @@ from ....forms.smoking_change_form import SmokingChangeForm
 class TestSmokingChangeForm(TestCase):
     def setUp(self):
         self.response_set = ResponseSetFactory.create()
+        self.normal_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
+            level=TobaccoSmokingHistory.Levels.NORMAL,
+            complete=True
+        )
 
 
     def test_is_valid_a_valid_value(self):
         form = SmokingChangeForm(
             response_set=self.response_set,
-            tobacco_type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            tobacco_smoking_history_item=self.normal_smoking_history,
             data={"value": [TobaccoSmokingHistory.Levels.INCREASED]}
         )
         self.assertTrue(form.is_valid())
@@ -24,7 +30,7 @@ class TestSmokingChangeForm(TestCase):
     def test_is_invalid_with_an_invalid_value(self):
         form = SmokingChangeForm(
             response_set=self.response_set,
-            tobacco_type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            tobacco_smoking_history_item=self.normal_smoking_history,
             data={"value": ["invalid"]}
         )
         self.assertFalse(form.is_valid())
@@ -37,7 +43,7 @@ class TestSmokingChangeForm(TestCase):
     def test_is_invalid_when_no_option_is_selected(self):
         form = SmokingChangeForm(
             response_set=self.response_set,
-            tobacco_type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            tobacco_smoking_history_item=self.normal_smoking_history,
             data={"value": []}
         )
         self.assertFalse(form.is_valid())
@@ -50,7 +56,7 @@ class TestSmokingChangeForm(TestCase):
     def test_saves_an_tobacco_smoking_history_for_the_type_and_level_selected(self):
         form = SmokingChangeForm(
             response_set=self.response_set,
-            tobacco_type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            tobacco_smoking_history_item=self.normal_smoking_history,
             data={
                 "value": [
                     TobaccoSmokingHistory.Levels.INCREASED,
@@ -62,12 +68,11 @@ class TestSmokingChangeForm(TestCase):
         form.save()
 
         items = self.response_set.tobacco_smoking_history
-        self.assertEqual(items.count(), 2)
+        self.assertEqual(items.count(), 3)  # Normal, Increased and Decreased
         self.assertTrue(all([
             item.type == TobaccoSmokingHistoryTypes.CIGARETTES
             for item in items.all()
         ]))
-
 
     def test_does_not_create_a_new_tobacco_smoking_history_if_the_level_already_exists(self):
         existing_item = TobaccoSmokingHistoryFactory(
@@ -78,16 +83,16 @@ class TestSmokingChangeForm(TestCase):
 
         form = SmokingChangeForm(
             response_set=self.response_set,
-            tobacco_type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            tobacco_smoking_history_item=self.normal_smoking_history,
             data={
                 "value": [TobaccoSmokingHistory.Levels.INCREASED]
             }
         )
         form.save()
-
-        self.assertEqual(self.response_set.tobacco_smoking_history.count(), 1)
+        increased_history_items = self.response_set.tobacco_smoking_history.filter(level=TobaccoSmokingHistory.Levels.INCREASED)
+        self.assertEqual(increased_history_items.count(), 1)
         self.assertEqual(
-            self.response_set.tobacco_smoking_history.first(),
+            increased_history_items.first(),
             existing_item
         )
 
@@ -101,7 +106,7 @@ class TestSmokingChangeForm(TestCase):
 
         form = SmokingChangeForm(
             response_set=self.response_set,
-            tobacco_type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            tobacco_smoking_history_item=self.normal_smoking_history,
             data={
                 "value": [TobaccoSmokingHistory.Levels.NO_CHANGE]
             }
@@ -114,15 +119,9 @@ class TestSmokingChangeForm(TestCase):
 
 
     def test_does_not_delete_normal_level_smoking_history(self):
-        TobaccoSmokingHistoryFactory(
-            response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
-            level=TobaccoSmokingHistory.Levels.NORMAL,
-        )
-
         form = SmokingChangeForm(
             response_set=self.response_set,
-            tobacco_type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            tobacco_smoking_history_item=self.normal_smoking_history,
             data={
                 "value": [TobaccoSmokingHistory.Levels.NO_CHANGE]
             }
@@ -134,15 +133,9 @@ class TestSmokingChangeForm(TestCase):
         ).count(), 1)
 
     def test_prevents_both_no_change_and_other_levels_selected(self):
-        TobaccoSmokingHistoryFactory(
-            response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
-            level=TobaccoSmokingHistory.Levels.NORMAL,
-        )
-
         form = SmokingChangeForm(
             response_set=self.response_set,
-            tobacco_type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            tobacco_smoking_history_item=self.normal_smoking_history,
             data={
                 "value": [TobaccoSmokingHistory.Levels.NO_CHANGE, TobaccoSmokingHistory.Levels.INCREASED]
             }
@@ -165,19 +158,13 @@ class TestSmokingChangeForm(TestCase):
             type=TobaccoSmokingHistoryTypes.CIGARETTES,
             level=TobaccoSmokingHistory.Levels.DECREASED,
         )
-        TobaccoSmokingHistoryFactory(
-            response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
-            level=TobaccoSmokingHistory.Levels.STOPPED,
-        )
 
         form = SmokingChangeForm(
             response_set=self.response_set,
-            tobacco_type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            tobacco_smoking_history_item=self.normal_smoking_history,
         )
 
         self.assertEqual(form.fields["value"].initial, [
             TobaccoSmokingHistory.Levels.INCREASED,
             TobaccoSmokingHistory.Levels.DECREASED,
-            TobaccoSmokingHistory.Levels.STOPPED,
         ])

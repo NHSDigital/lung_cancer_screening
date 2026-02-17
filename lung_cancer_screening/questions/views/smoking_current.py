@@ -13,7 +13,7 @@ class SmokingCurrentView(LoginRequiredMixin, EnsureResponseSet, EnsureEligibleMi
     template_name = "question_form.jinja"
     form_class = SmokingCurrentForm
     model = SmokingCurrentResponse
-    back_link_url = reverse_lazy("questions:age_when_started_smoking")
+    back_link_url = reverse_lazy("questions:types_tobacco_smoking")
 
     def get_success_url(self):
         return reverse(
