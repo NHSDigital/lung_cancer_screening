@@ -45,7 +45,6 @@ from .views.smoking_change import SmokingChangeView
 from .views.start import StartView
 from .views.weight import WeightView
 from .views.confirmation import ConfirmationView
-from .views.logout import LogoutView
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/start'), name='root'),
@@ -78,5 +77,4 @@ urlpatterns = [
     path('start', StartView.as_view(), name='start'),
     path('weight', WeightView.as_view(), name='weight'),
     path('confirmation', ConfirmationView.as_view(), name='confirmation'),
-    path('logout', LogoutView.as_view(), name='logout'),
 ]

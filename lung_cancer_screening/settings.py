@@ -252,9 +252,8 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_URL = '/oidc/authenticate/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-
-
 LOGIN_REDIRECT_URL_FAILURE = "/agree-to-share-information"
+ALLOW_LOGOUT_GET_METHOD = True
 
 # Additional security settings for production
 if not DEBUG:
