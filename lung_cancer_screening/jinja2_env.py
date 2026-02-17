@@ -38,4 +38,8 @@ def environment(**options):
         {"singularize": singularize}
     )
 
+    env.filters.update(
+        {"singularize": singularize}
+    )
+
     return env

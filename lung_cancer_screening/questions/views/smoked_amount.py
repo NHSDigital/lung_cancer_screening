@@ -35,6 +35,13 @@ class SmokedAmountView(
     model = SmokedAmountResponse
     success_url = reverse_lazy("questions:responses")
 
+    def get_success_url(self):
+        return reverse(
+            "questions:smoking_change",
+            kwargs={"tobacco_type": self.kwargs["tobacco_type"]},
+            query=self.get_change_query_params(),
+        )
+
     def get_back_link_url(self):
         return reverse("questions:smoked_total_years", kwargs={"tobacco_type": self.kwargs["tobacco_type"]})
 

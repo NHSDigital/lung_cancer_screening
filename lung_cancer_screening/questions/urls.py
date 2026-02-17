@@ -41,6 +41,7 @@ from .views.smoking_current import SmokingCurrentView
 from .views.smoked_total_years import SmokedTotalYearsView
 from .views.smoking_frequency import SmokingFrequencyView
 from .views.smoked_amount import SmokedAmountView
+from .views.smoking_change import SmokingChangeView
 from .views.start import StartView
 from .views.weight import WeightView
 from .views.confirmation import ConfirmationView
@@ -71,6 +72,7 @@ urlpatterns = [
     path('<tobacco_type>-smoked-total-years', SmokedTotalYearsView.as_view(), name='smoked_total_years'),
     path('<tobacco_type>-smoking-frequency', SmokingFrequencyView.as_view(), name='smoking_frequency'),
     path('<tobacco_type>-smoked-amount', SmokedAmountView.as_view(), name='smoked_amount'),
+    path('<tobacco_type>-smoking-change', SmokingChangeView.as_view(), name='smoking_change'),
     path('check-your-answers', ResponsesView.as_view(), name='responses'),
     path('sex-at-birth', SexAtBirthView.as_view(), name='sex_at_birth'),
     path('start', StartView.as_view(), name='start'),

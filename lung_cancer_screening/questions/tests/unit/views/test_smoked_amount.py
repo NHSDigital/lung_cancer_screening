@@ -157,7 +157,7 @@ class TestPostSmokedAmount(TestCase):
             self.smoking_history.smoked_amount_response.value, self.valid_params["value"]
         )
 
-    def test_redirects_to_responses(self):
+    def test_redirects_to_next_question(self):
         response = self.client.post(
             reverse("questions:smoked_amount", kwargs={
                 "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
@@ -165,7 +165,9 @@ class TestPostSmokedAmount(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:responses"))
+        self.assertRedirects(response, reverse("questions:smoking_change", kwargs={
+            "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+        }))
 
 
     def test_redirects_to_next_question_forwarding_the_change_query_param(self):
@@ -181,6 +183,8 @@ class TestPostSmokedAmount(TestCase):
 
         self.assertRedirects(
             response,
-            reverse("questions:responses"),
+            reverse("questions:smoking_change", kwargs={
+                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+            }, query={"change": "True"}),
             fetch_redirect_response=False,
         )

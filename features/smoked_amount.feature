@@ -26,7 +26,7 @@ Feature: Smoked amount page
     Then I see a back link to "/cigarettes-smoked-total-years"
     When I fill in "Roughly how many cigarettes do you smoke in a normal day?" with "20"
     And I submit the form
-    Then I am on "/check-your-answers"
+    Then I am on "/cigarettes-smoking-change"
 
   Scenario: Checking responses and changing them
     Given I am logged in
@@ -44,5 +44,6 @@ Feature: Smoked amount page
     Then I see "20" filled in for "Roughly how many cigarettes do you smoke in a normal day?"
     When I fill in "Roughly how many cigarettes do you smoke in a normal day?" with "15"
     And I click "Continue"
-    Then I am on "/check-your-answers"
-    And I see "15 cigarettes a day" as a response to "Current cigarette smoking" under "Smoking history"
+    Then I am on "/cigarettes-smoking-change?change=True"
+    When I go to "/check-your-answers"
+    Then I see "15 cigarettes a day" as a response to "Current cigarette smoking" under "Smoking history"
