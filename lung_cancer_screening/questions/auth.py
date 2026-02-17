@@ -47,7 +47,7 @@ class NHSLoginOIDCBackend(OIDCAuthenticationBackend):
         )
 
     def update_user(self, user, claims):
-        user.sub = claims.get('sub'),
+        user.sub = claims.get('sub')
         user.nhs_number = claims.get('nhs_number')
         user.email = claims.get('email')
         user.given_name = claims.get('given_name')
