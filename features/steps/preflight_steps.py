@@ -99,6 +99,10 @@ def given_i_have_answered_questions_showing_i_have_smoked_tobacco_type_frequency
     when_i_check_label(context, humanize(frequency))
     when_i_submit_the_form(context)
 
+@given('I have answered questions showing I have smoked {amount} "{tobacco_type}" "{frequency}"')
+def i_have_answered_questions_showing_i_have_smoked_amount_tobacco_type_frequency(context, amount, tobacco_type, frequency):
+    given_i_have_answered_questions_showing_i_have_smoked_tobacco_type_frequency(context, tobacco_type, frequency)
+    given_i_have_answered_questions_showing_i_have_smoked_amount_tobacco_type(context, amount, tobacco_type)
 
 @given('I have answered questions showing I have smoked {amount} "{tobacco_type}" as the amount')
 def given_i_have_answered_questions_showing_i_have_smoked_amount_tobacco_type(context, amount, tobacco_type):

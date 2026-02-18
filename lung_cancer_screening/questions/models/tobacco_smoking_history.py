@@ -32,7 +32,6 @@ class TobaccoSmokingHistory(BaseModel):
         DECREASED = "decreased", "Yes, I used to smoke fewer"
 
         # Only used to populate values in the form
-        STOPPED = "stopped", "Yes, I stopped smoking for a period of 1 year or longer"
         NO_CHANGE = NO_CHANGE_VALUE, "No, it has not changed"
 
 

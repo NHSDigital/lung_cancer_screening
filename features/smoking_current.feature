@@ -22,7 +22,7 @@ Feature: Smoking current page
     And I have answered questions showing I have smoked for "10" years
     And I have answered questions showing I have smoked "Cigarettes"
     When I go to "/cigarettes-smoking-current"
-    Then I see a back link to "/age-when-started-smoking"
+    Then I see a back link to "/types-tobacco-smoking"
     When I check "Yes" and submit
     Then I am on "/cigarettes-smoked-total-years"
 
