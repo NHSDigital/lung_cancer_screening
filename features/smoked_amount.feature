@@ -26,7 +26,7 @@ Feature: Smoked amount page
     And I have answered questions showing I currently smoke "Cigarettes"
     And I have answered questions showing I have smoked "Cigarettes" daily
     When I go to "/cigarettes-smoked-amount"
-    Then I see a back link to "/cigarettes-smoked-total-years"
+    Then I see a back link to "/cigarettes-smoking-frequency"
     When I fill in "Roughly how many cigarettes do you currently smoke in a normal day?" with "20"
     And I submit the form
     Then I am on "/cigarettes-smoking-change"

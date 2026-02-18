@@ -63,7 +63,7 @@ class TestGetSmokedAmount(TestCase):
 
         self.assertEqual(response.status_code, 404)
 
-    @tag("wip")
+
     def test_redirects_if_the_user_does_not_have_a_smoking_current_response(self):
         self.smoking_history.smoking_current_response.delete()
 
