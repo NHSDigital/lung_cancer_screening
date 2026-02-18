@@ -92,6 +92,18 @@ def given_i_have_answered_questions_showing_i_have_smoked_tobacco_type(
     when_i_submit_the_form(context)
 
 
+@given('I have answered questions showing I currently smoke "{tobacco_type}"')
+def given_i_have_answered_questions_showing_i_currently_smoke_tobacco_type(context, tobacco_type):
+    given_i_have_answered_questions_showing_i_have_smoked_tobacco_type(
+        context, tobacco_type
+    )
+    context.page.goto(
+        f"{context.live_server_url}/{tobacco_type.lower()}-smoking-current"
+    )
+    when_i_check_label(context, "Yes")
+    when_i_submit_the_form(context)
+
+
 @given('I have answered questions showing I have smoked "{tobacco_type}" {frequency}')
 def given_i_have_answered_questions_showing_i_have_smoked_tobacco_type_frequency(context, tobacco_type, frequency):
     given_i_have_answered_questions_showing_i_have_smoked_tobacco_type(context, tobacco_type)
@@ -107,5 +119,5 @@ def i_have_answered_questions_showing_i_have_smoked_amount_tobacco_type_frequenc
 @given('I have answered questions showing I have smoked {amount} "{tobacco_type}" as the amount')
 def given_i_have_answered_questions_showing_i_have_smoked_amount_tobacco_type(context, amount, tobacco_type):
     context.page.goto(f"{context.live_server_url}/{tobacco_type.lower()}-smoked-amount")
-    when_i_fill_in_label_with_value(context, f"Roughly how many {tobacco_type.lower()} do you smoke in a normal day?", amount)
+    when_i_fill_in_label_with_value(context, f"Roughly how many {tobacco_type.lower()} do you currently smoke in a normal day?", amount)
     when_i_submit_the_form(context)

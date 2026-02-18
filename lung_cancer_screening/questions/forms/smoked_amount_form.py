@@ -28,10 +28,13 @@ class SmokedAmountForm(forms.ModelForm):
         return self.instance.tobacco_smoking_history.human_type().lower()
 
     def _type_label(self):
-        return f"Roughly how many {self.type_string()} do you smoke in a normal {self.frequency_text}?"
+        return f"Roughly how many {self.type_string()} do you {self._currently_or_previously_text()} smoke in a normal {self.frequency_text}?"
+
+    def _currently_or_previously_text(self):
+        return "currently" if self.instance.tobacco_smoking_history.smoking_current_response.value else "previously"
 
     def _type_required_error_message(self):
-        return f"Enter how many {self.type_string()} you currently smoke in a normal {self.frequency_text}"
+        return f"Enter how many {self.type_string()} you {self._currently_or_previously_text()} smoke in a normal {self.frequency_text}"
 
     def _type_min_value_error_message(self):
         return f"The number of {self.type_string()} you smoke must be at least 1"

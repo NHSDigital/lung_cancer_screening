@@ -144,7 +144,7 @@ class TestPostSmokingFrequency(TestCase):
 
         self.assertRedirects(response, reverse("questions:smoked_amount", kwargs={
             "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
-        }))
+        }), fetch_redirect_response=False)
 
 
     def test_redirects_to_next_question_forwarding_the_change_query_param(self):

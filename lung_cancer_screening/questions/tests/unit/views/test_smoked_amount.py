@@ -6,6 +6,7 @@ from lung_cancer_screening.questions.models.tobacco_smoking_history import Tobac
 from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
 from ...factories.smoking_frequency_response_factory import SmokingFrequencyResponseFactory
+from ...factories.smoking_current_response_factory import SmokingCurrentResponseFactory
 from ....models.smoking_frequency_response import SmokingFrequencyValues
 
 @tag("SmokedAmount")
@@ -16,6 +17,10 @@ class TestGetSmokedAmount(TestCase):
         self.smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
             type=TobaccoSmokingHistoryTypes.CIGARETTES
+        )
+        self.smoking_current_response = SmokingCurrentResponseFactory.create(
+            tobacco_smoking_history=self.smoking_history,
+            value=True
         )
         self.frequency_response = SmokingFrequencyResponseFactory.create(
             tobacco_smoking_history=self.smoking_history,
@@ -58,6 +63,17 @@ class TestGetSmokedAmount(TestCase):
 
         self.assertEqual(response.status_code, 404)
 
+    @tag("wip")
+    def test_redirects_if_the_user_does_not_have_a_smoking_current_response(self):
+        self.smoking_history.smoking_current_response.delete()
+
+        response = self.client.get(reverse("questions:smoked_amount", kwargs={
+            "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+        }))
+
+        self.assertRedirects(response, reverse("questions:smoking_current", kwargs={
+            "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+        }))
 
     def test_redirects_when_the_smoking_history_item_does_not_have_a_smoking_frequency_response(self):
         self.frequency_response.delete()
@@ -87,6 +103,10 @@ class TestPostSmokedAmount(TestCase):
         self.smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
             type=TobaccoSmokingHistoryTypes.CIGARETTES
+        )
+        self.smoking_current_response = SmokingCurrentResponseFactory.create(
+            tobacco_smoking_history=self.smoking_history,
+            value=True
         )
         self.frequency_response = SmokingFrequencyResponseFactory.create(
             tobacco_smoking_history=self.smoking_history,
