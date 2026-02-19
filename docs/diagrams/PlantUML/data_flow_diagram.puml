@@ -2,7 +2,7 @@
 
 actor "Participant" as Participant
 entity "LCS App" as LCS_App
-entity "NHS Login" as NHS_Login
+entity "NHS login" as NHS_Login
 entity "In Health" as InHealth
 entity "NHS Incentivisation system" as NHS_Incentivisation_System
 

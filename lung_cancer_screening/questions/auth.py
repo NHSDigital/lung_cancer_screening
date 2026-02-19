@@ -1,5 +1,5 @@
 """
-Custom OIDC authentication backend for NHS Login with private key JWT.
+Custom OIDC authentication backend for NHS login with private key JWT.
 """
 import logging
 import time
