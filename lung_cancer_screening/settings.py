@@ -9,13 +9,14 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
+# ruff: noqa: F403
 import sys
 from os import environ
 from pathlib import Path
 
 from jinja2 import ChainableUndefined
 
-from lung_cancer_screening.config.auth_settings import *
+from .config.auth_settings import *
 
 
 def boolean_env(key, default=None):
@@ -220,6 +221,7 @@ LOGGING = {
 if not DEBUG:
     SECURE_SSL_REDIRECT = False
     SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
     USE_X_FORWARDED_HOST = True
 
 DISABLE_RECENT_SUBMISSION_LIMITATION = boolean_env("DISABLE_RECENT_SUBMISSION_LIMITATION", default=False)
