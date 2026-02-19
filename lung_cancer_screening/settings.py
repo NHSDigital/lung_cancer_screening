@@ -217,7 +217,7 @@ LOGGING = {
 # Custom User Model
 AUTH_USER_MODEL = 'questions.User'
 
-# OIDC Client Configuration for NHS Login
+# OIDC Client Configuration for NHS login
 # See: https://mozilla-django-oidc.readthedocs.io/
 OIDC_RP_CLIENT_ID = environ.get("OIDC_RP_CLIENT_ID")
 # Private key JWT authentication (no client secret)
@@ -230,7 +230,7 @@ OIDC_OP_AUTHORIZATION_ENDPOINT = f"{OIDC_OP_FQDN}/authorize"
 OIDC_OP_TOKEN_ENDPOINT = f"{OIDC_OP_FQDN}/token"
 OIDC_OP_USER_ENDPOINT = f"{OIDC_OP_FQDN}/userinfo"
 OIDC_OP_JWKS_ENDPOINT = f"{OIDC_OP_FQDN}/.well-known/jwks.json"
-# NHS Login requires RS512 for token endpoint authentication
+# NHS login requires RS512 for token endpoint authentication
 # See: https://auth.sandpit.signin.nhs.uk/.well-known/openid-configuration
 OIDC_RP_SIGN_ALGO = "RS512"
 OIDC_RP_SCOPES = "openid profile profile_extended email"

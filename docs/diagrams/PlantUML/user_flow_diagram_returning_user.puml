@@ -3,14 +3,14 @@
 entity "In Health" as InHealth
 actor "Participant" as Participant
 entity "LCS App" as LCS_App
-entity "NHS Login" as NHS_Login
+entity "NHS login" as NHS_Login
 entity "NHS Incentivisation system" as NHS_Incentivisation_System
 
 ' Participant flow
 InHealth -> Participant: Initial contact via letter or SMS
 Participant -> LCS_App
-LCS_App -> NHS_Login: Participant clicks start and is redirected to NHS Login
-NHS_Login -> LCS_App: NHS Login shares profile, email address and NHS Number (scopes "openid profile email")
+LCS_App -> NHS_Login: Participant clicks start and is redirected to NHS login
+NHS_Login -> LCS_App: NHS login shares profile, email address and NHS Number (scopes "openid profile email")
 Participant -> LCS_App: Completes questionnaire and submits
 
 ' In Health flow
