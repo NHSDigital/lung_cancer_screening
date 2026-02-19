@@ -2,14 +2,14 @@
 
 actor "Participant" as Participant
 entity "LCS App" as LCS_App
-entity "NHS Login" as NHS_Login
+entity "NHS login" as NHS_login
 entity "In Health" as InHealth
 entity "NHS Incentivisation system" as NHS_Incentivisation_System
 
 ' Date flow into LCS App
 Participant -> LCS_App
-LCS_App -> NHS_Login
-NHS_Login -> LCS_App: Participant logs in and shares profile, email address and NHS Number (scopes "openid profile email") with LCS app
+LCS_App -> NHS_login
+NHS_login -> LCS_App: Participant logs in and shares profile, email address and NHS Number (scopes "openid profile profile_extended email") with LCS app
 Participant -> LCS_App: Completes questionnaire
 
 ' Data flow from LCS App to In Health
