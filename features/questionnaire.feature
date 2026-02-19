@@ -85,7 +85,7 @@ Feature: Questionnaire
     When I check "Daily" and submit
 
     Then I am on "/cigarettes-smoked-amount"
-    When I fill in "Roughly how many cigarettes do you smoke in a normal day?" with "15"
+    When I fill in "Roughly how many cigarettes do you currently smoke in a normal day?" with "15"
     And I submit the form
 
     Then I am on "/cigarettes-smoking-change"

@@ -4,8 +4,6 @@
 
   <h1 class="nhsuk-heading-l">{{ form.type_string() | title | singularize }} smoking</h1>
 
-  <p>This is a test of the online service. In the future, we will use this information to give you an accurate result.</p>
-
-  <p>The question on the next page will ask if the number of cigarettes you smoke has changed over time.</p>
+  <p>The question on the next page will ask if the number of {{ form.type_string() }} you smoke has changed over time.</p>
 
 {% endblock prelude %}

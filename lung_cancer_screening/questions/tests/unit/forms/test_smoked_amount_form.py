@@ -1,6 +1,7 @@
 from django.test import TestCase, tag
 
 from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
+from ...factories.smoking_current_response_factory import SmokingCurrentResponseFactory
 from ...factories.smoked_amount_response_factory import SmokedAmountResponseFactory
 from ...factories.smoking_frequency_response_factory import SmokingFrequencyResponseFactory
 from ....models.tobacco_smoking_history import TobaccoSmokingHistoryTypes
@@ -13,6 +14,10 @@ class TestSmokedAmountForm(TestCase):
     def setUp(self):
         self.smoking_history = TobaccoSmokingHistoryFactory.create(
             type=TobaccoSmokingHistoryTypes.CIGARETTES.value
+        )
+        self.smoking_current_response = SmokingCurrentResponseFactory.create(
+            tobacco_smoking_history=self.smoking_history,
+            value=False
         )
         self.frequency_response = SmokingFrequencyResponseFactory.create(
             tobacco_smoking_history=self.smoking_history,
@@ -50,6 +55,9 @@ class TestSmokedAmountForm(TestCase):
         cigarettes_smoking_history = TobaccoSmokingHistoryFactory.create(
             type=TobaccoSmokingHistoryTypes.CIGARETTES.value
         )
+        SmokingCurrentResponseFactory.create(
+            tobacco_smoking_history=cigarettes_smoking_history
+        )
         cigars_smoking_history = TobaccoSmokingHistoryFactory.create(
             type=TobaccoSmokingHistoryTypes.CIGARS.value
         )
@@ -57,6 +65,9 @@ class TestSmokedAmountForm(TestCase):
             tobacco_smoking_history=cigarettes_smoking_history
         )
         cigars_response = SmokedAmountResponseFactory.create(
+            tobacco_smoking_history=cigars_smoking_history
+        )
+        SmokingCurrentResponseFactory.create(
             tobacco_smoking_history=cigars_smoking_history
         )
         cigarettes_form = SmokedAmountForm(
@@ -79,6 +90,15 @@ class TestSmokedAmountForm(TestCase):
         )
 
         self.assertIn("my frequency", form.fields["value"].label)
+
+
+    def test_label_has_the_correct_currently_or_previously_text(self):
+        form = SmokedAmountForm(
+            instance=self.response,
+            data={"value": 20},
+        )
+
+        self.assertIn("previously", form.fields["value"].label)
 
 
     def test_min_value_validation_has_the_correct_message(self):
