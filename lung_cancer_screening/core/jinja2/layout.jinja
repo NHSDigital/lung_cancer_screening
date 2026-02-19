@@ -25,7 +25,7 @@
         },
         {
           "text": "Log out",
-          "href": url("questions:logout")
+          "href": url("oidc_logout")
         }
       ] if request.user.is_authenticated else []
     }

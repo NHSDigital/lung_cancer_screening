@@ -51,6 +51,37 @@ class TestTypesTobaccoSmokingForm(TestCase):
             ["Select the type of tobacco you smoke or have smoked"],
         )
 
+    def test_does_not_save_smoking_history_if_invalid(self):
+        form = TypesTobaccoSmokingForm(
+            response_set=self.response_set,
+            data={
+                "value": ["invalid"]
+            }
+        )
+
+        form.save()
+
+        self.assertEqual(self.response_set.tobacco_smoking_history.count(), 0)
+
+
+    def test_does_not_delete_smoking_history_if_invalid(self):
+        history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES
+        )
+
+        form = TypesTobaccoSmokingForm(
+            response_set=self.response_set,
+            data={
+                "value": ["invalid"]
+            }
+        )
+
+        form.save()
+
+        self.assertEqual(self.response_set.tobacco_smoking_history.first(), history)
+
+
     def test_saves_an_tobacco_smoking_type_for_each_value_selected(self):
         form = TypesTobaccoSmokingForm(
             response_set=self.response_set,

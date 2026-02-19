@@ -92,8 +92,6 @@ class NHSLoginOIDCBackend(OIDCAuthenticationBackend):
             headers=headers
         )
 
-        if isinstance(assertion, bytes):
-            return assertion.decode('utf-8')
         return assertion
 
     def get_token(self, token_payload):
