@@ -1,6 +1,6 @@
 dns_zone_name                    = "digital-lung-cancer-screening.nhs.uk"
 enable_entra_id_authentication   = false
-fetch_secrets_from_app_key_vault = true
+fetch_secrets_from_app_key_vault = false
 front_door_profile               = "afd-live-hub-lungcs"
 features = {
   front_door         = true
