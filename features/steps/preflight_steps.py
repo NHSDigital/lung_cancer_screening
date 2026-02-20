@@ -8,6 +8,7 @@ from features.steps.form_steps import (
     when_i_fill_in_label_with_value
 )
 
+from lung_cancer_screening.questions.models.tobacco_smoking_history import TobaccoSmokingHistory
 from lung_cancer_screening.questions.tests.factories.have_you_ever_smoked_response_factory import (
     ResponseSetFactory,
 )
@@ -120,4 +121,10 @@ def i_have_answered_questions_showing_i_have_smoked_amount_tobacco_type_frequenc
 def given_i_have_answered_questions_showing_i_have_smoked_amount_tobacco_type(context, amount, tobacco_type):
     context.page.goto(f"{context.live_server_url}/{tobacco_type.lower()}-smoked-amount")
     when_i_fill_in_label_with_value(context, f"Roughly how many {tobacco_type.lower()} do you currently smoke in a normal day?", amount)
+    when_i_submit_the_form(context)
+
+@given('I have answered questions showing I have "{level}" my level of "{tobacco_type}" smoking from "{previous_level}"')
+def given_i_have_answered_questions_showing_i_have_level_of_smoking(context, level, tobacco_type, previous_level):
+    context.page.goto(f"{context.live_server_url}/{tobacco_type.lower()}-smoking-change")
+    when_i_check_label(context, f"{TobaccoSmokingHistory.Levels[level.upper()].label} than {previous_level.lower()}")
     when_i_submit_the_form(context)
