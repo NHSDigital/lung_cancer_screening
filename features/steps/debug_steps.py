@@ -8,6 +8,6 @@ def screenshot(context, value=""):
         full_page=True, path=f"screenshots/{datetime.now()}-{value}-screenshot.png"
     )
 
-@step("I print eligibiity")
-def print_eligibiity(context):
+@step("I print eligibility")
+def print_eligibility(context):
     print("Is user eligible?: ", context.current_user.responseset_set.last().is_eligible())

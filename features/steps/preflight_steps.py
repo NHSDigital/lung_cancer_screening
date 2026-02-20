@@ -1,7 +1,6 @@
 from behave import given
 from inflection import humanize
 
-from features.steps.debug_steps import screenshot
 from features.steps.form_steps import (
     when_i_fill_in_and_submit_my_date_of_birth_as_x_years_ago,
     when_i_submit_the_form,
