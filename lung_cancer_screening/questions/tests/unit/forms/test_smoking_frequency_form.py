@@ -5,7 +5,6 @@ from lung_cancer_screening.questions.models.smoking_frequency_response import Sm
 from lung_cancer_screening.questions.tests.factories.response_set_factory import ResponseSetFactory
 
 from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
-from ...factories.smoking_frequency_response_factory import SmokingFrequencyResponseFactory
 from ....models.tobacco_smoking_history import TobaccoSmokingHistory, TobaccoSmokingHistoryTypes
 
 
