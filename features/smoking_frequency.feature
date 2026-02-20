@@ -49,3 +49,11 @@ Feature: Smoking frequency page
     Then I am on "/cigarettes-smoked-amount?change=True"
     When I go to "/check-your-answers"
     Then I see "10 cigarettes a week" as a response to "Current cigarette smoking" under "Smoking history"
+
+  Scenario: When I say that I have increased the amount I smoke I am shown the correct page
+    Given I am logged in
+    And I have answered questions showing I am eligible
+    And I have answered questions showing I have smoked 10 "Cigarettes" "daily"
+    And I have answered questions showing I have "increased" my level of "Cigarettes" smoking from "10 cigarettes a day"
+    Then I am on "/cigarettes-smoking-increased-frequency"
+    And I see a title "When you smoked more than 10 cigarettes a day, how often did you smoke cigarettes?"

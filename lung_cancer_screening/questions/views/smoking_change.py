@@ -3,6 +3,8 @@ from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormView
 
+from lung_cancer_screening.questions.models.tobacco_smoking_history import TobaccoSmokingHistory
+
 from .mixins.ensure_response_set import EnsureResponseSet
 from .mixins.ensure_eligible import EnsureEligibleMixin
 from .mixins.ensure_smoking_history_for_type import EnsureSmokingHistoryForTypeMixin
@@ -55,4 +57,35 @@ class SmokingChangeView(
 
 
     def get_success_url(self):
-        return reverse("questions:responses")
+        tobacco_smoking_history = self.request.response_set.tobacco_smoking_history
+        if tobacco_smoking_history.filter(level=TobaccoSmokingHistory.Levels.INCREASED).exists():
+            return reverse(
+                "questions:smoking_frequency",
+                kwargs={
+                    "tobacco_type": self.kwargs["tobacco_type"],
+                    "level": TobaccoSmokingHistory.Levels.INCREASED,
+                },
+                query=self.get_change_query_params()
+            )
+        elif tobacco_smoking_history.filter(level=TobaccoSmokingHistory.Levels.DECREASED).exists():
+            return reverse(
+                "questions:smoking_frequency",
+                kwargs={
+                    "tobacco_type": self.kwargs["tobacco_type"],
+                    "level": TobaccoSmokingHistory.Levels.DECREASED,
+                },
+                query=self.get_change_query_params(),
+            )
+        else:
+            return reverse("questions:responses")
+
+
+    def should_redirect_to_responses(self, request):
+        return bool(request.POST.get("change"))
+
+
+    def get_change_query_params(self):
+        if not self.should_redirect_to_responses(self.request):
+            return {}
+
+        return {"change": "True"}

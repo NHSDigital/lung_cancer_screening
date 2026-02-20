@@ -37,7 +37,7 @@ Feature: Smoking change page
     When I uncheck "No, it has not changed"
     And I check "Yes, I used to smoke more than 10 cigarettes a day"
     And I submit the form
-    Then I am on "/check-your-answers"
+    Then I am on "/cigarettes-smoking-increased-frequency"
 
   Scenario: Checking responses and changing them
     Given I am logged in
@@ -56,5 +56,6 @@ Feature: Smoking change page
     When I check "Yes, I used to smoke more than 10 cigarettes a day"
     And I uncheck "No, it has not changed"
     And I submit the form
-    Then I am on "/check-your-answers"
-    And I see "Yes, I used to smoke more" as a response to "Has the number of cigarettes you normally smoke changed over time?" under "Smoking history"
+    Then I am on "/cigarettes-smoking-increased-frequency?change=True"
+    When I go to "/check-your-answers"
+    Then I see "Yes, I used to smoke more" as a response to "Has the number of cigarettes you normally smoke changed over time?" under "Smoking history"
