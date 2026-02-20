@@ -25,14 +25,13 @@ class NHSLoginAuthenticationRequestView(OIDCAuthenticationRequestView):
         state = get_random_string(self.get_settings("OIDC_STATE_SIZE", 32))
         redirect_field_name = self.get_settings("OIDC_REDIRECT_FIELD_NAME", "next")
 
-        redirect_uri = self.get_settings("OIDC_RP_REDIRECT_URI")
-        print(f"redirect_uri: {redirect_uri}")
         params = {
             "response_type": "code",
             "scope": self.get_settings("OIDC_RP_SCOPES", "openid email"),
             "client_id": self.OIDC_RP_CLIENT_ID,
             "redirect_uri": self.get_settings("OIDC_RP_REDIRECT_URI"),
             "state": state,
+            "vtr": self.get_settings("OIDC_RP_VTR"),
         }
 
         params.update(self.get_extra_params(request))
