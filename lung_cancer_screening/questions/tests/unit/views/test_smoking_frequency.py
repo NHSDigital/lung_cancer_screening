@@ -3,7 +3,7 @@ from django.test import TestCase, tag
 from django.urls import reverse
 
 from ....models.smoking_frequency_response import SmokingFrequencyValues
-from ....models.tobacco_smoking_history import TobaccoSmokingHistoryTypes
+from ....models.tobacco_smoking_history import TobaccoSmokingHistory, TobaccoSmokingHistoryTypes
 from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
 
 from .helpers.authentication import login_user
@@ -17,7 +17,8 @@ class TestGetSmokingFrequency(TestCase):
         self.response_set = ResponseSetFactory.create(user=self.user, eligible=True)
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES.value
+            type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
+            complete=True
         )
 
 
@@ -69,6 +70,73 @@ class TestGetSmokingFrequency(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+    def test_back_link_normal_level(self):
+        response = self.client.get(reverse("questions:smoking_frequency", kwargs = {
+                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+            }))
+
+        self.assertEqual(
+            response.context_data["back_link_url"],
+            "/cigarettes-smoked-total-years",
+        )
+
+    def test_back_link_increased_level(self):
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
+            level=TobaccoSmokingHistory.Levels.INCREASED
+        )
+
+        response = self.client.get(reverse("questions:smoking_frequency", kwargs = {
+                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower(),
+                "level": TobaccoSmokingHistory.Levels.INCREASED.value.lower()
+            }))
+
+        self.assertEqual(
+            response.context_data["back_link_url"],
+            "/cigarettes-smoking-change"
+        )
+
+    def test_back_link_decreased_level_with_increased_level_present(self):
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
+            level=TobaccoSmokingHistory.Levels.INCREASED
+        )
+
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
+            level=TobaccoSmokingHistory.Levels.DECREASED
+        )
+
+        response = self.client.get(reverse("questions:smoking_frequency", kwargs = {
+                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower(),
+                "level": TobaccoSmokingHistory.Levels.DECREASED.value.lower()
+            }))
+
+        self.assertEqual(
+            response.context_data["back_link_url"],
+            "/cigarettes-smoked-increased-amount"
+        )
+
+    def test_back_link_decreased_level_without_increased_level_present(self):
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
+            level=TobaccoSmokingHistory.Levels.DECREASED
+        )
+
+        response = self.client.get(reverse("questions:smoking_frequency", kwargs = {
+                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower(),
+                "level": TobaccoSmokingHistory.Levels.DECREASED.value.lower()
+            }))
+
+        self.assertEqual(
+            response.context_data["back_link_url"],
+            "/cigarettes-smoking-change"
+        )
+
 
 @tag("SmokingFrequency")
 class TestPostSmokingFrequency(TestCase):
@@ -77,7 +145,8 @@ class TestPostSmokingFrequency(TestCase):
         self.response_set = ResponseSetFactory.create(user=self.user, eligible=True)
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES.value
+            type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
+            complete=True
         )
 
         self.valid_params = {"value": SmokingFrequencyValues.DAILY.value}
@@ -146,6 +215,24 @@ class TestPostSmokingFrequency(TestCase):
             "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
         }), fetch_redirect_response=False)
 
+    def test_redirects_to_next_question_when_given_a_level(self):
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
+            level=TobaccoSmokingHistory.Levels.INCREASED
+        )
+        response = self.client.post(
+            reverse("questions:smoking_frequency", kwargs = {
+                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower(),
+                "level": TobaccoSmokingHistory.Levels.INCREASED
+            }),
+            self.valid_params
+        )
+
+        self.assertRedirects(response, reverse("questions:smoked_amount", kwargs={
+            "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower(),
+            "level": TobaccoSmokingHistory.Levels.INCREASED
+        }))
 
     def test_redirects_to_next_question_forwarding_the_change_query_param(self):
         response = self.client.post(

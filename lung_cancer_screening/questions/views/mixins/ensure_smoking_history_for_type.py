@@ -7,10 +7,11 @@ class EnsureSmokingHistoryForTypeMixin:
 
     def dispatch(self, request, *args, **kwargs):
         url_tobacco_type = camelize(kwargs["tobacco_type"])
+        level = kwargs.get("level", TobaccoSmokingHistory.Levels.NORMAL)
 
         tobacco_smoking_history_item = request.response_set.tobacco_smoking_history.filter(
             type=url_tobacco_type,
-            level=TobaccoSmokingHistory.Levels.NORMAL
+            level=level
         )
 
         if tobacco_smoking_history_item.exists():
