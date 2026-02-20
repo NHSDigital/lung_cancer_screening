@@ -234,7 +234,8 @@ OIDC_OP_JWKS_ENDPOINT = f"{OIDC_OP_FQDN}/.well-known/jwks.json"
 # See: https://auth.sandpit.signin.nhs.uk/.well-known/openid-configuration
 OIDC_RP_SIGN_ALGO = "RS512"
 OIDC_RP_SCOPES = "openid profile profile_extended email"
-OIDC_RP_REDIRECT_URI = f"{environ.get('BASE_URL')}/oidc/callback/"
+OIDC_RP_REDIRECT_URI = f"{environ.get('BASE_URL')}/oidc/callback"
+OIDC_RP_VTR = ["P5.Cp.Cd", "P5.Cp.Ck", "P5.Cm"]
 # Use custom auth request view so redirect_uri is BASE_URL, not request Host
 # (fixes post-login redirect to instance URL when behind Front Door / proxy).
 OIDC_AUTHENTICATE_CLASS = (
