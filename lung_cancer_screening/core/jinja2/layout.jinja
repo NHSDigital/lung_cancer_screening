@@ -50,3 +50,17 @@
   {% block page_content %}
   {% endblock page_content %}
 {% endblock content %}
+
+
+{% block footer %}
+  {{ footer({
+    "meta": {
+      "items": [
+        {
+          "href": url("questions:privacy_policy"),
+          "text": "Privacy policy"
+        }
+      ]
+    }
+  }) }}
+{% endblock footer %}
