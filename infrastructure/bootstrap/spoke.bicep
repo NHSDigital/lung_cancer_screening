@@ -1,3 +1,9 @@
+
+/*
+  Subscription pre-requisites:
+    - az provider register --namespace 'Microsoft.App'
+*/
+
 targetScope='subscription'
 
 param enableSoftDelete bool
@@ -12,7 +18,7 @@ var hubMap = {
   dev:                  'nonlive'
   review:               'nonlive'
   preprod:              'live'
-  prd:                  'live'
+  prod:                 'live'
 }
 var privateEndpointRGName = 'rg-hub-${envConfig}-uks-hub-private-endpoints'
 var privateDNSZoneRGName = 'rg-hub-${hubMap[envConfig]}-uks-private-dns-zones'

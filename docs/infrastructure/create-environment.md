@@ -32,6 +32,25 @@ The environment requires a shared Azure front door profile created in the hub. T
   - Managed identity: `mi-lungcs-[environment]-adotoaz-uks`
   - Description: - Managed identity: `mi-lungcs-[environment]-adotoaz-uks` - Role: permanent on Directory
 
+## Azure Virtual Desktop Object ID
+
+The **Azure Virtual Desktop** Service Principal Object ID must be stored in the Azure DevOps variable group:
+
+- **Variable Group:** `<environment>_hub_backend`
+- **Variable Name:** `TF_VAR_AVD_OBJECT_ID`
+
+---
+
+### Retrieve the Object ID
+
+Run the following Azure CLI command:
+
+```bash
+az ad sp list --all \
+  --query "[?contains(displayName,'Azure Virtual Desktop')].{Name:displayName,Id:id}" \
+  -o table
+```
+
 ## Bicep
 
 > [!IMPORTANT]
@@ -99,6 +118,8 @@ Add the infrastructure secrets to the _inf_ key vault `kv-lungcs-[environment]-i
 - Check ADO pipeline. You may be prompted to authorise:
   - Pipeline: service connection
   - Environment: service connection and agent pool
+- assign yourself "Key Vault Secrets User" to application key vault to run the terraform code from the CLI inside the AVD when first trying to deploy the application.
+- assign yourself "Data Blob Reader" to State file storage account to run the terraform code from the CLI inside the AVD when first trying to deploy the application.
 
 ## App secrets
 

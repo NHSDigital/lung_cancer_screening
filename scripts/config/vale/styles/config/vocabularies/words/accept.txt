@@ -5,7 +5,7 @@ bot
 Cyber
 Dependabot
 Gitleaks
-Github
+(?i)Github
 Grype
 idempotence
 OAuth
@@ -29,3 +29,4 @@ yaml
 (?i)sha
 jq
 choco
+CLI

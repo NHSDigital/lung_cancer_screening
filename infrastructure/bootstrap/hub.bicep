@@ -9,6 +9,7 @@
   Subscription pre-requisites:
     - az provider register --namespace 'Microsoft.DevOpsInfrastructure'
     - az provider register --namespace 'Microsoft.DevCenter'
+    - az provider register --namespace 'Microsoft.Compute'
 
   Run once, deployment of the Managed DevOps Pool will fail.
   Manually Grant 'Reader' and 'Network Contributor' RBAC roles to the Service Principal 'DevopsInfrastructure' on the VNet resource.
@@ -37,10 +38,10 @@ var resourceGroupName = 'rg-hub-${hubType}-${regionShortName}-bootstrap'
 var virtualNetworkName = 'vnet-hub-${hubType}-${regionShortName}'
 var managedIdentityRGName = 'rg-mi-${hubType}-${regionShortName}'
 var miHub = 'mi-hub-${hubType}-${regionShortName}'
-var privateDNSZoneRGName = 'rg-hub-${hubType}-${regionShortName}-private-dns-zones'
+var privateDNSZoneRGName = 'rg-hub-${hubType}-${regionShortName}-bootstrap-private-dns-zones'
 var keyVaultName = 'kv-${appShortName}-${hubType}-inf'
 var privateEndpointSubnetName = 'sn-hub-${hubType}-${regionShortName}-private-endpoint'
-var storageAccountName = 'sa${appShortName}${regionShortName}state'
+var storageAccountName = 'sa${appShortName}${hubType}${regionShortName}state'
 var computeGalleryName = '${appShortName}_hub_compute_gallery'
 
 var miADOtoAZname = 'mi-${appShortName}-${hubType}-adotoaz-${regionShortName}'
@@ -94,12 +95,6 @@ resource managedIdentityRG 'Microsoft.Resources/resourceGroups@2024-11-01' = {
   location: region
 }
 
-@description('Retrieve existing private DNS zone resource group')
-resource privateDNSZoneRG 'Microsoft.Resources/resourceGroups@2024-11-01' = {
-  name: privateDNSZoneRGName
-  location: region
-}
-
 @description('Create the managed identity assumed by Azure devops to connect to Azure')
 module managedIdentiyHub 'modules/managedIdentity.bicep' = {
   scope: managedIdentityRG
@@ -137,6 +132,12 @@ module storageAccountPrivateEndpoint 'modules/privateEndpoint.bicep' = {
     resourceID: terraformStateStorageAccount.outputs.storageAccountID
     privateDNSZoneID: storagePrivateDNSZone.outputs.privateDNSZoneID
   }
+}
+
+@description('Retrieve existing private DNS zone resource group')
+resource privateDNSZoneRG 'Microsoft.Resources/resourceGroups@2024-11-01' = {
+  name: privateDNSZoneRGName
+  location: region
 }
 
 @description('Retrieve storage private DNS zone')
