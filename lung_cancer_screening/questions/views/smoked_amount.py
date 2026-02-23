@@ -8,6 +8,7 @@ from .mixins.ensure_prerequisite_responses import EnsurePrerequisiteResponsesMix
 from .smoking_history_question_base_view import SmokingHistoryQuestionBaseView
 from ..forms.smoked_amount_form import SmokedAmountForm
 from ..models.smoked_amount_response import SmokedAmountResponse
+from ..models.tobacco_smoking_history import TobaccoSmokingHistory
 
 class SmokedAmountView(
     LoginRequiredMixin,
@@ -23,33 +24,34 @@ class SmokedAmountView(
 
 
     def get_success_url(self):
-        return reverse(
-            "questions:smoking_change",
-            kwargs={"tobacco_type": self.kwargs["tobacco_type"]},
-            query=self.get_change_query_params(),
-        )
-
+        if self.get_smoking_history_item().is_normal():
+            return reverse(
+                "questions:smoking_change",
+                kwargs={"tobacco_type": self.kwargs["tobacco_type"]},
+                query=self.get_change_query_params(),
+            )
+        else:
+            return reverse(
+                "questions:smoked_total_years",
+                kwargs=self.kwargs,
+                query=self.get_change_query_params(),
+            )
 
     def get_back_link_url(self):
         return reverse(
             "questions:smoking_frequency",
-            kwargs={"tobacco_type": self.kwargs["tobacco_type"]},
+            kwargs=self.kwargs,
             query=self.get_change_query_params()
         )
 
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs["frequency_text"] = self.get_frequency_text()
+        kwargs["tobacco_smoking_history"] = self.get_smoking_history_item()
+        if self.get_smoking_history_item().level != TobaccoSmokingHistory.Levels.NORMAL:
+            kwargs["normal_tobacco_smoking_history"] = self.get_normal_smoking_history_item()
+
         return kwargs
-
-
-    def get_frequency_text(self):
-        return self.get_frequency_response().get_value_display_as_singleton_text()
-
-
-    def get_frequency_response(self):
-        return self.get_smoking_history_item().smoking_frequency_response
 
 
     def get_object_parent(self):
@@ -57,15 +59,19 @@ class SmokedAmountView(
 
 
     def get_prerequisite_responses_redirect_map(self):
-        return {
-            "smoking_current_response": reverse(
-                "questions:smoking_current",
-                kwargs={"tobacco_type": self.kwargs["tobacco_type"]},
-                query=self.get_change_query_params()
-            ),
+        result = {
             "smoking_frequency_response": reverse(
                 "questions:smoking_frequency",
                 kwargs={"tobacco_type": self.kwargs["tobacco_type"]},
                 query=self.get_change_query_params()
             )
         }
+
+        if self.get_smoking_history_item().level == TobaccoSmokingHistory.Levels.NORMAL:
+            result["smoking_current_response"] = reverse(
+                "questions:smoking_current",
+                kwargs={"tobacco_type": self.kwargs["tobacco_type"]},
+                query=self.get_change_query_params()
+            )
+
+        return result

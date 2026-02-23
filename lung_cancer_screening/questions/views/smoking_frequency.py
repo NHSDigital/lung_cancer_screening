@@ -34,13 +34,11 @@ class SmokingFrequencyView(
         return context
 
     def get_success_url(self):
-        #if not self.kwargs.get("level") :
-            return reverse(
-                "questions:smoked_amount",
-                kwargs=self.kwargs,
-                query=self.get_change_query_params(),
-            )
-        #return reverse("questions:responses")
+        return reverse(
+            "questions:smoked_amount",
+            kwargs=self.kwargs,
+            query=self.get_change_query_params(),
+        )
 
     def get_back_link_url(self):
         if not self.kwargs.get("level") :

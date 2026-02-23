@@ -1,9 +1,9 @@
 {% extends 'question_form.jinja' %}
 
 {% block prelude %}
+  {% if form.tobacco_smoking_history.is_normal() %}
+      <h1 class="nhsuk-heading-l">{{ form.type_string() | title | singularize }} smoking</h1>
 
-  <h1 class="nhsuk-heading-l">{{ form.type_string() | title | singularize }} smoking</h1>
-
-  <p>The question on the next page will ask if the number of {{ form.type_string() }} you smoke has changed over time.</p>
-
+      <p>The question on the next page will ask if the number of {{ form.type_string() }} you smoke has changed over time.</p>
+  {% endif %}
 {% endblock prelude %}

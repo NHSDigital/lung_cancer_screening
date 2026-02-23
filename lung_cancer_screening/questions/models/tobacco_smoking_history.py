@@ -79,3 +79,25 @@ class TobaccoSmokingHistory(BaseModel):
 
     def human_type(self):
         return TobaccoSmokingHistoryTypes(self.type).label
+
+    def amount(self):
+        if hasattr(self, "smoked_amount_response"):
+            return self.smoked_amount_response.value
+        else:
+            return None
+
+    def frequency_singular(self):
+        if hasattr(self, "smoking_frequency_response"):
+            return self.smoking_frequency_response.get_value_display_as_singleton_text()
+        else:
+            return None
+
+
+    def is_increased(self):
+        return self.level == self.Levels.INCREASED
+
+    def is_decreased(self):
+        return self.level == self.Levels.DECREASED
+
+    def is_normal(self):
+        return self.level == self.Levels.NORMAL

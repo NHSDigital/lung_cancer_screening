@@ -51,3 +51,16 @@ Feature: Smoked amount page
     Then I am on "/cigarettes-smoking-change?change=True"
     When I go to "/check-your-answers"
     Then I see "15 cigarettes a day" as a response to "Current cigarette smoking" under "Smoking history"
+
+  Scenario: When I say that I have increased the amount I smoke I am shown the correct page when I am on the smoked amount page
+    Given I am logged in
+    And I have answered questions showing I am eligible
+    And I have answered questions showing I have smoked for "10" years
+    And I have answered questions showing I currently smoke "Cigarettes"
+    And I have answered questions showing I have smoked 10 "Cigarettes" "daily"
+    And I have answered questions showing I have "increased" my level of "Cigarettes" smoking from "10 cigarettes a day"
+    And I have answered questions showing I have "increased" my level of "Cigarettes" smoking to "Weekly"
+    When I go to "/cigarettes-smoked-increased-amount"
+    And I fill in "When you smoked more than 10 cigarettes a day, roughly how many cigarettes did you normally smoke a week?" with "10"
+    And I submit the form
+    Then I am on "/cigarettes-smoked-increased-years"

@@ -1,5 +1,6 @@
 from behave import given
 from inflection import humanize
+from features.steps.debug_steps import screenshot
 
 from features.steps.form_steps import (
     when_i_fill_in_and_submit_my_date_of_birth_as_x_years_ago,
@@ -127,4 +128,18 @@ def given_i_have_answered_questions_showing_i_have_smoked_amount_tobacco_type(co
 def given_i_have_answered_questions_showing_i_have_level_of_smoking(context, level, tobacco_type, previous_level):
     context.page.goto(f"{context.live_server_url}/{tobacco_type.lower()}-smoking-change")
     when_i_check_label(context, f"{TobaccoSmokingHistory.Levels[level.upper()].label} than {previous_level.lower()}")
+    when_i_submit_the_form(context)
+
+@given('I have answered questions showing I have "{level}" my level of "{tobacco_type}" smoking to "{frequency}"')
+def given_i_have_answered_questions_showing_i_have_increased_or_decreased_smoked_tobacco_type_frequency(
+    context, level, tobacco_type, frequency
+):
+    given_i_have_answered_questions_showing_i_have_smoked_tobacco_type(
+        context, tobacco_type
+    )
+    context.page.goto(
+        f"{context.live_server_url}/{tobacco_type.lower()}-smoking-{level}-frequency"
+    )
+    screenshot(context)
+    when_i_check_label(context, humanize(frequency))
     when_i_submit_the_form(context)
