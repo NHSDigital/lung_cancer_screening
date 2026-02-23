@@ -1,0 +1,6 @@
+OIDC_RP_CLIENT_ID: lungcs
+OIDC_OP_FQDN: https://auth.aos.signin.nhs.uk
+NHS_LOGIN_SETTINGS_URL: https://settings.aos.signin.nhs.uk
+DISABLE_RECENT_SUBMISSION_LIMITATION: false
+BASE_URL: https://digital-lung-cancer-screening.nhs.uk
+CSRF_TRUSTED_ORIGINS: https://digital-lung-cancer-screening.nhs.uk

@@ -3,3 +3,4 @@ OIDC_OP_FQDN: https://auth.aos.signin.nhs.uk
 NHS_LOGIN_SETTINGS_URL: https://settings.aos.signin.nhs.uk
 DISABLE_RECENT_SUBMISSION_LIMITATION: true
 BASE_URL: https://dev.non-live.digital-lung-cancer-screening.nhs.uk
+CSRF_TRUSTED_ORIGINS: https://dev.non-live.digital-lung-cancer-screening.nhs.uk

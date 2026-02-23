@@ -18,6 +18,7 @@ module "infra" {
   key_vault_secrets_officer_groups = var.key_vault_secrets_officer_groups
   protect_keyvault                 = var.protect_keyvault
   vnet_address_space               = var.vnet_address_space
+  cae_zone_redundancy_enabled      = var.cae_zone_redundancy_enabled
 }
 
 module "container-apps" {

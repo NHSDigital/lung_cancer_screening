@@ -68,4 +68,5 @@ module "container-app-environment" {
   log_analytics_workspace_id     = module.log_analytics_workspace_audit.id
   vnet_integration_subnet_id     = module.container_app_subnet.id
   private_dns_zone_rg_name       = var.features.private_networking ? "rg-hub-${var.hub}-uks-private-dns-zones" : null
+  zone_redundancy_enabled        = var.cae_zone_redundancy_enabled
 }
