@@ -106,7 +106,7 @@ class TestPostSmokingChange(TestCase):
             complete=True
         )
         self.valid_params = {
-            "value": [TobaccoSmokingHistory.Levels.INCREASED],
+            "value": [TobaccoSmokingHistory.Levels.NO_CHANGE],
         }
 
 
@@ -152,7 +152,7 @@ class TestPostSmokingChange(TestCase):
         self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
 
 
-    def test_redirects_to_the_next_question(self):
+    def test_redirects_to_the_next_question_given_no_level(self):
         response = self.client.post(
             reverse("questions:smoking_change", kwargs = {
                 "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
@@ -161,6 +161,34 @@ class TestPostSmokingChange(TestCase):
         )
 
         self.assertRedirects(response, reverse("questions:responses"))
+
+
+    def test_redirects_to_the_next_question_given_level_increased(self):
+        response = self.client.post(
+            reverse("questions:smoking_change", kwargs = {
+                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+            }),
+            {"value": [TobaccoSmokingHistory.Levels.INCREASED]}
+        )
+
+        self.assertRedirects(response, reverse("questions:smoking_frequency", kwargs={
+            "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower(),
+            "level": TobaccoSmokingHistory.Levels.INCREASED.value.lower()
+        }))
+
+
+    def test_redirects_to_the_next_question_given_level_decreased_only(self):
+        response = self.client.post(
+            reverse("questions:smoking_change", kwargs = {
+                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+            }),
+            {"value": [TobaccoSmokingHistory.Levels.DECREASED]}
+        )
+
+        self.assertRedirects(response, reverse("questions:smoking_frequency", kwargs={
+            "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower(),
+            "level": TobaccoSmokingHistory.Levels.DECREASED.value.lower()
+        }))
 
 
     def test_creates_a_smoking_change_response(self):
@@ -172,4 +200,20 @@ class TestPostSmokingChange(TestCase):
         )
 
         self.assertEqual(self.response_set.tobacco_smoking_history.count(), 2)
-        self.assertEqual(self.response_set.tobacco_smoking_history.last().level, TobaccoSmokingHistory.Levels.INCREASED)
+        self.assertEqual(self.response_set.tobacco_smoking_history.last().level, TobaccoSmokingHistory.Levels.NO_CHANGE)
+
+
+    def test_creates_a_smoking_change_response_for_increased_and_decreased(self):
+        self.client.post(
+            reverse("questions:smoking_change", kwargs = {
+                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+            }),
+            {"value": [TobaccoSmokingHistory.Levels.INCREASED, TobaccoSmokingHistory.Levels.DECREASED]}
+        )
+
+        self.assertEqual(self.response_set.tobacco_smoking_history.count(), 3)
+
+        smoking_history_levels = self.response_set.tobacco_smoking_history.all().values_list("level", flat=True)
+        self.assertIn(TobaccoSmokingHistory.Levels.INCREASED, smoking_history_levels)
+        self.assertIn(TobaccoSmokingHistory.Levels.DECREASED, smoking_history_levels)
+        self.assertIn(TobaccoSmokingHistory.Levels.NORMAL, smoking_history_levels)
