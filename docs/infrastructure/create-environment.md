@@ -118,8 +118,8 @@ Add the infrastructure secrets to the _inf_ key vault `kv-lungcs-[environment]-i
 - Check ADO pipeline. You may be prompted to authorise:
   - Pipeline: service connection
   - Environment: service connection and agent pool
-- assign yourself "Key Vault Secrets User" to application key vault to run the terraform code from the CLI inside the AVD when first trying to deploy the application.
-- assign yourself "Data Blob Reader" to State file storage account to run the terraform code from the CLI inside the AVD when first trying to deploy the application.
+- Assign yourself "Key Vault Secrets User" to application key vault to run the terraform code from the CLI inside the AVD when first trying to deploy the application.
+- Assign yourself "Storage Blob Contributor" to State file storage account `salungcs[environment]tfstate`to run the terraform code from the CLI inside the AVD when first trying to deploy the application.
 
 ## App secrets
 

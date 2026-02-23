@@ -2,6 +2,7 @@
 /*
   Subscription pre-requisites:
     - az provider register --namespace 'Microsoft.App'
+    - az provider register --namespace 'Microsoft.Compute'
 */
 
 targetScope='subscription'
