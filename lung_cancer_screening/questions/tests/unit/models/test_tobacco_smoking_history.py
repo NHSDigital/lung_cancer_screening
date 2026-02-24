@@ -222,3 +222,34 @@ class TestTobaccoSmokingHistory(TestCase):
             level=TobaccoSmokingHistory.Levels.INCREASED,
         )
         self.assertFalse(tobacco_smoking_history.is_normal())
+
+    def test_grouped_by_type_returns_a_dictionary_of_types_and_their_history(self):
+        cigarettes_normal = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            level=TobaccoSmokingHistory.Levels.NORMAL,
+        )
+        cigars_normal = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARS,
+            level=TobaccoSmokingHistory.Levels.NORMAL,
+        )
+        cigars_increased = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARS,
+            level=TobaccoSmokingHistory.Levels.INCREASED,
+        )
+
+        by_type = TobaccoSmokingHistory.objects.grouped_by_type()
+        self.assertIn(TobaccoSmokingHistoryTypes.CIGARETTES, by_type)
+        self.assertIn(TobaccoSmokingHistoryTypes.CIGARS, by_type)
+        self.assertQuerySetEqual(
+            by_type[TobaccoSmokingHistoryTypes.CIGARETTES],
+            [cigarettes_normal],
+            ordered=False,
+        )
+        self.assertQuerySetEqual(
+            by_type[TobaccoSmokingHistoryTypes.CIGARS],
+            [cigars_normal, cigars_increased],
+            ordered=False,
+        )

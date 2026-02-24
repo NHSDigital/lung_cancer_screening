@@ -14,7 +14,7 @@ from ...factories.response_set_factory import ResponseSetFactory
 class TestGetSmokingFrequency(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
-        self.response_set = ResponseSetFactory.create(user=self.user, eligible=True)
+        self.response_set = ResponseSetFactory.create(user=self.user, complete=True)
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
             type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
@@ -142,7 +142,7 @@ class TestGetSmokingFrequency(TestCase):
 class TestPostSmokingFrequency(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
-        self.response_set = ResponseSetFactory.create(user=self.user, eligible=True)
+        self.response_set = ResponseSetFactory.create(user=self.user, complete=True)
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
             type=TobaccoSmokingHistoryTypes.CIGARETTES.value,

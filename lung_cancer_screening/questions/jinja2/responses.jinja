@@ -3,6 +3,7 @@
 {% from "nhsuk/components/summary-list/macro.jinja" import summaryList %}
 {% from 'nhsuk/components/button/macro.jinja' import button %}
 
+
 {% block page_content %}
   <div class="nhsuk-grid-row">
     <div class="nhsuk-grid-column-full">
@@ -46,6 +47,22 @@
           "rows": response_set.smoking_history_responses_items()
         }) }}
       </section>
+
+      {% for type_history in response_set.tobacco_smoking_history_by_type() %}
+        <section class="smoking-history-section">
+          <h3 class="nhsuk-heading-s">{{ type_history.title() }} smoking history</h3>
+
+          <a href="{{ url(
+            "questions:smoking_current",
+            kwargs={ "tobacco_type": type_history.url_type() },
+            query={ "change": "True" },
+          ) }}" class="nhsuk-link">Change</a>
+
+          {{ summaryList({
+            "rows": type_history.summary_items()
+          }) }}
+        </section>
+      {% endfor %}
 
       <form action="{{ request.path }}" method="post">
         {{ csrf_input }}

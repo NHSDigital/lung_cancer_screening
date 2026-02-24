@@ -9,3 +9,15 @@ class SmokingFrequencyResponseFactory(factory.django.DjangoModelFactory):
 
     tobacco_smoking_history = factory.SubFactory(TobaccoSmokingHistoryFactory)
     value =  factory.Iterator(SmokingFrequencyValues)
+
+    class Params:
+        daily = factory.Trait(
+            value=factory.Iterator(SmokingFrequencyValues.DAILY),
+        )
+        weekly = factory.Trait(
+            value=factory.Iterator(SmokingFrequencyValues.WEEKLY),
+        )
+        monthly = factory.Trait(
+            value=factory.Iterator(SmokingFrequencyValues.MONTHLY),
+        )
+
