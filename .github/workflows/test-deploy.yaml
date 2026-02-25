@@ -9,6 +9,7 @@ on:
         type: choice
         options:
           - poc
+          - review
 
 env:
   TARGET_ENV: ${{ inputs.target_env }}
@@ -40,4 +41,3 @@ jobs:
 
       - name: Terraform plan
         run: make ${TARGET_ENV} ci poc-terraform-apply DOCKER_IMAGE_TAG=git-sha-${{ github.sha }}
-
