@@ -47,6 +47,11 @@ variable "vnet_address_space" {
   type        = string
 }
 
+variable "cae_zone_redundancy_enabled" {
+  description = "Specifies whether the Container App Environment should be zone redundant."
+  type        = bool
+}
+
 variable "protect_keyvault" {
   description = "Ability to recover the key vault or its secrets after deletion"
   type        = bool

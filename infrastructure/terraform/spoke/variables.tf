@@ -135,6 +135,12 @@ variable "seed_demo_data" {
   default     = false
 }
 
+variable "cae_zone_redundancy_enabled" {
+  description = "Specifies whether the Container App Environment should be zone redundant."
+  type        = bool
+  default     = false
+}
+
 variable "use_apex_domain" {
   description = "Use apex domain for the Front Door endpoint. Set to true for production."
   type        = bool
