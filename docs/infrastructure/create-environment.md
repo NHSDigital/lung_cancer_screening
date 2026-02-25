@@ -94,7 +94,7 @@ Add the infrastructure secrets to the _inf_ key vault `kv-lungcs-[environment]-i
   - Scope level: `Subscription`
   - Subscription: `Digital Screening DToS - Core Services Dev`
   - Resource group for Service connection: leave blank
-  - Service Connection Name: `lungcs-[environment]`
+  - Service Connection Name: `sc-lungcs-[environment]-spoke`
   - Do NOT tick: Grant access permission to all pipelines
   - Security: allow `Deploy to Azure - [environment]` pipeline
 - Create ADO environment: [environment]
