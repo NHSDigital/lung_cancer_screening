@@ -10,6 +10,7 @@ on:
         options:
           - poc
           - review
+          - dev
 
 env:
   TARGET_ENV: ${{ inputs.target_env }}
