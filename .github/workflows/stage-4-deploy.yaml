@@ -53,7 +53,7 @@ jobs:
             --commit-id ${{inputs.commit_sha}} \
             --name "Deploy to Azure - ${{ matrix.environment }}" \
             --org https://dev.azure.com/nhse-dtos \
-            --project lung-cancer-risk-check \
+            --project lung-cancer-cancer-screening \
             --parameters commitSHA=${{inputs.commit_sha}} ${pr_argument} environment=${{ matrix.environment }} pool=${ADO_MANAGEMENT_POOL} \
             --output tsv --query id)
 
