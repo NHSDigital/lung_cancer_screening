@@ -47,7 +47,7 @@ stages:
                 - task: AzureCLI@2
                   displayName: Run terraform
                   inputs:
-                    azureSubscription: lung-${{ parameters.environment }}
+                    azureSubscription: sc-lungcs-${{ parameters.environment }}-spoke
                     scriptType: bash
                     scriptLocation: inlineScript
                     addSpnToEnvironment: true
