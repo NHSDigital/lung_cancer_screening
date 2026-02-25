@@ -84,7 +84,7 @@ Attempting Azure CLI login by using OIDC...
 Error: No subscriptions found for ***.
 ```
 
-Give the managed identity Reader role on a subscription (normally Devops)
+Give the managed identity Reader role on a subscription (normally the hub subscription)
 
 ### Pipeline permissions
 
