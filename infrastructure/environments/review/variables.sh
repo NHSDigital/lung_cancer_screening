@@ -1,4 +1,4 @@
-REGION=UK South
+REGION=uksouth
 APP_SHORT_NAME=lungcs
 ENV_CONFIG=review
 AZURE_SUBSCRIPTION="Lung Cancer Risk Check - Review"
