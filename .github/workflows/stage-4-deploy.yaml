@@ -57,9 +57,9 @@ jobs:
             --parameters commitSHA=${{inputs.commit_sha}} ${pr_argument} environment=${{ matrix.environment }} pool=${ADO_MANAGEMENT_POOL} \
             --output tsv --query id)
 
-          echo "See pipeline run in Azure devops: https://dev.azure.com/nhse-dtos/lung_cancer_screening/_build/results?buildId=${RUN_ID}&view=results"
+          echo "See pipeline run in Azure devops: https://dev.azure.com/nhse-dtos/lung-cancer-screening/_build/results?buildId=${RUN_ID}&view=results"
 
-          scripts/bash/wait_ado_pipeline.sh "$RUN_ID" https://dev.azure.com/nhse-dtos lung_cancer_screening
+          scripts/bash/wait_ado_pipeline.sh "$RUN_ID" https://dev.azure.com/nhse-dtos lung-cancer-screening
 
       - name: Basic application smoke test
         run: |
