@@ -9,6 +9,7 @@ on:
         type: choice
         options:
           - poc
+          - review
 
 env:
   TARGET_ENV: ${{ inputs.target_env }}
