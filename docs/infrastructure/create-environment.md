@@ -70,6 +70,7 @@ Add the infrastructure secrets to the _inf_ key vault `kv-lungcs-[environment]-i
 ## Azure devops
 
 - Create ADO group
+  - In project settings -> permissions -> New Group
   - Name: `Run pipeline - [environment]`
   - Members: `mi-lungcs-[environment]-ghtoado-uks`. There may be more than 1 in the list. Check client id printed below the name.
   - Permissions:
