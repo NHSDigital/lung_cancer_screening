@@ -14,7 +14,7 @@ from ...factories.response_set_factory import ResponseSetFactory
 class TestGetSmokingFrequency(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
-        self.response_set = ResponseSetFactory.create(user=self.user, eligible=True)
+        self.response_set = ResponseSetFactory.create(user=self.user, complete=True)
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
             type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
@@ -142,7 +142,7 @@ class TestGetSmokingFrequency(TestCase):
 class TestPostSmokingFrequency(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
-        self.response_set = ResponseSetFactory.create(user=self.user, eligible=True)
+        self.response_set = ResponseSetFactory.create(user=self.user, complete=True)
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
             type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
@@ -203,6 +203,23 @@ class TestPostSmokingFrequency(TestCase):
             self.tobacco_smoking_history.smoking_frequency_response.value, self.valid_params["value"]
         )
 
+    def test_creates_a_smoking_frequency_response_when_given_a_level(self):
+        increased_level = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
+            level=TobaccoSmokingHistory.Levels.INCREASED
+        )
+        self.client.post(reverse("questions:smoking_frequency", kwargs = {
+                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower(),
+                "level": TobaccoSmokingHistory.Levels.INCREASED.value.lower()
+            }), self.valid_params)
+
+        increased_level.refresh_from_db()
+        self.assertEqual(
+            increased_level.smoking_frequency_response.value, self.valid_params["value"]
+        )
+
+
     def test_redirects_to_next_question(self):
         response = self.client.post(
             reverse("questions:smoking_frequency", kwargs = {
@@ -214,6 +231,7 @@ class TestPostSmokingFrequency(TestCase):
         self.assertRedirects(response, reverse("questions:smoked_amount", kwargs={
             "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
         }), fetch_redirect_response=False)
+
 
     def test_redirects_to_next_question_when_given_a_level(self):
         TobaccoSmokingHistoryFactory.create(

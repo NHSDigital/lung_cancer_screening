@@ -89,7 +89,17 @@ Feature: Questionnaire
     And I submit the form
 
     Then I am on "/cigarettes-smoking-change"
-    When I check "No, it has not changed" and submit
+    When I check "Yes, I used to smoke more than 15 cigarettes a day" and submit
+
+    Then I am on "/cigarettes-smoking-increased-frequency"
+    When I check "Weekly" and submit
+
+    Then I am on "/cigarettes-smoked-increased-amount"
+    When I fill in "When you smoked more than 15 cigarettes a day, roughly how many cigarettes did you normally smoke a week?" with "20"
+    And I submit the form
+
+    Then I am on "/cigarettes-smoked-increased-years"
+    When I go to "/check-your-answers"
 
     Then I am on "/check-your-answers"
     And I see "Yes, I used to smoke" as a response to "Have you ever smoked tobacco?" under "Eligibility"
@@ -111,7 +121,7 @@ Feature: Questionnaire
     And I see "18" as a response to "Age you started smoking" under "Smoking history"
     And I see "Yes (10 years)" as a response to "Have you ever stopped smoking for periods of 1 year or longer?" under "Smoking history"
 
-    And I see "10" as a response to "Total number of years you have smoked cigarettes" under "Smoking history"
+    And I see "10" as a response to "Total number of years you smoked cigarettes" under "Smoking history"
     And I see "15 cigarettes a day" as a response to "Current cigarette smoking" under "Smoking history"
 
     When I click "Submit"

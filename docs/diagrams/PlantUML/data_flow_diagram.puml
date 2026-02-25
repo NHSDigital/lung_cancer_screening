@@ -1,20 +1,24 @@
 @startuml
 
 actor "Participant" as Participant
+actor "NHS Staff (engineer)" as NHS_Staff
 entity "LCS App" as LCS_App
 entity "NHS login" as NHS_login
+entity "NHS Secure mail" as NHS_Secure_mail
 entity "In Health" as InHealth
 entity "NHS Incentivisation system" as NHS_Incentivisation_System
 
 ' Date flow into LCS App
 Participant -> LCS_App
 LCS_App -> NHS_login
-NHS_login -> LCS_App: Participant logs in and shares profile, email address and NHS Number (scopes "openid profile profile_extended email") with LCS app
+NHS_login -> LCS_App: Participant logs in and shares profile, email address and NHS Number (scopes "openid profile profile_extended emil") with LCS app
 Participant -> LCS_App: Completes questionnaire
 
 ' Data flow from LCS App to In Health
-LCS_App -> InHealth: Completed digital participant NHS Numbers shared with InHealth
-InHealth -> LCS_App: InHealth share completed telephone responses corresponding to digital NHS number responses
+LCS_App -> NHS_Staff: Generate report of participants who have submitted responses
+NHS_Secure_mail -> InHealth: Completed digital participant NHS Numbers shared with InHealth
+InHealth -> NHS_Secure_mail: InHealth share completed telephone responses corresponding to digital NHS number responses
+NHS_Staff -> LCS_App: NHS Staff performs comparison of responses to understand comprehension of question ste
 
 ' Data flow from LCS App to NHS Incentivisation system
 LCS_App -> NHS_Incentivisation_System: Eligible participant's email addresses shared with NHS Incentivisation system

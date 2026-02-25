@@ -1,11 +1,11 @@
 from decimal import Decimal
 from django.urls import reverse
-from inflection import dasherize, singularize
 
 from ..models.respiratory_conditions_response import RespiratoryConditionValues
 from ..models.education_response import EducationValues
 from ..models.family_history_lung_cancer_response import FamilyHistoryLungCancerValues
-from ..models.tobacco_smoking_history import TobaccoSmokingHistory
+
+from .tobacco_smoking_history_type_presenter import TobaccoSmokingHistoryTypePresenter
 
 class ResponseSetPresenter:
     NOT_ANSWERED_TEXT = "Not answered"
@@ -149,19 +149,24 @@ class ResponseSetPresenter:
             for code in self.response_set.respiratory_conditions_response.value
         ])
 
-
     @property
     def types_tobacco_smoking(self):
-        normal_history = self.response_set.tobacco_smoking_history.filter(
-            level=TobaccoSmokingHistory.Levels.NORMAL
-        )
-        if normal_history.count() < 1:
+        if self.response_set.tobacco_smoking_history.count() < 1:
             return self.NOT_ANSWERED_TEXT
 
-        return self._list_to_sentence([
-            h.human_type() for h in normal_history.in_form_order()
-        ])
+        return self._list_to_sentence(
+            [x.human_type() for x in self.tobacco_smoking_history_by_type()]
+        )
 
+
+    def tobacco_smoking_history_by_type(self):
+        # Use .all() so grouped_by_type() runs on our custom QuerySet (not the RelatedManager)
+        by_type = self.response_set.tobacco_smoking_history.all().grouped_by_type()
+        return [
+            TobaccoSmokingHistoryTypePresenter(history)
+            for kind, history in by_type.items()
+            if history.exists()
+        ]
 
     def eligibility_responses_items(self):
         items = [
@@ -251,65 +256,6 @@ class ResponseSetPresenter:
 
         return items
 
-    def smoking_history_types_responses_items(self):
-        results = []
-        normal_history = self.response_set.tobacco_smoking_history.filter(
-            level=TobaccoSmokingHistory.Levels.NORMAL
-        )
-        for type_history in normal_history.in_form_order():
-            results.extend(self.smoking_history_summary_items_for_type(type_history))
-
-        return results
-
-    def smoking_history_summary_items_for_type(self, type_history):
-        type_label = type_history.human_type().lower()
-        tobacco_type_kwargs = {"tobacco_type": dasherize(type_history.type).lower()}
-
-        return [
-            self._check_your_answer_item(
-                f"Do you currently smoke {type_label}?",
-                self._boolean_response_to_yes_no(type_history, "smoking_current_response"),
-                "questions:smoking_current",
-                kwargs=tobacco_type_kwargs
-            ),
-            self._check_your_answer_item(
-                f"Total number of years you have smoked {type_label}",
-                type_history.smoked_total_years_response.value if hasattr(type_history, 'smoked_total_years_response') else self.NOT_ANSWERED_TEXT,
-                "questions:smoked_total_years",
-                kwargs = tobacco_type_kwargs
-            ),
-            self._check_your_answer_item(
-                f"Current {singularize(type_label)} smoking",
-                self._smoking_type_to_text(type_history),
-                "questions:smoking_frequency",
-                kwargs=tobacco_type_kwargs
-            ),
-            self._check_your_answer_item(
-                f"Has the number of {type_label} you normally smoke changed over time?",
-                self._smoking_change_to_text(type_history),
-                "questions:smoking_change",
-                kwargs=tobacco_type_kwargs
-            ),
-        ]
-
-
-    def _smoking_type_to_text(self, type_history):
-        if not hasattr(type_history, 'smoking_frequency_response') or not hasattr(type_history, 'smoked_amount_response'):
-            return self.NOT_ANSWERED_TEXT
-
-        return f"{type_history.smoked_amount_response.value} {type_history.human_type().lower()} a {type_history.smoking_frequency_response.get_value_display_as_singleton_text()}"
-
-    def _smoking_change_to_text(self, type_history):
-        history_for_type = self.response_set.tobacco_smoking_history.filter(
-            type=type_history.type
-        )
-        if history_for_type.filter(level=TobaccoSmokingHistory.Levels.INCREASED).exists():
-            return "Yes, I used to smoke more"
-        if history_for_type.filter(level=TobaccoSmokingHistory.Levels.DECREASED).exists():
-            return "Yes, I used to smoke fewer"
-        return "No, it has not changed"
-
-
     def smoking_history_responses_items(self):
         return [
             self._check_your_answer_item(
@@ -326,8 +272,7 @@ class ResponseSetPresenter:
                 "Types of tobacco smoked",
                 self.types_tobacco_smoking,
                 "questions:types_tobacco_smoking",
-            ),
-            *self.smoking_history_types_responses_items(),
+            )
         ]
 
 

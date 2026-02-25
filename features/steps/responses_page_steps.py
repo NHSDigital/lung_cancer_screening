@@ -27,6 +27,11 @@ def when_i_click_the_link_to_change(context, question, section):
     change_link = summary_list_row.locator(".nhsuk-summary-list__actions a")
     change_link.click()
 
+@when(u'I click the link to change "{type}" smoking history')
+def when_i_click_the_link_to_change_smoking_history(context, type):
+    section = find_section_named(context, f"{type} smoking history")
+    section.locator("a").click()
+
 def find_section_named(context, section):
     return context.page.locator(f"section:has-text('{section}')")
 

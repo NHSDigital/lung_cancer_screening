@@ -3,7 +3,10 @@ from django.core.exceptions import ValidationError
 
 from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
+from ...factories.smoked_amount_response_factory import SmokedAmountResponseFactory
+from ...factories.smoking_frequency_response_factory import SmokingFrequencyResponseFactory
 
+from ....models.smoking_frequency_response import SmokingFrequencyValues
 from ....models.tobacco_smoking_history import TobaccoSmokingHistoryTypes
 from ....models.tobacco_smoking_history import TobaccoSmokingHistory
 
@@ -130,3 +133,123 @@ class TestTobaccoSmokingHistory(TestCase):
         self.assertEqual(context.exception.message_dict, {
             "level": ["Cannot have both no change and other levels selected"]
         })
+
+
+    def test_amount_returns_the_value_of_the_smoked_amount_response(self):
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            level=TobaccoSmokingHistory.Levels.NORMAL,
+        )
+        SmokedAmountResponseFactory.create(
+            tobacco_smoking_history=tobacco_smoking_history,
+            value=10,
+        )
+        self.assertEqual(tobacco_smoking_history.amount(), 10)
+
+    def test_amount_returns_none_when_the_smoked_amount_response_does_not_exist(self):
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            level=TobaccoSmokingHistory.Levels.NORMAL,
+        )
+        self.assertIsNone(tobacco_smoking_history.amount())
+
+    def test_frequency_singular_returns_the_value_of_the_smoking_frequency_response(self):
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            level=TobaccoSmokingHistory.Levels.NORMAL,
+        )
+        SmokingFrequencyResponseFactory.create(
+            tobacco_smoking_history=tobacco_smoking_history,
+            value=SmokingFrequencyValues.DAILY,
+        )
+        self.assertEqual(tobacco_smoking_history.frequency_singular(), "day")
+
+    def test_frequency_singular_returns_none_when_the_smoking_frequency_response_does_not_exist(self):
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            level=TobaccoSmokingHistory.Levels.NORMAL,
+        )
+        self.assertIsNone(tobacco_smoking_history.frequency_singular())
+
+    def test_is_increased_returns_true_when_the_level_is_increased(self):
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            level=TobaccoSmokingHistory.Levels.INCREASED,
+        )
+        self.assertTrue(tobacco_smoking_history.is_increased())
+
+    def test_is_increased_returns_false_when_the_level_is_not_increased(self):
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            level=TobaccoSmokingHistory.Levels.NORMAL,
+        )
+        self.assertFalse(tobacco_smoking_history.is_increased())
+
+    def test_is_decreased_returns_true_when_the_level_is_decreased(self):
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            level=TobaccoSmokingHistory.Levels.DECREASED,
+        )
+        self.assertTrue(tobacco_smoking_history.is_decreased())
+
+    def test_is_decreased_returns_false_when_the_level_is_not_decreased(self):
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            level=TobaccoSmokingHistory.Levels.NORMAL,
+        )
+        self.assertFalse(tobacco_smoking_history.is_decreased())
+
+    def test_is_normal_returns_true_when_the_level_is_normal(self):
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            level=TobaccoSmokingHistory.Levels.NORMAL,
+        )
+        self.assertTrue(tobacco_smoking_history.is_normal())
+
+    def test_is_normal_returns_false_when_the_level_is_not_normal(self):
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            level=TobaccoSmokingHistory.Levels.INCREASED,
+        )
+        self.assertFalse(tobacco_smoking_history.is_normal())
+
+    def test_grouped_by_type_returns_a_dictionary_of_types_and_their_history(self):
+        cigarettes_normal = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            level=TobaccoSmokingHistory.Levels.NORMAL,
+        )
+        cigars_normal = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARS,
+            level=TobaccoSmokingHistory.Levels.NORMAL,
+        )
+        cigars_increased = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            type=TobaccoSmokingHistoryTypes.CIGARS,
+            level=TobaccoSmokingHistory.Levels.INCREASED,
+        )
+
+        by_type = TobaccoSmokingHistory.objects.grouped_by_type()
+        self.assertIn(TobaccoSmokingHistoryTypes.CIGARETTES, by_type)
+        self.assertIn(TobaccoSmokingHistoryTypes.CIGARS, by_type)
+        self.assertQuerySetEqual(
+            by_type[TobaccoSmokingHistoryTypes.CIGARETTES],
+            [cigarettes_normal],
+            ordered=False,
+        )
+        self.assertQuerySetEqual(
+            by_type[TobaccoSmokingHistoryTypes.CIGARS],
+            [cigars_normal, cigars_increased],
+            ordered=False,
+        )
