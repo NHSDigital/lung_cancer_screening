@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .mixins.ensure_response_set import EnsureResponseSet
 from .mixins.ensure_eligible import EnsureEligibleMixin
 from .mixins.ensure_smoking_history_for_type import EnsureSmokingHistoryForTypeMixin
+from .mixins.ensure_prerequisite_responses import EnsurePrerequisiteResponsesMixin
 from .smoking_history_question_base_view import SmokingHistoryQuestionBaseView
 from ..forms.smoked_total_years_form import SmokedTotalYearsForm
 from ..models.smoked_total_years_response import SmokedTotalYearsResponse
@@ -18,10 +19,10 @@ class EnsureAnsweredAgeWhenStartedSmokingMixin:
         else:
             return super().dispatch(request, *args, **kwargs)
 
-
 class SmokedTotalYearsView(
     LoginRequiredMixin, EnsureResponseSet, EnsureEligibleMixin,
     EnsureSmokingHistoryForTypeMixin, EnsureAnsweredAgeWhenStartedSmokingMixin,
+    EnsurePrerequisiteResponsesMixin,
     SmokingHistoryQuestionBaseView
 ):
     template_name = "question_form.jinja"
@@ -68,3 +69,23 @@ class SmokedTotalYearsView(
 
     def has_decreased_level(self):
         return self.request.response_set.tobacco_smoking_history.cigarettes().decreased().exists()
+
+    def get_object_parent(self):
+        return self.get_smoking_history_item()
+
+    def get_prerequisite_responses_redirect_map(self):
+        if self.get_smoking_history_item().is_normal():
+            return {}
+
+        return {
+            "smoking_frequency_response": reverse(
+                "questions:smoking_frequency",
+                kwargs=self.kwargs,
+                query=self.get_change_query_params(),
+            ),
+            "smoked_amount_response": reverse(
+                "questions:smoked_amount",
+                kwargs=self.kwargs,
+                query=self.get_change_query_params(),
+            ),
+        }
