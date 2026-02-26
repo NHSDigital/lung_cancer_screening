@@ -38,6 +38,8 @@ var roleID = {
   networkContributor: '4d97b98b-1d4f-4787-a291-c67834d212e7'
   rbacAdmin: 'f58310d9-a9f6-439a-9e8d-f62e7b41a168'
   reader: 'acdd72a7-3385-48ef-bd42-f606fba81ae7'
+  storageBlobDataContributor: 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
+  storageQueueDataContributor: '974c5e8b-45b9-4653-ba55-5f855dd0fb88'
 }
 
 // Retrieve existing terraform state resource group
@@ -193,14 +195,54 @@ resource CDNContributorAssignment 'Microsoft.Authorization/roleAssignments@2022-
 }
 
 // Let the managed identity assign the Key Vault Secrets User role to the container app managed identity
+// resource rbacAdminAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+//   name: guid(subscription().subscriptionId, envConfig, 'rbacAdmin')
+//   properties: {
+//     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roleID.rbacAdmin)
+//     principalId: managedIdentiyADOtoAZ.outputs.miPrincipalID
+//     condition: '((!(ActionMatches{\'Microsoft.Authorization/roleAssignments/write\'})) OR (@Request[Microsoft.Authorization/roleAssignments:RoleDefinitionId] ForAnyOfAnyValues:GuidEquals {${roleID.kvSecretsUser}})) AND ((!(ActionMatches{\'Microsoft.Authorization/roleAssignments/delete\'})) OR (@Resource[Microsoft.Authorization/roleAssignments:RoleDefinitionId] ForAnyOfAnyValues:GuidEquals {${roleID.kvSecretsUser}}))'
+//     conditionVersion: '2.0'
+//     description: '${miADOtoAZname} Role Based Access Control Administrator access to subscription. Only allows assigning the Key Vault Secrets User role.'
+//   }
+// }
+
+// Let the managed identity assign limited data-plane roles only
 resource rbacAdminAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(subscription().subscriptionId, envConfig, 'rbacAdmin')
   properties: {
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roleID.rbacAdmin)
+    roleDefinitionId: subscriptionResourceId(
+      'Microsoft.Authorization/roleDefinitions',
+      roleID.rbacAdmin
+    )
     principalId: managedIdentiyADOtoAZ.outputs.miPrincipalID
-    condition: '((!(ActionMatches{\'Microsoft.Authorization/roleAssignments/write\'})) OR (@Request[Microsoft.Authorization/roleAssignments:RoleDefinitionId] ForAnyOfAnyValues:GuidEquals {${roleID.kvSecretsUser}})) AND ((!(ActionMatches{\'Microsoft.Authorization/roleAssignments/delete\'})) OR (@Resource[Microsoft.Authorization/roleAssignments:RoleDefinitionId] ForAnyOfAnyValues:GuidEquals {${roleID.kvSecretsUser}}))'
+
+    condition: '''
+    (
+        (!(ActionMatches{\'Microsoft.Authorization/roleAssignments/write\'})) OR
+        (@Request[Microsoft.Authorization/roleAssignments:RoleDefinitionId]
+          ForAnyOfAnyValues:GuidEquals {
+            ${roleID.kvSecretsUser},
+            ${roleID.storageBlobDataContributor},
+            ${roleID.storageQueueDataContributor}
+          }
+        )
+      )
+      AND
+      (
+        (!(ActionMatches{\'Microsoft.Authorization/roleAssignments/delete\'})) OR
+        (@Resource[Microsoft.Authorization/roleAssignments:RoleDefinitionId]
+          ForAnyOfAnyValues:GuidEquals {
+            ${roleID.kvSecretsUser},
+            ${roleID.storageBlobDataContributor},
+            ${roleID.storageQueueDataContributor}
+          }
+        )
+      )
+      '''
+
     conditionVersion: '2.0'
-    description: '${miADOtoAZname} Role Based Access Control Administrator access to subscription. Only allows assigning the Key Vault Secrets User role.'
+
+    description: '${miADOtoAZname} RBAC Admin access. Can only assign KV Secrets User and Storage data-plane contributor roles.'
   }
 }
 
