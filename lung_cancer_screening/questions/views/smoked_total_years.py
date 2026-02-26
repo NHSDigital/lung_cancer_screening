@@ -8,6 +8,7 @@ from .mixins.ensure_smoking_history_for_type import EnsureSmokingHistoryForTypeM
 from .smoking_history_question_base_view import SmokingHistoryQuestionBaseView
 from ..forms.smoked_total_years_form import SmokedTotalYearsForm
 from ..models.smoked_total_years_response import SmokedTotalYearsResponse
+from ..models.tobacco_smoking_history import TobaccoSmokingHistory
 
 
 class EnsureAnsweredAgeWhenStartedSmokingMixin:
@@ -27,17 +28,43 @@ class SmokedTotalYearsView(
     form_class = SmokedTotalYearsForm
     model = SmokedTotalYearsResponse
 
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["tobacco_smoking_history"] = self.get_smoking_history_item()
+        return kwargs
+
+
     def get_success_url(self):
-        return reverse(
-            "questions:smoking_frequency",
-            kwargs={"tobacco_type": self.kwargs["tobacco_type"]},
-            query=self.get_change_query_params(),
-        )
+        if self.get_smoking_history_item().is_normal():
+            return reverse(
+                "questions:smoking_frequency",
+                kwargs={"tobacco_type": self.kwargs["tobacco_type"]},
+                query=self.get_change_query_params(),
+            )
+
+        if (
+            self.get_smoking_history_item().is_increased()
+            and self.has_decreased_level()
+        ):
+            return reverse(
+                "questions:smoking_frequency",
+                kwargs={
+                    "tobacco_type": self.kwargs["tobacco_type"],
+                    "level": TobaccoSmokingHistory.Levels.DECREASED.value
+                },
+                query=self.get_change_query_params(),
+            )
+
+        return reverse("questions:responses")
+
 
     def get_back_link_url(self):
-
         return reverse(
             "questions:smoking_current",
             kwargs={"tobacco_type": self.kwargs["tobacco_type"]},
             query=self.get_change_query_params(),
         )
+
+    def has_decreased_level(self):
+        return self.request.response_set.tobacco_smoking_history.cigarettes().decreased().exists()

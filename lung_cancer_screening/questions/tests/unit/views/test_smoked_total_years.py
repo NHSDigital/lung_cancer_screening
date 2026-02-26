@@ -2,7 +2,7 @@ from django.test import TestCase, tag
 from django.urls import reverse
 
 from .helpers.authentication import login_user
-from lung_cancer_screening.questions.models.tobacco_smoking_history import TobaccoSmokingHistoryTypes
+from ....models.tobacco_smoking_history import TobaccoSmokingHistoryTypes, TobaccoSmokingHistory
 from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
 from ...factories.age_when_started_smoking_response_factory import AgeWhenStartedSmokingResponseFactory
@@ -18,7 +18,7 @@ class TestGetSmokedTotalYears(TestCase):
         )
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES.value
+            cigarettes=True,
         )
 
 
@@ -92,7 +92,7 @@ class TestPostSmokedTotalYears(TestCase):
         )
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES.value
+            cigarettes=True,
         )
         self.valid_params = {"value": 1}
 
@@ -179,7 +179,7 @@ class TestPostSmokedTotalYears(TestCase):
         )
 
 
-    def test_redirects_to_next_question(self):
+    def test_redirects_to_frequency_by_default(self):
         response = self.client.post(
             reverse("questions:smoked_total_years", kwargs = {
                 "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
@@ -190,6 +190,68 @@ class TestPostSmokedTotalYears(TestCase):
         self.assertRedirects(response, reverse("questions:smoking_frequency", kwargs={
             "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
         }))
+
+
+    def test_redirects_response_if_the_smoking_history_change_item_is_increased(self):
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=self.tobacco_smoking_history.type,
+            increased=True,
+        )
+
+        response = self.client.post(
+            reverse("questions:smoked_total_years", kwargs = {
+                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower(),
+                "level": TobaccoSmokingHistory.Levels.INCREASED.value,
+            }),
+            self.valid_params
+        )
+
+        self.assertRedirects(response, reverse("questions:responses"))
+
+
+    def test_redirects_response_if_the_smoking_history_change_item_is_decreased(self):
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=self.tobacco_smoking_history.type,
+            decreased=True,
+        )
+
+        response = self.client.post(
+            reverse("questions:smoked_total_years", kwargs = {
+                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower(),
+                "level": TobaccoSmokingHistory.Levels.DECREASED.value,
+            }),
+            self.valid_params
+        )
+
+        self.assertRedirects(response, reverse("questions:responses"))
+
+    def test_redirects_to_decreased_frequency_if_increased_and_has_decreased_history_item(self):
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=self.tobacco_smoking_history.type,
+            increased=True,
+        )
+
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=self.tobacco_smoking_history.type,
+            decreased=True,
+        )
+
+        response = self.client.post(
+            reverse("questions:smoked_total_years", kwargs = {
+                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower(),
+                "level": TobaccoSmokingHistory.Levels.INCREASED.value,
+            }),
+            self.valid_params
+        )
+
+        self.assertRedirects(response, reverse("questions:smoking_frequency", kwargs={
+            "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower(),
+            "level": TobaccoSmokingHistory.Levels.DECREASED.value,
+        }), fetch_redirect_response=False)
 
 
     def test_redirects_to_next_question_forwarding_the_change_query_param(self):

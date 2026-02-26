@@ -130,8 +130,8 @@ def given_i_have_answered_questions_showing_i_have_level_of_smoking(context, lev
     when_i_check_label(context, f"{TobaccoSmokingHistory.Levels[level.upper()].label} than {previous_level.lower()}")
     when_i_submit_the_form(context)
 
-@given('I have answered questions showing I have "{level}" my level of "{tobacco_type}" smoking to "{frequency}"')
-def given_i_have_answered_questions_showing_i_have_increased_or_decreased_smoked_tobacco_type_frequency(
+@given('I have answered questions showing I have "{level}" my frequency of "{tobacco_type}" smoking to "{frequency}"')
+def given_i_have_answered_questions_showing_i_have_changed_frequency_of_smoked_tobacco_type(
     context, level, tobacco_type, frequency
 ):
     given_i_have_answered_questions_showing_i_have_smoked_tobacco_type(
@@ -140,6 +140,13 @@ def given_i_have_answered_questions_showing_i_have_increased_or_decreased_smoked
     context.page.goto(
         f"{context.live_server_url}/{tobacco_type.lower()}-smoking-{level}-frequency"
     )
-    screenshot(context)
     when_i_check_label(context, humanize(frequency))
+    when_i_submit_the_form(context)
+
+@given('I have answered questions showing I have "{level}" my amount of "{tobacco_type}" smoking to "{amount}"')
+def given_i_have_answered_questions_showing_i_have_changed_amount_of_smoked_tobacco_type(context, level, tobacco_type, amount):
+    given_i_have_answered_questions_showing_i_have_smoked_tobacco_type(context, tobacco_type)
+    context.page.goto(f"{context.live_server_url}/{tobacco_type.lower()}-smoked-{level}-amount")
+    screenshot(context)
+    when_i_fill_in_label_with_value(context, f"roughly how many {tobacco_type.lower()} did you normally smoke a", amount, exact=False)
     when_i_submit_the_form(context)
