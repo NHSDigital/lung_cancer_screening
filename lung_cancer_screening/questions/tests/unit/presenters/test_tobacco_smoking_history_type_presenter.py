@@ -110,7 +110,7 @@ class TestTobaccoSmokingHistoryTypePresenter(TestCase):
 
         self.assertIn(
             {
-                "key": {"text": "When you smoked less than 7 cigarettes a week"},
+                "key": {"text": "When you smoked fewer than 7 cigarettes a week"},
                 "value": {"text": "50 cigarettes a day for 10 years"},
             },
             presenter.summary_items(),

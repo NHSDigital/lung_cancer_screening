@@ -2,10 +2,11 @@ from django.test import TestCase, tag
 from django.urls import reverse
 
 from .helpers.authentication import login_user
-from lung_cancer_screening.questions.models.tobacco_smoking_history import TobaccoSmokingHistoryTypes
+from ....models.tobacco_smoking_history import TobaccoSmokingHistoryTypes, TobaccoSmokingHistory
 from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
 from ...factories.age_when_started_smoking_response_factory import AgeWhenStartedSmokingResponseFactory
+from ...factories.smoking_frequency_response_factory import SmokingFrequencyResponseFactory
 
 
 @tag("SmokedTotalYears")
@@ -18,7 +19,7 @@ class TestGetSmokedTotalYears(TestCase):
         )
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES.value
+            cigarettes=True,
         )
 
 
@@ -73,6 +74,45 @@ class TestGetSmokedTotalYears(TestCase):
         self.assertEqual(response.status_code, 404)
 
 
+    def test_redirects_to_increased_frequency_if_the_user_has_not_answered_frequency_and_the_level_is_changed(self):
+        increased = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=self.tobacco_smoking_history.type,
+            increased=True,
+        )
+
+        response = self.client.get(reverse("questions:smoked_total_years", kwargs = {
+            "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower(),
+            "level": increased.level,
+        }))
+
+        self.assertRedirects(response, reverse("questions:smoking_frequency", kwargs={
+            "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower(),
+            "level": increased.level,
+        }), fetch_redirect_response=False)
+
+
+    def test_redirects_to_increased_amount_if_the_user_has_not_answered_amount_and_the_level_is_changed(self):
+        increased = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=self.tobacco_smoking_history.type,
+            increased=True,
+        )
+        SmokingFrequencyResponseFactory.create(
+            tobacco_smoking_history=increased,
+        )
+
+        response = self.client.get(reverse("questions:smoked_total_years", kwargs = {
+            "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower(),
+            "level": increased.level,
+        }))
+
+        self.assertRedirects(response, reverse("questions:smoked_amount", kwargs={
+            "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower(),
+            "level": increased.level,
+        }), fetch_redirect_response=False)
+
+
     def test_responds_successfully(self):
         response = self.client.get(reverse("questions:smoked_total_years", kwargs = {
                 "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
@@ -92,7 +132,7 @@ class TestPostSmokedTotalYears(TestCase):
         )
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES.value
+            cigarettes=True,
         )
         self.valid_params = {"value": 1}
 
@@ -168,6 +208,36 @@ class TestPostSmokedTotalYears(TestCase):
         self.assertEqual(response.status_code, 404)
 
 
+    def test_redirects_to_increased_frequency_if_the_user_has_not_answered_frequency_and_the_level_is_changed(self):
+        increased = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=self.tobacco_smoking_history.type,
+            increased=True,
+        )
+
+        response = self.client.post(
+            reverse(
+                "questions:smoked_total_years",
+                kwargs={
+                    "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower(),
+                    "level": increased.level,
+                },
+            ),
+            self.valid_params
+        )
+
+        self.assertRedirects(
+            response,
+            reverse(
+                "questions:smoking_frequency",
+                kwargs={
+                    "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower(),
+                    "level": increased.level,
+                },
+            ),
+            fetch_redirect_response=False,
+        )
+
     def test_creates_a_smoked_total_years_response(self):
         self.client.post(reverse("questions:smoked_total_years", kwargs = {
             "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
@@ -179,7 +249,7 @@ class TestPostSmokedTotalYears(TestCase):
         )
 
 
-    def test_redirects_to_next_question(self):
+    def test_redirects_to_frequency_by_default(self):
         response = self.client.post(
             reverse("questions:smoked_total_years", kwargs = {
                 "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
@@ -190,6 +260,95 @@ class TestPostSmokedTotalYears(TestCase):
         self.assertRedirects(response, reverse("questions:smoking_frequency", kwargs={
             "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
         }))
+
+
+    def test_redirects_response_if_the_smoking_history_change_item_is_increased(self):
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=self.tobacco_smoking_history.type,
+            complete=True,
+            increased=True,
+        )
+
+        response = self.client.post(
+            reverse("questions:smoked_total_years", kwargs = {
+                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower(),
+                "level": TobaccoSmokingHistory.Levels.INCREASED.value,
+            }),
+            self.valid_params
+        )
+
+        self.assertRedirects(response, reverse("questions:responses"))
+
+
+    def test_redirects_response_if_the_smoking_history_change_item_is_decreased(self):
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=self.tobacco_smoking_history.type,
+            complete=True,
+            decreased=True,
+        )
+
+        response = self.client.post(
+            reverse("questions:smoked_total_years", kwargs = {
+                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower(),
+                "level": TobaccoSmokingHistory.Levels.DECREASED.value,
+            }),
+            self.valid_params
+        )
+
+        self.assertRedirects(response, reverse("questions:responses"))
+
+
+    def test_redirects_to_decreased_frequency_if_increased_and_has_decreased_history_item(self):
+        increased = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=self.tobacco_smoking_history.type,
+            complete=True,
+            increased=True,
+        )
+
+        decreased =TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=self.tobacco_smoking_history.type,
+            complete=True,
+            decreased=True,
+        )
+
+        response = self.client.post(
+            reverse("questions:smoked_total_years", kwargs = {
+                "tobacco_type": increased.type.lower(),
+                "level": increased.level,
+            }),
+            self.valid_params
+        )
+
+        self.assertRedirects(response, reverse("questions:smoking_frequency", kwargs={
+            "tobacco_type": decreased.type.lower(),
+            "level": decreased.level,
+        }), fetch_redirect_response=False)
+
+
+    @tag("wip")
+    def test_redirects_to_increased_amount_if_the_user_has_not_answered_amount_and_the_level_is_changed(self):
+        increased = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=self.tobacco_smoking_history.type,
+            increased=True,
+        )
+        SmokingFrequencyResponseFactory.create(
+            tobacco_smoking_history=increased,
+        )
+
+        response = self.client.post(reverse("questions:smoked_total_years", kwargs = {
+            "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower(),
+            "level": increased.level,
+        }), self.valid_params)
+
+        self.assertRedirects(response, reverse("questions:smoked_amount", kwargs={
+            "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower(),
+            "level": increased.level,
+        }), fetch_redirect_response=False)
 
 
     def test_redirects_to_next_question_forwarding_the_change_query_param(self):

@@ -142,5 +142,5 @@ def when_i_uncheck_label(context, label):
 
 
 @when('I fill in "{label}" with "{value}"')
-def when_i_fill_in_label_with_value(context, label, value):
-    context.page.get_by_label(label, exact=True).fill(value)
+def when_i_fill_in_label_with_value(context, label, value, exact=True):
+    context.page.get_by_label(label, exact=exact).fill(value)

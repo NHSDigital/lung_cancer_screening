@@ -55,7 +55,7 @@ class TobaccoSmokingHistoryTypePresenter(BasePresenter):
     def decreased_summary_items(self):
         return [
             self._check_your_answer_item(
-                f"When you smoked less than {self.normal_tobacco_smoking_history().to_sentence()}",
+                f"When you smoked fewer than {self.normal_tobacco_smoking_history().to_sentence()}",
                 f"{self.decreased_tobacco_smoking_history().to_sentence()} for {self.decreased_tobacco_smoking_history().duration_years()}",
             ),
         ]

@@ -6,11 +6,12 @@ from ..models.smoked_total_years_response import SmokedTotalYearsResponse
 
 class SmokedTotalYearsForm(forms.ModelForm):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, tobacco_smoking_history,*args, **kwargs):
+        self.tobacco_smoking_history = tobacco_smoking_history
         super().__init__(*args, **kwargs)
 
         self.fields["value"] = IntegerField(
-            label="Roughly how many years have you smoked cigarettes?",
+            label=self.label(),
             label_is_page_heading=True,
             label_classes="nhsuk-label--l",
             classes="nhsuk-input--width-4",
@@ -22,6 +23,12 @@ class SmokedTotalYearsForm(forms.ModelForm):
                 "invalid": "Years must be in whole numbers"
             },
         )
+
+    def label(self):
+        if self.tobacco_smoking_history.is_normal():
+            return f"Roughly how many years have you smoked {self.tobacco_smoking_history.human_type().lower()}?"
+        else:
+            return f"Roughly how many years did you smoke {self.tobacco_smoking_history.amount()} {self.tobacco_smoking_history.human_type().lower()} a {self.tobacco_smoking_history.frequency_singular()}?"
 
     class Meta:
         model = SmokedTotalYearsResponse
