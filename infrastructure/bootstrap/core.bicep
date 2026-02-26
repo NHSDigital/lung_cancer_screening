@@ -2,9 +2,13 @@ targetScope='subscription'
 
 @minLength(1)
 param miPrincipalId string
+
 @minLength(1)
 param miName string
+
 param userGroupPrincipalID string
+
+param userGroupName string
 
 // See: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
 var roleID = {
