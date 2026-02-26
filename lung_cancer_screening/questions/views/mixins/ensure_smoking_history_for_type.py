@@ -6,16 +6,26 @@ from lung_cancer_screening.questions.models.tobacco_smoking_history import Tobac
 class EnsureSmokingHistoryForTypeMixin:
 
     def dispatch(self, request, *args, **kwargs):
-        url_tobacco_type = camelize(kwargs["tobacco_type"])
-        level = kwargs.get("level", TobaccoSmokingHistory.Levels.NORMAL)
+        self.ensure_smoking_history_item_exists()
+        return super().dispatch(request, *args, **kwargs)
 
-        tobacco_smoking_history_item = request.response_set.tobacco_smoking_history.filter(
-            type=url_tobacco_type,
-            level=level
+    def ensure_smoking_history_item_exists(self):
+        try:
+            self.tobacco_smoking_history_item()
+        except TobaccoSmokingHistory.DoesNotExist:
+            raise Http404("Tobacco smoking history item not found")
+
+
+    def tobacco_type(self):
+        return camelize(self.kwargs["tobacco_type"])
+
+
+    def level(self):
+        return self.kwargs.get("level", TobaccoSmokingHistory.Levels.NORMAL)
+
+
+    def tobacco_smoking_history_item(self):
+        return self.request.response_set.tobacco_smoking_history.get(
+            type=self.tobacco_type(),
+            level=self.level()
         )
-
-        if tobacco_smoking_history_item.exists():
-            request.tobacco_smoking_history_item = tobacco_smoking_history_item.first()
-            return super().dispatch(request, *args, **kwargs)
-        else:
-            raise Http404

@@ -25,7 +25,7 @@ class SmokingFrequencyView(
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs["response_set"] = self.request.response_set
-        kwargs["tobacco_smoking_history_item"] = self.request.tobacco_smoking_history_item
+        kwargs["tobacco_smoking_history_item"] = self.tobacco_smoking_history_item()
         return kwargs
 
     def get_context_data(self, **kwargs):
@@ -57,7 +57,7 @@ class SmokingFrequencyView(
 
         elif self.kwargs.get("level") == TobaccoSmokingHistory.Levels.DECREASED:
             if self._has_increased_level():
-                self.get_smoking_history_item
+                self.tobacco_smoking_history_item()
                 return reverse(
                 "questions:smoked_amount",
                 kwargs={"tobacco_type": self.kwargs.get("tobacco_type"), "level": TobaccoSmokingHistory.Levels.INCREASED},
@@ -73,6 +73,6 @@ class SmokingFrequencyView(
 
     def _has_increased_level(self):
         return self.request.response_set.tobacco_smoking_history.filter(
-                type=self.request.tobacco_smoking_history_item.type,
+                type=self.tobacco_smoking_history_item().type,
                 level=TobaccoSmokingHistory.Levels.INCREASED
             ).exists()
