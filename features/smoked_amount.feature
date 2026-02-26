@@ -40,6 +40,7 @@ Feature: Smoked amount page
     And I have answered questions showing I have "increased" my level of "Cigarettes" smoking from "10 cigarettes a day"
     And I have answered questions showing I have "increased" my frequency of "Cigarettes" smoking to "Weekly"
     When I go to "/cigarettes-smoked-increased-amount"
-    And I fill in "When you smoked more than 10 cigarettes a day, roughly how many cigarettes did you normally smoke a week?" with "10"
+    Then I see a back link to "/cigarettes-smoking-increased-frequency"
+    When I fill in "When you smoked more than 10 cigarettes a day, roughly how many cigarettes did you normally smoke a week?" with "10"
     And I submit the form
     Then I am on "/cigarettes-smoked-increased-years"

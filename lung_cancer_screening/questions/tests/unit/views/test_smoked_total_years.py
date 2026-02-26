@@ -122,6 +122,41 @@ class TestGetSmokedTotalYears(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+    def test_has_a_back_link_to_smoking_current_by_default(self):
+        response = self.client.get(reverse("questions:smoked_total_years", kwargs = {
+            "tobacco_type":self.tobacco_smoking_history.type.lower()
+        }))
+
+        self.assertEqual(
+            response.context_data["back_link_url"],
+            reverse("questions:smoking_current", kwargs={
+                "tobacco_type": self.tobacco_smoking_history.type.lower()
+            }),
+        )
+
+
+    def test_has_a_back_link_to_smoking_amount_if_the_level_is_not_normal(self):
+        increased = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=self.tobacco_smoking_history.type,
+            complete=True,
+            increased=True,
+        )
+
+        response = self.client.get(reverse("questions:smoked_total_years", kwargs = {
+            "tobacco_type":self.tobacco_smoking_history.type.lower(),
+            "level": increased.level,
+        }))
+
+        self.assertEqual(
+            response.context_data["back_link_url"],
+            reverse("questions:smoked_amount", kwargs={
+                "tobacco_type": increased.type.lower(),
+                "level": increased.level,
+            }),
+        )
+
+
 @tag("SmokedTotalYears")
 class TestPostSmokedTotalYears(TestCase):
     def setUp(self):
@@ -329,7 +364,6 @@ class TestPostSmokedTotalYears(TestCase):
         }), fetch_redirect_response=False)
 
 
-    @tag("wip")
     def test_redirects_to_increased_amount_if_the_user_has_not_answered_amount_and_the_level_is_changed(self):
         increased = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
