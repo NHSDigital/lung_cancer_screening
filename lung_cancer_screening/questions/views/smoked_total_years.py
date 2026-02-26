@@ -73,19 +73,11 @@ class SmokedTotalYearsView(
     def get_object_parent(self):
         return self.get_smoking_history_item()
 
-    def get_prerequisite_responses_redirect_map(self):
+    def prerequisite_responses(self):
         if self.get_smoking_history_item().is_normal():
-            return {}
+            return []
 
-        return {
-            "smoking_frequency_response": reverse(
-                "questions:smoking_frequency",
-                kwargs=self.kwargs,
-                query=self.get_change_query_params(),
-            ),
-            "smoked_amount_response": reverse(
-                "questions:smoked_amount",
-                kwargs=self.kwargs,
-                query=self.get_change_query_params(),
-            ),
-        }
+        return [
+            "smoking_frequency_response",
+            "smoked_amount_response"
+        ]
