@@ -18,7 +18,6 @@
 
 targetScope = 'subscription'
 
-// param devopsInfrastructureId string
 param devopsSubnetAddressPrefix string
 param privateEndpointSubnetAddressPrefix string
 param hubType string // live / nonlive
