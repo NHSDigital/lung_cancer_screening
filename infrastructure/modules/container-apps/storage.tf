@@ -5,12 +5,11 @@ module "azure_blob_storage_identity" {
   uai_name            = "mi-${var.app_short_name}-${var.environment}-blob-storage"
 }
 
-# module "azure_queue_storage_identity" {
-#   source              = "../dtos-devops-templates/infrastructure/modules/managed-identity"
-#   resource_group_name = azurerm_resource_group.main.name
-#   location            = var.region
-#   uai_name            = "mi-${var.app_short_name}-${var.environment}-queue-storage"
-# }
+resource "azurerm_role_assignment" "terraform_user_access_admin" {
+  scope                = data.azurerm_subscription.current.id
+  role_definition_name = "User Access Administrator"
+  principal_id         = module.azure_blob_storage_identity.principal_id
+}
 
 module "storage" {
   source = "../dtos-devops-templates/infrastructure/modules/storage"
@@ -43,13 +42,5 @@ module "blob_storage_role_assignment" {
   principal_id         = module.azure_blob_storage_identity.principal_id
   role_definition_name = "Storage Blob Data Contributor"
   scope                = module.storage.storage_account_id
-  depends_on           = [module.storage, module.azure_blob_storage_identity]
+  depends_on           = [module.storage, module.azure_blob_storage_identity, azurerm_role_assignment.terraform_user_access_admin]
 }
-
-# module "queue_storage_role_assignment" {
-#   source               = "../dtos-devops-templates/infrastructure/modules/rbac-assignment"
-#   principal_id         = module.azure_queue_storage_identity.principal_id
-#   role_definition_name = "Storage Queue Data Contributor"
-#   scope                = module.storage.storage_account_id
-#   depends_on           = [module.storage, module.azure_queue_storage_identity]
-# }
