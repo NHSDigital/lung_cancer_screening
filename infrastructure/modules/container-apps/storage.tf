@@ -36,5 +36,5 @@ module "blob_storage_role_assignment" {
   principal_id         = module.azure_blob_storage_identity.principal_id
   role_definition_name = "Storage Blob Data Contributor"
   scope                = module.storage.storage_account_id
-  depends_on           = [module.storage, module.azure_blob_storage_identity, azurerm_role_assignment.terraform_user_access_admin]
+  depends_on           = [module.storage, module.azure_blob_storage_identity]
 }
