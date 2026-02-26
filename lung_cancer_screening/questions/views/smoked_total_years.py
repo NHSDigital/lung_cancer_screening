@@ -61,11 +61,19 @@ class SmokedTotalYearsView(
 
 
     def get_back_link_url(self):
+        if self.get_smoking_history_item().is_normal():
+            return reverse(
+                "questions:smoking_current",
+                kwargs={"tobacco_type": self.kwargs["tobacco_type"]},
+                query=self.get_change_query_params(),
+            )
+
         return reverse(
-            "questions:smoking_current",
-            kwargs={"tobacco_type": self.kwargs["tobacco_type"]},
+            "questions:smoked_amount",
+            kwargs=self.kwargs,
             query=self.get_change_query_params(),
         )
+
 
     def has_decreased_level(self):
         return self.request.response_set.tobacco_smoking_history.cigarettes().decreased().exists()
