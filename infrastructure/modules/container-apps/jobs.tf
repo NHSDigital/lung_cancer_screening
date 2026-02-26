@@ -14,7 +14,6 @@ module "db_setup" {
   docker_image     = var.docker_image
   user_assigned_identity_ids = flatten([
     [module.azure_blob_storage_identity.id],
-    [module.azure_queue_storage_identity.id],
     var.deploy_database_as_container ? [] : [module.db_connect_identity[0].id]
   ])
   environment_variables = merge(
