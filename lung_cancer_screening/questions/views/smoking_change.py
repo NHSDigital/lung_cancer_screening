@@ -8,6 +8,7 @@ from lung_cancer_screening.questions.models.tobacco_smoking_history import Tobac
 from .mixins.ensure_response_set import EnsureResponseSet
 from .mixins.ensure_eligible import EnsureEligibleMixin
 from .mixins.ensure_smoking_history_for_type import EnsureSmokingHistoryForTypeMixin
+from .mixins.ensure_prerequisite_responses import EnsurePrerequisiteResponsesMixin
 from ..forms.smoking_change_form import SmokingChangeForm
 
 class EnsureSmokingFrequencyAndAmountResponseMixin:

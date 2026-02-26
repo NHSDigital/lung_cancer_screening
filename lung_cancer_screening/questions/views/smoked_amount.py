@@ -58,20 +58,12 @@ class SmokedAmountView(
         return self.get_smoking_history_item()
 
 
-    def get_prerequisite_responses_redirect_map(self):
-        result = {
-            "smoking_frequency_response": reverse(
-                "questions:smoking_frequency",
-                kwargs={"tobacco_type": self.kwargs["tobacco_type"]},
-                query=self.get_change_query_params()
-            )
-        }
+    def prerequisite_responses(self):
+        result = [
+            "smoking_frequency_response",
+        ]
 
-        if self.get_smoking_history_item().level == TobaccoSmokingHistory.Levels.NORMAL:
-            result["smoking_current_response"] = reverse(
-                "questions:smoking_current",
-                kwargs={"tobacco_type": self.kwargs["tobacco_type"]},
-                query=self.get_change_query_params()
-            )
+        if self.get_smoking_history_item().is_normal():
+            result.append("smoking_current_response")
 
         return result
