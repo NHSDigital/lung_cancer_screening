@@ -22,7 +22,6 @@ module "db_setup" {
     var.deploy_database_as_container ? local.container_db_env : local.azure_db_env
   )
   depends_on = [
-    module.queue_storage_role_assignment,
     module.blob_storage_role_assignment
   ]
 
