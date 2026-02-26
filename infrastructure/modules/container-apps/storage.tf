@@ -5,12 +5,6 @@ module "azure_blob_storage_identity" {
   uai_name            = "mi-${var.app_short_name}-${var.environment}-blob-storage"
 }
 
-resource "azurerm_role_assignment" "terraform_user_access_admin" {
-  scope                = data.azurerm_subscription.current.id
-  role_definition_name = "User Access Administrator"
-  principal_id         = module.azure_blob_storage_identity.principal_id
-}
-
 module "storage" {
   source = "../dtos-devops-templates/infrastructure/modules/storage"
 
