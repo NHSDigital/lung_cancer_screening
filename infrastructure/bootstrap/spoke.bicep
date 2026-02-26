@@ -40,6 +40,7 @@ var roleID = {
   reader: 'acdd72a7-3385-48ef-bd42-f606fba81ae7'
   storageBlobDataContributor: 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
   storageQueueDataContributor: '974c5e8b-45b9-4653-ba55-5f855dd0fb88'
+  userAccessAdmin: '18d7d88d-d35e-4fb5-a5c3-7773c20a72d9'
 }
 
 // Retrieve existing terraform state resource group
@@ -212,6 +213,18 @@ resource storageBlobDataContributor 'Microsoft.Authorization/roleAssignments@202
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roleID.storageBlobDataContributor)
     principalId: managedIdentiyADOtoAZ.outputs.miPrincipalID
     description: '${miADOtoAZname} Storage Blob Data Contributor access to subscription'
+  }
+}
+
+resource userAccessAdminAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(subscription().subscriptionId, envConfig, 'uaa')
+  properties: {
+    roleDefinitionId: subscriptionResourceId(
+      'Microsoft.Authorization/roleDefinitions',
+      roleID.userAccessAdmin  // User Access Administrator
+    )
+    principalId: managedIdentiyADOtoAZ.outputs.miPrincipalID
+    description: 'Allow bootstrap identity to create role assignments'
   }
 }
 
