@@ -217,20 +217,21 @@ resource rbacAdminAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01
     principalId: managedIdentiyADOtoAZ.outputs.miPrincipalID
 
     condition: '''
-      (
-      (!(ActionMatches{'Microsoft.Authorization/roleAssignments/write'})) OR
-      (@Request[Microsoft.Authorization/roleAssignments:RoleDefinitionId] ForAnyOfAnyValues:GuidEquals {${roleID.kvSecretsUser},${roleID.storageBlobDataContributor},${roleID.storageQueueDataContributor}})
-      )
-      AND
-      (
-      (!(ActionMatches{'Microsoft.Authorization/roleAssignments/delete'})) OR
-      (@Resource[Microsoft.Authorization/roleAssignments:RoleDefinitionId] ForAnyOfAnyValues:GuidEquals {${roleID.kvSecretsUser},${roleID.storageBlobDataContributor},${roleID.storageQueueDataContributor}})
-      )
-      '''
-
+(
+  (!(ActionMatches{'Microsoft.Authorization/roleAssignments/write'})) OR
+  (@Request[Microsoft.Authorization/roleAssignments:RoleDefinitionId]
+    ForAnyOfAnyValues:GuidEquals {${join(',', allowedRoleIds)}})
+)
+AND
+(
+  (!(ActionMatches{'Microsoft.Authorization/roleAssignments/delete'})) OR
+  (@Resource[Microsoft.Authorization/roleAssignments:RoleDefinitionId]
+    ForAnyOfAnyValues:GuidEquals {${join(',', allowedRoleIds)}})
+)
+'''
     conditionVersion: '2.0'
 
-    description: '${miADOtoAZname} RBAC Admin access. Can only assign KV Secrets User and Storage data-plane contributor roles.'
+    description: '${miADOtoAZname} RBAC Admin. Limited to allowed data-plane roles.'
   }
 }
 
