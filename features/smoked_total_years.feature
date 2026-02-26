@@ -41,6 +41,7 @@ Feature: Smoked total years page
     And I have answered questions showing I have "increased" my frequency of "Cigarettes" smoking to "Weekly"
     And I have answered questions showing I have "increased" my amount of "Cigarettes" smoking to "10"
     When I go to "/cigarettes-smoked-increased-years"
-    And I fill in "Roughly how many years did you smoke 10 cigarettes a week?" with "9"
+    Then I see a back link to "/cigarettes-smoked-increased-amount"
+    When I fill in "Roughly how many years did you smoke 10 cigarettes a week?" with "9"
     And I submit the form
     Then I am on "/check-your-answers"

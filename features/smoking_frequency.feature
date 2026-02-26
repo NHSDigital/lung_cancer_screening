@@ -35,5 +35,7 @@ Feature: Smoking frequency page
     And I have answered questions showing I currently smoke "Cigarettes"
     And I have answered questions showing I have smoked 10 "Cigarettes" "daily"
     And I have answered questions showing I have "increased" my level of "Cigarettes" smoking from "10 cigarettes a day"
-    Then I am on "/cigarettes-smoking-increased-frequency"
-    And I see a title "When you smoked more than 10 cigarettes a day, how often did you smoke cigarettes?"
+    When I go to "/cigarettes-smoking-increased-frequency"
+    Then I see a back link to "/cigarettes-smoking-change"
+    When I check "Weekly" and submit
+    Then I am on "/cigarettes-smoked-increased-amount"
