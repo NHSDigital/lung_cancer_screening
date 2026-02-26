@@ -13,8 +13,8 @@ from ..forms.smoking_change_form import SmokingChangeForm
 class EnsureSmokingFrequencyAndAmountResponseMixin:
     def dispatch(self, request, *args, **kwargs):
         if (
-            hasattr(request.tobacco_smoking_history_item, 'smoking_frequency_response')
-            and hasattr(request.tobacco_smoking_history_item, 'smoked_amount_response')
+            hasattr(self.tobacco_smoking_history_item(), 'smoking_frequency_response')
+            and hasattr(self.tobacco_smoking_history_item(), 'smoked_amount_response')
         ):
             return super().dispatch(request, *args, **kwargs)
 
@@ -37,7 +37,7 @@ class SmokingChangeView(
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs["response_set"] = self.request.response_set
-        kwargs["tobacco_smoking_history_item"] = self.request.tobacco_smoking_history_item
+        kwargs["tobacco_smoking_history_item"] = self.tobacco_smoking_history_item()
         return kwargs
 
     def get_context_data(self, **kwargs):
