@@ -24,7 +24,7 @@ class SmokedAmountView(
 
 
     def get_success_url(self):
-        if self.get_smoking_history_item().is_normal():
+        if self.tobacco_smoking_history_item().is_normal():
             return reverse(
                 "questions:smoking_change",
                 kwargs={"tobacco_type": self.kwargs["tobacco_type"]},
@@ -47,15 +47,15 @@ class SmokedAmountView(
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs["tobacco_smoking_history"] = self.get_smoking_history_item()
-        if self.get_smoking_history_item().level != TobaccoSmokingHistory.Levels.NORMAL:
+        kwargs["tobacco_smoking_history"] = self.tobacco_smoking_history_item()
+        if self.tobacco_smoking_history_item().level != TobaccoSmokingHistory.Levels.NORMAL:
             kwargs["normal_tobacco_smoking_history"] = self.get_normal_smoking_history_item()
 
         return kwargs
 
 
     def get_object_parent(self):
-        return self.get_smoking_history_item()
+        return self.tobacco_smoking_history_item()
 
 
     def prerequisite_responses(self):
@@ -63,7 +63,7 @@ class SmokedAmountView(
             "smoking_frequency_response",
         ]
 
-        if self.get_smoking_history_item().is_normal():
+        if self.tobacco_smoking_history_item().is_normal():
             result.append("smoking_current_response")
 
         return result
