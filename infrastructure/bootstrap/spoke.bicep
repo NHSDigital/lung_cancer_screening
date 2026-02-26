@@ -38,6 +38,9 @@ var roleID = {
   networkContributor: '4d97b98b-1d4f-4787-a291-c67834d212e7'
   rbacAdmin: 'f58310d9-a9f6-439a-9e8d-f62e7b41a168'
   reader: 'acdd72a7-3385-48ef-bd42-f606fba81ae7'
+  storageBlobDataContributor: 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
+  storageQueueDataContributor: '974c5e8b-45b9-4653-ba55-5f855dd0fb88'
+  userAccessAdmin: '18d7d88d-d35e-4fb5-a5c3-7773c20a72d9'
 }
 
 // Retrieve existing terraform state resource group
@@ -203,6 +206,28 @@ resource rbacAdminAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01
     description: '${miADOtoAZname} Role Based Access Control Administrator access to subscription. Only allows assigning the Key Vault Secrets User role.'
   }
 }
+
+resource storageBlobDataContributor 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(subscription().subscriptionId, envConfig, 'storageBlobDataContributor')
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roleID.storageBlobDataContributor)
+    principalId: managedIdentiyADOtoAZ.outputs.miPrincipalID
+    description: '${miADOtoAZname} Storage Blob Data Contributor access to subscription'
+  }
+}
+
+// resource userAccessAdminAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+//   name: guid(subscription().subscriptionId, envConfig, 'uaa')
+//   properties: {
+//     roleDefinitionId: subscriptionResourceId(
+//       'Microsoft.Authorization/roleDefinitions',
+//       roleID.userAccessAdmin  // User Access Administrator
+//     )
+//     principalId: managedIdentiyADOtoAZ.outputs.miPrincipalID
+//     description: 'Allow bootstrap identity to create role assignments'
+//   }
+// }
+
 
 output miPrincipalID string = managedIdentiyADOtoAZ.outputs.miPrincipalID
 output miName string = miADOtoAZname

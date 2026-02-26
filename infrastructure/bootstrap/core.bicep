@@ -2,8 +2,13 @@ targetScope='subscription'
 
 @minLength(1)
 param miPrincipalId string
+
 @minLength(1)
 param miName string
+
+param userGroupPrincipalID string
+
+param userGroupName string
 
 // See: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
 var roleID = {
@@ -12,6 +17,7 @@ var roleID = {
   rbacAdmin: 'f58310d9-a9f6-439a-9e8d-f62e7b41a168'
   storageBlobDataContributor: 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
   storageQueueDataContributor: '974c5e8b-45b9-4653-ba55-5f855dd0fb88'
+  userAccessAdmin: 'f1a07417-d97a-45cb-824c-7a7467783830'
 }
 
 // Let the managed identity configure resources in the subscription
@@ -45,3 +51,16 @@ resource rbacAdminAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01
     description: '${miName} Role Based Access Control Administrator access to subscription. Can assign Key Vault Secrets User, Storage Blob Data Contributor, and Storage Queue Data Contributor roles.'
   }
 }
+
+// Let the managed identity assign RBAC roles at subscription scope
+// resource userAccessAdminAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+//   name: guid(subscription().subscriptionId, miPrincipalId, 'userAccessAdmin')
+//   properties: {
+//     roleDefinitionId: subscriptionResourceId(
+//       'Microsoft.Authorization/roleDefinitions',
+//       roleID.userAccessAdmin
+//     )
+//     principalId: miPrincipalId
+//     description: '${miName} User Access Administrator access to subscription'
+//   }
+// }

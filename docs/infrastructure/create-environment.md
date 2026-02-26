@@ -70,6 +70,7 @@ Add the infrastructure secrets to the _inf_ key vault `kv-lungcs-[environment]-i
 ## Azure devops
 
 - Create ADO group
+  - In project settings -> permissions -> New Group
   - Name: `Run pipeline - [environment]`
   - Members: `mi-lungcs-[environment]-ghtoado-uks`. There may be more than 1 in the list. Check client id printed below the name.
   - Permissions:
@@ -93,7 +94,7 @@ Add the infrastructure secrets to the _inf_ key vault `kv-lungcs-[environment]-i
   - Scope level: `Subscription`
   - Subscription: `Digital Screening DToS - Core Services Dev`
   - Resource group for Service connection: leave blank
-  - Service Connection Name: `lungcs-[environment]`
+  - Service Connection Name: `sc-lungcs-[environment]-spoke`
   - Do NOT tick: Grant access permission to all pipelines
   - Security: allow `Deploy to Azure - [environment]` pipeline
 - Create ADO environment: [environment]
@@ -127,3 +128,8 @@ Add the infrastructure secrets to the _inf_ key vault `kv-lungcs-[environment]-i
 - Set `fetch_secrets_from_app_key_vault` terraform variable to `true`
 - Test running terraform manually from the AVD (Optional)
 - Raise a pull request, review and merge to trigger the pipeline
+
+## Run terraform from CLI (AVD)
+
+- assign yourself "Key Vault Secrets User" to application key vault to run the terraform code from the CLI inside the AVD when first trying to deploy the application.
+- assign yourself "Data Blob Reader" to State file storage account to run the terraform code from the CLI inside the AVD when first trying to deploy the application.

@@ -31,6 +31,10 @@ on:
         description: "Version of the software, set by the CI/CD pipeline workflow"
         required: true
         type: string
+      commit_sha:
+        description: 'Commit sha of the docker image'
+        required: true
+        type: string
 
 env:
   REGISTRY: ghcr.io
@@ -69,7 +73,10 @@ jobs:
             type=raw,value=${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || '{{branch}}' }}
             type=raw,value=${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || '' }}
             type=sha,format=long,prefix=git-sha-
-
+      - name: Print commit SHA
+        env:
+          COMMIT_SHA: ${{ inputs.commit_sha }}
+        run: echo "Commit SHA is ${COMMIT_SHA}"
       - name: Build and push Docker image
         id: push
         uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8
