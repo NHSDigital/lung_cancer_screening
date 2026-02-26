@@ -217,26 +217,14 @@ resource rbacAdminAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01
     principalId: managedIdentiyADOtoAZ.outputs.miPrincipalID
 
     condition: '''
-    (
-        (!(ActionMatches{\'Microsoft.Authorization/roleAssignments/write\'})) OR
-        (@Request[Microsoft.Authorization/roleAssignments:RoleDefinitionId]
-          ForAnyOfAnyValues:GuidEquals {
-            ${roleID.kvSecretsUser},
-            ${roleID.storageBlobDataContributor},
-            ${roleID.storageQueueDataContributor}
-          }
-        )
+      (
+      (!(ActionMatches{'Microsoft.Authorization/roleAssignments/write'})) OR
+      (@Request[Microsoft.Authorization/roleAssignments:RoleDefinitionId] ForAnyOfAnyValues:GuidEquals {${roleID.kvSecretsUser},${roleID.storageBlobDataContributor},${roleID.storageQueueDataContributor}})
       )
       AND
       (
-        (!(ActionMatches{\'Microsoft.Authorization/roleAssignments/delete\'})) OR
-        (@Resource[Microsoft.Authorization/roleAssignments:RoleDefinitionId]
-          ForAnyOfAnyValues:GuidEquals {
-            ${roleID.kvSecretsUser},
-            ${roleID.storageBlobDataContributor},
-            ${roleID.storageQueueDataContributor}
-          }
-        )
+      (!(ActionMatches{'Microsoft.Authorization/roleAssignments/delete'})) OR
+      (@Resource[Microsoft.Authorization/roleAssignments:RoleDefinitionId] ForAnyOfAnyValues:GuidEquals {${roleID.kvSecretsUser},${roleID.storageBlobDataContributor},${roleID.storageQueueDataContributor}})
       )
       '''
 
