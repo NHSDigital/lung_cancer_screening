@@ -2,6 +2,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormView
+from inflection import camelize
 
 from lung_cancer_screening.questions.models.tobacco_smoking_history import TobaccoSmokingHistory
 
@@ -89,3 +90,4 @@ class SmokingChangeView(
             return {}
 
         return {"change": "True"}
+

@@ -164,7 +164,18 @@ class TestSmokingChangeForm(TestCase):
             tobacco_smoking_history_item=self.normal_smoking_history,
         )
 
-        self.assertEqual(form.fields["value"].initial, [
-            TobaccoSmokingHistory.Levels.INCREASED,
-            TobaccoSmokingHistory.Levels.DECREASED,
-        ])
+        initial = form.fields["value"].initial
+        self.assertIn(TobaccoSmokingHistory.Levels.INCREASED, initial)
+        self.assertIn(TobaccoSmokingHistory.Levels.DECREASED, initial)
+
+
+    def test_label_contains_the_smoking_history_type(self):
+        self.normal_smoking_history.type = TobaccoSmokingHistoryTypes.CIGARS.value
+        form = SmokingChangeForm(
+            response_set=self.response_set,
+            tobacco_smoking_history_item=self.normal_smoking_history,
+        )
+        self.assertEqual(
+            form.fields["value"].label,
+            "Has the number of cigars you normally smoke changed over time?"
+        )

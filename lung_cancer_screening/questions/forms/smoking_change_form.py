@@ -15,7 +15,7 @@ class SmokingChangeForm(forms.Form):
         self.fields["value"] = MultipleChoiceField(
             choices=self.choices(),
             widget=forms.CheckboxSelectMultiple,
-            label="Has the number of cigarettes you normally smoke changed over time?",
+            label=self.label(),
             label_classes="nhsuk-fieldset__legend--l",
             label_is_page_heading=True,
             hint="Select all that apply",
@@ -30,6 +30,9 @@ class SmokingChangeForm(forms.Form):
         value_field.add_divider_after(
             TobaccoSmokingHistory.Levels.DECREASED, "or"
         )
+
+    def label(self):
+        return f"Has the number of {self.tobacco_smoking_history.human_type().lower()} you normally smoke changed over time?"
 
     def choices(self):
         return [
@@ -47,7 +50,7 @@ class SmokingChangeForm(forms.Form):
         return f"{self.tobacco_smoking_history.smoked_amount_response.value} {self.tobacco_smoking_history.human_type().lower()} a {self.tobacco_smoking_history.smoking_frequency_response.get_value_display_as_singleton_text()}"
 
     def _required_error_message(self):
-        return "Select if the number of cigarettes you smoke has changed over time"
+        return f"Select if the number of {self.tobacco_smoking_history.human_type().lower()} you smoke has changed over time"
 
 
     def save(self, commit=True):
@@ -63,7 +66,7 @@ class SmokingChangeForm(forms.Form):
             return False
         if (self.cleaned_data["value"].count(TobaccoSmokingHistory.Levels.NO_CHANGE) > 0
             and len(self.cleaned_data["value"]) > 1):
-                self.add_error( "value", forms.ValidationError("Select if the number of cigarettes you smoke has changed over time, or select 'no, it has not changed'"))
+                self.add_error( "value", forms.ValidationError(f"Select if the number of {self.tobacco_smoking_history.human_type().lower()} you smoke has changed over time, or select 'no, it has not changed'"))
                 return False
         return True
 
@@ -97,6 +100,8 @@ class SmokingChangeForm(forms.Form):
 
 
     def _existing_levels(self):
-        return list(self.response_set.tobacco_smoking_history.exclude(
+        return list(self.response_set.tobacco_smoking_history.filter(
+            type=self.tobacco_type
+        ).exclude(
             level=TobaccoSmokingHistory.Levels.NORMAL
         ).values_list("level", flat=True))

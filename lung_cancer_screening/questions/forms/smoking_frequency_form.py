@@ -1,17 +1,16 @@
 from django import forms
 
-from lung_cancer_screening.questions.models.tobacco_smoking_history import TobaccoSmokingHistory
 
 from ..models.smoking_frequency_response import SmokingFrequencyResponse, SmokingFrequencyValues
 
 from ...nhsuk_forms.typed_choice_field import TypedChoiceField
 
 class SmokingFrequencyForm(forms.ModelForm):
-    def __init__(self, *args, response_set, tobacco_smoking_history_item, **kwargs):
+    def __init__(self, *args, tobacco_smoking_history_item, normal_tobacco_smoking_history_item = None, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.response_set = response_set
         self.tobacco_smoking_history_item = tobacco_smoking_history_item
+        self.normal_tobacco_smoking_history_item = normal_tobacco_smoking_history_item
 
         self.fields["value"] = TypedChoiceField(
             choices=SmokingFrequencyValues.choices,
@@ -38,15 +37,16 @@ class SmokingFrequencyForm(forms.ModelForm):
         model = SmokingFrequencyResponse
         fields = ['value']
 
+    def more_or_fewer_string(self):
+        return "more" if self.tobacco_smoking_history_item.is_increased() else "fewer"
+
     def _get_label_for_value(self):
-        if self.tobacco_smoking_history_item.level == TobaccoSmokingHistory.Levels.DECREASED:
-            return f"When you smoked fewer than {self.__get_smoking_string()}, how often did you smoke {self.tobacco_smoking_history_item.human_type().lower()}?"
-        if self.tobacco_smoking_history_item.level == TobaccoSmokingHistory.Levels.INCREASED:
-            return f"When you smoked more than {self.__get_smoking_string()}, how often did you smoke {self.tobacco_smoking_history_item.human_type().lower()}?"
-        return f"How often do you smoke {self.tobacco_smoking_history_item.human_type().lower()}?"
+        if self.tobacco_smoking_history_item.is_normal():
+            return f"How often do you smoke {self.tobacco_smoking_history_item.human_type().lower()}?"
+
+        return f"When you smoked {self.more_or_fewer_string()} than {self.__get_smoking_string()}, how often did you smoke {self.tobacco_smoking_history_item.human_type().lower()}?"
 
     def __get_smoking_string(self):
-        normal_smoking_history_for_type = self.response_set.tobacco_smoking_history.filter(level=TobaccoSmokingHistory.Levels.NORMAL).first()
-        amount = normal_smoking_history_for_type.smoked_amount_response.value
-        frequency = normal_smoking_history_for_type.smoking_frequency_response.get_value_display_as_singleton_text()
+        amount = self.normal_tobacco_smoking_history_item.amount()
+        frequency = self.normal_tobacco_smoking_history_item.frequency_singular()
         return f"{amount} {self.tobacco_smoking_history_item.human_type().lower()} a {frequency}"

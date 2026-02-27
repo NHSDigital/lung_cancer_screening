@@ -35,7 +35,7 @@ class TypesTobaccoSmokingView(
             "questions:smoking_current",
             kwargs={
                 "tobacco_type": dasherize(
-                    self.request.response_set.tobacco_smoking_history.first().type
+                    self.request.response_set.tobacco_smoking_history.in_form_order().first().type
                 ).lower()
             },
         )
