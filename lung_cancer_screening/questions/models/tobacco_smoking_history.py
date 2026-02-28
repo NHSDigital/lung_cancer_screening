@@ -7,7 +7,7 @@ from .response_set import ResponseSet
 
 class TobaccoSmokingHistoryTypes(models.TextChoices):
     CIGARETTES = "Cigarettes", "Cigarettes"
-    ROLLED_CIGARETTES = "RolledCigarettes", "Rolled cigarettes, or roll-ups"
+    ROLLING_TOBACCO = "RollingTobacco", "Rolling tobacco"
     PIPE = "Pipe", "Pipe"
     CIGARS = "Cigars", "Cigars"
     CIGARILLOS = "Cigarillos", "Cigarillos"
@@ -45,8 +45,8 @@ class TobaccoSmokingHistoryQuerySet(BaseQuerySet):
     def cigars(self):
         return self.filter(type=TobaccoSmokingHistoryTypes.CIGARS)
 
-    def rolled_cigarettes(self):
-        return self.filter(type=TobaccoSmokingHistoryTypes.ROLLED_CIGARETTES)
+    def rolling_tobacco(self):
+        return self.filter(type=TobaccoSmokingHistoryTypes.ROLLING_TOBACCO)
 
     def pipe(self):
         return self.filter(type=TobaccoSmokingHistoryTypes.PIPE)

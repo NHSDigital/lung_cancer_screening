@@ -299,15 +299,15 @@ class TestTobaccoSmokingHistory(TestCase):
         self.assertNotIn(cigarettes, cigars)
 
 
-    def test_rolled_cigarettes_returns_all_rolled_cigarettes_smoking_history_items(self):
-        rolled_cigarette_normal = TobaccoSmokingHistoryFactory(
+    def test_rolling_tobacco_returns_all_rolling_tobacco_smoking_history_items(self):
+        rolling_tobacco_normal = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            rolled_cigarettes=True,
+            rolling_tobacco=True,
             normal=True,
         )
-        rolled_cigarette_increased = TobaccoSmokingHistoryFactory(
+        rolling_tobacco_increased = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            rolled_cigarettes=True,
+            rolling_tobacco=True,
             increased=True,
         )
         cigars = TobaccoSmokingHistoryFactory(
@@ -315,11 +315,11 @@ class TestTobaccoSmokingHistory(TestCase):
             cigars=True,
         )
 
-        rolled_cigarettes = TobaccoSmokingHistory.objects.rolled_cigarettes()
+        rolling_tobacco = TobaccoSmokingHistory.objects.rolling_tobacco()
 
-        self.assertIn(rolled_cigarette_normal, rolled_cigarettes)
-        self.assertIn(rolled_cigarette_increased, rolled_cigarettes)
-        self.assertNotIn(cigars, rolled_cigarettes)
+        self.assertIn(rolling_tobacco_normal, rolling_tobacco)
+        self.assertIn(rolling_tobacco_increased, rolling_tobacco)
+        self.assertNotIn(cigars, rolling_tobacco)
 
 
     def test_pipe_returns_all_pipe_smoking_history_items(self):

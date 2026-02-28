@@ -12,7 +12,7 @@ from lung_cancer_screening.questions.presenters.tobacco_smoking_history_presente
 class TestTobaccoSmokingHistoryPresenter(TestCase):
     def setUp(self):
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.build(
-            rolled_cigarettes=True,
+            rolling_tobacco=True,
             complete=True,
         )
 
@@ -21,7 +21,7 @@ class TestTobaccoSmokingHistoryPresenter(TestCase):
 
         self.assertEqual(
             presenter.human_type(),
-            "Rolled cigarettes, or roll-ups"
+            "Rolling tobacco"
         )
 
     def test_url_type_returns_the_url_type_of_the_tobacco_smoking_history(self):
@@ -29,7 +29,7 @@ class TestTobaccoSmokingHistoryPresenter(TestCase):
 
         self.assertEqual(
             presenter.url_type(),
-            "rolled-cigarettes"
+            "rolling-tobacco"
         )
 
     def test_duration_years_returns_not_answered_text_if_duration_years_is_not_set(self):
@@ -67,5 +67,5 @@ class TestTobaccoSmokingHistoryPresenter(TestCase):
 
         self.assertEqual(
             presenter.to_sentence(),
-            "7 rolled cigarettes, or roll-ups a week"
+            "7 rolling tobacco a week"
         )

@@ -41,8 +41,8 @@ class TobaccoSmokingHistoryFactory(factory.django.DjangoModelFactory):
         cigars = factory.Trait(
             type=TobaccoSmokingHistoryTypes.CIGARS,
         )
-        rolled_cigarettes = factory.Trait(
-            type=TobaccoSmokingHistoryTypes.ROLLED_CIGARETTES,
+        rolling_tobacco = factory.Trait(
+            type=TobaccoSmokingHistoryTypes.ROLLING_TOBACCO,
         )
         pipe = factory.Trait(
             type=TobaccoSmokingHistoryTypes.PIPE,
