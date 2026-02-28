@@ -215,6 +215,31 @@ class TestPostSmokingChange(TestCase):
         }))
 
 
+    def test_does_not_redirect_to_increased_if_increased_exists_for_another_type_and_is_not_selected(self):
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=self.tobacco_smoking_history.type,
+            complete=True,
+            increased=True,
+        )
+        cigars = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            cigars=True,
+            complete=True
+        )
+
+        response = self.client.post(
+            reverse("questions:smoking_change", kwargs = {
+                "tobacco_type": cigars.type.lower()
+            }),
+            {"value": [TobaccoSmokingHistory.Levels.NO_CHANGE]}
+        )
+
+        self.assertRedirects(response, reverse("questions:responses"),
+            fetch_redirect_response=False
+        )
+
+
     def test_creates_a_smoking_change_response(self):
         self.client.post(
             reverse("questions:smoking_change", kwargs = {
