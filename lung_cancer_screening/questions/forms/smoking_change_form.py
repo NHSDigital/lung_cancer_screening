@@ -31,8 +31,11 @@ class SmokingChangeForm(forms.Form):
             TobaccoSmokingHistory.Levels.DECREASED, "or"
         )
 
+    def amount_prefix(self):
+        return "grams of " if self.tobacco_smoking_history.is_rolling_tobacco() else ""
+
     def label(self):
-        return f"Has the number of {self.tobacco_smoking_history.human_type().lower()} you normally smoke changed over time?"
+        return f"Has the number of {self.amount_prefix()}{self.tobacco_smoking_history.human_type().lower()} you normally smoke changed over time?"
 
     def choices(self):
         return [
@@ -47,10 +50,10 @@ class SmokingChangeForm(forms.Form):
         return TobaccoSmokingHistory.Levels(value).label + f" than {self.generate_label_suffix()}"
 
     def generate_label_suffix(self):
-        return f"{self.tobacco_smoking_history.smoked_amount_response.value} {self.tobacco_smoking_history.human_type().lower()} a {self.tobacco_smoking_history.smoking_frequency_response.get_value_display_as_singleton_text()}"
+        return f"{self.tobacco_smoking_history.smoked_amount_response.value} {self.amount_prefix()}{self.tobacco_smoking_history.human_type().lower()} a {self.tobacco_smoking_history.smoking_frequency_response.get_value_display_as_singleton_text()}"
 
     def _required_error_message(self):
-        return f"Select if the number of {self.tobacco_smoking_history.human_type().lower()} you smoke has changed over time"
+        return f"Select if the number of {self.amount_prefix()}{self.tobacco_smoking_history.human_type().lower()} you smoke has changed over time"
 
 
     def save(self, commit=True):

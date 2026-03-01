@@ -1,6 +1,8 @@
 from django.db import models
 from django.db.models import Case, Value, When
 from django.core.exceptions import ValidationError
+from django.utils.text import slugify
+from inflection import camelize, underscore
 
 from .base import BaseModel, BaseQuerySet
 from .response_set import ResponseSet
@@ -53,6 +55,9 @@ class TobaccoSmokingHistoryQuerySet(BaseQuerySet):
 
     def cigarillos(self):
         return self.filter(type=TobaccoSmokingHistoryTypes.CIGARILLOS)
+
+    def by_url_type(self, url_type):
+        return self.filter(type=camelize(underscore(url_type)))
 
 
 NO_CHANGE_VALUE = "no_change"
@@ -143,4 +148,10 @@ class TobaccoSmokingHistory(BaseModel):
             return self.smoking_current_response.value
         else:
             return None
+
+    def is_rolling_tobacco(self):
+        return self.type == TobaccoSmokingHistoryTypes.ROLLING_TOBACCO
+
+    def url_type(self):
+        return slugify(self.human_type())
 

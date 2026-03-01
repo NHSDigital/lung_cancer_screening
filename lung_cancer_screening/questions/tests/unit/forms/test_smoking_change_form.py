@@ -12,8 +12,8 @@ class TestSmokingChangeForm(TestCase):
         self.response_set = ResponseSetFactory.create(complete=True)
         self.normal_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
-            level=TobaccoSmokingHistory.Levels.NORMAL,
+            cigarettes=True,
+            normal=True,
             complete=True
         )
 
@@ -70,14 +70,14 @@ class TestSmokingChangeForm(TestCase):
         items = self.response_set.tobacco_smoking_history
         self.assertEqual(items.count(), 3)  # Normal, Increased and Decreased
         self.assertTrue(all([
-            item.type == TobaccoSmokingHistoryTypes.CIGARETTES
+            item.type == self.normal_smoking_history.type
             for item in items.all()
         ]))
 
     def test_does_not_create_a_new_tobacco_smoking_history_if_the_level_already_exists(self):
         existing_item = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.INCREASED,
         )
 
@@ -100,7 +100,7 @@ class TestSmokingChangeForm(TestCase):
     def test_deletes_a_tobacco_smoking_history_if_the_level_is_no_longer_selected(self):
         TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.INCREASED,
         )
 
@@ -150,12 +150,12 @@ class TestSmokingChangeForm(TestCase):
     def test_initializes_the_form_based_on_existing_smoking_histories(self):
         TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.INCREASED,
         )
         TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.DECREASED,
         )
 

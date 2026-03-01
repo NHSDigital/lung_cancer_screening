@@ -106,6 +106,7 @@ Feature: Smoking history pages
     And I have answered questions showing I have smoked for "30" years
     When I go to "/types-tobacco-smoking"
     And I check "Cigarettes"
+    And I check "Rolling tobacco"
     And I check "Cigarillos"
     And I check "Cigars"
     And I submit the form
@@ -156,6 +157,56 @@ Feature: Smoking history pages
     Then I am on "/cigarettes-smoked-decreased-years"
     When I fill in "Roughly how many years did you smoke 1 cigarettes a month?" with "2"
     And I submit the form
+
+  # Rolling tobacco with increased and decresed
+    Then I am on "/rolling-tobacco-smoking-current"
+    And I see a page title "Do you currently smoke rolling tobacco?"
+    When I check "Yes"
+    And I submit the form
+
+    Then I am on "/rolling-tobacco-smoked-total-years"
+    When I fill in "Roughly how many years have you smoked rolling tobacco?" with "26"
+    And I submit the form
+
+    Then I am on "/rolling-tobacco-smoking-frequency"
+    And I see a page title "How often do you smoke rolling tobacco?"
+    When I check "Weekly"
+    And I submit the form
+
+    Then I am on "/rolling-tobacco-smoked-amount"
+    When I fill in "Roughly how many grams of rolling tobacco do you currently smoke in a normal week?" with "25"
+    And I submit the form
+
+    Then I am on "/rolling-tobacco-smoking-change"
+    When I check "Yes, I used to smoke more than 25 grams of rolling tobacco a week"
+    And I check "Yes, I used to smoke fewer than 25 grams of rolling tobacco a week"
+    And I submit the form
+
+    Then I am on "/rolling-tobacco-smoking-increased-frequency"
+    And I see a page title "When you smoked more than 25 grams of rolling tobacco a week, how often did you smoke rolling tobacco?"
+    When I check "Daily"
+    And I submit the form
+
+    Then I am on "/rolling-tobacco-smoked-increased-amount"
+    When I fill in "When you smoked more than 25 grams of rolling tobacco a week, roughly how many grams of rolling tobacco did you normally smoke a day?" with "12"
+    And I submit the form
+
+    Then I am on "/rolling-tobacco-smoked-increased-years"
+    When I fill in "Roughly how many years did you smoke 12 grams of rolling tobacco a day?" with "10"
+    And I submit the form
+
+    Then I am on "/rolling-tobacco-smoking-decreased-frequency"
+    When I check "Monthly"
+    And I submit the form
+
+    Then I am on "/rolling-tobacco-smoked-decreased-amount"
+    When I fill in "When you smoked fewer than 25 grams of rolling tobacco a week, roughly how many grams of rolling tobacco did you normally smoke a month?" with "5"
+    And I submit the form
+
+    Then I am on "/rolling-tobacco-smoked-decreased-years"
+    When I fill in "Roughly how many years did you smoke 5 grams of rolling tobacco a month?" with "4"
+    And I submit the form
+
 
   # Cigars with only decreased
     Then I am on "/cigars-smoking-current"
@@ -238,6 +289,11 @@ Feature: Smoking history pages
     And I see "10 cigarettes a day" as a response to "Current cigarette smoking" under "Cigarette smoking history"
     And I see "200 cigarettes a week for 5 years" as a response to "When you smoked more than 10 cigarettes a day" under "Cigarette smoking history"
     And I see "1 cigarettes a month for 2 years" as a response to "When you smoked fewer than 10 cigarettes a day" under "Cigarette smoking history"
+
+    Then I see "26 years" as a response to "Total number of years you smoked rolling tobacco" under "Rolling tobacco smoking history"
+    And I see "25 grams of rolling tobacco a week" as a response to "Current rolling tobacco smoking" under "Rolling tobacco smoking history"
+    And I see "12 grams of rolling tobacco a day for 10 years" as a response to "When you smoked more than 25 grams of rolling tobacco a week" under "Rolling tobacco smoking history"
+    And I see "5 grams of rolling tobacco a month for 4 years" as a response to "When you smoked fewer than 25 grams of rolling tobacco a week" under "Rolling tobacco smoking history"
 
     Then I see "8 years" as a response to "Total number of years you smoked cigars" under "Cigar smoking history"
     And I see "9 cigars a month" as a response to "Current cigar smoking" under "Cigar smoking history"

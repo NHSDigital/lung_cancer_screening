@@ -1,5 +1,3 @@
-from inflection import dasherize, underscore
-
 from lung_cancer_screening.questions.presenters.base_presenter import BasePresenter
 
 class TobaccoSmokingHistoryPresenter(BasePresenter):
@@ -10,7 +8,7 @@ class TobaccoSmokingHistoryPresenter(BasePresenter):
         return self.tobacco_smoking_history.human_type()
 
     def url_type(self):
-        return dasherize(underscore(self.tobacco_smoking_history.type)).lower()
+        return self.tobacco_smoking_history.url_type()
 
     def duration_years(self):
         if not self.tobacco_smoking_history.duration_years():
@@ -21,6 +19,9 @@ class TobaccoSmokingHistoryPresenter(BasePresenter):
     def is_current(self):
         return self.tobacco_smoking_history.is_current()
 
+    def amount_prefix(self):
+        return "grams of " if self.tobacco_smoking_history.is_rolling_tobacco() else ""
+
     def to_sentence(self):
-        return f"{self.tobacco_smoking_history.amount()} {self.tobacco_smoking_history.human_type().lower()} a {self.tobacco_smoking_history.frequency_singular()}"
+        return f"{self.tobacco_smoking_history.amount()} {self.amount_prefix()}{self.tobacco_smoking_history.human_type().lower()} a {self.tobacco_smoking_history.frequency_singular()}"
 

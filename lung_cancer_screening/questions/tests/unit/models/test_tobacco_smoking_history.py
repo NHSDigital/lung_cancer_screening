@@ -32,7 +32,7 @@ class TestTobaccoSmokingHistory(TestCase):
     def test_has_type_as_a_string(self):
         response = TobaccoSmokingHistoryFactory.build(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
         )
 
         self.assertIsInstance(response.type, str)
@@ -41,13 +41,13 @@ class TestTobaccoSmokingHistory(TestCase):
     def test_is_valid_with_a_duplicate_response_set_and_level_with_different_types(self):
         TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARS,
+            cigars=True,
             level=TobaccoSmokingHistory.Levels.NORMAL,
         )
 
         TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.NORMAL,
         )
 
@@ -55,13 +55,13 @@ class TestTobaccoSmokingHistory(TestCase):
     def test_is_valid_with_a_duplicate_response_set_and_type_with_different_levels(self):
         TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.NORMAL,
         )
 
         TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.INCREASED,
         )
 
@@ -69,14 +69,14 @@ class TestTobaccoSmokingHistory(TestCase):
     def test_is_invalid_with_a_duplicate_response_set_type_and_level(self):
         TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.NORMAL,
         )
 
         with self.assertRaises(ValidationError):
             TobaccoSmokingHistoryFactory(
                 response_set=self.response_set,
-                type=TobaccoSmokingHistoryTypes.CIGARETTES,
+                cigarettes=True,
                 level=TobaccoSmokingHistory.Levels.NORMAL,
             )
 
@@ -84,13 +84,13 @@ class TestTobaccoSmokingHistory(TestCase):
     def test_is_valid_with_a_duplicate_response_set_with_both_no_change_and_normal_level(self):
         TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.NORMAL,
         )
 
         TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.NO_CHANGE,
         )
 
@@ -98,13 +98,13 @@ class TestTobaccoSmokingHistory(TestCase):
     def test_is_invalid_when_no_change_exists_and_creating_a_non_normal_level(self):
         TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.NO_CHANGE,
         )
 
         instance = TobaccoSmokingHistoryFactory.build(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.INCREASED,
         )
         with self.assertRaises(ValidationError) as context:
@@ -118,13 +118,13 @@ class TestTobaccoSmokingHistory(TestCase):
     def test_is_invalid_when_non_normal_level_exists_and_creating_a_no_change(self):
         TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.INCREASED,
         )
 
         instance = TobaccoSmokingHistoryFactory.build(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.NO_CHANGE,
         )
         with self.assertRaises(ValidationError) as context:
@@ -138,7 +138,7 @@ class TestTobaccoSmokingHistory(TestCase):
     def test_amount_returns_the_value_of_the_smoked_amount_response(self):
         tobacco_smoking_history = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.NORMAL,
         )
         SmokedAmountResponseFactory.create(
@@ -150,7 +150,7 @@ class TestTobaccoSmokingHistory(TestCase):
     def test_amount_returns_none_when_the_smoked_amount_response_does_not_exist(self):
         tobacco_smoking_history = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.NORMAL,
         )
         self.assertIsNone(tobacco_smoking_history.amount())
@@ -158,7 +158,7 @@ class TestTobaccoSmokingHistory(TestCase):
     def test_frequency_singular_returns_the_value_of_the_smoking_frequency_response(self):
         tobacco_smoking_history = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.NORMAL,
         )
         SmokingFrequencyResponseFactory.create(
@@ -170,7 +170,7 @@ class TestTobaccoSmokingHistory(TestCase):
     def test_frequency_singular_returns_none_when_the_smoking_frequency_response_does_not_exist(self):
         tobacco_smoking_history = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.NORMAL,
         )
         self.assertIsNone(tobacco_smoking_history.frequency_singular())
@@ -178,7 +178,7 @@ class TestTobaccoSmokingHistory(TestCase):
     def test_is_increased_returns_true_when_the_level_is_increased(self):
         tobacco_smoking_history = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.INCREASED,
         )
         self.assertTrue(tobacco_smoking_history.is_increased())
@@ -186,7 +186,7 @@ class TestTobaccoSmokingHistory(TestCase):
     def test_is_increased_returns_false_when_the_level_is_not_increased(self):
         tobacco_smoking_history = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.NORMAL,
         )
         self.assertFalse(tobacco_smoking_history.is_increased())
@@ -194,7 +194,7 @@ class TestTobaccoSmokingHistory(TestCase):
     def test_is_decreased_returns_true_when_the_level_is_decreased(self):
         tobacco_smoking_history = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.DECREASED,
         )
         self.assertTrue(tobacco_smoking_history.is_decreased())
@@ -202,7 +202,7 @@ class TestTobaccoSmokingHistory(TestCase):
     def test_is_decreased_returns_false_when_the_level_is_not_decreased(self):
         tobacco_smoking_history = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.NORMAL,
         )
         self.assertFalse(tobacco_smoking_history.is_decreased())
@@ -210,7 +210,7 @@ class TestTobaccoSmokingHistory(TestCase):
     def test_is_normal_returns_true_when_the_level_is_normal(self):
         tobacco_smoking_history = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.NORMAL,
         )
         self.assertTrue(tobacco_smoking_history.is_normal())
@@ -218,7 +218,7 @@ class TestTobaccoSmokingHistory(TestCase):
     def test_is_normal_returns_false_when_the_level_is_not_normal(self):
         tobacco_smoking_history = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.INCREASED,
         )
         self.assertFalse(tobacco_smoking_history.is_normal())
@@ -226,17 +226,17 @@ class TestTobaccoSmokingHistory(TestCase):
     def test_grouped_by_type_returns_a_dictionary_of_types_and_their_history(self):
         cigarettes_normal = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.NORMAL,
         )
         cigars_normal = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARS,
+            cigars=True,
             level=TobaccoSmokingHistory.Levels.NORMAL,
         )
         cigars_increased = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARS,
+            cigars=True,
             level=TobaccoSmokingHistory.Levels.INCREASED,
         )
 
@@ -285,7 +285,7 @@ class TestTobaccoSmokingHistory(TestCase):
         )
         cigar_increased = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARS,
+            cigars=True,
             increased=True,
         )
         cigarettes = TobaccoSmokingHistoryFactory(
@@ -366,3 +366,22 @@ class TestTobaccoSmokingHistory(TestCase):
         self.assertIn(cigarillo_normal, cigarillos)
         self.assertIn(cigarillo_increased, cigarillos)
         self.assertNotIn(cigars, cigarillos)
+
+
+    def test_url_type_returns_the_url_type_of_the_tobacco_smoking_history(self):
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            rolling_tobacco=True,
+        )
+        self.assertEqual(tobacco_smoking_history.url_type(), "rolling-tobacco")
+
+
+    def test_by_url_type_returns_the_tobacco_smoking_history_by_the_url_type(self):
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            rolling_tobacco=True,
+        )
+        self.assertIn(
+            tobacco_smoking_history,
+            TobaccoSmokingHistory.objects.by_url_type("rolling-tobacco")
+        )

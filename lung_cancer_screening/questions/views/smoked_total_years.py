@@ -1,7 +1,7 @@
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
-from inflection import camelize, dasherize, underscore
+from inflection import camelize, underscore, dasherize
 
 from .mixins.ensure_response_set import EnsureResponseSet
 from .mixins.ensure_eligible import EnsureEligibleMixin
@@ -107,7 +107,7 @@ class SmokedTotalYearsView(
 
 
     def remaining_unanswered_histories(self):
-        tobacco_type = camelize(self.kwargs["tobacco_type"])
+        tobacco_type = camelize(underscore(self.kwargs["tobacco_type"]))
         histories = self.request.response_set.types_tobacco_smoking_history()
         return histories[histories.index(tobacco_type) + 1 :]
 

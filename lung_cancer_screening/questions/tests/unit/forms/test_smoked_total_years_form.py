@@ -11,7 +11,7 @@ from ....forms.smoked_total_years_form import SmokedTotalYearsForm
 class TestSmokedTotalYearsForm(TestCase):
     def setUp(self):
         self.smoking_history = TobaccoSmokingHistoryFactory.create(
-            type=TobaccoSmokingHistoryTypes.CIGARETTES.value
+            cigarettes=True
         )
         self.age_started_smoking_response = AgeWhenStartedSmokingResponseFactory.create(
             response_set=self.smoking_history.response_set

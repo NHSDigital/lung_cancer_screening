@@ -17,7 +17,7 @@ class TestGetSmokingFrequency(TestCase):
         self.response_set = ResponseSetFactory.create(user=self.user, complete=True)
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
+            cigarettes=True,
             complete=True
         )
 
@@ -83,7 +83,7 @@ class TestGetSmokingFrequency(TestCase):
     def test_back_link_increased_level(self):
         TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.INCREASED
         )
 
@@ -100,13 +100,13 @@ class TestGetSmokingFrequency(TestCase):
     def test_back_link_decreased_level_with_increased_level_present(self):
         TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.INCREASED
         )
 
         TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.DECREASED
         )
 
@@ -123,7 +123,7 @@ class TestGetSmokingFrequency(TestCase):
     def test_back_link_decreased_level_without_increased_level_present(self):
         TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.DECREASED
         )
 
@@ -145,7 +145,7 @@ class TestPostSmokingFrequency(TestCase):
         self.response_set = ResponseSetFactory.create(user=self.user, complete=True)
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
+            cigarettes=True,
             complete=True
         )
 
@@ -206,7 +206,7 @@ class TestPostSmokingFrequency(TestCase):
     def test_creates_a_smoking_frequency_response_when_given_a_level(self):
         increased_level = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.INCREASED
         )
         self.client.post(reverse("questions:smoking_frequency", kwargs = {
@@ -236,7 +236,7 @@ class TestPostSmokingFrequency(TestCase):
     def test_redirects_to_next_question_when_given_a_level(self):
         TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.INCREASED
         )
         response = self.client.post(

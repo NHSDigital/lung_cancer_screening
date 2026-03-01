@@ -10,7 +10,7 @@ from ....models.tobacco_smoking_history import TobaccoSmokingHistoryTypes
 class TestSmokedAmountResponse(TestCase):
     def setUp(self):
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
-            type=TobaccoSmokingHistoryTypes.CIGARETTES.value
+            cigarettes=True
         )
 
     def test_has_a_valid_factory(self):

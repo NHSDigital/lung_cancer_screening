@@ -2,7 +2,6 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormView
-from inflection import camelize
 
 from lung_cancer_screening.questions.models.tobacco_smoking_history import TobaccoSmokingHistory
 
@@ -93,6 +92,6 @@ class SmokingChangeView(
 
 
     def tobacco_smoking_history(self):
-        return self.request.response_set.tobacco_smoking_history.filter(
-            type=camelize(self.kwargs["tobacco_type"])
+        return self.request.response_set.tobacco_smoking_history.by_url_type(
+            self.kwargs["tobacco_type"]
         )

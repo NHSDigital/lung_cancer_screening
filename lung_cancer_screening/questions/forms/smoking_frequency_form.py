@@ -40,6 +40,9 @@ class SmokingFrequencyForm(forms.ModelForm):
     def more_or_fewer_string(self):
         return "more" if self.tobacco_smoking_history_item.is_increased() else "fewer"
 
+    def amount_prefix(self):
+        return "grams of " if self.tobacco_smoking_history_item.is_rolling_tobacco() else ""
+
     def _get_label_for_value(self):
         if self.tobacco_smoking_history_item.is_normal():
             return f"How often do you smoke {self.tobacco_smoking_history_item.human_type().lower()}?"
@@ -49,4 +52,4 @@ class SmokingFrequencyForm(forms.ModelForm):
     def __get_smoking_string(self):
         amount = self.normal_tobacco_smoking_history_item.amount()
         frequency = self.normal_tobacco_smoking_history_item.frequency_singular()
-        return f"{amount} {self.tobacco_smoking_history_item.human_type().lower()} a {frequency}"
+        return f"{amount} {self.amount_prefix()}{self.tobacco_smoking_history_item.human_type().lower()} a {frequency}"

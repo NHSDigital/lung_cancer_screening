@@ -1,6 +1,5 @@
 from django.test import TestCase, tag
 from django.urls import reverse
-from inflection import dasherize
 
 from lung_cancer_screening.questions.models.tobacco_smoking_history import TobaccoSmokingHistoryTypes
 from lung_cancer_screening.questions.tests.factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
@@ -16,7 +15,7 @@ class TestGetSmokingCurrent(TestCase):
         self.response_set = ResponseSetFactory.create(user=self.user, eligible=True)
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES.value
+            cigarettes=True
         )
 
 
@@ -76,7 +75,7 @@ class TestPostSmokingCurrent(TestCase):
         self.response_set = ResponseSetFactory.create(user=self.user, eligible=True)
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES.value
+            cigarettes=True
         )
 
         self.valid_params = {"value": True}
@@ -142,7 +141,7 @@ class TestPostSmokingCurrent(TestCase):
         )
 
         self.assertRedirects(response, reverse("questions:smoked_total_years", kwargs={
-            "tobacco_type": dasherize(TobaccoSmokingHistoryTypes.CIGARETTES.value).lower()
+            "tobacco_type":self.tobacco_smoking_history.url_type()
         }), fetch_redirect_response=False)
 
 

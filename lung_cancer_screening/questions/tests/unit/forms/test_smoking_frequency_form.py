@@ -14,7 +14,7 @@ class TestSmokingFrequencyForm(TestCase):
         self.response_set = ResponseSetFactory.create(complete=True)
         self.normal_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.NORMAL,
             complete=True
         )
@@ -69,7 +69,7 @@ class TestSmokingFrequencyForm(TestCase):
     def test_shows_increased_label_for_increased_level(self):
         increased_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.INCREASED,
         )
         form = SmokingFrequencyForm(

@@ -24,11 +24,27 @@ class SmokedTotalYearsForm(forms.ModelForm):
             },
         )
 
+    def amount_prefix(self):
+        return "grams of " if self.tobacco_smoking_history.is_rolling_tobacco() else ""
+
+    def normal_label(self):
+        return (
+            f"Roughly how many years have you smoked "
+            f"{self.tobacco_smoking_history.human_type().lower()}?"
+        )
+
+    def changed_label(self):
+        return (
+            f"Roughly how many years did you smoke {self.tobacco_smoking_history.amount()} "
+            f"{self.amount_prefix()}{self.tobacco_smoking_history.human_type().lower()} "
+            f"a {self.tobacco_smoking_history.frequency_singular()}?"
+        )
+
     def label(self):
         if self.tobacco_smoking_history.is_normal():
-            return f"Roughly how many years have you smoked {self.tobacco_smoking_history.human_type().lower()}?"
+            return self.normal_label()
         else:
-            return f"Roughly how many years did you smoke {self.tobacco_smoking_history.amount()} {self.tobacco_smoking_history.human_type().lower()} a {self.tobacco_smoking_history.frequency_singular()}?"
+            return self.changed_label()
 
     class Meta:
         model = SmokedTotalYearsResponse

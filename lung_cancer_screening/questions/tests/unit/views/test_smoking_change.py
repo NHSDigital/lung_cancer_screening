@@ -17,7 +17,7 @@ class TestGetSmokingChange(TestCase):
         self.response_set = ResponseSetFactory.create(user=self.user, complete=True)
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
+            cigarettes=True,
             complete=True
         )
 
@@ -126,7 +126,7 @@ class TestPostSmokingChange(TestCase):
         self.response_set = ResponseSetFactory.create(user=self.user, complete=True)
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES.value,
+            cigarettes=True,
             complete=True
         )
         self.valid_params = {

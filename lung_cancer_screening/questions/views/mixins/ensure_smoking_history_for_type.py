@@ -17,7 +17,7 @@ class EnsureSmokingHistoryForTypeMixin:
 
 
     def tobacco_type(self):
-        return camelize(self.kwargs["tobacco_type"])
+        return self.kwargs["tobacco_type"]
 
 
     def level(self):
@@ -25,7 +25,8 @@ class EnsureSmokingHistoryForTypeMixin:
 
 
     def tobacco_smoking_history_item(self):
-        return self.request.response_set.tobacco_smoking_history.get(
-            type=self.tobacco_type(),
+        return self.request.response_set.tobacco_smoking_history.by_url_type(
+            self.tobacco_type(),
+        ).get(
             level=self.level()
         )

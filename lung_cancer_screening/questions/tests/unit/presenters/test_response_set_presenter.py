@@ -422,18 +422,20 @@ class TestResponseSetPresenter(TestCase):
     def test_types_tobacco_smoking(self):
         TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.SHISHA
+            rolling_tobacco=True
         )
         TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARS
+            cigars=True
         )
         TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES
+            cigarettes=True
         )
         presenter = ResponseSetPresenter(self.response_set)
-        self.assertEqual(presenter.types_tobacco_smoking, "Cigarettes, Cigars, and Shisha")
+        self.assertEqual(
+            presenter.types_tobacco_smoking, "Cigarettes, Rolling tobacco, and Cigars"
+        )
 
 
     @tag("TobaccoSmokingHistory")

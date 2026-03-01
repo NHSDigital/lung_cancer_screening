@@ -10,8 +10,8 @@ class SmokingHistoryQuestionBaseView(QuestionBaseView):
             tobacco_smoking_history=self.tobacco_smoking_history_item()
         )[0]
 
+
     def get_normal_smoking_history_item(self):
-        return self.request.response_set.tobacco_smoking_history.filter(
-            type=camelize(self.kwargs["tobacco_type"]),
-            level=TobaccoSmokingHistory.Levels.NORMAL
-        ).first()
+        return self.request.response_set.tobacco_smoking_history.by_url_type(
+            self.kwargs["tobacco_type"]
+        ).normal().first()
