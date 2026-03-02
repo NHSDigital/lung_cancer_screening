@@ -1,6 +1,4 @@
-from inflection import camelize
 
-from ..models.tobacco_smoking_history import TobaccoSmokingHistory
 from .question_base_view import QuestionBaseView
 
 

@@ -7,6 +7,9 @@ class TobaccoSmokingHistoryTypePresenter(BasePresenter):
     def __init__(self, tobacco_smoking_history):
         self.tobacco_smoking_history = tobacco_smoking_history
 
+    def get_type_display(self):
+        return self.normal_tobacco_smoking_history().get_type_display()
+
     def normal_tobacco_smoking_history(self):
         return TobaccoSmokingHistoryPresenter(
             self.tobacco_smoking_history.normal().first()

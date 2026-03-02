@@ -147,6 +147,7 @@ class TestSmokingChangeForm(TestCase):
         ).count(), 1)
         self.assertEqual(self.response_set.tobacco_smoking_history.all().count(), 1)
 
+
     def test_initializes_the_form_based_on_existing_smoking_histories(self):
         TobaccoSmokingHistoryFactory(
             response_set=self.response_set,

@@ -3,7 +3,6 @@ from django.core.exceptions import ValidationError
 
 from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
 from ...factories.smoked_amount_response_factory import SmokedAmountResponseFactory
-from ....models.tobacco_smoking_history import TobaccoSmokingHistoryTypes
 
 
 @tag("SmokedAmount")

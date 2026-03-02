@@ -67,5 +67,5 @@ class TestTobaccoSmokingHistoryPresenter(TestCase):
 
         self.assertEqual(
             presenter.to_sentence(),
-            "7 rolling tobacco a week"
+            "7 grams of rolling tobacco a week"
         )

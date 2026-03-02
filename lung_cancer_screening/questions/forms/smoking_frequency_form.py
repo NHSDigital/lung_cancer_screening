@@ -52,4 +52,4 @@ class SmokingFrequencyForm(forms.ModelForm):
     def __get_smoking_string(self):
         amount = self.normal_tobacco_smoking_history_item.amount()
         frequency = self.normal_tobacco_smoking_history_item.frequency_singular()
-        return f"{amount} {self.amount_prefix()}{self.tobacco_smoking_history_item.human_type().lower()} a {frequency}"
+        return f"{amount} {self.tobacco_smoking_history_item.unit()} a {frequency}"

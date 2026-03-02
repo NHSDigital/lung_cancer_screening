@@ -3,7 +3,7 @@ from django.test import TestCase, tag
 from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
 from ...factories.smoked_total_years_response_factory import SmokedTotalYearsResponseFactory
 from ...factories.age_when_started_smoking_response_factory import AgeWhenStartedSmokingResponseFactory
-from ....models.tobacco_smoking_history import TobaccoSmokingHistoryTypes, TobaccoSmokingHistory
+from ....models.tobacco_smoking_history import TobaccoSmokingHistory
 from ....forms.smoked_total_years_form import SmokedTotalYearsForm
 
 
@@ -89,4 +89,18 @@ class TestSmokedTotalYearsForm(TestCase):
         self.assertEqual(
             form.label(),
             "Roughly how many years did you smoke 200 cigarettes a week?"
+        )
+
+
+    def test_has_a_required_error_message_including_the_type_of_tobacco_smoking_history(self):
+        form = SmokedTotalYearsForm(
+            instance=self.response,
+            tobacco_smoking_history=self.smoking_history,
+            data={
+                "value": None
+            }
+        )
+        self.assertIn(
+            "Enter the number of years you have smoked cigarettes",
+            form.errors["value"]
         )

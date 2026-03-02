@@ -107,12 +107,14 @@ Feature: Smoking history pages
     When I go to "/types-tobacco-smoking"
     And I check "Cigarettes"
     And I check "Rolling tobacco"
+    And I check "Pipe"
     And I check "Cigarillos"
     And I check "Cigars"
     And I submit the form
 
   # Cigarettes with increased and decresed
     Then I am on "/cigarettes-smoking-current"
+    And I see a page title "Do you currently smoke cigarettes?"
     When I check "Yes"
     And I submit the form
 
@@ -121,6 +123,7 @@ Feature: Smoking history pages
     And I submit the form
 
     Then I am on "/cigarettes-smoking-frequency"
+    And I see a page title "How often do you smoke cigarettes?"
     When I check "Daily"
     And I submit the form
 
@@ -129,6 +132,7 @@ Feature: Smoking history pages
     And I submit the form
 
     Then I am on "/cigarettes-smoking-change"
+    And I see a page title "Has the number of cigarettes you normally smoke changed over time?"
     When I check "Yes, I used to smoke more than 10 cigarettes a day"
     And I check "Yes, I used to smoke fewer than 10 cigarettes a day"
     And I submit the form
@@ -147,6 +151,7 @@ Feature: Smoking history pages
     And I submit the form
 
     Then I am on "/cigarettes-smoking-decreased-frequency"
+    And I see a page title "When you smoked fewer than 10 cigarettes a day, how often did you smoke cigarettes?"
     When I check "Monthly"
     And I submit the form
 
@@ -205,6 +210,56 @@ Feature: Smoking history pages
 
     Then I am on "/rolling-tobacco-smoked-decreased-years"
     When I fill in "Roughly how many years did you smoke 5 grams of rolling tobacco a month?" with "4"
+    And I submit the form
+
+  # Pipe with increased and decresed
+    Then I am on "/pipe-smoking-current"
+    And I see a page title "Do you currently smoke a pipe?"
+    When I check "Yes"
+    And I submit the form
+
+    Then I am on "/pipe-smoked-total-years"
+    When I fill in "Roughly how many years have you smoked a pipe?" with "26"
+    And I submit the form
+
+    Then I am on "/pipe-smoking-frequency"
+    And I see a page title "How often do you smoke a pipe?"
+    When I check "Weekly"
+    And I submit the form
+
+    Then I am on "/pipe-smoked-amount"
+    When I fill in "Roughly how many full pipe loads do you currently smoke in a normal week?" with "25"
+    And I submit the form
+
+    Then I am on "/pipe-smoking-change"
+    And I see a page title "Has the number of full pipe loads you normally smoke changed over time?"
+    When I check "Yes, I used to smoke more than 25 full pipe loads a week"
+    And I check "Yes, I used to smoke fewer than 25 full pipe loads a week"
+    And I submit the form
+
+    Then I am on "/pipe-smoking-increased-frequency"
+    And I see a page title "When you smoked more than 25 full pipe loads a week, how often did you smoke a pipe?"
+    When I check "Daily"
+    And I submit the form
+
+    Then I am on "/pipe-smoked-increased-amount"
+    When I fill in "When you smoked more than 25 full pipe loads a week, roughly how many full pipe loads did you normally smoke a day?" with "12"
+    And I submit the form
+
+    Then I am on "/pipe-smoked-increased-years"
+    When I fill in "Roughly how many years did you smoke 12 full pipe loads a day?" with "10"
+    And I submit the form
+
+    Then I am on "/pipe-smoking-decreased-frequency"
+    When I check "Monthly"
+    And I submit the form
+
+    Then I am on "/pipe-smoked-decreased-amount"
+    When I fill in "When you smoked fewer than 25 full pipe loads a week, roughly how many full pipe loads did you normally smoke a month?" with "5"
+    And I submit the form
+
+    Then I am on "/pipe-smoked-decreased-years"
+    When I fill in "Roughly how many years did you smoke 5 full pipe loads a month?" with "4"
     And I submit the form
 
 

@@ -27,7 +27,6 @@ from ....models.ethnicity_response import EthnicityValues
 from ....models.education_response import EducationValues
 from ....models.family_history_lung_cancer_response import FamilyHistoryLungCancerValues
 from ....models.relatives_age_when_diagnosed_response import RelativesAgeWhenDiagnosedValues
-from ....models.tobacco_smoking_history import TobaccoSmokingHistoryTypes
 
 from ....models.respiratory_conditions_response import RespiratoryConditionValues
 

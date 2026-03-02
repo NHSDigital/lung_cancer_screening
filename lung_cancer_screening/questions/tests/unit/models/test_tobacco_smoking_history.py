@@ -385,3 +385,75 @@ class TestTobaccoSmokingHistory(TestCase):
             tobacco_smoking_history,
             TobaccoSmokingHistory.objects.by_url_type("rolling-tobacco")
         )
+
+
+    def test_human_type_returns_the_human_type_of_the_tobacco_smoking_history(self):
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            rolling_tobacco=True,
+        )
+        self.assertEqual(tobacco_smoking_history.human_type(), "Rolling tobacco")
+
+
+    def test_human_type_returns_the_human_type_of_the_tobacco_smoking_history_with_a_prefix_when_the_type_is_pipe(self):
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            pipe=True,
+        )
+        self.assertEqual(tobacco_smoking_history.human_type(), "a Pipe")
+
+
+    def test_unit_returns_the_unit_of_the_tobacco_smoking_history_as_human_type_by_default(self):
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            cigarettes=True,
+        )
+        self.assertEqual(tobacco_smoking_history.unit(), "cigarettes")
+
+
+    def test_unit_returns_the_unit_of_the_tobacco_smoking_history_as_grams_of_rolling_tobacco_when_the_type_is_rolling_tobacco(self):
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            rolling_tobacco=True,
+        )
+        self.assertEqual(tobacco_smoking_history.unit(), "grams of rolling tobacco")
+
+
+    def test_unit_returns_the_unit_of_the_tobacco_smoking_history_as_full_pipe_loads_when_the_type_is_pipe(self):
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            pipe=True,
+        )
+        self.assertEqual(tobacco_smoking_history.unit(), "full pipe loads")
+
+
+    def test_is_pipe_returns_true_when_the_type_is_pipe(self):
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            pipe=True,
+        )
+        self.assertTrue(tobacco_smoking_history.is_pipe())
+
+
+    def test_is_pipe_returns_false_when_the_type_is_not_pipe(self):
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            rolling_tobacco=True,
+        )
+        self.assertFalse(tobacco_smoking_history.is_pipe())
+
+
+    def test_is_rolling_tobacco_returns_true_when_the_type_is_rolling_tobacco(self):
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            rolling_tobacco=True,
+        )
+        self.assertTrue(tobacco_smoking_history.is_rolling_tobacco())
+
+
+    def test_is_rolling_tobacco_returns_false_when_the_type_is_not_rolling_tobacco(self):
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            pipe=True,
+        )
+        self.assertFalse(tobacco_smoking_history.is_rolling_tobacco())

@@ -1,4 +1,3 @@
-from inflection import camelize
 from django.http import Http404
 
 from lung_cancer_screening.questions.models.tobacco_smoking_history import TobaccoSmokingHistory

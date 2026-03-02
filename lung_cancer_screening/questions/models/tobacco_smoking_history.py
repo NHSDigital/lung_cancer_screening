@@ -113,8 +113,26 @@ class TobaccoSmokingHistory(BaseModel):
                     {"level": "Cannot have both no change and other levels selected"}
                 )
 
+
+    def type_prefix(self):
+        if self.is_pipe():
+            return "a "
+        else:
+            return ""
+
+
     def human_type(self):
-        return TobaccoSmokingHistoryTypes(self.type).label
+        return f"{self.type_prefix()}{self.get_type_display()}"
+
+
+    def unit(self):
+        if self.is_rolling_tobacco():
+            return "grams of rolling tobacco"
+        if self.is_pipe():
+            return "full pipe loads"
+        else:
+            return self.human_type().lower()
+
 
     def amount(self):
         if hasattr(self, "smoked_amount_response"):
@@ -149,8 +167,14 @@ class TobaccoSmokingHistory(BaseModel):
         else:
             return None
 
+
+    def is_pipe(self):
+        return self.type == TobaccoSmokingHistoryTypes.PIPE
+
+
     def is_rolling_tobacco(self):
         return self.type == TobaccoSmokingHistoryTypes.ROLLING_TOBACCO
+
 
     def url_type(self):
         return slugify(self.human_type())

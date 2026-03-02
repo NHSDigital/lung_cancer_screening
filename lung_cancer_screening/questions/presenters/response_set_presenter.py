@@ -155,7 +155,7 @@ class ResponseSetPresenter:
             return self.NOT_ANSWERED_TEXT
 
         return self._list_to_sentence(
-            [x.human_type() for x in self.tobacco_smoking_history_by_type()]
+            [x.get_type_display() for x in self.tobacco_smoking_history_by_type()]
         )
 
 

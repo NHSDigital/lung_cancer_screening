@@ -44,15 +44,15 @@ class SmokedAmountForm(forms.ModelForm):
 
 
     def _normal_type_label(self):
-        return f"Roughly how many {self.amount_prefix()}{self.type_string()} do you {self._currently_or_previously_text()} smoke in a normal {self.tobacco_smoking_history.frequency_singular()}?"
+        return f"Roughly how many {self.tobacco_smoking_history.unit()} do you {self._currently_or_previously_text()} smoke in a normal {self.tobacco_smoking_history.frequency_singular()}?"
 
 
     def _changed_type_label(self):
         return (
             f"When you smoked {self.more_or_fewer_text()} than "
-            f"{self.normal_tobacco_smoking_history.amount()} {self.amount_prefix()}{self.type_string()} "
+            f"{self.normal_tobacco_smoking_history.amount()} {self.tobacco_smoking_history.unit()} "
             f"a {self.normal_tobacco_smoking_history.frequency_singular()}, "
-            f"roughly how many {self.amount_prefix()}{self.type_string()} "
+            f"roughly how many {self.tobacco_smoking_history.unit()} "
             f"did you normally smoke a {self.tobacco_smoking_history.frequency_singular()}?"
         )
 
