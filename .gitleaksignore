@@ -10,6 +10,8 @@ infrastructure/terraform/spoke/resource_group_init/spoke.bicep:generic-api-key:3
 infrastructure/terraform/spoke/resource_group_init/spoke.bicep:generic-api-key:33
 infrastructure/terraform/spoke/resource_group_init/storage.bicep:generic-api-key:59
 infrastructure/terraform/spoke/resource_group_init/keyVault.bicep:generic-api-key:10
+infrastructure/bootstrap/core.bicep:generic-api-key:16
+infrastructure/bootstrap/spoke.bicep:generic-api-key:43
 infrastructure/bootstrap/hub.bicep:generic-api-key:55
 infrastructure/bootstrap/hub.bicep:generic-api-key:56
 infrastructure/bootstrap/modules/storage.bicep:generic-api-key:59
