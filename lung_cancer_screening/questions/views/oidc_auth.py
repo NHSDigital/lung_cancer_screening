@@ -31,8 +31,10 @@ class NHSLoginAuthenticationRequestView(OIDCAuthenticationRequestView):
             "client_id": self.OIDC_RP_CLIENT_ID,
             "redirect_uri": self.get_settings("OIDC_RP_REDIRECT_URI"),
             "state": state,
-            # "vtr": self.get_settings("OIDC_RP_VTR"),
         }
+
+        if self.get_settings("OIDC_RP_VTR", None):
+            params["vtr"] = self.get_settings("OIDC_RP_VTR")
 
         params.update(self.get_extra_params(request))
 
