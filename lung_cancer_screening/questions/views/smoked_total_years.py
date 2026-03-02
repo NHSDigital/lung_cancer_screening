@@ -20,10 +20,13 @@ class EnsureAnsweredAgeWhenStartedSmokingMixin:
             return super().dispatch(request, *args, **kwargs)
 
 class SmokedTotalYearsView(
-    LoginRequiredMixin, EnsureResponseSet, EnsureEligibleMixin,
-    EnsureSmokingHistoryForTypeMixin, EnsureAnsweredAgeWhenStartedSmokingMixin,
+    LoginRequiredMixin,
+    EnsureResponseSet,
+    EnsureEligibleMixin,
+    EnsureSmokingHistoryForTypeMixin,
     EnsurePrerequisiteResponsesMixin,
-    SmokingHistoryQuestionBaseView
+    EnsureAnsweredAgeWhenStartedSmokingMixin,
+    SmokingHistoryQuestionBaseView,
 ):
     template_name = "question_form.jinja"
     form_class = SmokedTotalYearsForm
@@ -32,12 +35,12 @@ class SmokedTotalYearsView(
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs["tobacco_smoking_history"] = self.get_smoking_history_item()
+        kwargs["tobacco_smoking_history"] = self.tobacco_smoking_history_item()
         return kwargs
 
 
     def get_success_url(self):
-        if self.get_smoking_history_item().is_normal():
+        if self.tobacco_smoking_history_item().is_normal():
             return reverse(
                 "questions:smoking_frequency",
                 kwargs={"tobacco_type": self.kwargs["tobacco_type"]},
@@ -45,7 +48,7 @@ class SmokedTotalYearsView(
             )
 
         if (
-            self.get_smoking_history_item().is_increased()
+            self.tobacco_smoking_history_item().is_increased()
             and self.has_decreased_level()
         ):
             return reverse(
@@ -71,21 +74,13 @@ class SmokedTotalYearsView(
         return self.request.response_set.tobacco_smoking_history.cigarettes().decreased().exists()
 
     def get_object_parent(self):
-        return self.get_smoking_history_item()
+        return self.tobacco_smoking_history_item()
 
-    def get_prerequisite_responses_redirect_map(self):
-        if self.get_smoking_history_item().is_normal():
-            return {}
+    def prerequisite_responses(self):
+        if self.tobacco_smoking_history_item().is_normal():
+            return []
 
-        return {
-            "smoking_frequency_response": reverse(
-                "questions:smoking_frequency",
-                kwargs=self.kwargs,
-                query=self.get_change_query_params(),
-            ),
-            "smoked_amount_response": reverse(
-                "questions:smoked_amount",
-                kwargs=self.kwargs,
-                query=self.get_change_query_params(),
-            ),
-        }
+        return [
+            "smoking_frequency_response",
+            "smoked_amount_response"
+        ]

@@ -65,9 +65,33 @@ class TestGetSmokingChange(TestCase):
 
         self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
 
-
-    def test_redirects_to_smoked_amount_when_does_not_have_a_smoking_frequency_response_and_smoked_amount_response(self):
+    def test_redirects_to_smoking_frequency_when_does_not_have_a_smoking_frequency_response(
+        self,
+    ):
         self.tobacco_smoking_history.smoking_frequency_response.delete()
+
+        response = self.client.get(
+            reverse(
+                "questions:smoking_change",
+                kwargs={
+                    "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+                },
+            )
+        )
+
+        self.assertRedirects(
+            response,
+            reverse(
+                "questions:smoked_amount",
+                kwargs={
+                    "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+                },
+            ),
+            fetch_redirect_response=False,
+        )
+
+    def test_redirects_to_smoked_amount_when_does_not_have_a__smoked_amount_response(self):
+        self.tobacco_smoking_history.smoked_amount_response.delete()
 
         response = self.client.get(
             reverse(

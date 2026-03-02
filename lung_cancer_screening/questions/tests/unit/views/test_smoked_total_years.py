@@ -329,7 +329,6 @@ class TestPostSmokedTotalYears(TestCase):
         }), fetch_redirect_response=False)
 
 
-    @tag("wip")
     def test_redirects_to_increased_amount_if_the_user_has_not_answered_amount_and_the_level_is_changed(self):
         increased = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
