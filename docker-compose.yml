@@ -8,6 +8,7 @@ services:
       target: development
       args:
         UID: "${UID}"
+        GIT_COMMIT: "${COMMIT_SHA}"
     command: python manage.py runserver 0.0.0.0:8000
     user: "${UID}:${UID}"
     ports:
