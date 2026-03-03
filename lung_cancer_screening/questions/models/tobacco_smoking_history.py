@@ -13,7 +13,7 @@ class TobaccoSmokingHistoryTypes(models.TextChoices):
     PIPE = "Pipe", "Pipe"
     CIGARS = "Cigars", "Cigars"
     CIGARILLOS = "Cigarillos", "Cigarillos"
-    SHISHA = "Shisha", "Shisha"
+    #SHISHA = "Shisha", "Shisha"
 
 class TobaccoSmokingHistoryQuerySet(BaseQuerySet):
     def in_form_order(self):

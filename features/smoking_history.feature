@@ -339,6 +339,8 @@ Feature: Smoking history pages
   # Check your answers
     Then I am on "/check-your-answers"
 
+    And I take a screenshot
+
     Then I see "15 years" as a response to "Total number of years you smoked cigarettes" under "Cigarette smoking history"
     And I see "10 cigarettes a day" as a response to "Current cigarette smoking" under "Cigarette smoking history"
     And I see "200 cigarettes a week for 5 years" as a response to "When you smoked more than 10 cigarettes a day" under "Cigarette smoking history"
@@ -348,6 +350,11 @@ Feature: Smoking history pages
     And I see "25 grams of rolling tobacco a week" as a response to "Current rolling tobacco smoking" under "Rolling tobacco smoking history"
     And I see "12 grams of rolling tobacco a day for 10 years" as a response to "When you smoked more than 25 grams of rolling tobacco a week" under "Rolling tobacco smoking history"
     And I see "5 grams of rolling tobacco a month for 4 years" as a response to "When you smoked fewer than 25 grams of rolling tobacco a week" under "Rolling tobacco smoking history"
+
+    Then I see "26 years" as a response to "Total number of years you smoked a pipe" under "Pipe smoking history"
+    And I see "25 full pipe loads a week" as a response to "Current pipe smoking" under "Pipe smoking history"
+    And I see "12 full pipe loads a day for 10 years" as a response to "When you smoked more than 25 full pipe loads a week" under "Pipe smoking history"
+    And I see "5 full pipe loads a month for 4 years" as a response to "When you smoked fewer than 25 full pipe loads a week" under "Pipe smoking history"
 
     Then I see "8 years" as a response to "Total number of years you smoked cigars" under "Cigar smoking history"
     And I see "9 cigars a month" as a response to "Current cigar smoking" under "Cigar smoking history"

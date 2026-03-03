@@ -40,7 +40,7 @@ class SmokedAmountForm(forms.ModelForm):
         return "grams of " if self.tobacco_smoking_history.is_rolling_tobacco() else ""
 
     def suffix(self):
-        return "grams" if self.tobacco_smoking_history.is_rolling_tobacco() else self.type_string()
+        return "grams" if self.tobacco_smoking_history.is_rolling_tobacco() else self.tobacco_smoking_history.unit()
 
 
     def _normal_type_label(self):

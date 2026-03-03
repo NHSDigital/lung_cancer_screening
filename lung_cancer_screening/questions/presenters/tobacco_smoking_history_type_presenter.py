@@ -24,7 +24,7 @@ class TobaccoSmokingHistoryTypePresenter(BasePresenter):
         return TobaccoSmokingHistoryPresenter(decreased) if decreased else None
 
     def title(self):
-        return singularize(self.normal_tobacco_smoking_history().human_type())
+        return singularize(self.normal_tobacco_smoking_history().get_type_display())
 
     def url_type(self):
         return self.normal_tobacco_smoking_history().url_type()
@@ -42,7 +42,7 @@ class TobaccoSmokingHistoryTypePresenter(BasePresenter):
                 self.normal_tobacco_smoking_history().duration_years(),
             ),
             self._check_your_answer_item(
-                f"{self.current_or_previous()} {singularize(self.human_type().lower())} smoking",
+                f"{self.current_or_previous()} {singularize(self.get_type_display().lower())} smoking",
                 self.normal_tobacco_smoking_history().to_sentence(),
             ),
         ]
