@@ -30,5 +30,4 @@ class Migration(migrations.Migration):
             name='type',
             field=models.CharField(choices=[('Cigarettes', 'Cigarettes'), ('RollingTobacco', 'Rolling tobacco'), ('Pipe', 'Pipe'), ('Cigars', 'Cigars'), ('Cigarillos', 'Cigarillos'), ('Shisha', 'Shisha')]),
         ),
-        
     ]

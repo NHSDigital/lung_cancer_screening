@@ -99,7 +99,6 @@ Feature: Smoking history pages
 
     And I see "40 cigarettes a day for 5 years" as a response to "When you smoked more than 25 cigarettes a month" under "Cigarette smoking history"
 
-  @wip
   Scenario: Multiple smoking histories
     Given I am logged in
     And I have answered questions showing I am eligible
@@ -112,7 +111,7 @@ Feature: Smoking history pages
     And I check "Cigars"
     And I submit the form
 
-  # Cigarettes with increased and decresed
+  # Cigarettes with increased and decreased
     Then I am on "/cigarettes-smoking-current"
     And I see a page title "Do you currently smoke cigarettes?"
     When I check "Yes"
@@ -163,7 +162,7 @@ Feature: Smoking history pages
     When I fill in "Roughly how many years did you smoke 1 cigarettes a month?" with "2"
     And I submit the form
 
-  # Rolling tobacco with increased and decresed
+  # Rolling tobacco with increased and decreased
     Then I am on "/rolling-tobacco-smoking-current"
     And I see a page title "Do you currently smoke rolling tobacco?"
     When I check "Yes"
@@ -212,7 +211,7 @@ Feature: Smoking history pages
     When I fill in "Roughly how many years did you smoke 5 grams of rolling tobacco a month?" with "4"
     And I submit the form
 
-  # Pipe with increased and decresed
+  # Pipe with increased and decreased
     Then I am on "/pipe-smoking-current"
     And I see a page title "Do you currently smoke a pipe?"
     When I check "Yes"
