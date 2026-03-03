@@ -35,6 +35,25 @@ class SmokedTotalYearsResponse(BaseModel):
                 )
             })
 
+    def normal_max_value_error_message(self):
+        return (
+            "The number of years you smoked cigarettes must be fewer "
+            "than the total number of years you have been smoking"
+        )
+
+    def changed_max_value_error_message(self):
+        return (
+            "The number of years you smoked "
+            f"{self.tobacco_smoking_history.to_sentence()} "
+            "must be fewer than the total number of years you have been smoking"
+        )
+
+    def max_value_error_message(self):
+        if self.tobacco_smoking_history.is_normal():
+            return self.normal_max_value_error_message()
+
+        return self.changed_max_value_error_message()
+
     def _validate_value_fewer_than_total_number_of_years_smoked(self):
         if not self.value:
             return None
@@ -42,7 +61,7 @@ class SmokedTotalYearsResponse(BaseModel):
         if self.value > self.tobacco_smoking_history.response_set.age_when_started_smoking_response.years_smoked_including_stopped():
             raise ValidationError({
                 "value": ValidationError(
-                    "The number of years you smoked cigarettes must be fewer than the total number of years you have been smoking",
-                    code="value_greater_than_total_number_of_years_smoked"
+                    self.max_value_error_message(),
+                    code="max"
                 )
             })

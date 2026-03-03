@@ -129,6 +129,9 @@ class TobaccoSmokingHistory(BaseModel):
         else:
             return None
 
+    def to_sentence(self):
+        return f"{self.amount()} {self.human_type().lower()} a {self.frequency_singular()}"
+
     def is_increased(self):
         return self.level == self.Levels.INCREASED
 
