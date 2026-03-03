@@ -38,7 +38,12 @@ class SmokedAmountForm(forms.ModelForm):
 
 
     def _normal_type_label(self):
-        return f"Roughly how many {self.type_string()} do you {self._currently_or_previously_text()} smoke in a normal {self.tobacco_smoking_history.frequency_singular()}?"
+        do_or_did = "do" if self.tobacco_smoking_history.is_current() else "did"
+        return (
+            f"Roughly how many {self.type_string()} {do_or_did} you "
+            f"{self._currently_or_previously_text()} smoke in a normal "
+            f"{self.tobacco_smoking_history.frequency_singular()}?"
+        )
 
 
     def _changed_type_label(self):
@@ -53,11 +58,15 @@ class SmokedAmountForm(forms.ModelForm):
 
 
     def _currently_or_previously_text(self):
-        return "currently" if self.tobacco_smoking_history.smoking_current_response.value else "previously"
+        return "currently" if self.tobacco_smoking_history.is_current() else "previously"
 
 
     def _normal_type_required_error_message(self):
-        return f"Enter how many {self.type_string()} you {self._currently_or_previously_text()} smoke in a normal {self.tobacco_smoking_history.frequency_singular()}"
+        return (
+            f"Enter how many {self.type_string()} you "
+            f"{self._currently_or_previously_text()} {self.smoke_or_smoked_text()} "
+            f"in a normal {self.tobacco_smoking_history.frequency_singular()}"
+        )
 
 
     def _changed_type_required_error_message(self):
@@ -70,9 +79,19 @@ class SmokedAmountForm(forms.ModelForm):
         else:
             return self._normal_type_required_error_message()
 
+    def smoke_or_smoked_text(self):
+        if self.tobacco_smoking_history.is_current():
+            return "smoke"
+        else:
+            return "smoked"
+
 
     def _type_min_value_error_message(self):
-        return f"The number of {self.type_string()} you smoke must be at least 1"
+        return (
+            f"The number of {self.type_string()} you {self.smoke_or_smoked_text()} "
+            f"a {self.tobacco_smoking_history.frequency_singular()} "
+            "must be at least 1"
+        )
 
     class Meta:
         model = SmokedAmountResponse

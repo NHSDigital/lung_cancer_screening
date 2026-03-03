@@ -139,8 +139,8 @@ class TobaccoSmokingHistory(BaseModel):
         return self.level == self.Levels.NORMAL
 
     def is_current(self):
-        if hasattr(self, "smoking_current_response"):
-            return self.smoking_current_response.value
-        else:
+        if not hasattr(self, "smoking_current_response"):
             return None
+
+        return self.is_normal() and self.smoking_current_response.value
 

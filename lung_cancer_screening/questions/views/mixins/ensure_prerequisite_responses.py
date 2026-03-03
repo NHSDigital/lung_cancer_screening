@@ -18,10 +18,18 @@ class EnsurePrerequisiteResponsesMixin:
 
         return super().dispatch(request, *args, **kwargs)
 
+
+    def get_kwargs(self, prerequisite_response):
+        kwargs = self.kwargs.copy()
+        if prerequisite_response == "smoking_current_response":
+            kwargs.pop("level", None)
+        return kwargs
+
+
     def get_redirect_url(self, prerequisite_response):
         return reverse(
             self.RESPONSE_URL_MAPPING[prerequisite_response],
-            kwargs=self.kwargs,
+            kwargs=self.get_kwargs(prerequisite_response),
             query=self.change_query_params()
         )
 

@@ -17,7 +17,7 @@ class TestSmokedAmountForm(TestCase):
         )
         self.smoking_current_response = SmokingCurrentResponseFactory.create(
             tobacco_smoking_history=self.smoking_history,
-            value=False
+            value=True
         )
         self.frequency_response = SmokingFrequencyResponseFactory.create(
             tobacco_smoking_history=self.smoking_history,
@@ -55,10 +55,7 @@ class TestSmokedAmountForm(TestCase):
         self.assertIn("value", form.errors)
 
 
-    def test_min_value_validation_has_the_correct_message(self):
-        self.smoking_history.type = TobaccoSmokingHistoryTypes.CIGARS.value
-        self.smoking_history.save()
-
+    def test_min_value_validation_with_current_smoking_history(self):
         form = SmokedAmountForm(
             instance=self.response,
             tobacco_smoking_history=self.smoking_history,
@@ -67,12 +64,29 @@ class TestSmokedAmountForm(TestCase):
         form.full_clean()
         self.assertIn("value", form.errors)
         self.assertIn(
-            "The number of cigars you smoke must be at least 1",
+            "The number of cigarettes you smoke a day must be at least 1",
             form.errors["value"],
         )
 
 
-    def test_has_a_label_for_the_normal_type(self):
+    def test_min_value_validation_has_with_previous_smoking_history(self):
+        self.smoking_current_response.value = False
+        self.smoking_current_response.save()
+
+        form = SmokedAmountForm(
+            instance=self.response,
+            tobacco_smoking_history=self.smoking_history,
+            data={"value": 0}
+        )
+
+        form.full_clean()
+        self.assertIn("value", form.errors)
+        self.assertIn(
+            "The number of cigarettes you smoked a day must be at least 1",
+            form.errors["value"],
+        )
+
+    def test_has_a_label_for_the_normal_type_current(self):
         form = SmokedAmountForm(
             instance=self.response,
             data={"value": 20},
@@ -81,7 +95,22 @@ class TestSmokedAmountForm(TestCase):
 
         self.assertEqual(
             form.fields["value"].label,
-            "Roughly how many cigarettes do you previously smoke in a normal day?"
+            "Roughly how many cigarettes do you currently smoke in a normal day?"
+        )
+
+    def test_has_a_label_for_the_current_type_previously(self):
+        self.smoking_current_response.value = False
+        self.smoking_current_response.save()
+
+        form = SmokedAmountForm(
+            instance=self.response,
+            data={"value": 20},
+            tobacco_smoking_history=self.smoking_history
+        )
+
+        self.assertEqual(
+            form.fields["value"].label,
+            "Roughly how many cigarettes did you previously smoke in a normal day?"
         )
 
 
@@ -141,9 +170,27 @@ class TestSmokedAmountForm(TestCase):
         form.full_clean()
         self.assertIn("value", form.errors)
         self.assertIn(
-            "Enter how many cigarettes you previously smoke in a normal day",
+            "Enter how many cigarettes you currently smoke in a normal day",
             form.errors["value"],
         )
+
+    def test_has_a_required_error_message_for_the_normal_type_previously(self):
+        self.smoking_current_response.value = False
+        self.smoking_current_response.save()
+
+        form = SmokedAmountForm(
+            instance=self.response,
+            data={"value": None},
+            tobacco_smoking_history=self.smoking_history
+        )
+
+        form.full_clean()
+        self.assertIn("value", form.errors)
+        self.assertIn(
+            "Enter how many cigarettes you previously smoked in a normal day",
+            form.errors["value"],
+        )
+
 
     def test_has_a_required_error_message_for_the_increased_type(self):
         increased_smoking_history = TobaccoSmokingHistoryFactory.create(

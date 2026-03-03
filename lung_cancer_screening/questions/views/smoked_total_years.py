@@ -81,12 +81,10 @@ class SmokedTotalYearsView(
     def has_decreased_level(self):
         return self.request.response_set.tobacco_smoking_history.cigarettes().decreased().exists()
 
-    def get_object_parent(self):
-        return self.tobacco_smoking_history_item()
 
     def prerequisite_responses(self):
         if self.tobacco_smoking_history_item().is_normal():
-            return []
+            return ["smoking_current_response"]
 
         return [
             "smoking_frequency_response",
