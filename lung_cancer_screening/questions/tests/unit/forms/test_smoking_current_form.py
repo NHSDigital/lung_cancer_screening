@@ -10,7 +10,7 @@ from ....forms.smoking_current_form import SmokingCurrentForm
 class TestSmokingCurrentForm(TestCase):
     def setUp(self):
         self.smoking_history = TobaccoSmokingHistoryFactory.create(
-            cigars=True
+            medium_cigars=True
         )
         self.response = SmokingCurrentResponse.objects.create(
             tobacco_smoking_history=self.smoking_history,
@@ -57,7 +57,7 @@ class TestSmokingCurrentForm(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(
             form.errors["value"],
-            ["Select if you currently smoke cigars"]
+            ["Select if you currently smoke medium cigars"]
         )
 
     def test_label_contains_the_smoking_history_type(self):
@@ -70,5 +70,5 @@ class TestSmokingCurrentForm(TestCase):
         )
         self.assertEqual(
             form.fields["value"].label,
-            "Do you currently smoke cigars?"
+            "Do you currently smoke medium cigars?"
         )

@@ -41,7 +41,7 @@ class TestTobaccoSmokingHistory(TestCase):
     def test_is_valid_with_a_duplicate_response_set_and_level_with_different_types(self):
         TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            cigars=True,
+            medium_cigars=True,
             level=TobaccoSmokingHistory.Levels.NORMAL,
         )
 
@@ -229,28 +229,28 @@ class TestTobaccoSmokingHistory(TestCase):
             cigarettes=True,
             level=TobaccoSmokingHistory.Levels.NORMAL,
         )
-        cigars_normal = TobaccoSmokingHistoryFactory(
+        medium_cigars_normal = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            cigars=True,
+            medium_cigars=True,
             level=TobaccoSmokingHistory.Levels.NORMAL,
         )
-        cigars_increased = TobaccoSmokingHistoryFactory(
+        medium_cigars_increased = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            cigars=True,
+            medium_cigars=True,
             level=TobaccoSmokingHistory.Levels.INCREASED,
         )
 
         by_type = TobaccoSmokingHistory.objects.grouped_by_type()
         self.assertIn(TobaccoSmokingHistoryTypes.CIGARETTES, by_type)
-        self.assertIn(TobaccoSmokingHistoryTypes.CIGARS, by_type)
+        self.assertIn(TobaccoSmokingHistoryTypes.MEDIUM_CIGARS, by_type)
         self.assertQuerySetEqual(
             by_type[TobaccoSmokingHistoryTypes.CIGARETTES],
             [cigarettes_normal],
             ordered=False,
         )
         self.assertQuerySetEqual(
-            by_type[TobaccoSmokingHistoryTypes.CIGARS],
-            [cigars_normal, cigars_increased],
+            by_type[TobaccoSmokingHistoryTypes.MEDIUM_CIGARS],
+            [medium_cigars_normal, medium_cigars_increased],
             ordered=False,
         )
 
@@ -265,38 +265,38 @@ class TestTobaccoSmokingHistory(TestCase):
             cigarettes=True,
             increased=True,
         )
-        cigars = TobaccoSmokingHistoryFactory(
+        medium_cigars = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            cigars=True,
+            medium_cigars=True,
         )
 
         cigarettes = TobaccoSmokingHistory.objects.cigarettes()
 
         self.assertIn(cigarette_normal, cigarettes)
         self.assertIn(cigarette_increased, cigarettes)
-        self.assertNotIn(cigars, cigarettes)
+        self.assertNotIn(medium_cigars, cigarettes)
 
 
-    def test_cigars_returns_all_cigars_smoking_history_items(self):
-        cigar_normal = TobaccoSmokingHistoryFactory(
+    def test_medium_cigars_returns_all_medium_cigars_smoking_history_items(self):
+        medium_cigar_normal = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            cigars=True,
+            medium_cigars=True,
             normal=True,
         )
-        cigar_increased = TobaccoSmokingHistoryFactory(
+        medium_cigar_increased = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            cigars=True,
+            medium_cigars=True,
             increased=True,
         )
         cigarettes = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
             cigarettes=True,
         )
-        cigars = TobaccoSmokingHistory.objects.cigars()
+        medium_cigars = TobaccoSmokingHistory.objects.medium_cigars()
 
-        self.assertIn(cigar_normal, cigars)
-        self.assertIn(cigar_increased, cigars)
-        self.assertNotIn(cigarettes, cigars)
+        self.assertIn(medium_cigar_normal, medium_cigars)
+        self.assertIn(medium_cigar_increased, medium_cigars)
+        self.assertNotIn(cigarettes, medium_cigars)
 
 
     def test_rolling_tobacco_returns_all_rolling_tobacco_smoking_history_items(self):
@@ -310,16 +310,16 @@ class TestTobaccoSmokingHistory(TestCase):
             rolling_tobacco=True,
             increased=True,
         )
-        cigars = TobaccoSmokingHistoryFactory(
+        medium_cigars = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            cigars=True,
+            medium_cigars=True,
         )
 
         rolling_tobacco = TobaccoSmokingHistory.objects.rolling_tobacco()
 
         self.assertIn(rolling_tobacco_normal, rolling_tobacco)
         self.assertIn(rolling_tobacco_increased, rolling_tobacco)
-        self.assertNotIn(cigars, rolling_tobacco)
+        self.assertNotIn(medium_cigars, rolling_tobacco)
 
 
     def test_pipe_returns_all_pipe_smoking_history_items(self):
@@ -333,16 +333,16 @@ class TestTobaccoSmokingHistory(TestCase):
             pipe=True,
             increased=True,
         )
-        cigars = TobaccoSmokingHistoryFactory(
+        medium_cigars = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            cigars=True,
+            medium_cigars=True,
         )
 
         pipes = TobaccoSmokingHistory.objects.pipe()
 
         self.assertIn(pipe_normal, pipes)
         self.assertIn(pipe_increased, pipes)
-        self.assertNotIn(cigars, pipes)
+        self.assertNotIn(medium_cigars, pipes)
 
 
     def test_cigarillos_returns_all_cigarillos_smoking_history_items(self):
@@ -356,16 +356,16 @@ class TestTobaccoSmokingHistory(TestCase):
             cigarillos=True,
             increased=True,
         )
-        cigars = TobaccoSmokingHistoryFactory(
+        medium_cigars = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            cigars=True,
+            medium_cigars=True,
         )
 
         cigarillos = TobaccoSmokingHistory.objects.cigarillos()
 
         self.assertIn(cigarillo_normal, cigarillos)
         self.assertIn(cigarillo_increased, cigarillos)
-        self.assertNotIn(cigars, cigarillos)
+        self.assertNotIn(medium_cigars, cigarillos)
 
 
     def test_url_type_returns_the_url_type_of_the_tobacco_smoking_history(self):

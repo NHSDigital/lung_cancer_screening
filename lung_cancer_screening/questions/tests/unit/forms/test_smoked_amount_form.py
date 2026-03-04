@@ -56,7 +56,7 @@ class TestSmokedAmountForm(TestCase):
 
 
     def test_min_value_validation_has_the_correct_message(self):
-        self.smoking_history.type = TobaccoSmokingHistoryTypes.CIGARS.value
+        self.smoking_history.type = TobaccoSmokingHistoryTypes.MEDIUM_CIGARS.value
         self.smoking_history.save()
 
         form = SmokedAmountForm(
@@ -67,7 +67,7 @@ class TestSmokedAmountForm(TestCase):
         form.full_clean()
         self.assertIn("value", form.errors)
         self.assertIn(
-            "The number of cigars you smoke must be at least 1",
+            "The number of medium cigars you smoke must be at least 1",
             form.errors["value"],
         )
 

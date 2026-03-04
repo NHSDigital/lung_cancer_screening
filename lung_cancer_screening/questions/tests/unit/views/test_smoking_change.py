@@ -222,15 +222,15 @@ class TestPostSmokingChange(TestCase):
             complete=True,
             increased=True,
         )
-        cigars = TobaccoSmokingHistoryFactory.create(
+        medium_cigars = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            cigars=True,
+            medium_cigars=True,
             complete=True
         )
 
         response = self.client.post(
             reverse("questions:smoking_change", kwargs = {
-                "tobacco_type": cigars.type.lower()
+                "tobacco_type": medium_cigars.type
             }),
             {"value": [TobaccoSmokingHistory.Levels.NO_CHANGE]}
         )

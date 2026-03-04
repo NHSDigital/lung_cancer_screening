@@ -425,7 +425,7 @@ class TestResponseSetPresenter(TestCase):
         )
         TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            cigars=True
+            medium_cigars=True
         )
         TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
@@ -433,7 +433,7 @@ class TestResponseSetPresenter(TestCase):
         )
         presenter = ResponseSetPresenter(self.response_set)
         self.assertEqual(
-            presenter.types_tobacco_smoking, "Cigarettes, Rolling tobacco, and Cigars"
+            presenter.types_tobacco_smoking, "Cigarettes, Rolling tobacco, and Medium cigars"
         )
 
 
@@ -446,12 +446,12 @@ class TestResponseSetPresenter(TestCase):
         )
         TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            cigars=True,
+            medium_cigars=True,
             normal=True,
         )
         TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            cigars=True,
+            medium_cigars=True,
             increased=True,
         )
 

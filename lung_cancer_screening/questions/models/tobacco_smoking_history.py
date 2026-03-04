@@ -11,7 +11,10 @@ class TobaccoSmokingHistoryTypes(models.TextChoices):
     CIGARETTES = "Cigarettes", "Cigarettes"
     ROLLING_TOBACCO = "RollingTobacco", "Rolling tobacco"
     PIPE = "Pipe", "Pipe"
-    CIGARS = "Cigars", "Cigars"
+    #CIGARS = "Cigars", "Cigars"
+    SMALL_CIGARS = "SmallCigars", "Small cigars"
+    MEDIUM_CIGARS = "MediumCigars", "Medium cigars"
+    LARGE_CIGARS = "LargeCigars", "Large cigars"
     CIGARILLOS = "Cigarillos", "Cigarillos"
     #SHISHA = "Shisha", "Shisha"
 
@@ -44,8 +47,14 @@ class TobaccoSmokingHistoryQuerySet(BaseQuerySet):
     def cigarettes(self):
         return self.filter(type=TobaccoSmokingHistoryTypes.CIGARETTES)
 
-    def cigars(self):
-        return self.filter(type=TobaccoSmokingHistoryTypes.CIGARS)
+    def small_cigars(self):
+        return self.filter(type=TobaccoSmokingHistoryTypes.SMALL_CIGARS)
+
+    def medium_cigars(self):
+        return self.filter(type=TobaccoSmokingHistoryTypes.MEDIUM_CIGARS)
+
+    def large_cigars(self):
+        return self.filter(type=TobaccoSmokingHistoryTypes.LARGE_CIGARS)
 
     def rolling_tobacco(self):
         return self.filter(type=TobaccoSmokingHistoryTypes.ROLLING_TOBACCO)

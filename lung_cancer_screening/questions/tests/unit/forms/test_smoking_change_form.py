@@ -171,12 +171,12 @@ class TestSmokingChangeForm(TestCase):
 
 
     def test_label_contains_the_smoking_history_type(self):
-        self.normal_smoking_history.type = TobaccoSmokingHistoryTypes.CIGARS.value
+        self.normal_smoking_history.type = TobaccoSmokingHistoryTypes.MEDIUM_CIGARS.value
         form = SmokingChangeForm(
             response_set=self.response_set,
             tobacco_smoking_history_item=self.normal_smoking_history,
         )
         self.assertEqual(
             form.fields["value"].label,
-            "Has the number of cigars you normally smoke changed over time?"
+            "Has the number of medium cigars you normally smoke changed over time?"
         )

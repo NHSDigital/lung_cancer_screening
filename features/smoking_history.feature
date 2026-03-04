@@ -108,7 +108,7 @@ Feature: Smoking history pages
     And I check "Rolling tobacco"
     And I check "Pipe"
     And I check "Cigarillos"
-    And I check "Cigars"
+    And I check "Medium cigars"
     And I submit the form
 
   # Cigarettes with increased and decreased
@@ -262,41 +262,41 @@ Feature: Smoking history pages
     And I submit the form
 
 
-  # Cigars with only decreased
-    Then I am on "/cigars-smoking-current"
-    And I see a page title "Do you currently smoke cigars?"
+  # Medium cigars with only decreased
+    Then I am on "/medium-cigars-smoking-current"
+    And I see a page title "Do you currently smoke medium cigars?"
     When I check "Yes"
     And I submit the form
 
-    Then I am on "/cigars-smoked-total-years"
-    When I fill in "Roughly how many years have you smoked cigars?" with "8"
+    Then I am on "/medium-cigars-smoked-total-years"
+    When I fill in "Roughly how many years have you smoked medium cigars?" with "8"
     And I submit the form
 
-    Then I am on "/cigars-smoking-frequency"
-    And I see a page title "How often do you smoke cigars?"
+    Then I am on "/medium-cigars-smoking-frequency"
+    And I see a page title "How often do you smoke medium cigars?"
     When I check "Monthly"
     And I submit the form
 
-    Then I am on "/cigars-smoked-amount"
-    When I fill in "Roughly how many cigars do you currently smoke in a normal month?" with "9"
+    Then I am on "/medium-cigars-smoked-amount"
+    When I fill in "Roughly how many medium cigars do you currently smoke in a normal month?" with "9"
     And I submit the form
 
-    Then I am on "/cigars-smoking-change"
-    And I see a page title "Has the number of cigars you normally smoke changed over time?"
-    When I check "Yes, I used to smoke fewer than 9 cigars a month"
+    Then I am on "/medium-cigars-smoking-change"
+    And I see a page title "Has the number of medium cigars you normally smoke changed over time?"
+    When I check "Yes, I used to smoke fewer than 9 medium cigars a month"
     And I submit the form
 
-    Then I am on "/cigars-smoking-decreased-frequency"
-    And I see a page title "When you smoked fewer than 9 cigars a month, how often did you smoke cigars?"
+    Then I am on "/medium-cigars-smoking-decreased-frequency"
+    And I see a page title "When you smoked fewer than 9 medium cigars a month, how often did you smoke medium cigars?"
     When I check "Weekly"
     And I submit the form
 
-    Then I am on "/cigars-smoked-decreased-amount"
-    When I fill in "When you smoked fewer than 9 cigars a month, roughly how many cigars did you normally smoke a week?" with "7"
+    Then I am on "/medium-cigars-smoked-decreased-amount"
+    When I fill in "When you smoked fewer than 9 medium cigars a month, roughly how many medium cigars did you normally smoke a week?" with "7"
     And I submit the form
 
-    Then I am on "/cigars-smoked-decreased-years"
-    When I fill in "Roughly how many years did you smoke 7 cigars a week?" with "3"
+    Then I am on "/medium-cigars-smoked-decreased-years"
+    When I fill in "Roughly how many years did you smoke 7 medium cigars a week?" with "3"
     And I submit the form
 
   # Cigarillos with only increased
@@ -339,8 +339,6 @@ Feature: Smoking history pages
   # Check your answers
     Then I am on "/check-your-answers"
 
-    And I take a screenshot
-
     Then I see "15 years" as a response to "Total number of years you smoked cigarettes" under "Cigarette smoking history"
     And I see "10 cigarettes a day" as a response to "Current cigarette smoking" under "Cigarette smoking history"
     And I see "200 cigarettes a week for 5 years" as a response to "When you smoked more than 10 cigarettes a day" under "Cigarette smoking history"
@@ -356,9 +354,9 @@ Feature: Smoking history pages
     And I see "12 full pipe loads a day for 10 years" as a response to "When you smoked more than 25 full pipe loads a week" under "Pipe smoking history"
     And I see "5 full pipe loads a month for 4 years" as a response to "When you smoked fewer than 25 full pipe loads a week" under "Pipe smoking history"
 
-    Then I see "8 years" as a response to "Total number of years you smoked cigars" under "Cigar smoking history"
-    And I see "9 cigars a month" as a response to "Current cigar smoking" under "Cigar smoking history"
-    And I see "7 cigars a week for 3 years" as a response to "When you smoked fewer than 9 cigars a month" under "Cigar smoking history"
+    Then I see "8 years" as a response to "Total number of years you smoked medium cigars" under "Medium cigar smoking history"
+    And I see "9 medium cigars a month" as a response to "Current medium cigar smoking" under "Medium cigar smoking history"
+    And I see "7 medium cigars a week for 3 years" as a response to "When you smoked fewer than 9 medium cigars a month" under "Medium cigar smoking history"
 
     Then I see "4 years" as a response to "Total number of years you smoked cigarillos" under "Cigarillo smoking history"
     And I see "2 cigarillos a month" as a response to "Current cigarillo smoking" under "Cigarillo smoking history"
