@@ -244,4 +244,5 @@ class TestNHSLoginOIDCBackend(TestCase):
 
         finally:
             os.environ.pop('OIDC_RP_CLIENT_PRIVATE_KEY_FILE', None)
+            os.environ['OIDC_RP_CLIENT_PRIVATE_KEY'] = 'MYSUPERSECRETPRIVATEKEY'
             os.remove(temp_file_path)
