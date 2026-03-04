@@ -26,6 +26,20 @@ def list_env(key):
     return value.split(",") if value else []
 
 
+def pem_key_env(key, file_path_key=None):
+    # Env var takes precedence over file path.
+    value = environ.get(key)
+    if value:
+        return value
+
+    # Fall back to pem key file
+    if file_path_key:
+        file_path = environ.get(file_path_key)
+        if file_path:
+            return Path(file_path).read_text()
+
+    return None
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -225,7 +239,10 @@ OIDC_RP_CLIENT_ID = environ.get("OIDC_RP_CLIENT_ID")
 # Set a dummy value to satisfy mozilla-django-oidc's requirement
 # It w't be used since we override get_token() to use private key JWT
 OIDC_RP_CLIENT_SECRET = "not-used-private-key-jwt"
-OIDC_RP_CLIENT_PRIVATE_KEY = environ.get("OIDC_RP_CLIENT_PRIVATE_KEY")
+OIDC_RP_CLIENT_PRIVATE_KEY = pem_key_env(
+    "OIDC_RP_CLIENT_PRIVATE_KEY",
+    file_path_key="OIDC_RP_CLIENT_PRIVATE_KEY_FILE"
+)
 OIDC_OP_FQDN = environ.get("OIDC_OP_FQDN")
 OIDC_OP_AUTHORIZATION_ENDPOINT = f"{OIDC_OP_FQDN}/authorize"
 OIDC_OP_TOKEN_ENDPOINT = f"{OIDC_OP_FQDN}/token"
