@@ -1,5 +1,6 @@
 data "azurerm_client_config" "current" {}
 
+# This will be added back in once Groups Reader role is added to the GitHub MI
 # data "azuread_group" "postgres_sql_admin_group" {
 #   display_name = var.postgres_sql_admin_group
 # }

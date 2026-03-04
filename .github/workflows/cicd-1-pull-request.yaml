@@ -98,5 +98,5 @@ jobs:
         with:
           message: |
             The review app is available at this URL:
-            https://pr-${{ github.event.pull_request.number }}.manage-breast-screening.non-live.screening.nhs.uk
+            https://pr-${{ github.event.pull_request.number }}.non-live.digital-lung-cancer-screening.nhs.uk/
             You must authenticate with HTTP basic authentication. Ask the team for credentials.

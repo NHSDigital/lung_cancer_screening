@@ -216,18 +216,6 @@ resource storageBlobDataContributor 'Microsoft.Authorization/roleAssignments@202
   }
 }
 
-// resource userAccessAdminAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-//   name: guid(subscription().subscriptionId, envConfig, 'uaa')
-//   properties: {
-//     roleDefinitionId: subscriptionResourceId(
-//       'Microsoft.Authorization/roleDefinitions',
-//       roleID.userAccessAdmin  // User Access Administrator
-//     )
-//     principalId: managedIdentiyADOtoAZ.outputs.miPrincipalID
-//     description: 'Allow bootstrap identity to create role assignments'
-//   }
-// }
-
 
 output miPrincipalID string = managedIdentiyADOtoAZ.outputs.miPrincipalID
 output miName string = miADOtoAZname

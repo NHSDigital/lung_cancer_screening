@@ -51,16 +51,3 @@ resource rbacAdminAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01
     description: '${miName} Role Based Access Control Administrator access to subscription. Can assign Key Vault Secrets User, Storage Blob Data Contributor, and Storage Queue Data Contributor roles.'
   }
 }
-
-// Let the managed identity assign RBAC roles at subscription scope
-// resource userAccessAdminAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-//   name: guid(subscription().subscriptionId, miPrincipalId, 'userAccessAdmin')
-//   properties: {
-//     roleDefinitionId: subscriptionResourceId(
-//       'Microsoft.Authorization/roleDefinitions',
-//       roleID.userAccessAdmin
-//     )
-//     principalId: miPrincipalId
-//     description: '${miName} User Access Administrator access to subscription'
-//   }
-// }
