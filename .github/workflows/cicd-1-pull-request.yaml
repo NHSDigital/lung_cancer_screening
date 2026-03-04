@@ -17,6 +17,7 @@ jobs:
       nodejs_version: ${{ steps.variables.outputs.nodejs_version }}
       python_version: ${{ steps.variables.outputs.python_version }}
       terraform_version: ${{ steps.variables.outputs.terraform_version }}
+      does_pull_request_exist: ${{ steps.pr_exists.outputs.does_pull_request_exist }}
       version: ${{ steps.variables.outputs.version }}
     steps:
       - name: 'Checkout code'
@@ -33,6 +34,33 @@ jobs:
           echo "python_version=$(grep "^python" .tool-versions | cut -f2 -d' ')" >> $GITHUB_OUTPUT
           echo "terraform_version=$(grep "^terraform" .tool-versions | cut -f2 -d' ')" >> $GITHUB_OUTPUT
           echo "version=${GITHUB_REF}" >> $GITHUB_OUTPUT
+      - name: "Check if pull request exists for this branch"
+        id: pr_exists
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          branch_name=${GITHUB_HEAD_REF:-$(echo $GITHUB_REF | sed 's#refs/heads/##')}
+          echo "Current branch is '$branch_name'"
+          if gh pr list --head $branch_name | grep -q .; then
+            echo "Pull request exists"
+            echo "does_pull_request_exist=true" >> $GITHUB_OUTPUT
+          else
+            echo "Pull request doesn't exist"
+            echo "does_pull_request_exist=false" >> $GITHUB_OUTPUT
+          fi
+      - name: "List variables"
+        run: |
+          export BUILD_DATETIME_LONDON="${{ steps.variables.outputs.build_datetime_london }}"
+          export BUILD_DATETIME="${{ steps.variables.outputs.build_datetime }}"
+          export BUILD_TIMESTAMP="${{ steps.variables.outputs.build_timestamp }}"
+          export BUILD_EPOCH="${{ steps.variables.outputs.build_epoch }}"
+          export NODEJS_VERSION="${{ steps.variables.outputs.nodejs_version }}"
+          export PYTHON_VERSION="${{ steps.variables.outputs.python_version }}"
+          export TERRAFORM_VERSION="${{ steps.variables.outputs.terraform_version }}"
+          export VERSION="${{ steps.variables.outputs.version }}"
+          export DOES_PULL_REQUEST_EXIST="${{ steps.pr_exists.outputs.does_pull_request_exist }}"
+          export BRANCH_NAME="${{ steps.variables.outputs.branch_name }}"
+          make list-variables
   commit-stage:
     name: 'Commit stage'
     needs: [metadata]
@@ -73,13 +101,26 @@ jobs:
       version: '${{ needs.metadata.outputs.version }}'
       commit_sha: '${{ github.event.pull_request.head.sha }}'
     secrets: inherit
+  acceptance-stage: # Recommended maximum execution time is 10 minutes
+    name: "Acceptance stage"
+    needs: [metadata, build-stage]
+    uses: ./.github/workflows/stage-4-acceptance.yaml
+    if: needs.metadata.outputs.does_pull_request_exist == 'true' || (github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'reopened'))
+    with:
+      build_datetime: "${{ needs.metadata.outputs.build_datetime }}"
+      build_timestamp: "${{ needs.metadata.outputs.build_timestamp }}"
+      build_epoch: "${{ needs.metadata.outputs.build_epoch }}"
+      nodejs_version: "${{ needs.metadata.outputs.nodejs_version }}"
+      python_version: "${{ needs.metadata.outputs.python_version }}"
+      terraform_version: "${{ needs.metadata.outputs.terraform_version }}"
+      version: "${{ needs.metadata.outputs.version }}"
   deploy-stage:
     if: contains(github.event.pull_request.labels.*.name, 'deploy')
     name: Deploy review app pr-${{ github.event.pull_request.number }}
     needs: [build-stage]
     permissions:
       id-token: write
-    uses: ./.github/workflows/stage-4-deploy.yaml
+    uses: ./.github/workflows/stage-5-deploy.yaml
     with:
       environments: '["review"]'
       commit_sha: ${{ github.event.pull_request.head.sha }}
