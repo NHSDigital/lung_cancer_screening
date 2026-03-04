@@ -1,8 +1,9 @@
 data "azurerm_client_config" "current" {}
 
-data "azuread_group" "postgres_sql_admin_group" {
-  display_name = var.postgres_sql_admin_group
-}
+# This will be added back in once Groups Reader role is added to the GitHub MI
+# data "azuread_group" "postgres_sql_admin_group" {
+#   display_name = var.postgres_sql_admin_group
+# }
 
 data "azurerm_private_dns_zone" "storage" {
   count = var.features.private_networking ? 1 : 0

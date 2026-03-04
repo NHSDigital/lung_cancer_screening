@@ -91,6 +91,11 @@ RUN chown -R ${USER}:${USER} ${APP_DIR}
 USER ${USER}
 COPY --chown=${USER}:${USER} . .
 
+ARG COMMIT_SHA
+ENV COMMIT_SHA=$COMMIT_SHA
+
+RUN echo "COMMIT_SHA: $COMMIT_SHA"
+
 FROM python_base
 
 USER ${USER}
@@ -104,5 +109,8 @@ COPY --chown=${USER}:${USER} manage.py ./
 RUN python ./manage.py collectstatic --noinput
 
 EXPOSE 8000
+
+ARG COMMIT_SHA
+ENV COMMIT_SHA=$COMMIT_SHA
 
 CMD ["/app/.venv/bin/gunicorn", "--bind", "0.0.0.0:8000", "lung_cancer_screening.wsgi"]

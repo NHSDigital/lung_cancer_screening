@@ -84,7 +84,7 @@ Attempting Azure CLI login by using OIDC...
 Error: No subscriptions found for ***.
 ```
 
-Give the managed identity Reader role on a subscription (normally Devops)
+Give the managed identity Reader role on a subscription (normally the hub subscription)
 
 ### Pipeline permissions
 
@@ -234,8 +234,8 @@ The smoke test verifies the deployed application is accessible and serving the c
 **Common causes:**
 
 1. **Apex domain misconfiguration**
-   - Production uses apex domain (`manage-breast-screening.nhs.uk`)
-   - Other environments use subdomain (`{env}.manage-breast-screening.nhs.uk`)
+   - Production uses apex domain (`digital-lung-cancer-screening.nhs.uk`)
+   - Other environments use subdomain (`{env}.non-live.digital-lung-cancer-screening.nhs.uk`)
    - Ensure `use_apex_domain = true` is set in `infrastructure/environments/prod/variables.tfvars`
 
 2. **Front Door not approved**
