@@ -1,10 +1,11 @@
 .PHONY: dev-run dev-up dev-down dev-logs dev-shell dev-migrate dev-makemigrations dev-clean dev-test
 
 UID=$(shell id -u)
-DOCKER_COMPOSE_CMD = env UID=$(UID) docker compose
+COMMIT_SHA=$(shell git rev-parse --short HEAD 2>/dev/null)
+DOCKER_COMPOSE_CMD = env UID=$(UID) COMMIT_SHA=$(COMMIT_SHA) docker compose
 
 dev-build:
-	$(DOCKER_COMPOSE_CMD) build
+	$(DOCKER_COMPOSE_CMD) build --progress=plain
 
 dev-run:
 	$(DOCKER_COMPOSE_CMD) up
