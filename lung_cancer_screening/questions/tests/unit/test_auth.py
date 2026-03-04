@@ -231,6 +231,7 @@ class TestNHSLoginOIDCBackend(TestCase):
 
     def test_pem_key_file_env(self):
         settings.OIDC_RP_CLIENT_PRIVATE_KEY=None
+        os.environ['OIDC_RP_CLIENT_PRIVATE_KEY'] = ''
         temp_pem_key = self.test_private_key_pem
         # Create a temporary PEM key file
         with tempfile.NamedTemporaryFile(delete=False, suffix=".pem", mode='w') as temp_file:
@@ -238,7 +239,6 @@ class TestNHSLoginOIDCBackend(TestCase):
             temp_file_path = temp_file.name
 
         try:
-            #settings.OIDC_RP_CLIENT_PRIVATE_KEY_FILE = temp_file_path #this settings override doesn't work for the env vars in the pem_key_env function.
             os.environ['OIDC_RP_CLIENT_PRIVATE_KEY_FILE'] = temp_file_path
             result = pem_key_env("OIDC_RP_CLIENT_PRIVATE_KEY", "OIDC_RP_CLIENT_PRIVATE_KEY_FILE")
             self.assertEqual(result, temp_pem_key)
@@ -246,4 +246,3 @@ class TestNHSLoginOIDCBackend(TestCase):
         finally:
             os.environ.pop('OIDC_RP_CLIENT_PRIVATE_KEY_FILE', None)
             os.remove(temp_file_path)
-
