@@ -230,7 +230,6 @@ class TestNHSLoginOIDCBackend(TestCase):
         self.assertIn('Token request failed: 500', str(context.exception))
 
     def test_pem_key_file_env(self):
-        settings.OIDC_RP_CLIENT_PRIVATE_KEY=None
         os.environ['OIDC_RP_CLIENT_PRIVATE_KEY'] = ''
         temp_pem_key = self.test_private_key_pem
         # Create a temporary PEM key file
