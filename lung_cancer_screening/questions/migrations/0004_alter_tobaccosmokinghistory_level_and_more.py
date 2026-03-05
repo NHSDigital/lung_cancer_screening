@@ -8,8 +8,11 @@ def rolled_cigarettes_to_rolling_tobacco(apps, schema_editor):
     TobaccoSmokingHistory.objects.filter(type='RolledCigarettes').update(type='RollingTobacco')
 
 
-def noop(apps, schema_editor):
-    pass
+def rolling_tobacco_to_rolled_cigarettes(apps, schema_editor):
+    TobaccoSmokingHistory = apps.get_model("questions", "TobaccoSmokingHistory")
+    TobaccoSmokingHistory.objects.filter(type="RollingTobacco").update(
+        type="RolledCigarettes"
+    )
 
 
 class Migration(migrations.Migration):
@@ -19,7 +22,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(rolled_cigarettes_to_rolling_tobacco, noop),
+        migrations.RunPython(rolled_cigarettes_to_rolling_tobacco, rolling_tobacco_to_rolled_cigarettes),
         migrations.AlterField(
             model_name='tobaccosmokinghistory',
             name='level',
