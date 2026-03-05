@@ -1,4 +1,5 @@
 import factory
+from factory import fuzzy
 
 from .response_set_factory import ResponseSetFactory
 from ...models.tobacco_smoking_history import (
@@ -12,7 +13,7 @@ class TobaccoSmokingHistoryFactory(factory.django.DjangoModelFactory):
         model = TobaccoSmokingHistory
 
     response_set = factory.SubFactory(ResponseSetFactory)
-    type = TobaccoSmokingHistoryTypes.CIGARETTES
+    type = fuzzy.FuzzyChoice(TobaccoSmokingHistoryTypes)
 
     class Params:
         complete = factory.Trait(

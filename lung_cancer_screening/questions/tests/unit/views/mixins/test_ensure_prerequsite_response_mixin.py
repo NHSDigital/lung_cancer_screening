@@ -34,10 +34,11 @@ class EnsurePrerequisiteResponsesMixinTest(TestCase):
 
 
     def test_returns_200_by_default(self):
-        tobacco_type = self.tobacco_smoking_history.type.lower()
+        tobacco_type = self.tobacco_smoking_history.url_type()
         view, response = self._dispatch(BaseFakeView(), self.request, tobacco_type)
 
         self.assertEqual(response.status_code, 200)
+
 
     def test_returns_200_when_prerequisite_responses_are_present(self):
         class FakeView(BaseFakeView):
@@ -48,17 +49,18 @@ class EnsurePrerequisiteResponsesMixinTest(TestCase):
             tobacco_smoking_history=self.tobacco_smoking_history
         )
 
-        tobacco_type = self.tobacco_smoking_history.type.lower()
+        tobacco_type = self.tobacco_smoking_history.url_type()
         view, response = self._dispatch(FakeView(), self.request, tobacco_type)
 
         self.assertEqual(response.status_code, 200)
+
 
     def test_redirects_when_the_prerequisite_responses_do_not_exist(self):
         class FakeView(BaseFakeView):
             def prerequisite_responses(self):
                 return ["smoking_current_response"]
 
-        tobacco_type = self.tobacco_smoking_history.type.lower()
+        tobacco_type = self.tobacco_smoking_history.url_type()
         view, response = self._dispatch(FakeView(), self.request, tobacco_type)
 
         self.assertRedirects(response, reverse(
