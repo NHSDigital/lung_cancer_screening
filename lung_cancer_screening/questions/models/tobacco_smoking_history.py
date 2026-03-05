@@ -11,12 +11,10 @@ class TobaccoSmokingHistoryTypes(models.TextChoices):
     CIGARETTES = "Cigarettes", "Cigarettes"
     ROLLING_TOBACCO = "RollingTobacco", "Rolling tobacco"
     PIPE = "Pipe", "Pipe"
-    #CIGARS = "Cigars", "Cigars"
     SMALL_CIGARS = "SmallCigars", "Small cigars"
     MEDIUM_CIGARS = "MediumCigars", "Medium cigars"
     LARGE_CIGARS = "LargeCigars", "Large cigars"
     CIGARILLOS = "Cigarillos", "Cigarillos"
-    #SHISHA = "Shisha", "Shisha"
 
 class TobaccoSmokingHistoryQuerySet(BaseQuerySet):
     def in_form_order(self):
