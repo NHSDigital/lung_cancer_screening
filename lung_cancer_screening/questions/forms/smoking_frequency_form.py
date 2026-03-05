@@ -19,7 +19,7 @@ class SmokingFrequencyForm(forms.ModelForm):
             label_classes="nhsuk-fieldset__legend--l",
             label_is_page_heading=True,
             error_messages={
-                'required': 'Select how often you smoke cigarettes',
+                'required': self.required_error_message(),
             }
         )
 
@@ -53,3 +53,10 @@ class SmokingFrequencyForm(forms.ModelForm):
         amount = self.normal_tobacco_smoking_history_item.amount()
         frequency = self.normal_tobacco_smoking_history_item.frequency_singular()
         return f"{amount} {self.tobacco_smoking_history_item.unit()} a {frequency}"
+
+
+    def required_error_message(self):
+        return (
+            f"Select how often you smoke "
+            f"{self.tobacco_smoking_history_item.human_type().lower()}"
+        )
