@@ -43,11 +43,25 @@ class SmokedTotalYearsForm(forms.ModelForm):
         else:
             return self.changed_label()
 
-    def required_error_message(self):
+    def normal_required_error_message(self):
         return (
             "Enter the number of years you have smoked "
-            f"{self.tobacco_smoking_history.unit()}"
+            f"{self.tobacco_smoking_history.human_type().lower()}"
         )
+
+    def changed_required_error_message(self):
+        return (
+            "Enter the number of years you have smoked "
+            f"{self.tobacco_smoking_history.amount()} "
+            f"{self.tobacco_smoking_history.unit()} "
+            f"a {self.tobacco_smoking_history.frequency_singular()}"
+        )
+
+    def required_error_message(self):
+        if self.tobacco_smoking_history.is_normal():
+            return self.normal_required_error_message()
+        else:
+            return self.changed_required_error_message()
 
     class Meta:
         model = SmokedTotalYearsResponse
