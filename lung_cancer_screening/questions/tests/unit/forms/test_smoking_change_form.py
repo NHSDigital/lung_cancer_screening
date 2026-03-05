@@ -133,7 +133,6 @@ class TestSmokingChangeForm(TestCase):
         ).count(), 1)
 
 
-    @tag("wip")
     def test_prevents_both_no_change_and_other_levels_selected(self):
         self.normal_smoking_history.type = TobaccoSmokingHistoryTypes.ROLLING_TOBACCO.value
         self.normal_smoking_history.save()
