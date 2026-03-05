@@ -33,7 +33,6 @@ Feature: Types tobacco smoking page
     And I have answered questions showing I am eligible
     And I have answered questions showing I have smoked for "10" years
     When I go to "/types-tobacco-smoking"
-    And I take a screenshot
     And I check "Cigarettes"
     And I check "Medium cigars"
     And I submit the form
