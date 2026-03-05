@@ -4,14 +4,18 @@ from django.contrib.auth import get_user_model
 from django.conf import settings
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
+import tempfile
+import os
 
 from ...auth import NHSLoginOIDCBackend
 from ...tests.factories.user_factory import UserFactory
+from lung_cancer_screening.settings import pem_key_env
 
 User = get_user_model()
 
 @override_settings(
         OIDC_RP_CLIENT_PRIVATE_KEY=None,  # Will be set per test
+        OIDC_RP_CLIENT_PRIVATE_KEY_FILE=None,
         OIDC_OP_TOKEN_ENDPOINT='https://auth.example.com/token',
         OIDC_RP_CLIENT_ID='test-client-id',
         OIDC_RP_REDIRECT_URI='https://app.example.com/callback',
@@ -224,3 +228,21 @@ class TestNHSLoginOIDCBackend(TestCase):
             self.backend.get_token(token_payload)
 
         self.assertIn('Token request failed: 500', str(context.exception))
+
+    def test_pem_key_file_env(self):
+        os.environ['OIDC_RP_CLIENT_PRIVATE_KEY'] = ''
+        temp_pem_key = self.test_private_key_pem
+        # Create a temporary PEM key file
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".pem", mode='w') as temp_file:
+            temp_file.write(temp_pem_key)
+            temp_file_path = temp_file.name
+
+        try:
+            os.environ['OIDC_RP_CLIENT_PRIVATE_KEY_FILE'] = temp_file_path
+            result = pem_key_env("OIDC_RP_CLIENT_PRIVATE_KEY", "OIDC_RP_CLIENT_PRIVATE_KEY_FILE")
+            self.assertEqual(result, temp_pem_key)
+
+        finally:
+            os.environ.pop('OIDC_RP_CLIENT_PRIVATE_KEY_FILE', None)
+            os.environ['OIDC_RP_CLIENT_PRIVATE_KEY'] = 'MYSUPERSECRETPRIVATEKEY'
+            os.remove(temp_file_path)

@@ -57,8 +57,8 @@ class SmokingChangeView(
 
 
     def get_success_url(self):
-        tobacco_smoking_history = self.request.response_set.tobacco_smoking_history
-        if tobacco_smoking_history.filter(level=TobaccoSmokingHistory.Levels.INCREASED).exists():
+        tobacco_smoking_history = self.tobacco_smoking_history()
+        if tobacco_smoking_history.increased().exists():
             return reverse(
                 "questions:smoking_frequency",
                 kwargs={
@@ -67,7 +67,7 @@ class SmokingChangeView(
                 },
                 query=self.get_change_query_params()
             )
-        elif tobacco_smoking_history.filter(level=TobaccoSmokingHistory.Levels.DECREASED).exists():
+        elif tobacco_smoking_history.decreased().exists():
             return reverse(
                 "questions:smoking_frequency",
                 kwargs={
@@ -89,3 +89,9 @@ class SmokingChangeView(
             return {}
 
         return {"change": "True"}
+
+
+    def tobacco_smoking_history(self):
+        return self.request.response_set.tobacco_smoking_history.by_url_type(
+            self.kwargs["tobacco_type"]
+        )

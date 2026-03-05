@@ -18,6 +18,7 @@
     "gunicorn",
     "jinja",
     "kebabize",
+    "kwargs",
     "makemigrations",
     "nhsuk",
     "novalidate",
@@ -31,5 +32,5 @@
     "toplevel",
     "unsubmitted",
     "whitenoise"
-  ]
+  ],
 }

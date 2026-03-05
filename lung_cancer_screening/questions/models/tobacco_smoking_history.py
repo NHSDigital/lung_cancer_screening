@@ -1,17 +1,20 @@
 from django.db import models
 from django.db.models import Case, Value, When
 from django.core.exceptions import ValidationError
+from django.utils.text import slugify
+from inflection import camelize, underscore
 
 from .base import BaseModel, BaseQuerySet
 from .response_set import ResponseSet
 
 class TobaccoSmokingHistoryTypes(models.TextChoices):
     CIGARETTES = "Cigarettes", "Cigarettes"
-    ROLLED_CIGARETTES = "RolledCigarettes", "Rolled cigarettes, or roll-ups"
+    ROLLING_TOBACCO = "RollingTobacco", "Rolling tobacco"
     PIPE = "Pipe", "Pipe"
-    CIGARS = "Cigars", "Cigars"
+    SMALL_CIGARS = "SmallCigars", "Small cigars"
+    MEDIUM_CIGARS = "MediumCigars", "Medium cigars"
+    LARGE_CIGARS = "LargeCigars", "Large cigars"
     CIGARILLOS = "Cigarillos", "Cigarillos"
-    SHISHA = "Shisha", "Shisha"
 
 class TobaccoSmokingHistoryQuerySet(BaseQuerySet):
     def in_form_order(self):
@@ -42,17 +45,26 @@ class TobaccoSmokingHistoryQuerySet(BaseQuerySet):
     def cigarettes(self):
         return self.filter(type=TobaccoSmokingHistoryTypes.CIGARETTES)
 
-    def cigars(self):
-        return self.filter(type=TobaccoSmokingHistoryTypes.CIGARS)
+    def small_cigars(self):
+        return self.filter(type=TobaccoSmokingHistoryTypes.SMALL_CIGARS)
 
-    def rolled_cigarettes(self):
-        return self.filter(type=TobaccoSmokingHistoryTypes.ROLLED_CIGARETTES)
+    def medium_cigars(self):
+        return self.filter(type=TobaccoSmokingHistoryTypes.MEDIUM_CIGARS)
+
+    def large_cigars(self):
+        return self.filter(type=TobaccoSmokingHistoryTypes.LARGE_CIGARS)
+
+    def rolling_tobacco(self):
+        return self.filter(type=TobaccoSmokingHistoryTypes.ROLLING_TOBACCO)
 
     def pipe(self):
         return self.filter(type=TobaccoSmokingHistoryTypes.PIPE)
 
     def cigarillos(self):
         return self.filter(type=TobaccoSmokingHistoryTypes.CIGARILLOS)
+
+    def by_url_type(self, url_type):
+        return self.filter(type=camelize(underscore(url_type)))
 
 
 NO_CHANGE_VALUE = "no_change"
@@ -108,8 +120,26 @@ class TobaccoSmokingHistory(BaseModel):
                     {"level": "Cannot have both no change and other levels selected"}
                 )
 
+
+    def type_prefix(self):
+        if self.is_pipe():
+            return "a "
+        else:
+            return ""
+
+
     def human_type(self):
-        return TobaccoSmokingHistoryTypes(self.type).label
+        return f"{self.type_prefix()}{self.get_type_display()}"
+
+
+    def unit(self):
+        if self.is_rolling_tobacco():
+            return "grams of rolling tobacco"
+        if self.is_pipe():
+            return "full pipe loads"
+        else:
+            return self.human_type().lower()
+
 
     def amount(self):
         if hasattr(self, "smoked_amount_response"):
@@ -143,4 +173,16 @@ class TobaccoSmokingHistory(BaseModel):
             return self.smoking_current_response.value
         else:
             return None
+
+
+    def is_pipe(self):
+        return self.type == TobaccoSmokingHistoryTypes.PIPE
+
+
+    def is_rolling_tobacco(self):
+        return self.type == TobaccoSmokingHistoryTypes.ROLLING_TOBACCO
+
+
+    def url_type(self):
+        return slugify(self.get_type_display())
 

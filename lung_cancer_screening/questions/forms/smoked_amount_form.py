@@ -18,7 +18,7 @@ class SmokedAmountForm(forms.ModelForm):
             label_is_page_heading=not self.tobacco_smoking_history.is_normal(),
             classes="nhsuk-input--width-4",
             hint="Give an estimate if you are not sure",
-            suffix=self.type_string(),
+            suffix=self.suffix(),
             required=True,
             error_messages={
                 "required": self._type_required_error_message(),
@@ -26,9 +26,9 @@ class SmokedAmountForm(forms.ModelForm):
             },
         )
 
+
     def type_string(self):
         return self.tobacco_smoking_history.human_type().lower()
-
 
     def more_or_fewer_text(self):
         if self.tobacco_smoking_history.is_increased():
@@ -36,13 +36,25 @@ class SmokedAmountForm(forms.ModelForm):
         elif self.tobacco_smoking_history.is_decreased():
             return "fewer"
 
+    def amount_prefix(self):
+        return "grams of " if self.tobacco_smoking_history.is_rolling_tobacco() else ""
+
+    def suffix(self):
+        return "grams" if self.tobacco_smoking_history.is_rolling_tobacco() else self.tobacco_smoking_history.unit()
+
 
     def _normal_type_label(self):
-        return f"Roughly how many {self.type_string()} do you {self._currently_or_previously_text()} smoke in a normal {self.tobacco_smoking_history.frequency_singular()}?"
+        return f"Roughly how many {self.tobacco_smoking_history.unit()} do you {self._currently_or_previously_text()} smoke in a normal {self.tobacco_smoking_history.frequency_singular()}?"
 
 
     def _changed_type_label(self):
-        return f"When you smoked {self.more_or_fewer_text()} than {self.normal_tobacco_smoking_history.amount()} {self.type_string()} a {self.normal_tobacco_smoking_history.frequency_singular()}, roughly how many {self.type_string()} did you normally smoke a {self.tobacco_smoking_history.frequency_singular()}?"
+        return (
+            f"When you smoked {self.more_or_fewer_text()} than "
+            f"{self.normal_tobacco_smoking_history.amount()} {self.tobacco_smoking_history.unit()} "
+            f"a {self.normal_tobacco_smoking_history.frequency_singular()}, "
+            f"roughly how many {self.tobacco_smoking_history.unit()} "
+            f"did you normally smoke a {self.tobacco_smoking_history.frequency_singular()}?"
+        )
 
 
     def _type_label(self):
@@ -57,11 +69,16 @@ class SmokedAmountForm(forms.ModelForm):
 
 
     def _normal_type_required_error_message(self):
-        return f"Enter how many {self.type_string()} you {self._currently_or_previously_text()} smoke in a normal {self.tobacco_smoking_history.frequency_singular()}"
+        return f"Enter how many {self.amount_prefix()}{self.type_string()} you {self._currently_or_previously_text()} smoke in a normal {self.tobacco_smoking_history.frequency_singular()}"
 
 
     def _changed_type_required_error_message(self):
-        return f"Enter the number of {self.type_string()} you smoked when you smoked {self.more_or_fewer_text()} than {self.normal_tobacco_smoking_history.amount()} {self.type_string()} a {self.normal_tobacco_smoking_history.frequency_singular()}"
+        return (
+            f"Enter the number of {self.amount_prefix()}{self.type_string()} "
+            f"you smoked when you smoked {self.more_or_fewer_text()} than "
+            f"{self.normal_tobacco_smoking_history.amount()} {self.amount_prefix()}{self.type_string()} "
+            f"a {self.normal_tobacco_smoking_history.frequency_singular()}"
+        )
 
 
     def _type_required_error_message(self):

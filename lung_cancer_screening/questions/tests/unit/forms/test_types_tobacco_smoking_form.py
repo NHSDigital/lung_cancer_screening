@@ -67,7 +67,7 @@ class TestTypesTobaccoSmokingForm(TestCase):
     def test_does_not_delete_smoking_history_if_invalid(self):
         history = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES
+            cigarettes=True
         )
 
         form = TypesTobaccoSmokingForm(
@@ -100,7 +100,7 @@ class TestTypesTobaccoSmokingForm(TestCase):
 
 
     def test_does_not_create_a_new_tobacco_smoking_type_if_it_already_exists(self):
-        TobaccoSmokingHistoryFactory(response_set=self.response_set, type=TobaccoSmokingHistoryTypes.CIGARETTES)
+        TobaccoSmokingHistoryFactory(response_set=self.response_set, cigarettes=True)
 
         form = TypesTobaccoSmokingForm(
             response_set=self.response_set,
@@ -114,7 +114,7 @@ class TestTypesTobaccoSmokingForm(TestCase):
 
 
     def test_deletes_a_tobacco_smoking_type_if_it_is_no_longer_selected(self):
-        TobaccoSmokingHistoryFactory(response_set=self.response_set, type=TobaccoSmokingHistoryTypes.CIGARETTES)
+        TobaccoSmokingHistoryFactory(response_set=self.response_set, cigarettes=True)
 
         form = TypesTobaccoSmokingForm(
             response_set=self.response_set,
