@@ -29,3 +29,8 @@ class SmokingCurrentView(
             query=self.get_change_query_params(),
         )
 
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["tobacco_smoking_history"] = self.tobacco_smoking_history_item()
+        return kwargs

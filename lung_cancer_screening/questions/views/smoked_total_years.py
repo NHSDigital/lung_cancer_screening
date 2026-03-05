@@ -1,6 +1,7 @@
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from inflection import camelize, underscore, dasherize
 
 from .mixins.ensure_response_set import EnsureResponseSet
 from .mixins.ensure_eligible import EnsureEligibleMixin
@@ -60,6 +61,15 @@ class SmokedTotalYearsView(
                 query=self.get_change_query_params(),
             )
 
+        if self.next_unanswered_history():
+            return reverse(
+                "questions:smoking_current",
+                kwargs={
+                    "tobacco_type": self.next_unanswered_history(),
+                },
+                query=self.get_change_query_params(),
+            )
+
         return reverse("questions:responses")
 
 
@@ -79,7 +89,9 @@ class SmokedTotalYearsView(
 
 
     def has_decreased_level(self):
-        return self.request.response_set.tobacco_smoking_history.cigarettes().decreased().exists()
+        return self.request.response_set.tobacco_smoking_history.filter(
+            type=self.tobacco_smoking_history_item().type,
+        ).decreased().exists()
 
     def get_object_parent(self):
         return self.tobacco_smoking_history_item()
@@ -92,3 +104,16 @@ class SmokedTotalYearsView(
             "smoking_frequency_response",
             "smoked_amount_response"
         ]
+
+
+    def remaining_unanswered_histories(self):
+        tobacco_type = camelize(underscore(self.kwargs["tobacco_type"]))
+        histories = self.request.response_set.types_tobacco_smoking_history()
+        return histories[histories.index(tobacco_type) + 1 :]
+
+
+    def next_unanswered_history(self):
+        if len(self.remaining_unanswered_histories()) < 1:
+            return None
+
+        return dasherize(underscore(self.remaining_unanswered_histories()[0]))

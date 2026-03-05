@@ -34,17 +34,17 @@ Feature: Types tobacco smoking page
     And I have answered questions showing I have smoked for "10" years
     When I go to "/types-tobacco-smoking"
     And I check "Cigarettes"
-    And I check "Cigars"
+    And I check "Medium cigars"
     And I submit the form
     When I go to "/check-your-answers"
-    Then I see "Cigarettes and Cigars" as a response to "Types of tobacco smoked" under "Smoking history"
+    Then I see "Cigarettes and Medium cigars" as a response to "Types of tobacco smoked" under "Smoking history"
     And I see "/types-tobacco-smoking?change=True" as a link to change "Types of tobacco smoked" under "Smoking history"
     When I click the link to change "Types of tobacco smoked" under "Smoking history"
     Then I am on "/types-tobacco-smoking?change=True"
     And I see "Cigarettes" selected
-    And I see "Cigars" selected
+    And I see "Medium cigars" selected
     When I check "Pipe"
     And I click "Continue"
     Then I am on "/cigarettes-smoking-current"
     When I go to "/check-your-answers"
-    Then I see "Cigarettes, Pipe, and Cigars" as a response to "Types of tobacco smoked" under "Smoking history"
+    Then I see "Cigarettes, Pipe, and Medium cigars" as a response to "Types of tobacco smoked" under "Smoking history"

@@ -27,7 +27,6 @@ from ....models.ethnicity_response import EthnicityValues
 from ....models.education_response import EducationValues
 from ....models.family_history_lung_cancer_response import FamilyHistoryLungCancerValues
 from ....models.relatives_age_when_diagnosed_response import RelativesAgeWhenDiagnosedValues
-from ....models.tobacco_smoking_history import TobaccoSmokingHistoryTypes
 
 from ....models.respiratory_conditions_response import RespiratoryConditionValues
 
@@ -422,18 +421,20 @@ class TestResponseSetPresenter(TestCase):
     def test_types_tobacco_smoking(self):
         TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.SHISHA
+            rolling_tobacco=True
         )
         TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARS
+            medium_cigars=True
         )
         TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES
+            cigarettes=True
         )
         presenter = ResponseSetPresenter(self.response_set)
-        self.assertEqual(presenter.types_tobacco_smoking, "Cigarettes, Cigars, and Shisha")
+        self.assertEqual(
+            presenter.types_tobacco_smoking, "Cigarettes, Rolling tobacco, and Medium cigars"
+        )
 
 
     @tag("TobaccoSmokingHistory")
@@ -445,12 +446,12 @@ class TestResponseSetPresenter(TestCase):
         )
         TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            cigars=True,
+            medium_cigars=True,
             normal=True,
         )
         TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            cigars=True,
+            medium_cigars=True,
             increased=True,
         )
 

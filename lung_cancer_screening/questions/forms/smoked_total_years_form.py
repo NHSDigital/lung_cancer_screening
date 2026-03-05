@@ -19,16 +19,35 @@ class SmokedTotalYearsForm(forms.ModelForm):
             required=True,
             suffix="years",
             error_messages={
-                "required": "Enter the number of years you have smoked cigarettes",
+                "required": self.required_error_message(),
                 "invalid": "Years must be in whole numbers"
             },
         )
 
+    def normal_label(self):
+        return (
+            f"Roughly how many years have you smoked "
+            f"{self.tobacco_smoking_history.human_type().lower()}?"
+        )
+
+    def changed_label(self):
+        return (
+            f"Roughly how many years did you smoke {self.tobacco_smoking_history.amount()} "
+            f"{self.tobacco_smoking_history.unit()} "
+            f"a {self.tobacco_smoking_history.frequency_singular()}?"
+        )
+
     def label(self):
         if self.tobacco_smoking_history.is_normal():
-            return f"Roughly how many years have you smoked {self.tobacco_smoking_history.human_type().lower()}?"
+            return self.normal_label()
         else:
-            return f"Roughly how many years did you smoke {self.tobacco_smoking_history.amount()} {self.tobacco_smoking_history.human_type().lower()} a {self.tobacco_smoking_history.frequency_singular()}?"
+            return self.changed_label()
+
+    def required_error_message(self):
+        return (
+            "Enter the number of years you have smoked "
+            f"{self.tobacco_smoking_history.unit()}"
+        )
 
     class Meta:
         model = SmokedTotalYearsResponse

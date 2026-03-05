@@ -10,3 +10,7 @@ def then_i_see_a_back_link_to(context, url):
     back_link = context.page.locator(".nhsuk-back-link")
     expect(back_link).to_have_count(1)
     expect(back_link).to_have_attribute("href", url)
+
+@then(u'I see a page title "{title}"')
+def then_i_see_a_page_title(context, title):
+    expect(context.page.locator('h1')).to_have_text(title)

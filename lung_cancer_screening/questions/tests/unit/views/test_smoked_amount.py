@@ -17,7 +17,7 @@ class TestGetSmokedAmount(TestCase):
         self.response_set = ResponseSetFactory.create(user=self.user, eligible=True)
         self.smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES
+            cigarettes=True
         )
         self.smoking_current_response = SmokingCurrentResponseFactory.create(
             tobacco_smoking_history=self.smoking_history,
@@ -64,7 +64,7 @@ class TestGetSmokedAmount(TestCase):
 
         self.assertEqual(response.status_code, 404)
 
-    @tag("wip")
+
     def test_redirects_if_the_user_does_not_have_a_smoking_current_response(self):
         self.smoking_history.smoking_current_response.delete()
 
@@ -110,7 +110,7 @@ class TestGetSmokedAmount(TestCase):
     def test_back_link_increased_level(self):
         increased_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.INCREASED
         )
         SmokingFrequencyResponseFactory.create(
@@ -135,7 +135,7 @@ class TestPostSmokedAmount(TestCase):
         self.response_set = ResponseSetFactory.create(user=self.user, eligible=True)
         self.smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES
+            cigarettes=True
         )
         self.smoking_current_response = SmokingCurrentResponseFactory.create(
             tobacco_smoking_history=self.smoking_history,
@@ -226,7 +226,7 @@ class TestPostSmokedAmount(TestCase):
     def test_redirects_to_next_question_when_the_smoking_history_item_is_increased(self):
         increased_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            type=TobaccoSmokingHistoryTypes.CIGARETTES,
+            cigarettes=True,
             level=TobaccoSmokingHistory.Levels.INCREASED
         )
         SmokingFrequencyResponseFactory.create(
