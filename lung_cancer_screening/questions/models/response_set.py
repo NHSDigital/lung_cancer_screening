@@ -106,3 +106,9 @@ class ResponseSet(BaseModel):
             self.date_of_birth_response.is_eligible(),
             self.check_need_appointment_response.is_eligible()
         ])
+
+
+    def types_tobacco_smoking_history(self):
+        return list(self.tobacco_smoking_history.in_form_order().values_list(
+            "type", flat=True
+        ).distinct())

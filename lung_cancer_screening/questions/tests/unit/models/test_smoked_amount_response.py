@@ -3,14 +3,13 @@ from django.core.exceptions import ValidationError
 
 from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
 from ...factories.smoked_amount_response_factory import SmokedAmountResponseFactory
-from ....models.tobacco_smoking_history import TobaccoSmokingHistoryTypes
 
 
 @tag("SmokedAmount")
 class TestSmokedAmountResponse(TestCase):
     def setUp(self):
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
-            type=TobaccoSmokingHistoryTypes.CIGARETTES.value
+            cigarettes=True
         )
 
     def test_has_a_valid_factory(self):

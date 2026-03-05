@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 
 from ...factories.user_factory import UserFactory
 from ...factories.response_set_factory import ResponseSetFactory
+from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
 from ...factories.have_you_ever_smoked_response_factory import HaveYouEverSmokedResponseFactory
 from ...factories.date_of_birth_response_factory import DateOfBirthResponseFactory
 from ...factories.check_need_appointment_response_factory import CheckNeedAppointmentResponseFactory
@@ -264,3 +265,23 @@ class TestResponseSet(TestCase):
         )
 
         self.assertFalse(self.response_set.is_eligible())
+
+
+    def test_types_tobacco_smoking_history_returns_all_types_of_tobacco_smoking_history_without_duplicate_types(self):
+        cigarettes = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            cigarettes=True,
+        )
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            cigarettes=True,
+            increased=True,
+        )
+        cigarillos = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            cigarillos=True,
+        )
+        self.assertEqual(
+            list(self.response_set.types_tobacco_smoking_history()),
+            [cigarettes.type.value, cigarillos.type.value]
+        )
