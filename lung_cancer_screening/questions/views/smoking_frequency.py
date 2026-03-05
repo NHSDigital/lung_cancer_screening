@@ -25,7 +25,7 @@ class SmokingFrequencyView(
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs["tobacco_smoking_history_item"] = self.tobacco_smoking_history_item()
-        if not self.kwargs.get("level") == TobaccoSmokingHistory.Levels.NORMAL:
+        if not self.tobacco_smoking_history_item().is_normal():
             kwargs["normal_tobacco_smoking_history_item"] = self.get_normal_smoking_history_item()
         return kwargs
 
