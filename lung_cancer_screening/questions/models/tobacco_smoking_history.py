@@ -184,5 +184,5 @@ class TobaccoSmokingHistory(BaseModel):
 
 
     def url_type(self):
-        return slugify(self.human_type())
+        return slugify(self.get_type_display())
 
