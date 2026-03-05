@@ -70,9 +70,14 @@ class SmokingChangeForm(forms.Form):
             return False
         if (self.cleaned_data["value"].count(TobaccoSmokingHistory.Levels.NO_CHANGE) > 0
             and len(self.cleaned_data["value"]) > 1):
-                self.add_error( "value", forms.ValidationError(f"Select if the number of {self.tobacco_smoking_history.human_type().lower()} you smoke has changed over time, or select 'no, it has not changed'"))
+                message = (
+                    f"Select if the number of {self.tobacco_smoking_history.unit()} "
+                    "you smoke has changed over time, or select 'no, it has not changed'"
+                )
+                self.add_error( "value", forms.ValidationError(message))
                 return False
         return True
+
 
     def _delete_levels_not_selected(self):
         for level in self._existing_levels():

@@ -132,20 +132,28 @@ class TestSmokingChangeForm(TestCase):
             level=TobaccoSmokingHistory.Levels.NORMAL
         ).count(), 1)
 
+
+    @tag("wip")
     def test_prevents_both_no_change_and_other_levels_selected(self):
+        self.normal_smoking_history.type = TobaccoSmokingHistoryTypes.ROLLING_TOBACCO.value
+        self.normal_smoking_history.save()
+
         form = SmokingChangeForm(
             response_set=self.response_set,
             tobacco_smoking_history_item=self.normal_smoking_history,
             data={
-                "value": [TobaccoSmokingHistory.Levels.NO_CHANGE, TobaccoSmokingHistory.Levels.INCREASED]
+                "value": [
+                    TobaccoSmokingHistory.Levels.NO_CHANGE,
+                    TobaccoSmokingHistory.Levels.INCREASED
+                ]
             }
         )
-        form.save()
 
-        self.assertEqual(self.response_set.tobacco_smoking_history.filter(
-            level=TobaccoSmokingHistory.Levels.NORMAL
-        ).count(), 1)
-        self.assertEqual(self.response_set.tobacco_smoking_history.all().count(), 1)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["value"],
+            ["Select if the number of grams of rolling tobacco you smoke has changed over time, or select 'no, it has not changed'"],
+        )
 
 
     def test_initializes_the_form_based_on_existing_smoking_histories(self):
