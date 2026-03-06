@@ -1,12 +1,12 @@
 from django import forms
-from functools import cached_property
 
 from ...nhsuk_forms.integer_field import IntegerField
 from ..models.smoked_amount_response import SmokedAmountResponse
-from ..presenters.tobacco_smoking_history_presenter import TobaccoSmokingHistoryPresenter
+
+from .mixins.smoking_form_presenter import SmokingFormPresenter
 
 
-class SmokedAmountForm(forms.ModelForm):
+class SmokedAmountForm(SmokingFormPresenter, forms.ModelForm):
 
     def __init__(self, tobacco_smoking_history, normal_tobacco_smoking_history = None, *args, **kwargs):
         self.tobacco_smoking_history = tobacco_smoking_history
@@ -27,14 +27,6 @@ class SmokedAmountForm(forms.ModelForm):
                 "min_value": self.min_value_error_message()
             },
         )
-
-    @cached_property
-    def presenter(self):
-        return TobaccoSmokingHistoryPresenter(self.tobacco_smoking_history)
-
-    @cached_property
-    def normal_presenter(self):
-        return TobaccoSmokingHistoryPresenter(self.normal_tobacco_smoking_history)
 
 
     def suffix(self):
