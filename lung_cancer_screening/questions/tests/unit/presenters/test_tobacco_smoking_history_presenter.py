@@ -1,9 +1,10 @@
-from django.test import TestCase, tag
+from django.test import TestCase
 
 from lung_cancer_screening.questions.tests.factories.response_set_factory import ResponseSetFactory
 from lung_cancer_screening.questions.tests.factories.age_when_started_smoking_response_factory import AgeWhenStartedSmokingResponseFactory
 from lung_cancer_screening.questions.tests.factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
 from lung_cancer_screening.questions.models.smoking_frequency_response import SmokingFrequencyValues
+from lung_cancer_screening.questions.models.tobacco_smoking_history import TobaccoSmokingHistoryTypes
 
 from lung_cancer_screening.questions.presenters.tobacco_smoking_history_presenter import (
     TobaccoSmokingHistoryPresenter,
@@ -237,4 +238,26 @@ class TestTobaccoSmokingHistoryPresenter(TestCase):
         self.assertEqual(
             presenter.currently_or_previously(),
             "previously"
+        )
+
+    def test_amount_prefix_when_rolling_tobacco(self):
+        self.tobacco_smoking_history.rolling_tobacco = True
+        self.tobacco_smoking_history.save()
+
+        presenter = TobaccoSmokingHistoryPresenter(self.tobacco_smoking_history)
+
+        self.assertEqual(
+            presenter.amount_prefix(),
+            "grams of "
+        )
+
+    def test_amount_prefix_defaults_to_empty_string(self):
+        self.tobacco_smoking_history.type = TobaccoSmokingHistoryTypes.PIPE
+        self.tobacco_smoking_history.save()
+
+        presenter = TobaccoSmokingHistoryPresenter(self.tobacco_smoking_history)
+
+        self.assertEqual(
+            presenter.amount_prefix(),
+            ""
         )

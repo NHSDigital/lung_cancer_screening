@@ -54,10 +54,6 @@ class SmokedAmountView(
         return kwargs
 
 
-    def get_object_parent(self):
-        return self.tobacco_smoking_history_item()
-
-
     def prerequisite_responses(self):
         result = [
             "smoking_frequency_response",

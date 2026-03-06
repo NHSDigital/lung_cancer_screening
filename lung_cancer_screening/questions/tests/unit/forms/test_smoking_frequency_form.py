@@ -27,7 +27,7 @@ class TestSmokingFrequencyForm(TestCase):
         )
         self.assertEqual(
             form.fields["value"].label,
-            f"How often do you smoke a pipe?"
+            "How often do you smoke a pipe?"
         )
 
     def test_has_a_normal_label_for_normal_level_in_past_tense(self):
@@ -39,7 +39,7 @@ class TestSmokingFrequencyForm(TestCase):
         )
         self.assertEqual(
             form.fields["value"].label,
-            f"How often did you smoke a pipe?"
+            "How often did you smoke a pipe?"
         )
 
 
@@ -62,7 +62,7 @@ class TestSmokingFrequencyForm(TestCase):
 
         self.assertEqual(
             form.fields["value"].label,
-            f"When you smoked more than 10 full pipe loads a week, how often did you smoke a pipe?"
+            "When you smoked more than 10 full pipe loads a week, how often did you smoke a pipe?"
         )
 
 
@@ -92,7 +92,7 @@ class TestSmokingFrequencyForm(TestCase):
         )
         self.assertFalse(form.is_valid())
         self.assertIn(
-            f"Select how often you smoke a pipe",
+            "Select how often you smoke a pipe",
             form.errors["value"]
         )
 
@@ -110,7 +110,7 @@ class TestSmokingFrequencyForm(TestCase):
 
         self.assertFalse(form.is_valid())
         self.assertIn(
-            f"Select how often you smoked a pipe",
+            "Select how often you smoked a pipe",
             form.errors["value"]
         )
 
@@ -138,7 +138,7 @@ class TestSmokingFrequencyForm(TestCase):
 
         self.assertFalse(form.is_valid())
         self.assertIn(
-            f"Select how often you smoked a pipe when you smoked more than 10 full pipe loads a week",
+            "Select how often you smoked a pipe when you smoked more than 10 full pipe loads a week",
             form.errors["value"]
         )
 
