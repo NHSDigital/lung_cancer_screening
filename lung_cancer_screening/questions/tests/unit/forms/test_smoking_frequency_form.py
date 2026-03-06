@@ -7,7 +7,7 @@ from lung_cancer_screening.questions.tests.factories.response_set_factory import
 from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
 
 
-@tag("SmokingFrequency")
+@tag("SmokingFrequency", "wip")
 class TestSmokingFrequencyForm(TestCase):
     def setUp(self):
         self.response_set = ResponseSetFactory.create(complete=True)
@@ -99,5 +99,36 @@ class TestSmokingFrequencyForm(TestCase):
         self.assertFalse(form.is_valid())
         self.assertIn(
             f"Select how often you smoke {self.normal_smoking_history.human_type().lower()}",
+            form.errors["value"]
+        )
+
+    def test_has_a_changed_required_error_message(self):
+        self.normal_smoking_history.smoked_amount_response.value = 10
+        self.normal_smoking_history.smoked_amount_response.save()
+
+        self.normal_smoking_history.smoking_frequency_response.value = SmokingFrequencyValues.DAILY.value
+        self.normal_smoking_history.smoking_frequency_response.save()
+
+        increased_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=self.normal_smoking_history.type,
+            increased=True,
+        )
+
+        form = SmokingFrequencyForm(
+            tobacco_smoking_history_item=increased_smoking_history,
+            normal_tobacco_smoking_history_item=self.normal_smoking_history,
+            data={
+                "value": None
+            }
+        )
+
+        self.assertFalse(form.is_valid())
+        self.assertIn(
+            (
+                f"Select how often you smoked {self.normal_smoking_history.human_type().lower()} "
+                "when you smoked more than 10 "
+                f"{self.normal_smoking_history.unit()} a day"
+            ),
             form.errors["value"]
         )

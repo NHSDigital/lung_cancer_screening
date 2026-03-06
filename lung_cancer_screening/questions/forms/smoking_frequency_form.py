@@ -55,8 +55,20 @@ class SmokingFrequencyForm(forms.ModelForm):
         return f"{amount} {self.tobacco_smoking_history_item.unit()} a {frequency}"
 
 
-    def required_error_message(self):
+    def normal_required_error_message(self):
         return (
             f"Select how often you smoke "
             f"{self.tobacco_smoking_history_item.human_type().lower()}"
         )
+
+    def changed_required_error_message(self):
+        return (
+            f"Select how often you smoked {self.normal_tobacco_smoking_history_item.human_type().lower()} "
+            f"when you smoked more than {self.__get_smoking_string()}"
+        )
+
+    def required_error_message(self):
+        if self.tobacco_smoking_history_item.is_normal():
+            return self.normal_required_error_message()
+        else:
+            return self.changed_required_error_message()
