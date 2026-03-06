@@ -4,8 +4,6 @@ from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFa
 from ...factories.smoking_current_response_factory import SmokingCurrentResponseFactory
 from ...factories.smoked_amount_response_factory import SmokedAmountResponseFactory
 from ...factories.smoking_frequency_response_factory import SmokingFrequencyResponseFactory
-from ....models.tobacco_smoking_history import TobaccoSmokingHistoryTypes, TobaccoSmokingHistory
-from ....models.smoking_frequency_response import SmokingFrequencyValues
 from ....forms.smoked_amount_form import SmokedAmountForm
 
 
@@ -55,7 +53,7 @@ class TestSmokedAmountForm(TestCase):
         self.assertIn("value", form.errors)
 
 
-    def test_min_value_validation_has_the_correct_message(self):
+    def test_min_value_validation_for_normal_level(self):
         form = SmokedAmountForm(
             instance=self.response,
             tobacco_smoking_history=self.smoking_history,
@@ -64,10 +62,32 @@ class TestSmokedAmountForm(TestCase):
         form.full_clean()
         self.assertIn("value", form.errors)
         self.assertIn(
-            "The number of full pipe loads you smoke must be at least 1",
+            "The number of full pipe loads you smoked a day must be at least 1",
             form.errors["value"],
         )
 
+
+    def test_min_value_validation_for_changed_level(self):
+        increased_smoking_history = TobaccoSmokingHistoryFactory.create(
+            type=self.smoking_history.type,
+            increased=True
+        )
+        SmokingFrequencyResponseFactory.create(
+            tobacco_smoking_history=increased_smoking_history,
+            daily=True
+        )
+        form = SmokedAmountForm(
+            instance=self.response,
+            tobacco_smoking_history=increased_smoking_history,
+            normal_tobacco_smoking_history=self.smoking_history,
+            data={"value": 0}
+        )
+
+        self.assertFalse(form.is_valid())
+        self.assertIn(
+            f"The number of {increased_smoking_history.unit()} you smoked a day must be at least 1",
+            form.errors["value"],
+        )
 
     def test_has_a_label_for_the_normal_type(self):
         form = SmokedAmountForm(
@@ -78,7 +98,7 @@ class TestSmokedAmountForm(TestCase):
 
         self.assertEqual(
             form.fields["value"].label,
-            "Roughly how many full pipe loads do you previously smoke in a normal day?"
+            "Roughly how many full pipe loads did you previously smoke in a normal day?"
         )
 
 
@@ -138,7 +158,7 @@ class TestSmokedAmountForm(TestCase):
         form.full_clean()
         self.assertIn("value", form.errors)
         self.assertIn(
-            "Enter how many full pipe loads you previously smoke in a normal day",
+            "Enter how many full pipe loads you previously smoked in a normal day",
             form.errors["value"],
         )
 
@@ -189,3 +209,4 @@ class TestSmokedAmountForm(TestCase):
             "Enter the number of full pipe loads you smoked when you smoked fewer than 20 full pipe loads a day",
             form.errors["value"],
         )
+

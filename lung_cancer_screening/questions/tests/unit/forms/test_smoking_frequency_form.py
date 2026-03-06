@@ -7,7 +7,7 @@ from lung_cancer_screening.questions.tests.factories.response_set_factory import
 from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
 
 
-@tag("SmokingFrequency", "wip")
+@tag("SmokingFrequency")
 class TestSmokingFrequencyForm(TestCase):
     def setUp(self):
         self.response_set = ResponseSetFactory.create(complete=True)

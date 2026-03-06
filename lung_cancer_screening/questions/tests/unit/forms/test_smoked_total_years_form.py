@@ -9,7 +9,7 @@ from ...factories.smoking_frequency_response_factory import SmokingFrequencyResp
 from ....forms.smoked_total_years_form import SmokedTotalYearsForm
 
 
-@tag("SmokedTotalYears", "wip")
+@tag("SmokedTotalYears")
 class TestSmokedTotalYearsForm(TestCase):
     def setUp(self):
         self.smoking_history = TobaccoSmokingHistoryFactory.create(
