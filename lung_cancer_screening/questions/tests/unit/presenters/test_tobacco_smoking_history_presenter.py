@@ -10,7 +10,7 @@ from lung_cancer_screening.questions.presenters.tobacco_smoking_history_presente
 )
 from lung_cancer_screening.questions.models.tobacco_smoking_history import TobaccoSmokingHistory
 
-@tag("wip")
+
 class TestTobaccoSmokingHistoryPresenter(TestCase):
     def setUp(self):
         self.response_set = ResponseSetFactory.create()
@@ -23,7 +23,7 @@ class TestTobaccoSmokingHistoryPresenter(TestCase):
             response_set=self.response_set
         )
 
-    def test_delgates_human_type_to_tobacco_smoking_history(self):
+    def test_delegates_human_type_to_tobacco_smoking_history(self):
         presenter = TobaccoSmokingHistoryPresenter(self.tobacco_smoking_history)
 
         self.assertEqual(
@@ -96,6 +96,7 @@ class TestTobaccoSmokingHistoryPresenter(TestCase):
             presenter.smoke_or_smoked(),
             "smoke"
         )
+
 
     def test_smoke_or_smoked_returns_past_tense_if_not_current_normal_level(self):
         self.tobacco_smoking_history.smoking_current_response.value = False
@@ -180,6 +181,28 @@ class TestTobaccoSmokingHistoryPresenter(TestCase):
         self.assertEqual(
             presenter.do_or_did(),
             "did"
+        )
+
+    def test_have_you_smoked_or_did_you_smoke_returns_have_if_current_normal_level(self):
+        self.tobacco_smoking_history.smoking_current_response.value = True
+        self.tobacco_smoking_history.smoking_current_response.save()
+
+        presenter = TobaccoSmokingHistoryPresenter(self.tobacco_smoking_history)
+
+        self.assertEqual(
+            presenter.have_you_smoked_or_did_you_smoke(),
+            "have you smoked"
+        )
+
+    def test_have_you_smoked_or_did_you_smoke_returns_did_if_not_current_normal_level(self):
+        self.tobacco_smoking_history.smoking_current_response.value = False
+        self.tobacco_smoking_history.smoking_current_response.save()
+
+        presenter = TobaccoSmokingHistoryPresenter(self.tobacco_smoking_history)
+
+        self.assertEqual(
+            presenter.have_you_smoked_or_did_you_smoke(),
+            "did you smoke"
         )
 
 

@@ -43,6 +43,6 @@ class SmokedTotalYearsResponse(BaseModel):
             raise ValidationError({
                 "value": ValidationError(
                     "The number of years you smoked cigarettes must be fewer than the total number of years you have been smoking",
-                    code="value_greater_than_total_number_of_years_smoked"
+                    code="max_value"
                 )
             })

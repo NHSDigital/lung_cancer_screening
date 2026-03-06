@@ -57,6 +57,13 @@ class TobaccoSmokingHistoryPresenter(BasePresenter):
         return "did"
 
 
+    def have_you_smoked_or_did_you_smoke(self):
+        if self.is_present_tense():
+            return "have you smoked"
+
+        return "did you smoke"
+
+
     def more_or_fewer(self):
         if self.tobacco_smoking_history.is_increased():
             return "more"
