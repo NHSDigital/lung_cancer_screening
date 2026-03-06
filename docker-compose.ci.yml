@@ -1,0 +1,11 @@
+# Used only in CI (COMPOSE_FILE=docker-compose.yml:docker-compose.ci.yml) to pin
+# pre-built image names so tests use the cached images instead of rebuilding.
+# Not loaded when running docker compose locally.
+
+services:
+  web:
+    image: ${COMPOSE_PROJECT_NAME}_web:latest
+    pull_policy: never
+  asset_builder:
+    image: ${COMPOSE_PROJECT_NAME}_asset_builder:latest
+    pull_policy: never
