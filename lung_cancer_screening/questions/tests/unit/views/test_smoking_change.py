@@ -13,7 +13,10 @@ from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFa
 class TestGetSmokingChange(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
-        self.response_set = ResponseSetFactory.create(user=self.user, complete=True)
+        self.response_set = ResponseSetFactory.create(
+            user=self.user,
+            complete_without_smoking=True
+        )
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
             complete=True,
@@ -127,7 +130,10 @@ class TestGetSmokingChange(TestCase):
 class TestPostSmokingChange(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
-        self.response_set = ResponseSetFactory.create(user=self.user, complete=True)
+        self.response_set = ResponseSetFactory.create(
+            user=self.user,
+            complete_without_smoking=True
+        )
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
             rolling_tobacco=True,

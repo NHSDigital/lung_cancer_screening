@@ -9,7 +9,7 @@ from ....forms.smoking_change_form import SmokingChangeForm
 @tag("SmokingChange")
 class TestSmokingChangeForm(TestCase):
     def setUp(self):
-        self.response_set = ResponseSetFactory.create(complete=True)
+        self.response_set = ResponseSetFactory.create(complete_without_smoking=True)
         self.normal_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
             cigarettes=True,

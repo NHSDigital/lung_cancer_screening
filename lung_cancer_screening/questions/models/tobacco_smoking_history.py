@@ -168,6 +168,9 @@ class TobaccoSmokingHistory(BaseModel):
     def is_normal(self):
         return self.level == self.Levels.NORMAL
 
+    def is_no_change(self):
+        return self.level == self.Levels.NO_CHANGE
+
     def is_current(self):
         if hasattr(self, "smoking_current_response"):
             return self.smoking_current_response.value
@@ -186,3 +189,19 @@ class TobaccoSmokingHistory(BaseModel):
     def url_type(self):
         return slugify(self.get_type_display())
 
+    def required_responses(self):
+        if self.is_no_change():
+            return []
+
+        return filter(
+            None,
+            [
+                "smoking_current_response" if self.is_normal() else None,
+                "smoked_total_years_response",
+                "smoking_frequency_response",
+                "smoked_amount_response",
+            ],
+        )
+
+    def is_complete(self):
+        return all(hasattr(self, response) for response in self.required_responses())

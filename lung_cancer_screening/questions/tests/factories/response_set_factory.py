@@ -43,59 +43,69 @@ class ResponseSetFactory(factory.django.DjangoModelFactory):
             ),
         )
 
-        complete = factory.Trait(
+        complete_without_smoking = factory.Trait(
             eligible=True,
             asbestos_exposure_response=factory.RelatedFactory(
                 "lung_cancer_screening.questions.tests.factories.asbestos_exposure_response_factory.AsbestosExposureResponseFactory",
-                factory_related_name="response_set"
+                factory_related_name="response_set",
             ),
             cancer_diagnosis_response=factory.RelatedFactory(
                 "lung_cancer_screening.questions.tests.factories.cancer_diagnosis_response_factory.CancerDiagnosisResponseFactory",
-                factory_related_name="response_set"
+                factory_related_name="response_set",
             ),
             education_response=factory.RelatedFactory(
                 "lung_cancer_screening.questions.tests.factories.education_response_factory.EducationResponseFactory",
-                factory_related_name="response_set"
+                factory_related_name="response_set",
             ),
             ethnicity_response=factory.RelatedFactory(
                 "lung_cancer_screening.questions.tests.factories.ethnicity_response_factory.EthnicityResponseFactory",
-                factory_related_name="response_set"
+                factory_related_name="response_set",
             ),
             family_history_lung_cancer_response=factory.RelatedFactory(
                 "lung_cancer_screening.questions.tests.factories.family_history_lung_cancer_response_factory.FamilyHistoryLungCancerResponseFactory",
-                factory_related_name="response_set"
+                factory_related_name="response_set",
             ),
             gender_response=factory.RelatedFactory(
                 "lung_cancer_screening.questions.tests.factories.gender_response_factory.GenderResponseFactory",
-                factory_related_name="response_set"
+                factory_related_name="response_set",
             ),
             height_response=factory.RelatedFactory(
                 "lung_cancer_screening.questions.tests.factories.height_response_factory.HeightResponseFactory",
-                factory_related_name="response_set"
+                factory_related_name="response_set",
             ),
             age_when_started_smoking_response=factory.RelatedFactory(
                 "lung_cancer_screening.questions.tests.factories.age_when_started_smoking_response_factory.AgeWhenStartedSmokingResponseFactory",
-                factory_related_name="response_set"
+                factory_related_name="response_set",
             ),
             periods_when_you_stopped_smoking_response=factory.RelatedFactory(
                 "lung_cancer_screening.questions.tests.factories.periods_when_you_stopped_smoking_response_factory.PeriodsWhenYouStoppedSmokingResponseFactory",
-                factory_related_name="response_set"
+                factory_related_name="response_set",
             ),
             relatives_age_when_diagnosed_response=factory.RelatedFactory(
                 "lung_cancer_screening.questions.tests.factories.relatives_age_when_diagnosed_response_factory.RelativesAgeWhenDiagnosedResponseFactory",
-                factory_related_name="response_set"
+                factory_related_name="response_set",
             ),
             respiratory_conditions_response=factory.RelatedFactory(
                 "lung_cancer_screening.questions.tests.factories.respiratory_conditions_response_factory.RespiratoryConditionsResponseFactory",
-                factory_related_name="response_set"
+                factory_related_name="response_set",
             ),
             sex_at_birth_response=factory.RelatedFactory(
                 "lung_cancer_screening.questions.tests.factories.sex_at_birth_response_factory.SexAtBirthResponseFactory",
-                factory_related_name="response_set"
+                factory_related_name="response_set",
             ),
             weight_response=factory.RelatedFactory(
                 "lung_cancer_screening.questions.tests.factories.weight_response_factory.WeightResponseFactory",
-                factory_related_name="response_set"
+                factory_related_name="response_set",
+            ),
+        )
+
+        complete = factory.Trait(
+            complete_without_smoking=True,
+            tobacco_smoking_history=factory.RelatedFactory(
+                "lung_cancer_screening.questions.tests.factories.tobacco_smoking_history_factory.TobaccoSmokingHistoryFactory",
+                factory_related_name="response_set",
+                normal=True,
+                complete=True,
             ),
         )
 

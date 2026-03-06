@@ -10,7 +10,7 @@ from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFa
 @tag("SmokingFrequency")
 class TestSmokingFrequencyForm(TestCase):
     def setUp(self):
-        self.response_set = ResponseSetFactory.create(complete=True)
+        self.response_set = ResponseSetFactory.create(complete_without_smoking=True)
         self.normal_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
             normal=True,

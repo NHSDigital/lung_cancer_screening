@@ -14,7 +14,10 @@ from ...factories.response_set_factory import ResponseSetFactory
 class TestGetSmokingFrequency(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
-        self.response_set = ResponseSetFactory.create(user=self.user, complete=True)
+        self.response_set = ResponseSetFactory.create(
+            user=self.user,
+            complete_without_smoking=True
+        )
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
             cigarettes=True,
@@ -155,7 +158,10 @@ class TestGetSmokingFrequency(TestCase):
 class TestPostSmokingFrequency(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
-        self.response_set = ResponseSetFactory.create(user=self.user, complete=True)
+        self.response_set = ResponseSetFactory.create(
+            user=self.user,
+            complete_without_smoking=True
+        )
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
             cigarettes=True,
@@ -207,7 +213,7 @@ class TestPostSmokingFrequency(TestCase):
 
         self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
 
-    @tag("wip")
+
     def test_redirects_to_smoking_current_if_the_user_has_not_answered_smoking_current(self):
         self.smoking_current_response.delete()
 

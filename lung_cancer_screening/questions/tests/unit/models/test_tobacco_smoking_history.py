@@ -2,6 +2,7 @@ from django.test import TestCase, tag
 from django.core.exceptions import ValidationError
 
 from ...factories.response_set_factory import ResponseSetFactory
+from ...factories.age_when_started_smoking_response_factory import AgeWhenStartedSmokingResponseFactory
 from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
 from ...factories.smoked_amount_response_factory import SmokedAmountResponseFactory
 from ...factories.smoking_frequency_response_factory import SmokingFrequencyResponseFactory
@@ -502,3 +503,149 @@ class TestTobaccoSmokingHistory(TestCase):
             pipe=True,
         )
         self.assertFalse(tobacco_smoking_history.is_rolling_tobacco())
+
+
+    def test_is_complete_returns_true_when_the_all_normal_level_responses_are_present(self):
+        AgeWhenStartedSmokingResponseFactory.create(
+            response_set=self.response_set,
+        )
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            normal=True,
+            complete=True
+        )
+
+        self.assertTrue(tobacco_smoking_history.is_complete())
+
+
+    def test_is_complete_returns_false_when_the_normal_level_current_response_is_not_present(self):
+        AgeWhenStartedSmokingResponseFactory.create(
+            response_set=self.response_set,
+        )
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            normal=True,
+            complete=True
+        )
+        tobacco_smoking_history.smoking_current_response.delete()
+        tobacco_smoking_history.refresh_from_db()
+
+        self.assertFalse(tobacco_smoking_history.is_complete())
+
+
+    def test_is_complete_returns_false_when_the_normal_level_smoked_amount_response_is_not_present(
+        self,
+    ):
+        AgeWhenStartedSmokingResponseFactory.create(
+            response_set=self.response_set,
+        )
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set, normal=True, complete=True
+        )
+        tobacco_smoking_history.smoked_amount_response.delete()
+        tobacco_smoking_history.refresh_from_db()
+
+        self.assertFalse(tobacco_smoking_history.is_complete())
+
+
+    def test_is_complete_returns_false_when_the_normal_level_smoking_frequency_response_is_not_present(
+        self,
+    ):
+        AgeWhenStartedSmokingResponseFactory.create(
+            response_set=self.response_set,
+        )
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set, normal=True, complete=True
+        )
+        tobacco_smoking_history.smoking_frequency_response.delete()
+        tobacco_smoking_history.refresh_from_db()
+
+        self.assertFalse(tobacco_smoking_history.is_complete())
+
+
+    def test_is_complete_returns_false_when_the_normal_level_smoked_total_years_response_is_not_present(
+        self,
+    ):
+        AgeWhenStartedSmokingResponseFactory.create(
+            response_set=self.response_set,
+        )
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set, normal=True, complete=True
+        )
+        tobacco_smoking_history.smoked_total_years_response.delete()
+        tobacco_smoking_history.refresh_from_db()
+
+        self.assertFalse(tobacco_smoking_history.is_complete())
+
+
+    def test_is_complete_returns_true_for_a_changed_level_when_all_responses_are_present(self):
+        AgeWhenStartedSmokingResponseFactory.create(
+            response_set=self.response_set,
+        )
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set, increased=True, complete=True
+        )
+
+        self.assertTrue(tobacco_smoking_history.is_complete())
+
+
+    def test_is_complete_returns_true_for_a_decreased_level_no_is_current_response_is_present(self):
+        AgeWhenStartedSmokingResponseFactory.create(
+            response_set=self.response_set,
+        )
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set, decreased=True, complete=True
+        )
+        tobacco_smoking_history.smoking_current_response.delete()
+        tobacco_smoking_history.refresh_from_db()
+
+        self.assertTrue(tobacco_smoking_history.is_complete())
+
+
+    def test_is_complete_returns_false_for_a_decreased_level_no_smoked_amount_response_is_present(self):
+        AgeWhenStartedSmokingResponseFactory.create(
+            response_set=self.response_set,
+        )
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set, decreased=True, complete=True
+        )
+        tobacco_smoking_history.smoked_amount_response.delete()
+        tobacco_smoking_history.refresh_from_db()
+
+        self.assertFalse(tobacco_smoking_history.is_complete())
+
+
+    def test_is_complete_returns_false_for_a_decreased_level_no_smoking_frequency_response_is_present(self):
+        AgeWhenStartedSmokingResponseFactory.create(
+            response_set=self.response_set,
+        )
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set, decreased=True, complete=True
+        )
+        tobacco_smoking_history.smoking_frequency_response.delete()
+        tobacco_smoking_history.refresh_from_db()
+        self.assertFalse(tobacco_smoking_history.is_complete())
+
+
+    def test_is_complete_returns_false_for_a_decreased_level_no_smoked_total_years_response_is_present(self):
+        AgeWhenStartedSmokingResponseFactory.create(
+            response_set=self.response_set,
+        )
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set, decreased=True, complete=True
+        )
+        tobacco_smoking_history.smoked_total_years_response.delete()
+        tobacco_smoking_history.refresh_from_db()
+
+        self.assertFalse(tobacco_smoking_history.is_complete())
+
+
+    def test_is_complete_returns_true_for_a_no_change_level_when_no_responses_are_present(self):
+        AgeWhenStartedSmokingResponseFactory.create(
+            response_set=self.response_set,
+        )
+        tobacco_smoking_history = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set, no_change=True
+        )
+
+        self.assertTrue(tobacco_smoking_history.is_complete())
