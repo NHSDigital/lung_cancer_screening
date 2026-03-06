@@ -65,6 +65,7 @@ class ResponseSet(BaseModel):
 
     def _response_attrs(self):
         response_attrs = [
+            'age_when_started_smoking_response',
             'asbestos_exposure_response',
             'cancer_diagnosis_response',
             'check_need_appointment_response',
@@ -87,8 +88,22 @@ class ResponseSet(BaseModel):
         return response_attrs
 
 
+    def has_complete_smoking_history(self):
+        if not self.tobacco_smoking_history.exists():
+            return False
+
+        return all(
+            tobacco_smoking_history.is_complete()
+            for tobacco_smoking_history
+            in self.tobacco_smoking_history.all()
+        )
+
+
     def is_complete(self):
-        return all(hasattr(self, attr) for attr in self._response_attrs())
+        return all([
+            all(hasattr(self, attr) for attr in self._response_attrs()),
+            self.has_complete_smoking_history()
+        ])
 
 
     def is_eligible(self):

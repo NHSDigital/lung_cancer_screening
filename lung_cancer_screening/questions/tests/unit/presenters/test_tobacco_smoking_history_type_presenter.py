@@ -11,7 +11,7 @@ from ....presenters.tobacco_smoking_history_type_presenter import TobaccoSmoking
 
 class TestTobaccoSmokingHistoryTypePresenter(TestCase):
     def setUp(self):
-        self.response_set = ResponseSetFactory.create(complete=True)
+        self.response_set = ResponseSetFactory.create(complete_without_smoking=True)
         self.normal_tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
             cigarettes=True,

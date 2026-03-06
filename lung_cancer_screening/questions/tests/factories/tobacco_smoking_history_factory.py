@@ -68,3 +68,6 @@ class TobaccoSmokingHistoryFactory(factory.django.DjangoModelFactory):
         decreased = factory.Trait(
             level=TobaccoSmokingHistory.Levels.DECREASED,
         )
+        no_change = factory.Trait(
+            level=TobaccoSmokingHistory.Levels.NO_CHANGE,
+        )

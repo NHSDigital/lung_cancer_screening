@@ -193,13 +193,28 @@ class TestResponseSet(TestCase):
         self.assertTrue(response_set.is_complete())
 
 
-    def test_is_ineligble_returns_false_when_any_eligibility_question_is_not_answered(self):
+    def test_is_complete_returns_false_if_any_tobacco_smoking_history_is_not_complete(self):
+        response_set = ResponseSetFactory.create(complete=True)
+        response_set.tobacco_smoking_history.first().smoking_current_response.delete()
+        response_set.refresh_from_db()
+
+        self.assertFalse(response_set.is_complete())
+
+
+    def test_is_complete_returns_false_if_there_are_no_smoking_histories(self):
+        response_set = ResponseSetFactory.create(complete=True)
+        response_set.tobacco_smoking_history.all().delete()
+        response_set.refresh_from_db()
+        self.assertFalse(response_set.is_complete())
+
+
+    def test_is_ineligible_returns_false_when_any_eligibility_question_is_not_answered(self):
         response_set = ResponseSetFactory.create()
 
         self.assertFalse(response_set.is_eligible())
 
 
-    def test_is_eligble_returns_true_when_smoked_age_and_need_appointment_are_eligible(self):
+    def test_is_eligible_returns_true_when_smoked_age_and_need_appointment_are_eligible(self):
         HaveYouEverSmokedResponseFactory(
             response_set=self.response_set,
             eligible=True
@@ -216,7 +231,7 @@ class TestResponseSet(TestCase):
         self.assertTrue(self.response_set.is_eligible())
 
 
-    def test_is_ineligble_returns_false_when_smoking_is_inelgible(self):
+    def test_is_ineligible_returns_false_when_smoking_is_ineligible(self):
         HaveYouEverSmokedResponseFactory(
             response_set=self.response_set,
             ineligible=True
@@ -233,7 +248,7 @@ class TestResponseSet(TestCase):
         self.assertFalse(self.response_set.is_eligible())
 
 
-    def test_is_ineligble_returns_false_when_age_is_inelgible(self):
+    def test_is_ineligible_returns_false_when_age_is_ineligible(self):
         HaveYouEverSmokedResponseFactory(
             response_set=self.response_set,
             eligible=True
@@ -250,7 +265,7 @@ class TestResponseSet(TestCase):
         self.assertFalse(self.response_set.is_eligible())
 
 
-    def test_is_ineligble_returns_false_when_need_appointment_is_inelgible(self):
+    def test_is_ineligible_returns_false_when_need_appointment_is_ineligible(self):
         HaveYouEverSmokedResponseFactory(
             response_set=self.response_set,
             eligible=True
