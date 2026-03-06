@@ -33,14 +33,70 @@ on:
         type: string
 
 jobs:
-  test-unit:
-    name: "Unit tests"
+  build-compose-cache:
+    name: "Build Docker Compose cache"
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - name: "Checkout code"
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - name: "Set up Docker Buildx"
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f
+      - name: "Build asset_builder for cache"
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8
+        with:
+          context: .
+          target: asset_builder
+          push: false
+          load: true
+          tags: ${{ github.event.repository.name }}_asset_builder:latest
+          cache-from: type=gha,scope=compose-asset
+          cache-to: type=gha,scope=compose-asset,mode=max
+      - name: "Build web image for cache"
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8
+        with:
+          context: .
+          target: development
+          push: false
+          load: true
+          tags: ${{ github.event.repository.name }}_web:latest
+          cache-from: type=gha,scope=compose-web
+          cache-to: type=gha,scope=compose-web,mode=max
+
+  test-unit:
+    name: "Unit tests"
+    needs: [build-compose-cache]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: "Checkout code"
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - name: "Set up Docker Buildx"
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f
+      - name: "Build asset_builder from cache"
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8
+        with:
+          context: .
+          target: asset_builder
+          push: false
+          load: true
+          tags: ${{ github.event.repository.name }}_asset_builder:latest
+          cache-from: type=gha,scope=compose-asset
+          cache-to: type=gha,scope=compose-asset,mode=max
+      - name: "Build web image from cache"
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8
+        with:
+          context: .
+          target: development
+          push: false
+          load: true
+          tags: ${{ github.event.repository.name }}_web:latest
+          cache-from: type=gha,scope=compose-web
+          cache-to: type=gha,scope=compose-web,mode=max
       - name: "Run unit test suite"
+        env:
+          COMPOSE_FILE: docker-compose.yml:docker-compose.ci.yml
+          COMPOSE_PROJECT_NAME: ${{ github.event.repository.name }}
         run: |
           cp .env.example .env
           make test-unit
@@ -49,12 +105,38 @@ jobs:
           echo "Nothing to save"
   test-lint:
     name: "Linting"
+    needs: [build-compose-cache]
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - name: "Checkout code"
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - name: "Set up Docker Buildx"
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f
+      - name: "Build asset_builder from cache"
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8
+        with:
+          context: .
+          target: asset_builder
+          push: false
+          load: true
+          tags: ${{ github.event.repository.name }}_asset_builder:latest
+          cache-from: type=gha,scope=compose-asset
+          cache-to: type=gha,scope=compose-asset,mode=max
+      - name: "Build web image from cache"
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8
+        with:
+          context: .
+          target: development
+          push: false
+          load: true
+          tags: ${{ github.event.repository.name }}_web:latest
+          cache-from: type=gha,scope=compose-web
+          cache-to: type=gha,scope=compose-web,mode=max
       - name: "Run linting"
+        env:
+          COMPOSE_FILE: docker-compose.yml:docker-compose.ci.yml
+          COMPOSE_PROJECT_NAME: ${{ github.event.repository.name }}
         run: |
           cp .env.example .env
           make test-lint
@@ -63,12 +145,38 @@ jobs:
           echo "Nothing to save"
   test-features:
     name: "Feature tests"
+    needs: [build-compose-cache]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - name: "Checkout code"
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - name: "Set up Docker Buildx"
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f
+      - name: "Build asset_builder from cache"
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8
+        with:
+          context: .
+          target: asset_builder
+          push: false
+          load: true
+          tags: ${{ github.event.repository.name }}_asset_builder:latest
+          cache-from: type=gha,scope=compose-asset
+          cache-to: type=gha,scope=compose-asset,mode=max
+      - name: "Build web image from cache"
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8
+        with:
+          context: .
+          target: development
+          push: false
+          load: true
+          tags: ${{ github.event.repository.name }}_web:latest
+          cache-from: type=gha,scope=compose-web
+          cache-to: type=gha,scope=compose-web,mode=max
       - name: "Run feature tests"
+        env:
+          COMPOSE_FILE: docker-compose.yml:docker-compose.ci.yml
+          COMPOSE_PROJECT_NAME: ${{ github.event.repository.name }}
         run: |
           cp .env.example .env
           make test-features
@@ -82,7 +190,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: "Checkout code"
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - name: "Run test coverage check"
         run: |
           make test-coverage
@@ -99,7 +207,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: "Checkout code"
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0 # Full history is needed to improving relevancy of reporting
       - name: "Perform static analysis"
