@@ -61,6 +61,20 @@ jobs:
       - name: "Save the linting result"
         run: |
           echo "Nothing to save"
+  test-features:
+    name: "Feature tests"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: "Checkout code"
+        uses: actions/checkout@v6
+      - name: "Run feature tests"
+        run: |
+          cp .env.example .env
+          make test-features
+      - name: "Save result"
+        run: |
+          echo "Nothing to save"
   test-coverage:
     name: "Test coverage"
     needs: [test-unit]
