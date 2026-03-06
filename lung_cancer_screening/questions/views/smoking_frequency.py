@@ -6,6 +6,7 @@ from lung_cancer_screening.questions.models.tobacco_smoking_history import Tobac
 from .mixins.ensure_response_set import EnsureResponseSet
 from .mixins.ensure_eligible import EnsureEligibleMixin
 from .mixins.ensure_smoking_history_for_type import EnsureSmokingHistoryForTypeMixin
+from .mixins.ensure_prerequisite_responses import EnsurePrerequisiteResponsesMixin
 from .smoking_history_question_base_view import SmokingHistoryQuestionBaseView
 from ..forms.smoking_frequency_form import SmokingFrequencyForm
 from ..models.smoking_frequency_response import SmokingFrequencyResponse
@@ -16,6 +17,7 @@ class SmokingFrequencyView(
     EnsureResponseSet,
     EnsureEligibleMixin,
     EnsureSmokingHistoryForTypeMixin,
+    EnsurePrerequisiteResponsesMixin,
     SmokingHistoryQuestionBaseView
 ):
     template_name = "question_form.jinja"
@@ -77,3 +79,12 @@ class SmokingFrequencyView(
                 type=self.tobacco_smoking_history_item().type,
                 level=TobaccoSmokingHistory.Levels.INCREASED
             ).exists()
+
+
+    def prerequisite_responses(self):
+        if not self.tobacco_smoking_history_item().is_normal():
+            return []
+
+        return [
+            "smoking_current_response",
+        ]

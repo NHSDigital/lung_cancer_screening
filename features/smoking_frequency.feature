@@ -5,6 +5,7 @@ Feature: Smoking frequency page
     Given I am logged in
     And I have answered questions showing I am eligible
     And I have answered questions showing I have smoked "Cigarettes"
+    And I have answered questions showing I currently smoke "Cigarettes"
     When I go to "/cigarettes-smoking-frequency"
     Then there are no accessibility violations
 
@@ -12,6 +13,7 @@ Feature: Smoking frequency page
     Given I am logged in
     And I have answered questions showing I am eligible
     And I have answered questions showing I have smoked "Cigarettes"
+    And I have answered questions showing I currently smoke "Cigarettes"
     When I go to "/cigarettes-smoking-frequency"
     And I click "Continue"
     Then I am on "/cigarettes-smoking-frequency"

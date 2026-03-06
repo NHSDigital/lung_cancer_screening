@@ -147,6 +147,5 @@ def given_i_have_answered_questions_showing_i_have_changed_frequency_of_smoked_t
 def given_i_have_answered_questions_showing_i_have_changed_amount_of_smoked_tobacco_type(context, level, tobacco_type, amount):
     given_i_have_answered_questions_showing_i_have_smoked_tobacco_type(context, tobacco_type)
     context.page.goto(f"{context.live_server_url}/{tobacco_type.lower()}-smoked-{level}-amount")
-    screenshot(context)
     when_i_fill_in_label_with_value(context, f"roughly how many {tobacco_type.lower()} did you normally smoke a", amount, exact=False)
     when_i_submit_the_form(context)
