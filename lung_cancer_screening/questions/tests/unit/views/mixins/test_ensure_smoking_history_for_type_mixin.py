@@ -31,17 +31,21 @@ class EnsureSmokingHistoryForTypeMixinTest(TestCase):
         return view, view.dispatch(request, tobacco_type=tobacco_type)
 
     def test_returns_200_when_tobacco_smoking_history_item_exists(self):
-        tobacco_type = self.tobacco_smoking_history.type.lower()
+        tobacco_type = self.tobacco_smoking_history.url_type()
         view, response = self._dispatch(self.request, tobacco_type)
 
         self.assertEqual(response.status_code, 200)
 
-    def test_tobacco_smoking_history_item_cached_property_returns_item(self):
-        tobacco_type = self.tobacco_smoking_history.type.lower()
+
+    def test_tobacco_smoking_history_item_returns_item(self):
+        tobacco_type = self.tobacco_smoking_history.url_type()
         view, response = self._dispatch(self.request, tobacco_type)
 
         self.assertEqual(view.tobacco_smoking_history_item(), self.tobacco_smoking_history)
 
+
     def test_raises_404_when_tobacco_smoking_history_item_does_not_exist(self):
+        tobacco_type = "cigarettes" if self.tobacco_smoking_history.is_pipe() else "pipe"
+
         with self.assertRaises(Http404):
-            self._dispatch(self.request, tobacco_type="pipe")
+            self._dispatch(self.request, tobacco_type=tobacco_type)

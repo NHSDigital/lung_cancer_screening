@@ -277,6 +277,28 @@ class TestTobaccoSmokingHistory(TestCase):
         self.assertNotIn(medium_cigars, cigarettes)
 
 
+    def test_small_cigars_returns_all_small_cigars_smoking_history_items(self):
+        small_cigar_normal = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            small_cigars=True,
+            normal=True,
+        )
+        small_cigar_increased = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            small_cigars=True,
+            increased=True,
+        )
+        cigarettes = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            cigarettes=True,
+        )
+        small_cigars = TobaccoSmokingHistory.objects.small_cigars()
+
+        self.assertIn(small_cigar_normal, small_cigars)
+        self.assertIn(small_cigar_increased, small_cigars)
+        self.assertNotIn(cigarettes, small_cigars)
+
+
     def test_medium_cigars_returns_all_medium_cigars_smoking_history_items(self):
         medium_cigar_normal = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
@@ -297,6 +319,29 @@ class TestTobaccoSmokingHistory(TestCase):
         self.assertIn(medium_cigar_normal, medium_cigars)
         self.assertIn(medium_cigar_increased, medium_cigars)
         self.assertNotIn(cigarettes, medium_cigars)
+
+
+    def test_large_cigars_returns_all_large_cigars_smoking_history_items(self):
+        large_cigar_normal = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            large_cigars=True,
+            normal=True,
+        )
+        large_cigar_increased = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            large_cigars=True,
+            increased=True,
+        )
+        medium_cigars = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            medium_cigars=True,
+        )
+
+        large_cigars = TobaccoSmokingHistory.objects.large_cigars()
+
+        self.assertIn(large_cigar_normal, large_cigars)
+        self.assertIn(large_cigar_increased, large_cigars)
+        self.assertNotIn(medium_cigars, large_cigars)
 
 
     def test_rolling_tobacco_returns_all_rolling_tobacco_smoking_history_items(self):

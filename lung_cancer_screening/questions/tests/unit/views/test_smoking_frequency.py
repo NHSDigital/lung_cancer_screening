@@ -20,6 +20,7 @@ class TestGetSmokingFrequency(TestCase):
             cigarettes=True,
             complete=True
         )
+        self.smoking_current_response = self.tobacco_smoking_history.smoking_current_response
 
 
     def test_redirects_if_the_user_is_not_logged_in(self):
@@ -61,6 +62,18 @@ class TestGetSmokingFrequency(TestCase):
         )
 
         self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+
+
+    def test_redirects_to_smoking_current_if_the_user_has_not_answered_smoking_current(self):
+        self.smoking_current_response.delete()
+
+        response = self.client.get(reverse("questions:smoking_frequency", kwargs = {
+            "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+        }))
+
+        self.assertRedirects(response, reverse("questions:smoking_current", kwargs={
+            "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+        }), fetch_redirect_response=False)
 
 
     def test_responds_successfully(self):
@@ -148,6 +161,7 @@ class TestPostSmokingFrequency(TestCase):
             cigarettes=True,
             complete=True
         )
+        self.smoking_current_response = self.tobacco_smoking_history.smoking_current_response
 
         self.valid_params = {"value": SmokingFrequencyValues.DAILY.value}
 
@@ -192,6 +206,19 @@ class TestPostSmokingFrequency(TestCase):
         )
 
         self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+
+    @tag("wip")
+    def test_redirects_to_smoking_current_if_the_user_has_not_answered_smoking_current(self):
+        self.smoking_current_response.delete()
+
+        response = self.client.post(reverse("questions:smoking_frequency", kwargs = {
+            "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+        }), self.valid_params)
+
+        self.assertRedirects(response, reverse("questions:smoking_current", kwargs={
+            "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+        }), fetch_redirect_response=False)
+
 
     def test_creates_a_smoking_frequency_response(self):
         self.client.post(reverse("questions:smoking_frequency", kwargs = {

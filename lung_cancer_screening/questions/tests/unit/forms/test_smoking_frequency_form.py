@@ -5,7 +5,6 @@ from lung_cancer_screening.questions.models.smoking_frequency_response import Sm
 from lung_cancer_screening.questions.tests.factories.response_set_factory import ResponseSetFactory
 
 from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
-from ....models.tobacco_smoking_history import TobaccoSmokingHistory
 
 
 @tag("SmokingFrequency")
@@ -14,15 +13,62 @@ class TestSmokingFrequencyForm(TestCase):
         self.response_set = ResponseSetFactory.create(complete=True)
         self.normal_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
-            cigarettes=True,
-            level=TobaccoSmokingHistory.Levels.NORMAL,
+            normal=True,
+            pipe=True,
             complete=True
+        )
+
+    def test_shows_normal_label_for_normal_level_in_present_tense(self):
+        self.normal_smoking_history.smoking_current_response.value = True
+        self.normal_smoking_history.smoking_current_response.save()
+
+        form = SmokingFrequencyForm(
+            tobacco_smoking_history=self.normal_smoking_history
+        )
+        self.assertEqual(
+            form.fields["value"].label,
+            "How often do you smoke a pipe?"
+        )
+
+    def test_has_a_normal_label_for_normal_level_in_past_tense(self):
+        self.normal_smoking_history.smoking_current_response.value = False
+        self.normal_smoking_history.smoking_current_response.save()
+
+        form = SmokingFrequencyForm(
+            tobacco_smoking_history=self.normal_smoking_history
+        )
+        self.assertEqual(
+            form.fields["value"].label,
+            "How often did you smoke a pipe?"
+        )
+
+
+    def test_shows_changed_label_for_changed_level(self):
+        self.normal_smoking_history.smoked_amount_response.value = 10
+        self.normal_smoking_history.smoked_amount_response.save()
+
+        self.normal_smoking_history.smoking_frequency_response.value = SmokingFrequencyValues.WEEKLY.value
+        self.normal_smoking_history.smoking_frequency_response.save()
+
+        increased_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=self.normal_smoking_history.type,
+            increased=True,
+        )
+        form = SmokingFrequencyForm(
+            tobacco_smoking_history=increased_smoking_history,
+            normal_tobacco_smoking_history=self.normal_smoking_history
+        )
+
+        self.assertEqual(
+            form.fields["value"].label,
+            "When you smoked more than 10 full pipe loads a week, how often did you smoke a pipe?"
         )
 
 
     def test_is_valid_with_a_valid_value(self):
         form = SmokingFrequencyForm(
-            tobacco_smoking_history_item=self.normal_smoking_history,
+            tobacco_smoking_history=self.normal_smoking_history,
             data={
                 "value": SmokingFrequencyValues.DAILY.value
             }
@@ -33,23 +79,73 @@ class TestSmokingFrequencyForm(TestCase):
             SmokingFrequencyValues.DAILY.value
         )
 
-    def test_is_invalid_with_a_none_value(self):
+
+    def test_has_a_required_error_message_for_normal_level_in_present_tense(self):
+        self.normal_smoking_history.smoking_current_response.value = True
+        self.normal_smoking_history.smoking_current_response.save()
+
         form = SmokingFrequencyForm(
-            tobacco_smoking_history_item=self.normal_smoking_history,
+            tobacco_smoking_history=self.normal_smoking_history,
             data={
                 "value": None
             }
         )
         self.assertFalse(form.is_valid())
         self.assertIn(
-            "Select how often you smoke cigarettes",
+            "Select how often you smoke a pipe",
+            form.errors["value"]
+        )
+
+
+    def test_has_a_normal_required_error_message_for_normal_level_in_past_tense(self):
+        self.normal_smoking_history.smoking_current_response.value = False
+        self.normal_smoking_history.smoking_current_response.save()
+
+        form = SmokingFrequencyForm(
+            tobacco_smoking_history=self.normal_smoking_history,
+            data={
+                "value": None
+            }
+        )
+
+        self.assertFalse(form.is_valid())
+        self.assertIn(
+            "Select how often you smoked a pipe",
+            form.errors["value"]
+        )
+
+
+    def test_has_a_required_error_message_for_changed_level(self):
+        self.normal_smoking_history.smoked_amount_response.value = 10
+        self.normal_smoking_history.smoked_amount_response.save()
+
+        self.normal_smoking_history.smoking_frequency_response.value = SmokingFrequencyValues.WEEKLY.value
+        self.normal_smoking_history.smoking_frequency_response.save()
+
+        increased_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=self.normal_smoking_history.type,
+            increased=True,
+        )
+
+        form = SmokingFrequencyForm(
+            tobacco_smoking_history=increased_smoking_history,
+            normal_tobacco_smoking_history=self.normal_smoking_history,
+            data={
+                "value": None
+            }
+        )
+
+        self.assertFalse(form.is_valid())
+        self.assertIn(
+            "Select how often you smoked a pipe when you smoked more than 10 full pipe loads a week",
             form.errors["value"]
         )
 
 
     def test_is_invalid_with_a_non_numeric_value(self):
         form = SmokingFrequencyForm(
-            tobacco_smoking_history_item=self.normal_smoking_history,
+            tobacco_smoking_history=self.normal_smoking_history,
             data={
                 "value": 'some string'
             }
@@ -59,26 +155,3 @@ class TestSmokingFrequencyForm(TestCase):
             "Select a valid choice. some string is not one of the available choices.",
             form.errors["value"]
         )
-
-    def test_shows_normal_label_for_normal_level(self):
-        form = SmokingFrequencyForm(
-            tobacco_smoking_history_item=self.normal_smoking_history
-        )
-        self.assertEqual(form.fields["value"].label, "How often do you smoke cigarettes?")
-
-    def test_shows_increased_label_for_increased_level(self):
-        increased_smoking_history = TobaccoSmokingHistoryFactory.create(
-            response_set=self.response_set,
-            cigarettes=True,
-            level=TobaccoSmokingHistory.Levels.INCREASED,
-        )
-        form = SmokingFrequencyForm(
-            tobacco_smoking_history_item=increased_smoking_history,
-            normal_tobacco_smoking_history_item=self.normal_smoking_history
-        )
-        self.assertEqual(form.fields["value"].label, f"When you smoked more than {self.get_normal_smoking_string()}, how often did you smoke cigarettes?")
-
-    def get_normal_smoking_string(self):
-        amount = self.normal_smoking_history.smoked_amount_response
-        frequency = self.normal_smoking_history.smoking_frequency_response
-        return f"{amount.value} {self.normal_smoking_history.human_type().lower()} a {frequency.get_value_display_as_singleton_text()}"

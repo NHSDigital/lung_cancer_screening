@@ -7,6 +7,7 @@ from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
 from ...factories.age_when_started_smoking_response_factory import AgeWhenStartedSmokingResponseFactory
 from ...factories.smoking_frequency_response_factory import SmokingFrequencyResponseFactory
+from ...factories.smoking_current_response_factory import SmokingCurrentResponseFactory
 
 
 @tag("SmokedTotalYears")
@@ -20,6 +21,9 @@ class TestGetSmokedTotalYears(TestCase):
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
             cigarettes=True,
+        )
+        self.smoking_current_response = SmokingCurrentResponseFactory.create(
+            tobacco_smoking_history=self.tobacco_smoking_history,
         )
 
 
@@ -72,6 +76,18 @@ class TestGetSmokedTotalYears(TestCase):
         }))
 
         self.assertEqual(response.status_code, 404)
+
+
+    def test_redirects_to_smoking_current_if_the_user_has_not_answered_smoking_current(self):
+        self.smoking_current_response.delete()
+
+        response = self.client.get(reverse("questions:smoked_total_years", kwargs = {
+            "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+        }))
+
+        self.assertRedirects(response, reverse("questions:smoking_current", kwargs={
+            "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+        }), fetch_redirect_response=False)
 
 
     def test_redirects_to_increased_frequency_if_the_user_has_not_answered_frequency_and_the_level_is_changed(self):
@@ -169,6 +185,9 @@ class TestPostSmokedTotalYears(TestCase):
             response_set=self.response_set,
             cigarettes=True,
         )
+        self.smoking_current_response = SmokingCurrentResponseFactory.create(
+            tobacco_smoking_history=self.tobacco_smoking_history,
+        )
         self.valid_params = {"value": 1}
 
 
@@ -231,6 +250,18 @@ class TestPostSmokedTotalYears(TestCase):
         )
 
         self.assertRedirects(response, reverse("questions:age_when_started_smoking"))
+
+
+    def test_redirects_to_smoking_current_if_the_user_has_not_answered_smoking_current(self):
+        self.smoking_current_response.delete()
+
+        response = self.client.post(reverse("questions:smoked_total_years", kwargs = {
+            "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+        }), self.valid_params)
+
+        self.assertRedirects(response, reverse("questions:smoking_current", kwargs={
+            "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+        }), fetch_redirect_response=False)
 
 
     def test_404_when_a_smoking_history_item_does_not_exist_for_the_given_type(self):

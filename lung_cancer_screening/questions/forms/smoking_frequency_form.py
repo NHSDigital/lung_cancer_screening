@@ -4,22 +4,23 @@ from django import forms
 from ..models.smoking_frequency_response import SmokingFrequencyResponse, SmokingFrequencyValues
 
 from ...nhsuk_forms.typed_choice_field import TypedChoiceField
+from .mixins.smoking_form_presenter import SmokingFormPresenter
 
-class SmokingFrequencyForm(forms.ModelForm):
-    def __init__(self, *args, tobacco_smoking_history_item, normal_tobacco_smoking_history_item = None, **kwargs):
+class SmokingFrequencyForm(SmokingFormPresenter, forms.ModelForm):
+    def __init__(self, *args, tobacco_smoking_history, normal_tobacco_smoking_history = None, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.tobacco_smoking_history_item = tobacco_smoking_history_item
-        self.normal_tobacco_smoking_history_item = normal_tobacco_smoking_history_item
+        self.tobacco_smoking_history = tobacco_smoking_history
+        self.normal_tobacco_smoking_history = normal_tobacco_smoking_history
 
         self.fields["value"] = TypedChoiceField(
             choices=SmokingFrequencyValues.choices,
             widget=forms.RadioSelect,
-            label=self._get_label_for_value(),
+            label=self.label(),
             label_classes="nhsuk-fieldset__legend--l",
             label_is_page_heading=True,
             error_messages={
-                'required': 'Select how often you smoke cigarettes',
+                'required': self.required_error_message(),
             }
         )
 
@@ -37,19 +38,46 @@ class SmokingFrequencyForm(forms.ModelForm):
         model = SmokingFrequencyResponse
         fields = ['value']
 
-    def more_or_fewer_string(self):
-        return "more" if self.tobacco_smoking_history_item.is_increased() else "fewer"
 
-    def amount_prefix(self):
-        return "grams of " if self.tobacco_smoking_history_item.is_rolling_tobacco() else ""
+    def normal_label(self):
+        return (
+            f"How often {self.presenter.do_or_did()} "
+            f"you smoke {self.presenter.human_type().lower()}?"
+        )
 
-    def _get_label_for_value(self):
-        if self.tobacco_smoking_history_item.is_normal():
-            return f"How often do you smoke {self.tobacco_smoking_history_item.human_type().lower()}?"
 
-        return f"When you smoked {self.more_or_fewer_string()} than {self.__get_smoking_string()}, how often did you smoke {self.tobacco_smoking_history_item.human_type().lower()}?"
+    def changed_label(self):
+        return (
+            f"When you smoked {self.presenter.more_or_fewer()} "
+            f"than {self.normal_presenter.to_sentence()}, how often did "
+            f"you smoke {self.presenter.human_type().lower()}?"
+        )
 
-    def __get_smoking_string(self):
-        amount = self.normal_tobacco_smoking_history_item.amount()
-        frequency = self.normal_tobacco_smoking_history_item.frequency_singular()
-        return f"{amount} {self.tobacco_smoking_history_item.unit()} a {frequency}"
+
+    def label(self):
+        if self.tobacco_smoking_history.is_normal():
+            return self.normal_label()
+        else:
+            return self.changed_label()
+
+
+    def normal_required_error_message(self):
+        return (
+            f"Select how often you {self.presenter.smoke_or_smoked()} "
+            f"{self.presenter.human_type().lower()}"
+        )
+
+
+    def changed_required_error_message(self):
+        return (
+            f"Select how often you smoked {self.presenter.human_type().lower()} "
+            f"when you smoked {self.presenter.more_or_fewer()} "
+            f"than {self.normal_presenter.to_sentence()}"
+        )
+
+
+    def required_error_message(self):
+        if self.tobacco_smoking_history.is_normal():
+            return self.normal_required_error_message()
+        else:
+            return self.changed_required_error_message()

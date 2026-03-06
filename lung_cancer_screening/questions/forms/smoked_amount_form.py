@@ -3,8 +3,10 @@ from django import forms
 from ...nhsuk_forms.integer_field import IntegerField
 from ..models.smoked_amount_response import SmokedAmountResponse
 
+from .mixins.smoking_form_presenter import SmokingFormPresenter
 
-class SmokedAmountForm(forms.ModelForm):
+
+class SmokedAmountForm(SmokingFormPresenter, forms.ModelForm):
 
     def __init__(self, tobacco_smoking_history, normal_tobacco_smoking_history = None, *args, **kwargs):
         self.tobacco_smoking_history = tobacco_smoking_history
@@ -13,7 +15,7 @@ class SmokedAmountForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields["value"] = IntegerField(
-            label=self._type_label(),
+            label=self.label(),
             label_classes="nhsuk-label--m" if self.tobacco_smoking_history.is_normal() else "nhsuk-label--l",
             label_is_page_heading=not self.tobacco_smoking_history.is_normal(),
             classes="nhsuk-input--width-4",
@@ -21,75 +23,69 @@ class SmokedAmountForm(forms.ModelForm):
             suffix=self.suffix(),
             required=True,
             error_messages={
-                "required": self._type_required_error_message(),
-                "min_value": self._type_min_value_error_message()
+                "required": self.required_error_message(),
+                "min_value": self.min_value_error_message()
             },
         )
 
 
-    def type_string(self):
-        return self.tobacco_smoking_history.human_type().lower()
-
-    def more_or_fewer_text(self):
-        if self.tobacco_smoking_history.is_increased():
-            return "more"
-        elif self.tobacco_smoking_history.is_decreased():
-            return "fewer"
-
-    def amount_prefix(self):
-        return "grams of " if self.tobacco_smoking_history.is_rolling_tobacco() else ""
-
     def suffix(self):
-        return "grams" if self.tobacco_smoking_history.is_rolling_tobacco() else self.tobacco_smoking_history.unit()
+        return "grams" if self.tobacco_smoking_history.is_rolling_tobacco() else self.presenter.unit()
 
 
-    def _normal_type_label(self):
-        return f"Roughly how many {self.tobacco_smoking_history.unit()} do you {self._currently_or_previously_text()} smoke in a normal {self.tobacco_smoking_history.frequency_singular()}?"
-
-
-    def _changed_type_label(self):
+    def normal_label(self):
         return (
-            f"When you smoked {self.more_or_fewer_text()} than "
-            f"{self.normal_tobacco_smoking_history.amount()} {self.tobacco_smoking_history.unit()} "
-            f"a {self.normal_tobacco_smoking_history.frequency_singular()}, "
-            f"roughly how many {self.tobacco_smoking_history.unit()} "
-            f"did you normally smoke a {self.tobacco_smoking_history.frequency_singular()}?"
+            f"Roughly how many {self.presenter.unit()} "
+            f"{self.presenter.do_or_did()} you "
+            f"{self.presenter.currently_or_previously()} smoke in a normal "
+            f"{self.presenter.frequency()}?"
         )
 
 
-    def _type_label(self):
-        if self.normal_tobacco_smoking_history:
-            return self._changed_type_label()
-        else:
-            return self._normal_type_label()
-
-
-    def _currently_or_previously_text(self):
-        return "currently" if self.tobacco_smoking_history.smoking_current_response.value else "previously"
-
-
-    def _normal_type_required_error_message(self):
-        return f"Enter how many {self.amount_prefix()}{self.type_string()} you {self._currently_or_previously_text()} smoke in a normal {self.tobacco_smoking_history.frequency_singular()}"
-
-
-    def _changed_type_required_error_message(self):
+    def changed_label(self):
         return (
-            f"Enter the number of {self.amount_prefix()}{self.type_string()} "
-            f"you smoked when you smoked {self.more_or_fewer_text()} than "
-            f"{self.normal_tobacco_smoking_history.amount()} {self.amount_prefix()}{self.type_string()} "
-            f"a {self.normal_tobacco_smoking_history.frequency_singular()}"
+            f"When you smoked {self.presenter.more_or_fewer()} than "
+            f"{self.normal_presenter.to_sentence()}, "
+            f"roughly how many {self.presenter.unit()} "
+            f"did you normally smoke a {self.presenter.frequency()}?"
         )
 
 
-    def _type_required_error_message(self):
-        if self.normal_tobacco_smoking_history:
-            return self._changed_type_required_error_message()
+    def label(self):
+        if self.tobacco_smoking_history.is_normal():
+            return self.normal_label()
         else:
-            return self._normal_type_required_error_message()
+            return self.changed_label()
 
 
-    def _type_min_value_error_message(self):
-        return f"The number of {self.type_string()} you smoke must be at least 1"
+    def normal_required_error_message(self):
+        return (
+            f"Enter how many {self.presenter.unit()} you "
+            f"{self.presenter.currently_or_previously()} {self.presenter.smoke_or_smoked()} "
+            f"in a normal {self.presenter.frequency()}"
+        )
+
+    def changed_required_error_message(self):
+        return (
+            f"Enter the number of {self.presenter.unit()} "
+            f"you smoked when you smoked {self.presenter.more_or_fewer()} than "
+            f"{self.normal_presenter.to_sentence()}"
+        )
+
+
+    def required_error_message(self):
+        if self.normal_tobacco_smoking_history:
+            return self.changed_required_error_message()
+        else:
+            return self.normal_required_error_message()
+
+
+    def min_value_error_message(self):
+        return (
+            f"The number of {self.presenter.unit()} you "
+            f"{self.presenter.smoke_or_smoked()} a {self.presenter.frequency()} "
+            "must be at least 1"
+        )
 
     class Meta:
         model = SmokedAmountResponse
