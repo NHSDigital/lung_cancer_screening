@@ -13,7 +13,7 @@ from ....forms.smoked_amount_form import SmokedAmountForm
 class TestSmokedAmountForm(TestCase):
     def setUp(self):
         self.smoking_history = TobaccoSmokingHistoryFactory.create(
-            cigarettes=True
+            pipe=True
         )
         self.smoking_current_response = SmokingCurrentResponseFactory.create(
             tobacco_smoking_history=self.smoking_history,
@@ -21,7 +21,7 @@ class TestSmokedAmountForm(TestCase):
         )
         self.frequency_response = SmokingFrequencyResponseFactory.create(
             tobacco_smoking_history=self.smoking_history,
-            value=SmokingFrequencyValues.DAILY
+            daily=True
         )
         self.response = SmokedAmountResponseFactory.build(
             tobacco_smoking_history=self.smoking_history
@@ -56,9 +56,6 @@ class TestSmokedAmountForm(TestCase):
 
 
     def test_min_value_validation_has_the_correct_message(self):
-        self.smoking_history.type = TobaccoSmokingHistoryTypes.MEDIUM_CIGARS.value
-        self.smoking_history.save()
-
         form = SmokedAmountForm(
             instance=self.response,
             tobacco_smoking_history=self.smoking_history,
@@ -67,7 +64,7 @@ class TestSmokedAmountForm(TestCase):
         form.full_clean()
         self.assertIn("value", form.errors)
         self.assertIn(
-            "The number of medium cigars you smoke must be at least 1",
+            "The number of full pipe loads you smoke must be at least 1",
             form.errors["value"],
         )
 
@@ -81,18 +78,18 @@ class TestSmokedAmountForm(TestCase):
 
         self.assertEqual(
             form.fields["value"].label,
-            "Roughly how many cigarettes do you previously smoke in a normal day?"
+            "Roughly how many full pipe loads do you previously smoke in a normal day?"
         )
 
 
     def test_has_a_label_for_the_increased_type(self):
         increased_smoking_history = TobaccoSmokingHistoryFactory.create(
-            cigarettes=True,
-            level=TobaccoSmokingHistory.Levels.INCREASED
+            type=self.smoking_history.type,
+            increased=True
         )
         SmokingFrequencyResponseFactory.create(
             tobacco_smoking_history=increased_smoking_history,
-            value=SmokingFrequencyValues.DAILY
+            daily=True
         )
 
         form = SmokedAmountForm(
@@ -104,18 +101,18 @@ class TestSmokedAmountForm(TestCase):
 
         self.assertEqual(
             form.fields["value"].label,
-            "When you smoked more than 20 cigarettes a day, roughly how many cigarettes did you normally smoke a day?"
+            "When you smoked more than 20 full pipe loads a day, roughly how many full pipe loads did you normally smoke a day?"
         )
 
 
     def test_has_a_label_for_the_decreased_type(self):
         decreased_smoking_history = TobaccoSmokingHistoryFactory.create(
-            cigarettes=True,
-            level=TobaccoSmokingHistory.Levels.DECREASED
+            type=self.smoking_history.type,
+            decreased=True
         )
         SmokingFrequencyResponseFactory.create(
             tobacco_smoking_history=decreased_smoking_history,
-            value=SmokingFrequencyValues.DAILY
+            daily=True
         )
 
         form = SmokedAmountForm(
@@ -127,7 +124,7 @@ class TestSmokedAmountForm(TestCase):
 
         self.assertEqual(
             form.fields["value"].label,
-            "When you smoked fewer than 20 cigarettes a day, roughly how many cigarettes did you normally smoke a day?"
+            "When you smoked fewer than 20 full pipe loads a day, roughly how many full pipe loads did you normally smoke a day?"
         )
 
 
@@ -141,18 +138,18 @@ class TestSmokedAmountForm(TestCase):
         form.full_clean()
         self.assertIn("value", form.errors)
         self.assertIn(
-            "Enter how many cigarettes you previously smoke in a normal day",
+            "Enter how many full pipe loads you previously smoke in a normal day",
             form.errors["value"],
         )
 
     def test_has_a_required_error_message_for_the_increased_type(self):
         increased_smoking_history = TobaccoSmokingHistoryFactory.create(
-            cigarettes=True,
-            level=TobaccoSmokingHistory.Levels.INCREASED
+            type=self.smoking_history.type,
+            increased=True
         )
         SmokingFrequencyResponseFactory.create(
             tobacco_smoking_history=increased_smoking_history,
-            value=SmokingFrequencyValues.DAILY
+            daily=True
         )
 
         form = SmokedAmountForm(
@@ -165,18 +162,18 @@ class TestSmokedAmountForm(TestCase):
         form.full_clean()
         self.assertIn("value", form.errors)
         self.assertIn(
-            "Enter the number of cigarettes you smoked when you smoked more than 20 cigarettes a day",
+            "Enter the number of full pipe loads you smoked when you smoked more than 20 full pipe loads a day",
             form.errors["value"],
         )
 
     def test_has_a_required_error_message_for_the_decreased_type(self):
         decreased_smoking_history = TobaccoSmokingHistoryFactory.create(
-            cigarettes=True,
-            level=TobaccoSmokingHistory.Levels.DECREASED
+            type=self.smoking_history.type,
+            decreased=True
         )
         SmokingFrequencyResponseFactory.create(
             tobacco_smoking_history=decreased_smoking_history,
-            value=SmokingFrequencyValues.DAILY
+            daily=True
         )
 
         form = SmokedAmountForm(
@@ -189,6 +186,6 @@ class TestSmokedAmountForm(TestCase):
         form.full_clean()
         self.assertIn("value", form.errors)
         self.assertIn(
-            "Enter the number of cigarettes you smoked when you smoked fewer than 20 cigarettes a day",
+            "Enter the number of full pipe loads you smoked when you smoked fewer than 20 full pipe loads a day",
             form.errors["value"],
         )

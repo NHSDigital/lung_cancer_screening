@@ -36,8 +36,6 @@ class SmokedAmountForm(forms.ModelForm):
         elif self.tobacco_smoking_history.is_decreased():
             return "fewer"
 
-    def amount_prefix(self):
-        return "grams of " if self.tobacco_smoking_history.is_rolling_tobacco() else ""
 
     def suffix(self):
         return "grams" if self.tobacco_smoking_history.is_rolling_tobacco() else self.tobacco_smoking_history.unit()
@@ -69,14 +67,14 @@ class SmokedAmountForm(forms.ModelForm):
 
 
     def _normal_type_required_error_message(self):
-        return f"Enter how many {self.amount_prefix()}{self.type_string()} you {self._currently_or_previously_text()} smoke in a normal {self.tobacco_smoking_history.frequency_singular()}"
+        return f"Enter how many {self.tobacco_smoking_history.unit()} you {self._currently_or_previously_text()} smoke in a normal {self.tobacco_smoking_history.frequency_singular()}"
 
 
     def _changed_type_required_error_message(self):
         return (
-            f"Enter the number of {self.amount_prefix()}{self.type_string()} "
+            f"Enter the number of {self.tobacco_smoking_history.unit()} "
             f"you smoked when you smoked {self.more_or_fewer_text()} than "
-            f"{self.normal_tobacco_smoking_history.amount()} {self.amount_prefix()}{self.type_string()} "
+            f"{self.normal_tobacco_smoking_history.amount()} {self.tobacco_smoking_history.unit()} "
             f"a {self.normal_tobacco_smoking_history.frequency_singular()}"
         )
 
@@ -89,7 +87,7 @@ class SmokedAmountForm(forms.ModelForm):
 
 
     def _type_min_value_error_message(self):
-        return f"The number of {self.type_string()} you smoke must be at least 1"
+        return f"The number of {self.tobacco_smoking_history.unit()} you smoke must be at least 1"
 
     class Meta:
         model = SmokedAmountResponse
