@@ -1,25 +1,23 @@
 {% extends 'layout.jinja' %}
 
-
 {% block content %}
-
 <div class="nhsuk-grid-row">
   <div class="nhsuk-grid-column-two-thirds">
     <h1 class="nhsuk-heading-l">NHS check if you need a lung scan cookies policy</h1>
+<section><p>Version 1.0, 09 March 2026</p></section>
     <div class="nhsuk-inset-text">
-  <span class="nhsuk-u-visually-hidden">Information: </span>
- <p>Version 1.0, 11 March 2025</p>
-</div>
-
-
+      <span class="nhsuk-u-visually-hidden">Information: </span>
+      <p>First release of the service for pilot GP surgeries.</p>
+    </div>
     <section>
 
       <p>This cookies policy relates to the service provided by NHS England.</p>
 
       <p>NHS England ("we" or "us") uses cookies to deliver the NHS check if you need a lung scan.</p>
 
-      <p>The information set out in this policy is provided in addition to the <a href="/privacy-policy" target="_blank"
-          rel="noopener">NHS check if you need a lung scan privacy
+      <p>The information set out in this policy is provided in addition to the <a
+          href="{{ url('questions:privacy_policy') }}" target="_blank" rel="noopener">NHS check if you need a lung scan
+          privacy
           policy</a> and should be read alongside it. </p>
 
       <p>We put small files called cookies on your device (for example, your phone).</p>
@@ -45,7 +43,7 @@
             <tr role="row">
               <th role="columnheader" class="" scope="col">Name</th>
               <th role="columnheader" class="" scope="col">Purpose</th>
-              <th role="columnheader" class="" scope="col">Description</th>
+              <th role="columnheader" class="" scope="col">Expires</th>
             </tr>
           </thead>
           <tbody class="nhsuk-table__body">
@@ -74,7 +72,7 @@
         surveys.</p>
 
       <p>Details on how Qualtrics uses cookies can be found in the <a href="https://www.qualtrics.com/cookie-statement/"
-          target="blank" rel="noopener">Qualtrics cookies policy</a>, which can be accessed from
+          target="_blank" rel="noopener">Qualtrics cookies policy</a>, which can be accessed from
         within the feedback survey.</p>
 
     </section>
@@ -94,14 +92,17 @@
     </section>
     <section>
       <h2 class="nhsuk-heading-m">Changes to this cookies policy</h2>
-      <p>The NHS check if you need a lung scan <a href="/terms-of-use" target="_blank" rel="noopener">terms of use</a>,
-        <a href="/privacy-policy" target="_blank" rel="noopener">privacy policy</a> and cookies policy may change. If
+      <p>The NHS check if you need a lung scan <a href="/terms-of-use" target="_blank" rel="noopener">terms of
+          use</a>,
+        <a href="{{ url('questions:privacy_policy') }}" target="_blank" rel="noopener">privacy policy</a> and cookies
+        policy may change. If
         you use the NHS check if you need a lung scan service again in the future you will be subject to the policies
         which exist at that time.
+      </p>
     </section>
     <section>
       <h2 class="nhsuk-heading-m">Version history</h2>
-      <p>Version 1, 11 March 2025 - first release of the service for pilot GP surgeries.</p>
+      <p>Version 1, 09 March 2026 - first release of the service for pilot GP surgeries.</p>
     </section>
   </div>
 </div>
