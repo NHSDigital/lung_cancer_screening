@@ -47,7 +47,7 @@ jobs:
           if [[ -n "$PR_NUMBER" ]]; then
             pr_argument="prNumber=$PR_NUMBER"
           else
-            pr_argument=""
+            pr_argument="prNumber=$ENVIRONMENT"
           fi
 
           source infrastructure/environments/$ENVIRONMENT/variables.sh
