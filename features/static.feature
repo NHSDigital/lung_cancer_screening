@@ -1,6 +1,6 @@
 @StaticContent
 Feature: Static Pages
-  Scenario: The cookies page is accessible
+  Scenario: The static pages are accessible
     Given I am logged in
     When I go to "/cookies"
     Then there are no accessibility violations
