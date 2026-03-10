@@ -59,16 +59,17 @@ CSRF_TRUSTED_ORIGINS = list_env("CSRF_TRUSTED_ORIGINS")
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.postgres",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
     "django.forms",
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'lung_cancer_screening.core',
-    'lung_cancer_screening.nhsuk_forms',
-    'lung_cancer_screening.questions',
-    'mozilla_django_oidc',
+    "lung_cancer_screening.core",
+    "lung_cancer_screening.nhsuk_forms",
+    "lung_cancer_screening.questions",
+    "mozilla_django_oidc",
 ]
 
 MIDDLEWARE = [
