@@ -276,13 +276,6 @@ LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL_FAILURE = "/agree-to-share-information"
 ALLOW_LOGOUT_GET_METHOD = True
 
-# Additional security settings for production
-if not DEBUG:
-    SECURE_SSL_REDIRECT = False
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    USE_X_FORWARDED_HOST = True
-
 DISABLE_RECENT_SUBMISSION_LIMITATION = boolean_env("DISABLE_RECENT_SUBMISSION_LIMITATION", default=False)
 
 COMMIT_SHA = environ.get("COMMIT_SHA", "unknown")
@@ -292,3 +285,12 @@ SECURE_CSP = {
     "font-src": (CSP.SELF, "https://assets.nhs.uk"),
     "script-src": (CSP.SELF, "'unsafe-inline'"),
 }
+
+# Additional security settings for production
+if not DEBUG:
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    USE_X_FORWARDED_HOST = True
