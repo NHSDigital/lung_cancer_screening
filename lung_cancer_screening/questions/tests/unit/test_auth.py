@@ -146,8 +146,7 @@ class TestNHSLoginOIDCBackend(TestCase):
         )
         self.assertEqual(data['grant_type'], 'authorization_code')
         self.assertEqual(data['code'], 'auth-code-123')
-        # redirect_uri is always OIDC_RP_REDIRECT_URI so it matches the auth request
-        self.assertEqual(data['redirect_uri'], 'https://app.example.com/callback')
+
 
     @patch('lung_cancer_screening.questions.auth.requests.post')
     def test_get_token_without_redirect_uri(self, mock_post):

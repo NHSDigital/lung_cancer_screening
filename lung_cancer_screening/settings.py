@@ -59,16 +59,17 @@ CSRF_TRUSTED_ORIGINS = list_env("CSRF_TRUSTED_ORIGINS")
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.postgres",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
     "django.forms",
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'lung_cancer_screening.core',
-    'lung_cancer_screening.nhsuk_forms',
-    'lung_cancer_screening.questions',
-    'mozilla_django_oidc',
+    "lung_cancer_screening.core",
+    "lung_cancer_screening.nhsuk_forms",
+    "lung_cancer_screening.questions",
+    "mozilla_django_oidc",
 ]
 
 MIDDLEWARE = [
@@ -252,16 +253,12 @@ OIDC_OP_JWKS_ENDPOINT = f"{OIDC_OP_FQDN}/.well-known/jwks.json"
 # See: https://auth.sandpit.signin.nhs.uk/.well-known/openid-configuration
 OIDC_RP_SIGN_ALGO = "RS512"
 OIDC_RP_SCOPES = "openid profile profile_extended email"
-OIDC_RP_REDIRECT_URI = f"{environ.get('BASE_URL')}/oidc/callback"
+OIDC_RP_REDIRECT_URI = "/oidc/callback/"
 # Only add VTR when not in local
 if not DEBUG:
-    OIDC_RP_VTR = ["P5.Cp.Cd", "P5.Cp.Ck", "P5.Cm"]
-
-# Use custom auth request view so redirect_uri is BASE_URL, not request Host
-# (fixes post-login redirect to instance URL when behind Front Door / proxy).
-OIDC_AUTHENTICATE_CLASS = (
-    "lung_cancer_screening.questions.views.oidc_auth.NHSLoginAuthenticationRequestView"
-)
+    OIDC_AUTH_REQUEST_EXTRA_PARAMS = {
+        "vtr": ["P5.Cp.Cd", "P5.Cp.Ck", "P5.Cm"]
+    }
 NHS_LOGIN_SETTINGS_URL = environ.get("NHS_LOGIN_SETTINGS_URL")
 
 # Authentication backends
@@ -281,7 +278,8 @@ ALLOW_LOGOUT_GET_METHOD = True
 if not DEBUG:
     SECURE_SSL_REDIRECT = False
     SESSION_COOKIE_SECURE = True
-    USE_X_FORWARDED_HEADERS = True
+    CSRF_COOKIE_SECURE = True
+    USE_X_FORWARDED_HOST = True
 
 DISABLE_RECENT_SUBMISSION_LIMITATION = boolean_env("DISABLE_RECENT_SUBMISSION_LIMITATION", default=False)
 
