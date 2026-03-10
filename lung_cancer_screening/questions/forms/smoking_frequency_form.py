@@ -31,7 +31,11 @@ class SmokingFrequencyForm(SmokingFormPresenter, forms.ModelForm):
         )
         value_field.add_hint_for_choice(
             SmokingFrequencyValues.MONTHLY,
-            "Select this option if you smoke once a month, or once every few months",
+            "Select this option if you smoke at least once a month",
+        )
+        value_field.add_hint_for_choice(
+            SmokingFrequencyValues.YEARLY,
+            "For example, 2 to 3 times a year or fewer",
         )
 
     class Meta:

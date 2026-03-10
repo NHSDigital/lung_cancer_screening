@@ -81,4 +81,5 @@ urlpatterns = [
     path('weight', WeightView.as_view(), name='weight'),
     path('confirmation', ConfirmationView.as_view(), name='confirmation'),
     path('privacy-policy', TemplateView.as_view(template_name='privacy_policy.jinja'), name='privacy_policy'),
+    path('cookies', TemplateView.as_view(template_name='cookies.jinja'), name='cookies'),
 ]
