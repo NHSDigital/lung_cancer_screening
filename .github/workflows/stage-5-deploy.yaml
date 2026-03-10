@@ -44,10 +44,10 @@ jobs:
           ENVIRONMENT: ${{ matrix.environment }}
           PR_NUMBER: ${{ inputs.pr_number }}
         run: |
+          PARAMS="commitSHA=$COMMIT_SHA environment=$ENVIRONMENT pool=${ADO_MANAGEMENT_POOL}"
+
           if [[ -n "$PR_NUMBER" ]]; then
-            pr_argument="prNumber=$PR_NUMBER"
-          else
-            pr_argument="prNumber=$ENVIRONMENT"
+            PARAMS="$PARAMS prNumber=$PR_NUMBER"
           fi
 
           source infrastructure/environments/$ENVIRONMENT/variables.sh
@@ -58,7 +58,7 @@ jobs:
             --name "Deploy to Azure - $ENVIRONMENT" \
             --org https://dev.azure.com/nhse-dtos \
             --project lung-cancer-screening \
-            --parameters commitSHA="$COMMIT_SHA" "$pr_argument" environment="$ENVIRONMENT" pool=${ADO_MANAGEMENT_POOL} \
+            --parameters $PARAMS \
             --output tsv --query id)
 
           echo "See pipeline run in Azure devops: https://dev.azure.com/nhse-dtos/lung-cancer-screening/_build/results?buildId=${RUN_ID}&view=results"
