@@ -1,9 +1,7 @@
-REGION=UK South
+REGION=uksouth
 APP_SHORT_NAME=lungcs
-
 ENVIRONMENT=preprod
 ENV_CONFIG=preprod
-
 AZURE_SUBSCRIPTION="Lung Cancer Risk Check - Preprod"
 HUB_SUBSCRIPTION="Lung Cancer Risk Check - Live hub"
 HUB=live
