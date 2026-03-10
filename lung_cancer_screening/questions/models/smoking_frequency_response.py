@@ -8,12 +8,14 @@ class SmokingFrequencyValues(models.TextChoices):
     DAILY = "D", "Daily"
     WEEKLY = "W", "Weekly"
     MONTHLY = "M", "Monthly"
+    YEARLY = "Y", "Yearly"
 
 class SmokingFrequencyResponse(BaseModel):
     SINGULAR_TEXT_MAP = {
         SmokingFrequencyValues.DAILY: "day",
         SmokingFrequencyValues.WEEKLY: "week",
         SmokingFrequencyValues.MONTHLY: "month",
+        SmokingFrequencyValues.YEARLY: "year",
     }
 
     tobacco_smoking_history = models.OneToOneField(
