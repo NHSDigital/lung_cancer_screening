@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import sys
 from os import environ
 from pathlib import Path
+from django.utils.csp import CSP
 
 from jinja2 import ChainableUndefined
 
@@ -73,15 +74,16 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
+    "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
     "lung_cancer_screening.questions.middleware.session_timeout.SessionTimeoutMiddleware",
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.csp.ContentSecurityPolicyMiddleware",
 ]
 
 ROOT_URLCONF = 'lung_cancer_screening.urls'
@@ -284,3 +286,9 @@ if not DEBUG:
 DISABLE_RECENT_SUBMISSION_LIMITATION = boolean_env("DISABLE_RECENT_SUBMISSION_LIMITATION", default=False)
 
 COMMIT_SHA = environ.get("COMMIT_SHA", "unknown")
+
+SECURE_CSP = {
+    "default-src": [CSP.SELF],
+    "font-src": (CSP.SELF, "https://assets.nhs.uk"),
+    "script-src": (CSP.SELF, "'unsafe-inline'"),
+}
