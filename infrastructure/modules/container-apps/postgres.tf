@@ -94,6 +94,13 @@ module "database_container" {
     POSTGRES_USER = local.database_user
     POSTGRES_DB   = local.database_name
   }
+
+  # alerts
+  action_group_id        = var.action_group_id
+  enable_alerting        = var.enable_alerting
+  alert_memory_threshold = 80
+  alert_cpu_threshold    = 90
+
   resource_group_name = azurerm_resource_group.main.name
   is_tcp_app          = true
   # postgres has a port of 5432

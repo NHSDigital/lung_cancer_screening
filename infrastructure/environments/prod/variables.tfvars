@@ -15,3 +15,5 @@ protect_keyvault                      = true
 vnet_address_space                    = "10.15.0.0/16"
 use_apex_domain                       = true
 cae_zone_redundancy_enabled           = true
+enable_alerting                       = true
+min_replicas                          = 2

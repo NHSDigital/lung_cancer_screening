@@ -144,6 +144,30 @@ variable "use_apex_domain" {
   type        = bool
 }
 
+variable "enable_alerting" {
+  description = "Whether monitoring and alerting is enabled."
+  type        = bool
+}
+
+variable "target_url" {
+  description = "The external url"
+  type        = string
+}
+
+variable "alert_window_size" {
+  type     = string
+  nullable = false
+  validation {
+    condition     = contains(["PT1M", "PT5M", "PT15M", "PT30M", "PT1H", "PT6H", "PT12H"], var.alert_window_size)
+    error_message = "The alert_window_size must be one of: PT1M, PT5M, PT15M, PT30M, PT1H, PT6H, PT12H"
+  }
+  description = "The period of time that is used to monitor alert activity e.g. PT1M, PT5M, PT15M, PT30M, PT1H, PT6H, PT12H. The interval between checks is adjusted accordingly."
+}
+
+variable "action_group_id" {
+  type        = string
+  description = "ID of the action group to notify."
+}
 
 locals {
   resource_group_name = "rg-${var.app_short_name}-${var.environment}-container-app-uks"

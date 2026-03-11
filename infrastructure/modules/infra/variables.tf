@@ -58,6 +58,16 @@ variable "protect_keyvault" {
   default     = true
 }
 
+variable "enable_alerting" {
+  description = "Whether monitoring and alerting is enabled."
+  type        = bool
+}
+
+variable "action_group_id" {
+  type        = string
+  description = "ID of the action group to notify."
+}
+
 locals {
   hub_vnet_rg_name = "rg-hub-${var.hub}-uks-bootstrap"
   hub_vnet_name    = "vnet-hub-${var.hub}-uks"
