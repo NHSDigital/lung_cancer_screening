@@ -39,6 +39,6 @@ module "webapp" {
   is_web_app       = true
   port             = 8000
   probe_path       = "/healthcheck"
-  # min_replicas     = var.min_replicas
+  min_replicas     = var.min_replicas
   memory           = var.container_memory
 }

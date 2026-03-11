@@ -40,6 +40,7 @@ variable "enable_entra_id_authentication" {
   type        = bool
 }
 
+
 variable "env_config" {
   description = "Environment configuration. Different environments may share the same environment config and the same infrastructure"
   type        = string
@@ -127,6 +128,12 @@ variable "main_subnet_id" {
   description = "The main subnet id. Created in the infra module."
   type        = string
 }
+
+variable "min_replicas" {
+  description = "Minimum number of container replicas"
+  type        = number
+}
+
 
 variable "region" {
   description = "The region to deploy in"
