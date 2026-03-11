@@ -1,3 +1,5 @@
+data "azurerm_subscription" "current" {}
+
 data "azuread_service_principal" "github-mi" {
   display_name = var.github_mi_name
 }
