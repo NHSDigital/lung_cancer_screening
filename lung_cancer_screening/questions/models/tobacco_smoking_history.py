@@ -18,12 +18,17 @@ class TobaccoSmokingHistoryTypes(models.TextChoices):
 
 class TobaccoSmokingHistoryQuerySet(BaseQuerySet):
     def in_form_order(self):
-        form_order = [choice[0] for choice in TobaccoSmokingHistoryTypes.choices]
-        order = Case(
-            *[When(type=type_val, then=Value(i)) for i, type_val in enumerate(form_order)],
-            default=Value(len(form_order)),
+        types_order = [choice[0] for choice in TobaccoSmokingHistoryTypes.choices]
+        order_types = Case(
+            *[When(type=type_val, then=Value(i)) for i, type_val in enumerate(types_order)],
+            default=Value(len(types_order)),
         )
-        return self.order_by(order)
+        levels_order = [choice[0] for choice in Levels.choices]
+        order_levels = Case(
+            *[When(level=level_val, then=Value(i)) for i, level_val in enumerate(levels_order)],
+            default=Value(len(levels_order)),
+        )
+        return self.order_by(order_levels, order_types)
 
     def increased(self):
         return self.filter(level='increased')
@@ -68,15 +73,17 @@ class TobaccoSmokingHistoryQuerySet(BaseQuerySet):
 
 
 NO_CHANGE_VALUE = "no_change"
+class Levels(models.TextChoices):
+    NORMAL = "normal", "Normal"
+    INCREASED = "increased", "Yes, I used to smoke more"
+    DECREASED = "decreased", "Yes, I used to smoke fewer"
+
+    # Only used to populate values in the form
+    NO_CHANGE = NO_CHANGE_VALUE, "No, it has not changed"
+
+
 class TobaccoSmokingHistory(BaseModel):
-    class Levels(models.TextChoices):
-        NORMAL = "normal", "Normal"
-        INCREASED = "increased", "Yes, I used to smoke more"
-        DECREASED = "decreased", "Yes, I used to smoke fewer"
-
-        # Only used to populate values in the form
-        NO_CHANGE = NO_CHANGE_VALUE, "No, it has not changed"
-
+    Levels = Levels
 
     response_set = models.ForeignKey(
         ResponseSet,

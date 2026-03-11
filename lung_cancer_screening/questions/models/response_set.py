@@ -124,6 +124,25 @@ class ResponseSet(BaseModel):
 
 
     def types_tobacco_smoking_history(self):
-        return list(self.tobacco_smoking_history.in_form_order().values_list(
+        return list(self.tobacco_smoking_history.normal().in_form_order().values_list(
             "type", flat=True
-        ).distinct())
+        ))
+
+
+    def previous_normal_smoking_history(self, smoking_history_item):
+        histories = list(self.tobacco_smoking_history.in_form_order().all())
+        current_history_index = histories.index(smoking_history_item)
+
+        if current_history_index == 0:
+            return None
+
+        return histories[histories.index(smoking_history_item) - 1]
+
+
+    def previous_smoking_history(self, smoking_history_item):
+        if not self.previous_normal_smoking_history(smoking_history_item):
+            return None
+
+        return self.tobacco_smoking_history.filter(
+            type=self.previous_normal_smoking_history(smoking_history_item).type,
+        ).in_form_order().last()

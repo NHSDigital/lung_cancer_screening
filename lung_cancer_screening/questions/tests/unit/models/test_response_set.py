@@ -300,3 +300,124 @@ class TestResponseSet(TestCase):
             list(self.response_set.types_tobacco_smoking_history()),
             [cigarettes.type.value, cigarillos.type.value]
         )
+
+
+    def test_previous_normal_smoking_history_returns_none_when_it_is_the_only_smoking_history_item    (self):
+        self.response_set.tobacco_smoking_history.all().delete()
+        smoking_history_item = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set
+        )
+        self.assertIsNone(
+            self.response_set.previous_normal_smoking_history(
+                smoking_history_item
+            )
+        )
+
+
+    def test_previous_normal_smoking_history_returns_none_when_it_is_the_first_smoking_history_item_respecting_form_order(self):
+        self.response_set.tobacco_smoking_history.all().delete()
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            cigarillos=True,
+        )
+        smoking_history_item = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            cigarettes=True,
+        )
+        self.assertIsNone(
+            self.response_set.previous_normal_smoking_history(
+                smoking_history_item
+            )
+        )
+
+
+    def test_previous_normal_smoking_history_returns_the_previous_normal_smoking_history_when_it_is_not_the_only_smoking_history_item(self):
+        self.response_set.tobacco_smoking_history.all().delete()
+        previous_normal_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            cigarettes=True
+        )
+        smoking_history_item = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            cigarillos=True
+        )
+        self.assertEqual(
+            self.response_set.previous_normal_smoking_history(smoking_history_item),
+            previous_normal_smoking_history
+        )
+
+
+    def test_previous_smoking_history_returns_none_when_it_is_the_only_smoking_history_item(self):
+        self.response_set.tobacco_smoking_history.all().delete()
+        smoking_history_item = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set
+        )
+        self.assertIsNone(
+            self.response_set.previous_smoking_history(smoking_history_item)
+        )
+
+
+    def test_returns_the_increased_smoking_history_when_it_is_attached_to_the_previous_normal_history(self):
+        self.response_set.tobacco_smoking_history.all().delete()
+        previous_normal_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            cigarettes=True
+        )
+        increased_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=previous_normal_smoking_history.type,
+            increased=True
+        )
+        current_normal_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            cigarillos=True,
+        )
+        self.assertEqual(
+            self.response_set.previous_smoking_history(current_normal_smoking_history),
+            increased_smoking_history
+        )
+
+    def test_returns_the_decreased_smoking_history_when_it_is_attached_to_the_previous_normal_history(self):
+        self.response_set.tobacco_smoking_history.all().delete()
+        previous_normal_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            cigarettes=True
+        )
+        decreased_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=previous_normal_smoking_history.type,
+            decreased=True
+        )
+        current_normal_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            cigarillos=True,
+        )
+        self.assertEqual(
+            self.response_set.previous_smoking_history(current_normal_smoking_history),
+            decreased_smoking_history
+        )
+
+    def test_returns_decreased_when_the_previous_normal_smoking_history_when_both_previous_and_current_exist(self):
+        self.response_set.tobacco_smoking_history.all().delete()
+        previous_normal_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            cigarettes=True
+        )
+        decreased_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=previous_normal_smoking_history.type,
+            decreased=True
+        )
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=previous_normal_smoking_history.type,
+            increased=True
+        )
+        current_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            cigarillos=True,
+        )
+        self.assertEqual(
+            self.response_set.previous_smoking_history(current_smoking_history),
+            decreased_smoking_history
+        )

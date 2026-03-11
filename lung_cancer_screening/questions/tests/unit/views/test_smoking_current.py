@@ -1,7 +1,6 @@
 from django.test import TestCase, tag
 from django.urls import reverse
 
-from lung_cancer_screening.questions.models.tobacco_smoking_history import TobaccoSmokingHistoryTypes
 from lung_cancer_screening.questions.tests.factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
 
 from .helpers.authentication import login_user
@@ -24,7 +23,7 @@ class TestGetSmokingCurrent(TestCase):
 
         response = self.client.get(
             reverse("questions:smoking_current", kwargs = {
-                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+                "tobacco_type": self.tobacco_smoking_history.url_type()
             })
         )
 
@@ -40,7 +39,7 @@ class TestGetSmokingCurrent(TestCase):
 
         response = self.client.get(
             reverse("questions:smoking_current", kwargs = {
-                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+                "tobacco_type": self.tobacco_smoking_history.url_type()
             })
         )
 
@@ -53,7 +52,7 @@ class TestGetSmokingCurrent(TestCase):
 
         response = self.client.get(
             reverse("questions:smoking_current", kwargs = {
-                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+                "tobacco_type": self.tobacco_smoking_history.url_type()
             })
         )
 
@@ -62,11 +61,61 @@ class TestGetSmokingCurrent(TestCase):
 
     def test_responds_successfully(self):
         response = self.client.get(reverse("questions:smoking_current", kwargs = {
-                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+                "tobacco_type": self.tobacco_smoking_history.url_type()
             }))
 
         self.assertEqual(response.status_code, 200)
 
+
+    def test_has_a_back_link_default(self):
+        response = self.client.get(reverse("questions:smoking_current", kwargs = {
+                "tobacco_type": self.tobacco_smoking_history.url_type()
+            }))
+
+        self.assertEqual(
+            response.context_data["back_link_url"],
+            reverse("questions:types_tobacco_smoking")
+        )
+
+
+    def test_has_a_back_link_to_the_previous_tobacco_type_when_on_a_later_type_with_no_changed_level(self):
+        later_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            small_cigars=True
+        )
+        response = self.client.get(reverse("questions:smoking_current", kwargs = {
+                "tobacco_type": later_smoking_history.url_type()
+            }))
+
+        self.assertEqual(
+            response.context_data["back_link_url"],
+            reverse("questions:smoked_amount", kwargs = {
+                "tobacco_type": self.tobacco_smoking_history.url_type()
+            })
+        )
+
+
+    def test_has_a_back_link_to_the_previous_tobacco_type_when_on_a_later_type_with_increased_level(self):
+        increased = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=self.tobacco_smoking_history.type,
+            increased=True
+        )
+        later_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            small_cigars=True
+        )
+        response = self.client.get(reverse("questions:smoking_current", kwargs = {
+            "tobacco_type": later_smoking_history.url_type(),
+        }))
+
+        self.assertEqual(
+            response.context_data["back_link_url"],
+            reverse("questions:smoked_total_years", kwargs = {
+                "tobacco_type": increased.url_type(),
+                "level": increased.level
+            })
+        )
 
 @tag("SmokingCurrent")
 class TestPostSmokingCurrent(TestCase):
@@ -101,7 +150,7 @@ class TestPostSmokingCurrent(TestCase):
 
         response = self.client.post(
             reverse("questions:smoking_current", kwargs = {
-                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+                "tobacco_type": self.tobacco_smoking_history.url_type()
             }),
             self.valid_params
         )
@@ -115,7 +164,7 @@ class TestPostSmokingCurrent(TestCase):
 
         response = self.client.post(
             reverse("questions:smoking_current", kwargs = {
-                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+                "tobacco_type": self.tobacco_smoking_history.url_type()
             }),
             self.valid_params
         )
@@ -124,7 +173,7 @@ class TestPostSmokingCurrent(TestCase):
 
     def test_creates_a_smoking_current_response(self):
         self.client.post(reverse("questions:smoking_current", kwargs = {
-                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+                "tobacco_type": self.tobacco_smoking_history.url_type()
             }), self.valid_params)
 
         self.tobacco_smoking_history.refresh_from_db()
@@ -135,7 +184,7 @@ class TestPostSmokingCurrent(TestCase):
     def test_redirects_to_next_question(self):
         response = self.client.post(
             reverse("questions:smoking_current", kwargs = {
-                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+                "tobacco_type": self.tobacco_smoking_history.url_type()
             }),
             self.valid_params
         )
@@ -148,7 +197,7 @@ class TestPostSmokingCurrent(TestCase):
     def test_redirects_to_next_question_forwarding_the_change_query_param(self):
         response = self.client.post(
             reverse("questions:smoking_current", kwargs = {
-                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+                "tobacco_type": self.tobacco_smoking_history.url_type()
             }),
             {
                 **self.valid_params,
@@ -158,7 +207,7 @@ class TestPostSmokingCurrent(TestCase):
 
         self.assertRedirects(response, reverse("questions:smoked_total_years",
             kwargs={
-                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+                "tobacco_type": self.tobacco_smoking_history.url_type()
             },
             query={"change": "True"}
         ), fetch_redirect_response=False)
@@ -167,7 +216,7 @@ class TestPostSmokingCurrent(TestCase):
     def test_responds_with_422_if_the_response_fails_to_create(self):
         response = self.client.post(
             reverse("questions:smoking_current", kwargs = {
-                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+                "tobacco_type": self.tobacco_smoking_history.url_type()
             }),
             {"value": "something not in list"}
         )
