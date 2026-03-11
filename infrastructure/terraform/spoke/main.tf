@@ -61,7 +61,7 @@ module "container-apps" {
   main_subnet_id                        = var.deploy_infra ? module.infra[0].main_subnet_id : data.azurerm_subnet.main[0].id
   seed_demo_data                        = var.seed_demo_data
   use_apex_domain                       = var.use_apex_domain
-  target_url                            = var.deploy_infra ? "${module.container-apps[0].external_url}healthcheck" : null
+  target_url                            = var.deploy_container_apps ? "${module.container-apps[0].external_url}healthcheck" : null
   container_memory                      = var.container_memory
   min_replicas                          = var.min_replicas
 }
