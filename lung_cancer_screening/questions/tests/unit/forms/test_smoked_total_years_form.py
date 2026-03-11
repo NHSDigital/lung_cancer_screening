@@ -229,7 +229,7 @@ class TestSmokedTotalYearsForm(TestCase):
         )
         self.assertFalse(form.is_valid())
         self.assertIn(
-            "The number of years you smoked cigarettes must equal to, or fewer than, the total number of years you smoked",
+            "The number of years you smoked cigarettes must be equal to, or fewer than, the total number of years you smoked",
             form.errors["value"]
         )
 
@@ -256,6 +256,6 @@ class TestSmokedTotalYearsForm(TestCase):
         )
         self.assertFalse(form.is_valid())
         self.assertIn(
-            "The number of years you smoked 200 cigarettes a week must equal to, or fewer than, the total number of years you have been smoking",
+            "The number of years you smoked 200 cigarettes a week must be equal to, or fewer than, the total number of years you have been smoking",
             form.errors["value"]
         )

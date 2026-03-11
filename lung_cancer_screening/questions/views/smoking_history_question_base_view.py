@@ -13,3 +13,9 @@ class SmokingHistoryQuestionBaseView(QuestionBaseView):
         return self.request.response_set.tobacco_smoking_history.by_url_type(
             self.kwargs["tobacco_type"]
         ).normal().first()
+
+
+    def previous_smoking_history(self):
+        return self.request.response_set.previous_smoking_history(
+            self.tobacco_smoking_history_item()
+        )

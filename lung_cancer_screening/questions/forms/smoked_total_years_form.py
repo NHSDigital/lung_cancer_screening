@@ -93,14 +93,14 @@ class SmokedTotalYearsForm(SmokingFormPresenter, forms.ModelForm):
     def normal_greater_than_years_smoked_error_message(self):
         return (
             f"The number of years you smoked {self.presenter.human_type().lower()} "
-            "must equal to, or fewer than, the total number of years you smoked"
+            "must be equal to, or fewer than, the total number of years you smoked"
         )
 
 
     def changed_greater_than_years_smoked_error_message(self):
         return (
             f"The number of years you smoked {self.presenter.to_sentence()} "
-            "must equal to, or fewer than, the total number of years you have been smoking"
+            "must be equal to, or fewer than, the total number of years you have been smoking"
         )
 
 

@@ -1,4 +1,4 @@
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from lung_cancer_screening.questions.views.smoking_history_question_base_view import SmokingHistoryQuestionBaseView
@@ -20,7 +20,6 @@ class SmokingCurrentView(
     template_name = "question_form.jinja"
     form_class = SmokingCurrentForm
     model = SmokingCurrentResponse
-    back_link_url = reverse_lazy("questions:types_tobacco_smoking")
 
     def get_success_url(self):
         return reverse(
@@ -28,6 +27,28 @@ class SmokingCurrentView(
             kwargs={"tobacco_type": self.kwargs["tobacco_type"]},
             query=self.get_change_query_params(),
         )
+
+
+    def get_back_link_url(self):
+        if self.previous_smoking_history():
+            if self.previous_smoking_history().is_normal():
+                return reverse(
+                    "questions:smoked_amount",
+                    kwargs={"tobacco_type": self.previous_smoking_history().url_type()},
+                    query=self.get_change_query_params(),
+                )
+
+            return reverse(
+                "questions:smoked_total_years",
+                kwargs={
+                    "tobacco_type": self.previous_smoking_history().url_type(),
+                    "level": self.previous_smoking_history().level,
+                },
+                query=self.get_change_query_params(),
+            )
+
+        return reverse("questions:types_tobacco_smoking")
+
 
 
     def get_form_kwargs(self):
