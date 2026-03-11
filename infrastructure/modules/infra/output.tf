@@ -14,6 +14,10 @@ output "log_analytics_workspace_audit_id" {
   value = module.log_analytics_workspace_audit.id
 }
 
+output "monitor_action_group_id" {
+  value = module.monitor_action_group.monitor_action_group.id
+}
+
 output "default_domain" {
   value = module.container-app-environment.default_domain
 }
