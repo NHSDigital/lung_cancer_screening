@@ -42,3 +42,10 @@ data "azurerm_monitor_action_group" "main" {
   name                = "ag-${var.env_config}-uks-${var.app_short_name}-${var.env_config}"
   resource_group_name = local.resource_group_name
 }
+
+data "azurerm_application_insights" "app_insights" {
+  count = var.deploy_infra ? 0 : 1
+
+  name                = "appi-${var.env_config}-uks-${var.app_short_name}"
+  resource_group_name = local.resource_group_name
+}

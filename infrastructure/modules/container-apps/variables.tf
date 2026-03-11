@@ -134,6 +134,11 @@ variable "min_replicas" {
   type        = number
 }
 
+variable "app_insights_id" {
+  description = "The Application Insights id."
+  type        = string
+}
+
 
 variable "region" {
   description = "The region to deploy in"
