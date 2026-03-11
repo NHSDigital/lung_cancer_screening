@@ -156,10 +156,10 @@ variable "enable_alerting" {
   type        = bool
 }
 
-variable "target_url" {
-  description = "The external url"
-  type        = string
-}
+# variable "target_url" {
+#   description = "The external url"
+#   type        = string
+# }
 
 variable "alert_window_size" {
   type     = string
