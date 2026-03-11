@@ -129,6 +129,12 @@ Add the infrastructure secrets to the _inf_ key vault `kv-lungcs-[environment]-i
 - Test running terraform manually from the AVD (Optional)
 - Raise a pull request, review and merge to trigger the pipeline
 
+## Infra secrets
+
+- Add the infra secrets to the inf key vault `kv-lungcs-[environment]-inf`
+- Create an monitoring email address which will be used to fire alerts to.
+- Set `monitoring-email-address` to a pre created monitring email address, if this is not set up then set it to your own email address.
+
 ## Run terraform from CLI (AVD)
 
 - assign yourself "Key Vault Secrets User" to application key vault to run the terraform code from the CLI inside the AVD when first trying to deploy the application.
