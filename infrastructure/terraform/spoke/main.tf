@@ -10,6 +10,8 @@ module "infra" {
 
   region                           = local.region
   resource_group_name              = local.resource_group_name
+  infra_key_vault_name             = local.infra_key_vault_name
+  infra_key_vault_rg               = local.infra_key_vault_rg
   app_short_name                   = var.app_short_name
   environment                      = var.env_config
   features                         = var.features
@@ -60,6 +62,8 @@ module "container-apps" {
   postgres_subnet_id                    = var.deploy_infra ? module.infra[0].postgres_subnet_id : data.azurerm_subnet.postgres[0].id
   main_subnet_id                        = var.deploy_infra ? module.infra[0].main_subnet_id : data.azurerm_subnet.main[0].id
   seed_demo_data                        = var.seed_demo_data
+  infra_key_vault_name                  = local.infra_key_vault_name
+  infra_key_vault_rg                    = local.infra_key_vault_rg
   use_apex_domain                       = var.use_apex_domain
   # target_url                            = var.deploy_container_apps ? "${module.container-apps[0].external_url}healthcheck" : null
   container_memory                      = var.container_memory
