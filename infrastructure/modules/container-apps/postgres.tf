@@ -48,6 +48,13 @@ module "postgres" {
 
   public_network_access_enabled = !var.features.private_networking
 
+  # alerts
+  action_group_id         = var.action_group_id
+  enable_alerting         = var.enable_alerting
+  alert_memory_threshold  = 80
+  alert_cpu_threshold     = 90
+  alert_storage_threshold = 80
+
   databases = {
     db1 = {
       collation   = "en_US.utf8"
