@@ -175,6 +175,12 @@ variable "container_memory" {
   default     = "0.5"
 }
 
+variable "min_replicas" {
+  description = "Minimum number of container replicas"
+  type        = number
+  default     = 1
+}
+
 locals {
   region              = "uksouth"
   resource_group_name = "rg-${var.app_short_name}-${var.env_config}-uks"
