@@ -1,7 +1,7 @@
 module "monitor_action_group" {
   source = "../dtos-devops-templates/infrastructure/modules/monitor-action-group"
 
-  name                = "ag-${var.environment}-uks-${var.application}-${var.environment}"
+  name                = "ag-${var.environment}-uks-${var.app_short_name}-${var.environment}"
   resource_group_name = azurerm_resource_group.main.name
   location            = var.region
   short_name          = "ag-${var.environment}"
