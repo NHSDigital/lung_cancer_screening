@@ -171,6 +171,11 @@ variable "alert_window_size" {
   description = "The period of time that is used to monitor alert activity e.g. PT1M, PT5M, PT15M, PT30M, PT1H, PT6H, PT12H. The interval between checks is adjusted accordingly."
 }
 
+variable "container_memory" {
+  description = "Memory allocated to the webapp container in Gi. CPU is automatically set to half the memory value by the container-app module."
+  type        = string
+}
+
 variable "action_group_id" {
   type        = string
   description = "ID of the action group to notify."
