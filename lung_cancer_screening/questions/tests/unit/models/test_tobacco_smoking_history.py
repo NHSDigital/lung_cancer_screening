@@ -649,3 +649,33 @@ class TestTobaccoSmokingHistory(TestCase):
         )
 
         self.assertTrue(tobacco_smoking_history.is_complete())
+
+
+    def test_in_form_order_returns_the_tobacco_smoking_history_in_form_order(self):
+        medium_cigars_decreased = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            medium_cigars=True,
+            decreased=True,
+        )
+        cigarettes_normal = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            cigarettes=True,
+            normal=True,
+        )
+        medium_cigars_increased = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            medium_cigars=True,
+            increased=True,
+        )
+        medium_cigars_normal = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            medium_cigars=True,
+            normal=True,
+        )
+
+        in_form_order = TobaccoSmokingHistory.objects.in_form_order()
+        self.assertQuerySetEqual(
+            in_form_order,
+            [cigarettes_normal, medium_cigars_normal, medium_cigars_increased, medium_cigars_decreased],
+            ordered=True,
+        )
