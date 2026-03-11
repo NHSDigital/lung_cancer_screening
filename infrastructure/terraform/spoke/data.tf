@@ -35,3 +35,10 @@ data "azurerm_subnet" "main" {
   virtual_network_name = "vnet-${var.env_config}-uks-${var.app_short_name}"
   resource_group_name  = local.resource_group_name
 }
+
+data "azurerm_monitor_action_group" "main" {
+  count = var.deploy_infra ? 0 : 1
+
+  name                = "ag-${var.env_config}-uks-${var.application}-${var.env_config}"
+  resource_group_name = local.resource_group_name
+}
