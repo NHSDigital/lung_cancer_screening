@@ -19,6 +19,8 @@ module "infra" {
   protect_keyvault                 = var.protect_keyvault
   vnet_address_space               = var.vnet_address_space
   cae_zone_redundancy_enabled      = var.cae_zone_redundancy_enabled
+  enable_alerting                  = var.enable_alerting
+  action_group_id                  = var.deploy_infra ? module.infra[0].monitor_action_group_id : data.azurerm_monitor_action_group.main[0].id
 }
 
 module "container-apps" {
@@ -33,6 +35,8 @@ module "container-apps" {
 
   region                                = local.region
   app_key_vault_id                      = var.deploy_infra ? module.infra[0].app_key_vault_id : data.azurerm_key_vault.app_key_vault[0].id
+  alert_window_size                     = var.alert_window_size
+  enable_alerting                       = var.enable_alerting
   app_short_name                        = var.app_short_name
   container_app_environment_id          = var.deploy_infra ? module.infra[0].container_app_environment_id : data.azurerm_container_app_environment.this[0].id
   default_domain                        = var.deploy_infra ? module.infra[0].default_domain : data.azurerm_container_app_environment.this[0].default_domain

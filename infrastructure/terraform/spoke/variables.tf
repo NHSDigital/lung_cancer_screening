@@ -152,6 +152,22 @@ variable "vnet_address_space" {
   type        = string
 }
 
+variable "alert_window_size" {
+  type     = string
+  nullable = false
+  default  = "PT15M"
+  validation {
+    condition     = contains(["PT1M", "PT5M", "PT15M", "PT30M", "PT1H", "PT6H", "PT12H"], var.alert_window_size)
+    error_message = "The alert_window_size must be one of: PT1M, PT5M, PT15M, PT30M, PT1H, PT6H, PT12H"
+  }
+  description = "The period of time that is used to monitor alert activity e.g. PT1M, PT5M, PT15M, PT30M, PT1H, PT6H, PT12H. The interval between checks is adjusted accordingly."
+}
+
+variable "enable_alerting" {
+  description = "Whether monitoring and alerting is enabled."
+  type        = bool
+  default     = false
+}
 
 locals {
   region              = "uksouth"
