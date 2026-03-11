@@ -17,3 +17,4 @@ vnet_address_space                    = "10.14.0.0/16"
 seed_demo_data                        = true
 enable_alerting                       = true
 min_replicas                          = 2
+container_memory                      = "1"
