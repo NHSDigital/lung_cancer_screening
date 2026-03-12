@@ -33,6 +33,9 @@
 {% endblock header %}
 
 {% block beforeContent %}
+
+  {% include 'phase_banner.jinja' %}
+
   {% if back_link_url %}
     <nav>
       {{
