@@ -17,6 +17,9 @@ Feature: Questionnaire
     When I go to "/start"
     And I click "Continue"
 
+    Then I am on "/agree-terms-of-use"
+    When I check "I agree" and submit
+
     Then I am on "/have-you-ever-smoked"
     When I fill in and submit my smoking status with "Yes, I used to smoke"
 

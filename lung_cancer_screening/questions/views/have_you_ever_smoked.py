@@ -14,7 +14,7 @@ class HaveYouEverSmokedView(LoginRequiredMixin, EnsureResponseSet, QuestionBaseV
     form_class = HaveYouEverSmokedForm
     model = HaveYouEverSmokedResponse
     success_url = reverse_lazy("questions:date_of_birth")
-    back_link_url = reverse_lazy("questions:start")
+    back_link_url = reverse_lazy("questions:agree_terms_of_use")
 
     def get_success_url(self):
         if self.object.has_smoked_regularly():
