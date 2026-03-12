@@ -38,8 +38,12 @@ def environment(**options):
         {"singularize": singularize}
     )
 
-    env.filters.update(
-        {"singularize": singularize}
-    )
+    env.filters['print'] = lambda x: ""
+    if (settings.DEBUG):
+        env.filters['print']=debug
 
     return env
+
+def debug(text):
+    print(text)
+    return ''
