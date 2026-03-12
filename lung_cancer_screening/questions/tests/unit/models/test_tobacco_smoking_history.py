@@ -652,6 +652,11 @@ class TestTobaccoSmokingHistory(TestCase):
 
 
     def test_in_form_order_returns_the_tobacco_smoking_history_in_form_order(self):
+        cigarettes_decreased = TobaccoSmokingHistoryFactory(
+            response_set=self.response_set,
+            cigarettes=True,
+            decreased=True,
+        )
         medium_cigars_decreased = TobaccoSmokingHistoryFactory(
             response_set=self.response_set,
             medium_cigars=True,
@@ -676,6 +681,18 @@ class TestTobaccoSmokingHistory(TestCase):
         in_form_order = TobaccoSmokingHistory.objects.in_form_order()
         self.assertQuerySetEqual(
             in_form_order,
-            [cigarettes_normal, medium_cigars_normal, medium_cigars_increased, medium_cigars_decreased],
+            [cigarettes_normal, cigarettes_decreased, medium_cigars_normal, medium_cigars_increased, medium_cigars_decreased],
             ordered=True,
+        )
+
+
+    def test_user_editable_does_not_include_no_change(self):
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            cigarillos=True,
+            no_change=True,
+        )
+        self.assertQuerySetEqual(
+            TobaccoSmokingHistory.objects.user_editable().all(),
+            [],
         )
