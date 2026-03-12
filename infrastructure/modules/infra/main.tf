@@ -74,7 +74,7 @@ module "container-app-environment" {
 module "app_insights_audit" {
   source = "../dtos-devops-templates/infrastructure/modules/app-insights"
 
-  name                = module.shared_config.names.app-insights
+  name                = "appi-${var.environment}-uks-${var.app_short_name}"
   location            = var.region
   resource_group_name = azurerm_resource_group.main.name
   appinsights_type    = "web"
