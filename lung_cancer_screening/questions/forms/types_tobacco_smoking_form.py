@@ -30,6 +30,22 @@ class TypesTobaccoSmokingForm(forms.Form):
 
         value_field=self['value']
         value_field.add_hint_for_choice(
+            TobaccoSmokingHistoryTypes.ROLLING_TOBACCO,
+            "or roll-ups",
+        )
+        value_field.add_hint_for_choice(
+            TobaccoSmokingHistoryTypes.SMALL_CIGARS,
+            "Petit Corona or Short Panetela, usually 4 to 5 inches long",
+        )
+        value_field.add_hint_for_choice(
+            TobaccoSmokingHistoryTypes.MEDIUM_CIGARS,
+            "Robusto or Corona, usually 5 to 6 inches long",
+        )
+        value_field.add_hint_for_choice(
+            TobaccoSmokingHistoryTypes.LARGE_CIGARS,
+            "Churchill or Double Corona, usually 7 to 8 inches long",
+        )
+        value_field.add_hint_for_choice(
             TobaccoSmokingHistoryTypes.CIGARILLOS,
             "Cafe Creme or Signature cigars, roughly the size of a cigarette"
         )
