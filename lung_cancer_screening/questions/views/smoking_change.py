@@ -3,7 +3,6 @@ from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormView
 
-from lung_cancer_screening.questions.models.tobacco_smoking_history import TobaccoSmokingHistory
 
 from .mixins.ensure_response_set import EnsureResponseSet
 from .mixins.ensure_eligible import EnsureEligibleMixin
@@ -57,25 +56,24 @@ class SmokingChangeView(
 
 
     def get_success_url(self):
-        tobacco_smoking_history = self.tobacco_smoking_history()
-        if tobacco_smoking_history.increased().exists():
-            return reverse(
-                "questions:smoking_frequency",
-                kwargs={
-                    "tobacco_type": self.kwargs["tobacco_type"],
-                    "level": TobaccoSmokingHistory.Levels.INCREASED,
-                },
-                query=self.get_change_query_params()
-            )
-        elif tobacco_smoking_history.decreased().exists():
-            return reverse(
-                "questions:smoking_frequency",
-                kwargs={
-                    "tobacco_type": self.kwargs["tobacco_type"],
-                    "level": TobaccoSmokingHistory.Levels.DECREASED,
-                },
-                query=self.get_change_query_params(),
-            )
+        if self.next_smoking_history():
+            if self.next_smoking_history().is_normal():
+                return reverse(
+                    "questions:smoking_current",
+                    kwargs={
+                        "tobacco_type": self.next_smoking_history().url_type(),
+                    },
+                    query=self.get_change_query_params(),
+                )
+            else:
+                return reverse(
+                    "questions:smoking_frequency",
+                    kwargs={
+                        "tobacco_type": self.next_smoking_history().url_type(),
+                        "level": self.next_smoking_history().level,
+                    },
+                    query=self.get_change_query_params(),
+                )
         else:
             return reverse("questions:responses")
 
@@ -94,4 +92,10 @@ class SmokingChangeView(
     def tobacco_smoking_history(self):
         return self.request.response_set.tobacco_smoking_history.by_url_type(
             self.kwargs["tobacco_type"]
+        )
+
+
+    def next_smoking_history(self):
+        return self.request.response_set.next_smoking_history(
+            self.tobacco_smoking_history_item()
         )
