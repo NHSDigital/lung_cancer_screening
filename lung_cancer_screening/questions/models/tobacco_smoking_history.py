@@ -28,13 +28,20 @@ class TobaccoSmokingHistoryQuerySet(BaseQuerySet):
             *[When(level=level_val, then=Value(i)) for i, level_val in enumerate(levels_order)],
             default=Value(len(levels_order)),
         )
-        return self.order_by(order_levels, order_types)
+        return self.order_by(order_types, order_levels)
+
+
+    def user_editable(self):
+        return self.exclude(level=Levels.NO_CHANGE)
+
 
     def increased(self):
         return self.filter(level='increased')
 
+
     def decreased(self):
         return self.filter(level='decreased')
+
 
     def normal(self):
         return self.filter(level='normal')
@@ -113,6 +120,7 @@ class TobaccoSmokingHistory(BaseModel):
     def clean(self):
         super().clean()
         self._validate_no_change_and_other_levels()
+
 
     def _validate_no_change_and_other_levels(self):
         others = self.response_set.tobacco_smoking_history.filter(type=self.type).exclude(pk=self.pk)

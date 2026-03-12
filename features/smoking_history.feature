@@ -108,6 +108,7 @@ Feature: Smoking history pages
     And I check "Rolling tobacco"
     And I check "Pipe"
     And I check "Cigarillos"
+    And I check "Small cigars"
     And I check "Medium cigars"
     And I submit the form
 
@@ -261,6 +262,29 @@ Feature: Smoking history pages
     When I fill in "Roughly how many years did you smoke 5 full pipe loads a month?" with "4"
     And I submit the form
 
+  # Small cigars with no change
+    Then I am on "/small-cigars-smoking-current"
+    And I see a page title "Do you currently smoke small cigars?"
+    When I check "Yes"
+    And I submit the form
+
+    Then I am on "/small-cigars-smoked-total-years"
+    When I fill in "Roughly how many years have you smoked small cigars?" with "8"
+    And I submit the form
+
+    Then I am on "/small-cigars-smoking-frequency"
+    And I see a page title "How often do you smoke small cigars?"
+    When I check "Monthly"
+    And I submit the form
+
+    Then I am on "/small-cigars-smoked-amount"
+    When I fill in "Roughly how many small cigars do you currently smoke in a normal month?" with "9"
+    And I submit the form
+
+    Then I am on "/small-cigars-smoking-change"
+    And I see a page title "Has the number of small cigars you normally smoke changed over time?"
+    When I check "No, it has not changed"
+    And I submit the form
 
   # Medium cigars with only decreased
     Then I am on "/medium-cigars-smoking-current"

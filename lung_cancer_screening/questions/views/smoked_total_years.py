@@ -105,7 +105,6 @@ class SmokedTotalYearsView(
             "smoked_amount_response"
         ]
 
-
     def remaining_unanswered_histories(self):
         tobacco_type = camelize(underscore(self.kwargs["tobacco_type"]))
         histories = self.request.response_set.types_tobacco_smoking_history()
