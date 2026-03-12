@@ -70,3 +70,44 @@ module "container-app-environment" {
   private_dns_zone_rg_name       = var.features.private_networking ? "rg-hub-${var.hub}-uks-private-dns-zones" : null
   zone_redundancy_enabled        = var.cae_zone_redundancy_enabled
 }
+
+module "app_insights_audit" {
+  source = "../dtos-devops-templates/infrastructure/modules/app-insights"
+
+  name                = module.shared_config.names.app-insights
+  location            = var.region
+  resource_group_name = azurerm_resource_group.main.name
+  appinsights_type    = "web"
+
+  log_analytics_workspace_id = module.log_analytics_workspace_audit.id
+
+  # alerts
+  action_group_id = module.monitor_action_group.monitor_action_group.id
+  enable_alerting = var.enable_alerting
+}
+
+module "private_link_scoped_service_law" {
+  source = "../dtos-devops-templates/infrastructure/modules/private-link-scoped-service"
+
+  providers = {
+    azurerm = azurerm.hub
+  }
+
+  name                = "pls-${var.app_short_name}-${var.environment}-law"
+  resource_group_name = "rg-hub-${var.hub}-uks-hub-private-endpoints"
+  linked_resource_id  = module.log_analytics_workspace_audit.id
+  scope_name          = "ampls-${var.hub}hub"
+}
+
+module "private_link_scoped_service_app_insights" {
+  source = "../dtos-devops-templates/infrastructure/modules/private-link-scoped-service"
+
+  providers = {
+    azurerm = azurerm.hub
+  }
+
+  name                = "pls-${var.app_short_name}-${var.environment}-appinsights"
+  resource_group_name = "rg-hub-${var.hub}-uks-hub-private-endpoints"
+  linked_resource_id  = module.app_insights_audit.id
+  scope_name          = "ampls-${var.hub}hub"
+}
