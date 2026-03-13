@@ -13,6 +13,13 @@ module "webapp" {
 
   name                             = "${var.app_short_name}-web-${var.environment}"
   container_app_environment_id     = var.container_app_environment_id
+
+  # alerts
+  action_group_id        = var.action_group_id
+  enable_alerting        = var.enable_alerting
+  alert_memory_threshold = 80
+  alert_cpu_threshold    = 90
+
   resource_group_name              = azurerm_resource_group.main.name
   fetch_secrets_from_app_key_vault = var.fetch_secrets_from_app_key_vault
   infra_key_vault_name             = "kv-${var.app_short_name}-${var.env_config}-inf"
@@ -31,4 +38,7 @@ module "webapp" {
   secret_variables = var.deploy_database_as_container ? { DATABASE_PASSWORD = resource.random_password.admin_password[0].result } : {}
   is_web_app       = true
   port             = 8000
+  probe_path       = "/healthcheck"
+  # min_replicas     = var.min_replicas
+  # memory           = var.container_memory
 }

@@ -10,6 +10,8 @@ module "infra" {
 
   region                           = local.region
   resource_group_name              = local.resource_group_name
+  infra_key_vault_name             = local.infra_key_vault_name
+  infra_key_vault_rg               = local.infra_key_vault_rg
   app_short_name                   = var.app_short_name
   environment                      = var.env_config
   features                         = var.features
@@ -19,6 +21,7 @@ module "infra" {
   protect_keyvault                 = var.protect_keyvault
   vnet_address_space               = var.vnet_address_space
   cae_zone_redundancy_enabled      = var.cae_zone_redundancy_enabled
+  enable_alerting                  = var.enable_alerting
 }
 
 module "container-apps" {
@@ -32,8 +35,12 @@ module "container-apps" {
   }
 
   region                                = local.region
+  action_group_id                       = var.deploy_infra ? module.infra[0].monitor_action_group_id : data.azurerm_monitor_action_group.main[0].id
+  alert_window_size                     = var.alert_window_size
+  enable_alerting                       = var.enable_alerting
   app_key_vault_id                      = var.deploy_infra ? module.infra[0].app_key_vault_id : data.azurerm_key_vault.app_key_vault[0].id
   app_short_name                        = var.app_short_name
+  app_insights_id                       = var.deploy_infra ? module.infra[0].app_insights_id : data.azurerm_application_insights.app_insights[0].id
   container_app_environment_id          = var.deploy_infra ? module.infra[0].container_app_environment_id : data.azurerm_container_app_environment.this[0].id
   default_domain                        = var.deploy_infra ? module.infra[0].default_domain : data.azurerm_container_app_environment.this[0].default_domain
   dns_zone_name                         = var.dns_zone_name
@@ -56,5 +63,10 @@ module "container-apps" {
   postgres_subnet_id                    = var.deploy_infra ? module.infra[0].postgres_subnet_id : data.azurerm_subnet.postgres[0].id
   main_subnet_id                        = var.deploy_infra ? module.infra[0].main_subnet_id : data.azurerm_subnet.main[0].id
   seed_demo_data                        = var.seed_demo_data
+  infra_key_vault_name                  = local.infra_key_vault_name
+  infra_key_vault_rg                    = local.infra_key_vault_rg
   use_apex_domain                       = var.use_apex_domain
+  # target_url                            = var.deploy_container_apps ? "${module.container-apps[0].external_url}healthcheck" : null
+  container_memory                      = var.container_memory
+  min_replicas                          = var.min_replicas
 }
