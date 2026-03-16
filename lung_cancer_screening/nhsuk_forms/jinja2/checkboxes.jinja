@@ -6,11 +6,12 @@
 {% set ns = namespace(items=[]) %}
 {% for value, text in unbound_field.choices %}
   {% set hint_text = field.get_hint_for_choice(value) %}
+  {% set checked = (value in (field.value() or [])) if (field.value() is iterable) else (value == field.value()) %}
   {% set ns.items = ns.items + [{
     "id": field.auto_id ~ '_' ~ loop.index0,
     "value": value,
     "text": text,
-    "checked": value in (field.value() or []),
+    "checked": checked,
     "hint": {
       "text": hint_text
     } if hint_text else undefined

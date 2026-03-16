@@ -87,11 +87,6 @@ class ChoiceField(forms.ChoiceField):
             isinstance(widget, type) and issubclass(widget, widgets.Select)
         ) or isinstance(widget, widgets.Select):
             return "select.jinja"
-        elif (
-            isinstance(widget, type) and issubclass(widget, widgets.CheckboxInput)
-        ) or isinstance(widget, widgets.CheckboxInput):
-            return "checkbox.jinja"
-
 
 class MultipleChoiceField(forms.MultipleChoiceField):
     """

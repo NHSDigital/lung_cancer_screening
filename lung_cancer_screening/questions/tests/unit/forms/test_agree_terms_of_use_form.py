@@ -19,20 +19,21 @@ class TestAgreeTermsOfUseForm(TestCase):
         form = TermsOfUseForm(
             instance=self.response,
             data={
-                "value": True
+                "value": ["True"]
             }
         )
+
         self.assertTrue(form.is_valid())
         self.assertEqual(
             form.data["value"],
-            True
+            ["True"]
         )
 
     def test_is_invalid_with_an_invalid_value(self):
         form = TermsOfUseForm(
             instance=self.response,
             data={
-                "value": False
+                "value": "Invalid entry"
             }
         )
         self.assertFalse(form.is_valid())
