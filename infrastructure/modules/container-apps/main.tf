@@ -53,5 +53,5 @@ module "azurerm_application_insights_standard_web_test" {
   location                = var.region
   action_group_id         = var.action_group_id
   application_insights_id = var.app_insights_id
-  target_url              = var.features.front_door ? "https://${module.frontdoor_endpoint[0].custom_domains["${var.environment}-domain"].host_name}/" : null
+  target_url              = var.features.front_door ? "${local.external_url}healthcheck" : null
 }

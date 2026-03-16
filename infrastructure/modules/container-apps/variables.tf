@@ -230,7 +230,7 @@ locals {
     DATABASE_NAME   = var.deploy_database_as_container ? null : module.postgres[0].database_names[0]
     DATABASE_USER   = var.deploy_database_as_container ? null : module.db_connect_identity[0].name
   }
-
+  external_url         = "https://${module.frontdoor_endpoint[0].custom_domains["${var.environment}-domain"].host_name}/"
   storage_account_name = "st${var.app_short_name}${var.environment}uks"
   storage_containers   = {}
   storage_queues       = []
