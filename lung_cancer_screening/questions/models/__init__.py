@@ -19,5 +19,6 @@ from .sex_at_birth_response import SexAtBirthResponse # noqa: F401
 from .smoking_current_response import SmokingCurrentResponse # noqa: F401
 from .smoking_frequency_response import SmokingFrequencyResponse # noqa: F401
 from .smoked_amount_response import SmokedAmountResponse # noqa: F401
+from .terms_of_use_response import TermsOfUseResponse # noqa: F401
 from .tobacco_smoking_history import TobaccoSmokingHistory # noqa: F401
 from .weight_response import WeightResponse # noqa: F401

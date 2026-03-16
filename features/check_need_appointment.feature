@@ -9,6 +9,7 @@ Feature: Check if you need an appointment page
 
   Scenario: Form errors
     Given I am logged in
+    And I have answered questions showing I have accepted the terms of use
     And I have answered have you ever smoked with an eligible response
     And I have answered date of birth with an eligible date of birth
     When I go to "/check-if-you-need-an-appointment"
@@ -19,6 +20,7 @@ Feature: Check if you need an appointment page
 
   Scenario: Eligibility exit if needs face to face appointment
     Given I am logged in
+    And I have answered questions showing I have accepted the terms of use
     And I have answered have you ever smoked with an eligible response
     And I have answered date of birth with an eligible date of birth
     When I go to "/check-if-you-need-an-appointment"
@@ -28,6 +30,7 @@ Feature: Check if you need an appointment page
 
   Scenario: Navigating backwards and forwards
     Given I am logged in
+    And I have answered questions showing I have accepted the terms of use
     And I have answered have you ever smoked with an eligible response
     And I have answered date of birth with an eligible date of birth
     When I go to "/check-if-you-need-an-appointment"
@@ -37,6 +40,7 @@ Feature: Check if you need an appointment page
 
   Scenario: Checking responses and changing them
     Given I am logged in
+    And I have answered questions showing I have accepted the terms of use
     And I have answered have you ever smoked with an eligible response
     And I have answered date of birth with an eligible date of birth
     When I go to "/check-if-you-need-an-appointment"

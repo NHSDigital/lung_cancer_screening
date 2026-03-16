@@ -109,6 +109,7 @@ class ResponseSet(BaseModel):
     def is_eligible(self):
         if not all(
             hasattr(self, attr) for attr in [
+                "terms_of_use_response",
                 'have_you_ever_smoked_response',
                 'date_of_birth_response',
                 'check_need_appointment_response'
@@ -117,6 +118,7 @@ class ResponseSet(BaseModel):
             return False
 
         return all([
+            self.terms_of_use_response.has_accepted(),
             self.have_you_ever_smoked_response.is_eligible(),
             self.date_of_birth_response.is_eligible(),
             self.check_need_appointment_response.is_eligible()

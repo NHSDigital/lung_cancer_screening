@@ -22,6 +22,7 @@ from lung_cancer_screening.questions.tests.factories.date_of_birth_response_fact
 from lung_cancer_screening.questions.tests.factories.age_when_started_smoking_response_factory import (
     AgeWhenStartedSmokingResponseFactory,
 )
+from lung_cancer_screening.questions.tests.factories.terms_of_use_response_factory import TermsOfUseResponseFactory
 
 
 def get_or_create_response_set(context):
@@ -32,6 +33,14 @@ def get_or_create_response_set(context):
         )
     )
 
+@given("I have answered questions showing I have accepted the terms of use")
+def given_i_have_answered_questions_showing_i_have_accepted_the_terms_of_use(context):
+    response_set = get_or_create_response_set(context)
+
+    TermsOfUseResponseFactory.create(
+        response_set=response_set,
+        value=True,
+    )
 
 @given('I have answered have you ever smoked with an eligible response')
 def given_i_have_answered_have_your_ever_smoked_with_an_eligible_response(context):

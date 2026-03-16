@@ -1,0 +1,14 @@
+body {
+      counter-reset: chapter;      /* Create a chapter counter scope */
+    }
+    .numbered h2:before {
+    content: counter(chapter) ". ";
+    counter-increment: chapter;  /* Add 1 to chapter */
+    }
+    .numbered ol { counter-reset: section }
+    .numbered ol > li { display: block }
+    .numbered ol > li:before {
+      content: counter(chapter) "." counter(section) ". ";
+      counter-increment: section;
+      font-weight: 600;
+    }

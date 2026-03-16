@@ -48,7 +48,7 @@ class TestGetResponses(TestCase):
             reverse("questions:responses")
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
 
     def test_get_responds_successfully(self):
@@ -120,7 +120,7 @@ class TestPostResponses(TestCase):
 
         response = self.client.post(reverse("questions:responses"))
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
 
     def test_post_responds_with_422_if_the_response_set_is_not_complete(self):

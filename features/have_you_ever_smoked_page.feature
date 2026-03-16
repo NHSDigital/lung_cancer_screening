@@ -7,6 +7,7 @@ Feature: Have you ever smoked page
 
   Scenario: Form errors
     Given I am logged in
+    And I have answered questions showing I have accepted the terms of use
     When I go to "/have-you-ever-smoked"
     And I submit the form
     Then I am on "/have-you-ever-smoked"
@@ -15,6 +16,7 @@ Feature: Have you ever smoked page
 
   Scenario: Eligibility of non smokers
     Given I am logged in
+    And I have answered questions showing I have accepted the terms of use
     When I go to "/have-you-ever-smoked"
     And I fill in and submit my smoking status with "No, I have never smoked"
     Then I am on "/non-smoker-exit"
@@ -23,8 +25,9 @@ Feature: Have you ever smoked page
 
   Scenario: Navigating backwards and forwards
     Given I am logged in
+    And I have answered questions showing I have accepted the terms of use
     When I go to "/have-you-ever-smoked"
-    Then I see a back link to "/start"
+    Then I see a back link to "/agree-terms-of-use"
     When I fill in and submit my smoking status with "Yes, I used to smoke"
     Then I am on "/date-of-birth"
 
