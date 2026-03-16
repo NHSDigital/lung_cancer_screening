@@ -17,8 +17,8 @@ def then_i_see_a_page_title(context, title):
 
 @then(u'I see a phase header "{phase}"')
 def then_i_see_a_phase_header(context, phase):
-    expect(context.page.locator('.lung-nhsuk-phase-banner__text')).to_have_count(1)
-    expect(context.page.locator('.nhsuk-tag')).to_have_text(phase)
+    expect(context.page.locator('.app-nhsuk-phase-banner__text')).to_have_count(1)
+    expect(context.page.locator('.app-nhsuk-phase-banner__content .nhsuk-tag')).to_have_text(phase)
 
 @then(u'I see a link named "{link_text}"')
 def then_i_see_a_link_named(context, link_text):
