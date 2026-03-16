@@ -1,22 +1,11 @@
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
+
 
 from .mixins.ensure_response_set import EnsureResponseSet
 from .question_base_view import QuestionBaseView
 from ..forms.agree_terms_of_use_form import TermsOfUseForm
 from ..models.terms_of_use_response import TermsOfUseResponse
-
-
-class EnsureAcceptedTermsEligible:
-    def dispatch(self, request, *args, **kwargs):
-        if (
-            not hasattr(request.response_set, "terms_of_use_response")
-            or not request.response_set.terms_of_use_response.has_accepted()
-        ):
-            return redirect(reverse("questions:agree_terms_of_use"))
-        else:
-            return super().dispatch(request, *args, **kwargs)
 
 
 class AgreeTermsOfUseView(LoginRequiredMixin, EnsureResponseSet, QuestionBaseView):

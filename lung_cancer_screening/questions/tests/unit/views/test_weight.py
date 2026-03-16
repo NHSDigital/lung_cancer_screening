@@ -43,7 +43,7 @@ class TestGetWeight(TestCase):
             reverse("questions:weight")
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
     def test_responds_successfully(self):
         ResponseSetFactory.create(user=self.user, eligible=True)
@@ -129,7 +129,7 @@ class TestPostWeight(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
     def test_creates_a_weight_response(self):
         response_set = ResponseSetFactory.create(user=self.user, eligible=True)

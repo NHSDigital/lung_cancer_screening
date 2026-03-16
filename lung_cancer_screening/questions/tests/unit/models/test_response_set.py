@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 
 from ...factories.user_factory import UserFactory
 from ...factories.response_set_factory import ResponseSetFactory
+from ...factories.terms_of_use_response_factory import TermsOfUseResponseFactory
 from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
 from ...factories.have_you_ever_smoked_response_factory import HaveYouEverSmokedResponseFactory
 from ...factories.date_of_birth_response_factory import DateOfBirthResponseFactory
@@ -215,6 +216,11 @@ class TestResponseSet(TestCase):
 
 
     def test_is_eligible_returns_true_when_smoked_age_and_need_appointment_are_eligible(self):
+        TermsOfUseResponseFactory.create(
+            response_set=self.response_set,
+            value=True
+        )
+
         HaveYouEverSmokedResponseFactory(
             response_set=self.response_set,
             eligible=True

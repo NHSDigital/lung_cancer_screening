@@ -53,7 +53,7 @@ class TestGetSmokedAmount(TestCase):
             })
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
     def test_404_when_a_smoking_history_item_does_not_exist_for_the_given_type(self):
         self.smoking_history.delete()
@@ -175,7 +175,7 @@ class TestPostSmokedAmount(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
     def test_404_when_a_smoking_history_item_does_not_exist_for_the_given_type(self):
         self.smoking_history.delete()

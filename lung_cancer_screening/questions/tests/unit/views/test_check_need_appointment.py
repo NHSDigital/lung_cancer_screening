@@ -1,6 +1,8 @@
 from django.test import TestCase, tag
 from django.urls import reverse
 
+from ...factories.terms_of_use_response_factory import TermsOfUseResponseFactory
+
 from .helpers.authentication import login_user
 from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.date_of_birth_response_factory import DateOfBirthResponseFactory
@@ -11,6 +13,11 @@ class TestGetCheckNeedAppointment(TestCase):
         self.user = login_user(self.client)
 
         self.response_set = ResponseSetFactory.create(user=self.user)
+
+        TermsOfUseResponseFactory.create(
+            response_set=self.response_set,
+            value=True
+        )
 
 
     def test_redirects_if_the_user_is_not_logged_in(self):
@@ -69,6 +76,11 @@ class TestPostCheckNeedAppointment(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
         self.response_set = ResponseSetFactory.create(user=self.user)
+
+        TermsOfUseResponseFactory.create(
+            response_set=self.response_set,
+            value=True
+        )
 
         self.valid_params = {"value": False}
 

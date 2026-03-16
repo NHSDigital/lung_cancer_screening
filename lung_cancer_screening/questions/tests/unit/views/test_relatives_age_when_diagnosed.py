@@ -46,7 +46,7 @@ class TestGetRelativesAgeWhenDiagnosed(TestCase):
             reverse("questions:relatives_age_when_diagnosed")
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
     def test_responds_successfully(self):
         FamilyHistoryLungCancerResponseFactory(
@@ -118,7 +118,7 @@ class TestPostRelativesAgeWhenDiagnosed(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
     def test_creates_a_relatives_age_when_diagnosed_response(self):
         response_set = ResponseSetFactory.create(user=self.user, eligible=True)

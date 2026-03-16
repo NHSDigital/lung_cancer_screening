@@ -8,6 +8,7 @@ Feature: Date of birth page
 
   Scenario: Form errors
     Given I am logged in
+    And I have answered questions showing I have accepted the terms of use
     And I have answered have you ever smoked with an eligible response
     When I go to "/date-of-birth"
     When I click "Continue"
@@ -26,6 +27,7 @@ Feature: Date of birth page
 
   Scenario: Eligibility of people not in age range
     Given I am logged in
+    And I have answered questions showing I have accepted the terms of use
     And I have answered have you ever smoked with an eligible response
     When I go to "/date-of-birth"
     And I fill in and submit my date of birth with "01-01-1900"
@@ -34,6 +36,7 @@ Feature: Date of birth page
 
   Scenario: Navigating backwards and forwards
     Given I am logged in
+    And I have answered questions showing I have accepted the terms of use
     And I have answered have you ever smoked with an eligible response
     When I go to "/date-of-birth"
     Then I see a back link to "/have-you-ever-smoked"

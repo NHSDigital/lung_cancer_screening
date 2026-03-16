@@ -41,7 +41,7 @@ class TestGetAsbestosExposure(TestCase):
             reverse("questions:asbestos_exposure")
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
 
     def test_responds_successfully(self):
@@ -93,7 +93,7 @@ class TestPostAsbestosExposure(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
 
     def test_creates_an_asbestos_exposure_response(self):

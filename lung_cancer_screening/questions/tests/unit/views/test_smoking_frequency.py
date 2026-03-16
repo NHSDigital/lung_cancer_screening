@@ -64,7 +64,7 @@ class TestGetSmokingFrequency(TestCase):
             })
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
 
     def test_redirects_to_smoking_current_if_the_user_has_not_answered_smoking_current(self):
@@ -211,7 +211,7 @@ class TestPostSmokingFrequency(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
 
     def test_redirects_to_smoking_current_if_the_user_has_not_answered_smoking_current(self):
