@@ -45,11 +45,13 @@ from .views.smoking_change import SmokingChangeView
 from .views.start import StartView
 from .views.weight import WeightView
 from .views.confirmation import ConfirmationView
+from .views.agree_terms_of_use import AgreeTermsOfUseView
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/start'), name='root'),
     path('age-range-exit', AgeRangeExitView.as_view(), name='age_range_exit'),
     path('age-when-started-smoking', AgeWhenStartedSmokingView.as_view(), name='age_when_started_smoking'),
+    path('agree-terms-of-use', AgreeTermsOfUseView.as_view(), name='agree_terms_of_use'),
     path("agree-to-share-information", TemplateView.as_view(template_name="agree_to_share_information.jinja"), name="agree_to_share_information"),
     path('asbestos-exposure', AsbestosExposureView.as_view(), name='asbestos_exposure'),
     path('call-us-to-book-an-appointment', BookAnAppointmentExitView.as_view(), name='book_an_appointment'),
@@ -78,6 +80,7 @@ urlpatterns = [
     path('check-your-answers', ResponsesView.as_view(), name='responses'),
     path('sex-at-birth', SexAtBirthView.as_view(), name='sex_at_birth'),
     path('start', StartView.as_view(), name='start'),
+    path('terms-of-use', TemplateView.as_view(template_name='terms_of_use.jinja'), name='terms_of_use'),
     path('weight', WeightView.as_view(), name='weight'),
     path('confirmation', ConfirmationView.as_view(), name='confirmation'),
     path('privacy-policy', TemplateView.as_view(template_name='privacy_policy.jinja'), name='privacy_policy'),

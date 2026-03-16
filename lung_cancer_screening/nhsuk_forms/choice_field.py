@@ -88,7 +88,6 @@ class ChoiceField(forms.ChoiceField):
         ) or isinstance(widget, widgets.Select):
             return "select.jinja"
 
-
 class MultipleChoiceField(forms.MultipleChoiceField):
     """
     A MultipleChoiceField that renders using the NHS.UK design system checkboxes

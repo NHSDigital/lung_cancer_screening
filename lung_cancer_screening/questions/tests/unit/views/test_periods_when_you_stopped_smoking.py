@@ -45,7 +45,7 @@ class TestGetPeriodsWhenYouStoppedSmoking(TestCase):
             reverse("questions:periods_when_you_stopped_smoking")
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
 
     def test_responds_successfully(self):
@@ -101,7 +101,7 @@ class TestPostPeriodsWhenYouStoppedSmoking(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
 
     def test_creates_a_periods_when_you_stopped_smoking_response(self):

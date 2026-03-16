@@ -42,7 +42,7 @@ class TestGetRespiratoryConditions(TestCase):
             reverse("questions:respiratory_conditions")
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
     def test_responds_successfully(self):
         ResponseSetFactory.create(user=self.user, eligible=True)
@@ -95,7 +95,7 @@ class TestPostRespiratoryConditions(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
     def test_creates_a_respiratory_conditions_response(self):
         response_set = ResponseSetFactory.create(user=self.user, eligible=True)

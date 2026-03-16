@@ -53,7 +53,7 @@ class TestGetSmokedTotalYears(TestCase):
             })
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
 
     def test_redirects_when_the_user_has_not_answered_age_when_started_smoking(self):
@@ -236,7 +236,7 @@ class TestPostSmokedTotalYears(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
 
     def test_redirects_when_the_user_has_not_answered_age_when_started_smoking(self):

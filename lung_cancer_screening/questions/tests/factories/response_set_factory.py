@@ -26,6 +26,11 @@ class ResponseSetFactory(factory.django.DjangoModelFactory):
 
     class Params:
         eligible = factory.Trait(
+            terms_of_use_response=factory.RelatedFactory(
+                "lung_cancer_screening.questions.tests.factories.terms_of_use_response_factory.TermsOfUseResponseFactory",
+                factory_related_name="response_set",
+                accepted=True
+            ),
             have_you_ever_smoked_response=factory.RelatedFactory(
                 "lung_cancer_screening.questions.tests.factories.have_you_ever_smoked_response_factory.HaveYouEverSmokedResponseFactory",
                 factory_related_name="response_set",

@@ -43,7 +43,7 @@ class TestGetFamilyHistoryLungCancer(TestCase):
             reverse("questions:family_history_lung_cancer")
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
     def test_responds_successfully(self):
         ResponseSetFactory.create(user=self.user, eligible=True)
@@ -98,7 +98,7 @@ class TestPostFamilyHistoryLungCancer(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
 
     def test_creates_a_family_history_lung_cancer_response(self):

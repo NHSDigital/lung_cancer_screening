@@ -2,6 +2,8 @@ from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 
+from lung_cancer_screening.questions.views.mixins.ensure_accepted_terms_of_use import EnsureAcceptedTermsEligible
+
 from .mixins.ensure_response_set import EnsureResponseSet
 from .question_base_view import QuestionBaseView
 from ..forms.date_of_birth_form import DateOfBirthForm
@@ -18,7 +20,7 @@ class EnsureSmokedEligible:
             return super().dispatch(request, *args, **kwargs)
 
 
-class DateOfBirthView(LoginRequiredMixin, EnsureResponseSet, EnsureSmokedEligible, QuestionBaseView):
+class DateOfBirthView(LoginRequiredMixin, EnsureResponseSet, EnsureAcceptedTermsEligible, EnsureSmokedEligible, QuestionBaseView):
     template_name = "question_form.jinja"
     form_class = DateOfBirthForm
     model = DateOfBirthResponse
