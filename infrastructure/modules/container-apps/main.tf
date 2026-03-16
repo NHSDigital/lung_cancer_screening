@@ -24,8 +24,8 @@ module "webapp" {
   environment_variables = merge(
     local.common_env,
     {
-      ALLOWED_HOSTS        = "${locals.hostname}",
-      CSRF_TRUSTED_ORIGINS = "https://${locals.hostname}"
+      ALLOWED_HOSTS        = "${local.hostname}",
+      CSRF_TRUSTED_ORIGINS = "https://${local.hostname}"
     },
     var.deploy_database_as_container ? local.container_db_env : local.azure_db_env
   )
