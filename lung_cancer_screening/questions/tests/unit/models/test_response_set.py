@@ -421,3 +421,48 @@ class TestResponseSet(TestCase):
             self.response_set.previous_smoking_history(current_smoking_history),
             decreased_smoking_history
         )
+
+
+    def test_next_smoking_history_returns_none_when_it_is_the_only_smoking_history_item(self):
+        smoking_history_item = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set
+        )
+        self.assertIsNone(
+            self.response_set.next_smoking_history(smoking_history_item)
+        )
+
+
+    def test_next_smoking_history_returns_the_next_smoking_history_when_it_is_not_the_only_smoking_history_item_respecting_form_order(self):
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            cigarillos=True,
+            increased=True,
+        )
+        next_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            cigarillos=True,
+        )
+        current_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            cigarettes=True,
+        )
+        self.assertEqual(
+            self.response_set.next_smoking_history(current_smoking_history),
+            next_smoking_history
+        )
+
+
+    def test_next_smoking_history_does_not_include_no_change(self):
+        current_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            cigarillos=True,
+            normal=True,
+        )
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            cigarillos=True,
+            no_change=True,
+        )
+        self.assertIsNone(
+            self.response_set.next_smoking_history(current_smoking_history)
+        )

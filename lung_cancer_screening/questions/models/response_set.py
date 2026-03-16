@@ -129,8 +129,12 @@ class ResponseSet(BaseModel):
         ))
 
 
+    def user_editable_tobacco_smoking_histories(self):
+        return self.tobacco_smoking_history.user_editable().in_form_order().all()
+
+
     def previous_normal_smoking_history(self, smoking_history_item):
-        histories = list(self.tobacco_smoking_history.in_form_order().all())
+        histories = list(self.user_editable_tobacco_smoking_histories())
         current_history_index = histories.index(smoking_history_item)
 
         if current_history_index == 0:
@@ -146,3 +150,13 @@ class ResponseSet(BaseModel):
         return self.tobacco_smoking_history.filter(
             type=self.previous_normal_smoking_history(smoking_history_item).type,
         ).in_form_order().last()
+
+
+    def next_smoking_history(self, smoking_history_item):
+        histories = list(self.user_editable_tobacco_smoking_histories())
+        current_history_index = histories.index(smoking_history_item)
+
+        if current_history_index == len(histories) - 1:
+            return None
+
+        return histories[current_history_index + 1]

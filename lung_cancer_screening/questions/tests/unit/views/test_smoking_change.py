@@ -191,6 +191,7 @@ class TestPostSmokingChange(TestCase):
         self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
 
 
+
     def test_redirects_to_the_next_question_given_no_level(self):
         response = self.client.post(
             reverse("questions:smoking_change", kwargs = {
@@ -201,6 +202,35 @@ class TestPostSmokingChange(TestCase):
 
         self.assertRedirects(response, reverse("questions:responses"))
 
+
+    def test_redirects_to_the_next_smoking_type_given_no_change_level_and_other_smoking_histories_exist(self):
+        self.tobacco_smoking_history.delete()
+        current_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            cigarettes=True,
+            complete=True,
+            normal=True,
+        )
+        next_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            medium_cigars=True,
+            complete=True,
+            normal=True,
+        )
+
+        response = self.client.post(
+            reverse("questions:smoking_change", kwargs = {
+                "tobacco_type": current_smoking_history.url_type()
+            }),
+            {"value": [TobaccoSmokingHistory.Levels.NO_CHANGE]}
+        )
+
+        self.assertRedirects(response,
+            reverse("questions:smoking_current", kwargs={
+                "tobacco_type": next_smoking_history.url_type()
+            }),
+            fetch_redirect_response=False
+        )
 
     def test_redirects_to_the_next_question_given_level_increased(self):
         response = self.client.post(
@@ -228,31 +258,6 @@ class TestPostSmokingChange(TestCase):
             "tobacco_type": self.tobacco_smoking_history.url_type(),
             "level": TobaccoSmokingHistory.Levels.DECREASED.value.lower()
         }))
-
-
-    def test_does_not_redirect_to_increased_if_increased_exists_for_another_type_and_is_not_selected(self):
-        TobaccoSmokingHistoryFactory.create(
-            response_set=self.response_set,
-            type=self.tobacco_smoking_history.type,
-            complete=True,
-            increased=True,
-        )
-        medium_cigars = TobaccoSmokingHistoryFactory.create(
-            response_set=self.response_set,
-            medium_cigars=True,
-            complete=True
-        )
-
-        response = self.client.post(
-            reverse("questions:smoking_change", kwargs = {
-                "tobacco_type": medium_cigars.url_type()
-            }),
-            {"value": [TobaccoSmokingHistory.Levels.NO_CHANGE]}
-        )
-
-        self.assertRedirects(response, reverse("questions:responses"),
-            fetch_redirect_response=False
-        )
 
 
     def test_creates_a_smoking_change_response(self):
