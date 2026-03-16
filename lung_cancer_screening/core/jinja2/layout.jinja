@@ -30,6 +30,9 @@
       ] if request.user.is_authenticated else []
     }
   }) }}
+
+  {% include 'phase_banner.jinja' %}
+
 {% endblock header %}
 
 {% block beforeContent %}
