@@ -41,6 +41,7 @@ var roleID = {
   storageBlobDataContributor: 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
   storageQueueDataContributor: '974c5e8b-45b9-4653-ba55-5f855dd0fb88'
   userAccessAdmin: '18d7d88d-d35e-4fb5-a5c3-7773c20a72d9'
+  monitoringContributor: '749f88d5-cbae-40b8-bcfc-e573ddc772fa'
 }
 
 // Retrieve existing terraform state resource group
@@ -216,6 +217,14 @@ resource storageBlobDataContributor 'Microsoft.Authorization/roleAssignments@202
   }
 }
 
+resource monitoringContributorAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(subscription().subscriptionId, envConfig, 'monitoringContributor')
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roleID.monitoringContributor)
+    principalId: managedIdentiyADOtoAZ.outputs.miPrincipalID
+    description: '${miADOtoAZname} Monitoring Contributor access to subscription'
+  }
+}
 
 output miPrincipalID string = managedIdentiyADOtoAZ.outputs.miPrincipalID
 output miName string = miADOtoAZname
