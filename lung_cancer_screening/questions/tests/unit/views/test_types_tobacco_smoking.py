@@ -47,7 +47,7 @@ class TestGetTypesTobaccoSmoking(TestCase):
 
         response = self.client.get(reverse("questions:types_tobacco_smoking"))
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
 
     def test_get_responds_successfully(self):
@@ -102,7 +102,7 @@ class TestPostTypesTobaccoSmoking(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
 
     def test_creates_a_tobacco_smoking_type_parent_model_for_each_type_given(self):
