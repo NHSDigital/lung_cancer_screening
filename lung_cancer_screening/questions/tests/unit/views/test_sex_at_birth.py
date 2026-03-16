@@ -43,7 +43,7 @@ class TestGetSexAtBirth(TestCase):
             reverse("questions:sex_at_birth")
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
     def test_responds_successfully(self):
         ResponseSetFactory.create(user=self.user, eligible=True)
@@ -95,7 +95,7 @@ class TestPostSexAtBirth(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
     def test_creates_a_sex_at_birth_response(self):
         response_set = ResponseSetFactory.create(user=self.user, eligible=True)

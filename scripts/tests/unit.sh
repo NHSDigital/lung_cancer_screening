@@ -21,8 +21,10 @@ cd "$(git rev-parse --show-toplevel)"
 
 if [[ -n "${TAG:-}" ]]; then
   TAG="--tag=$TAG"
+  COVERAGE=""
 else
   TAG=""
+  COVERAGE="&& coverage report -m --skip-covered"
 fi
 
 if [[ -n "${TEST_MODULE:-}" ]]; then
@@ -38,6 +40,5 @@ fi
 env UID="$(id -u)" docker compose run --rm web sh -c " \
   poetry run coverage run manage.py test $TEST_MODULE $TAG \
   --settings=lung_cancer_screening.settings_test \
-  --exclude-tag=accessibility && \
-  coverage report -m --skip-covered \
-"
+  --exclude-tag=accessibility \
+  $COVERAGE"
