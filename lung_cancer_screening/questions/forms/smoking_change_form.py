@@ -2,9 +2,10 @@ from django import forms
 
 from ...nhsuk_forms.choice_field import MultipleChoiceField
 from ..models.tobacco_smoking_history import TobaccoSmokingHistory
+from .mixins.smoking_form_presenter import SmokingFormPresenter
 
 
-class SmokingChangeForm(forms.Form):
+class SmokingChangeForm(SmokingFormPresenter, forms.Form):
     def __init__(self, *args, response_set, tobacco_smoking_history_item, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -20,7 +21,7 @@ class SmokingChangeForm(forms.Form):
             label_is_page_heading=True,
             hint="Select all that apply",
             error_messages={
-                "required": self._required_error_message()
+                "required": self.required_error_message()
             },
         )
 
@@ -31,8 +32,26 @@ class SmokingChangeForm(forms.Form):
             TobaccoSmokingHistory.Levels.DECREASED, "or"
         )
 
+    def current_label(self):
+        return (
+            f"Has the number of {self.tobacco_smoking_history.unit()} "
+            "you normally smoke changed over time?"
+        )
+
+
+    def previous_label(self):
+        return (
+            f"Did the number of {self.tobacco_smoking_history.unit()} "
+            "you normally smoked change over time?"
+        )
+
+
     def label(self):
-        return f"Has the number of {self.tobacco_smoking_history.unit()} you normally smoke changed over time?"
+        if self.tobacco_smoking_history.is_current():
+            return self.current_label()
+        else:
+            return self.previous_label()
+
 
     def choices(self):
         return [
@@ -44,17 +63,17 @@ class SmokingChangeForm(forms.Form):
     def generate_label(self, value, label):
         if value == TobaccoSmokingHistory.Levels.NO_CHANGE:
             return label
-        return TobaccoSmokingHistory.Levels(value).label + f" than {self.generate_label_suffix()}"
 
-    def generate_label_suffix(self):
         return (
-            f"{self.tobacco_smoking_history.smoked_amount_response.value} "
-            f"{self.tobacco_smoking_history.unit()} a "
-            f"{self.tobacco_smoking_history.frequency_singular()}"
+            f"{TobaccoSmokingHistory.Levels(value).label} "
+            f" than {self.presenter.to_sentence()}"
         )
 
-    def _required_error_message(self):
-        return f"Select if the number of {self.tobacco_smoking_history.unit()} you smoke has changed over time"
+    def required_error_message(self):
+        return (
+            f"Select if the number of {self.tobacco_smoking_history.unit()} "
+            f"you {self.presenter.smoke_or_smoked()} has changed over time"
+        )
 
 
     def save(self, commit=True):
@@ -71,8 +90,7 @@ class SmokingChangeForm(forms.Form):
         if (self.cleaned_data["value"].count(TobaccoSmokingHistory.Levels.NO_CHANGE) > 0
             and len(self.cleaned_data["value"]) > 1):
                 message = (
-                    f"Select if the number of {self.tobacco_smoking_history.unit()} "
-                    "you smoke has changed over time, or select 'no, it has not changed'"
+                    f"{self.required_error_message()}, or select 'no, it has not changed'"
                 )
                 self.add_error( "value", forms.ValidationError(message))
                 return False
