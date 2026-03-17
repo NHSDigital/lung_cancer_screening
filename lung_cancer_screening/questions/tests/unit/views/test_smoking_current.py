@@ -78,7 +78,12 @@ class TestGetSmokingCurrent(TestCase):
         )
 
 
-    def test_has_a_back_link_to_the_previous_tobacco_type_when_on_a_later_type_with_no_changed_level(self):
+    def test_has_a_back_link_to_the_previous_tobacco_type_with_no_changed_level_when_on_a_later_type(self):
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=self.tobacco_smoking_history.type,
+            no_change=True
+        )
         later_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
             small_cigars=True
