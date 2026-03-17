@@ -1,3 +1,4 @@
+from os import environ
 from django.conf import settings
 from django.templatetags.static import static
 from django.urls import reverse
@@ -38,6 +39,8 @@ def environment(**options):
         {"singularize": singularize}
     )
 
+    env.filters['env'] = get_env_value
+
     env.filters['print'] = lambda x: ""
     if (settings.DEBUG):
         env.filters['print']=debug
@@ -47,3 +50,7 @@ def environment(**options):
 def debug(text):
     print(text)
     return ''
+
+def get_env_value(key):
+
+    return environ.get(key, getattr(settings, key, "Value not found"))
