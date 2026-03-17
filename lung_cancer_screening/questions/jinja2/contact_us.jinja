@@ -1,0 +1,23 @@
+{% extends 'layout.jinja' %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      <h1 class="nhsuk-heading-l">Contact us</h1>
+
+      <section>
+        <h2 class="nhsuk-heading-m">To complete your lung cancer screening by phone</h2>
+
+        <p>Call us on: <a href="tel:{{"CONTACT_NUMBER"|env}}">{{"CONTACT_NUMBER"|env}}</a>
+
+        <h3>Phone lines are open:</h3>
+        <p>Monday to Friday 8am to 8pm</p>
+        <p>Saturdays 8am to 1pm</p>
+
+        <h2>If you have questions about the online service</h2>
+
+        Contact us by email: <a href="mailto:{{"CONTACT_EMAIL"|env}}">{{"CONTACT_EMAIL"|env}}</a>
+      </section>
+    </div>
+  </div>
+{% endblock %}

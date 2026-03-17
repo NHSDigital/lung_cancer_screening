@@ -294,3 +294,6 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     USE_X_FORWARDED_HOST = True
+
+CONTACT_NUMBER = environ.get("CONTACT_NUMBER", "020 3835 1600")
+CONTACT_EMAIL = environ.get("CONTACT_EMAIL", "england.digitallungcancerscreening@nhs.net")
