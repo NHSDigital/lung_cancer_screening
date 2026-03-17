@@ -152,8 +152,38 @@ variable "vnet_address_space" {
   type        = string
 }
 
+variable "alert_window_size" {
+  type     = string
+  nullable = false
+  default  = "PT15M"
+  validation {
+    condition     = contains(["PT1M", "PT5M", "PT15M", "PT30M", "PT1H", "PT6H", "PT12H"], var.alert_window_size)
+    error_message = "The alert_window_size must be one of: PT1M, PT5M, PT15M, PT30M, PT1H, PT6H, PT12H"
+  }
+  description = "The period of time that is used to monitor alert activity e.g. PT1M, PT5M, PT15M, PT30M, PT1H, PT6H, PT12H. The interval between checks is adjusted accordingly."
+}
+
+variable "enable_alerting" {
+  description = "Whether monitoring and alerting is enabled."
+  type        = bool
+  default     = false
+}
+
+variable "container_memory" {
+  description = "Memory allocated to the webapp container in Gi. CPU is automatically set to half the memory value by the container-app module."
+  type        = string
+  default     = "0.5"
+}
+
+variable "min_replicas" {
+  description = "Minimum number of container replicas"
+  type        = number
+  default     = 1
+}
 
 locals {
   region              = "uksouth"
   resource_group_name = "rg-${var.app_short_name}-${var.env_config}-uks"
+  infra_key_vault_name = "kv-${var.app_short_name}-${var.env_config}-inf"
+  infra_key_vault_rg   = "rg-${var.app_short_name}-${var.env_config}-infra"
 }
