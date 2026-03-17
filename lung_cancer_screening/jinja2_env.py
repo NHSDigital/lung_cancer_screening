@@ -52,4 +52,5 @@ def debug(text):
     return ''
 
 def get_env_value(key):
-    return getattr(environ, key, getattr(settings, key, "Value not found"))
+
+    return environ.get(key, getattr(settings, key, "Value not found"))
