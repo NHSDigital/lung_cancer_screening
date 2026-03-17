@@ -15,3 +15,6 @@ postgres_geo_redundant_backup_enabled = false
 protect_keyvault                      = false
 vnet_address_space                    = "10.12.0.0/16"
 seed_demo_data                        = true
+enable_alerting                       = false
+min_replicas                          = 1
+container_memory                      = "1"

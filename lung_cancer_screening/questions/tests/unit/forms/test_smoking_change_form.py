@@ -16,6 +16,7 @@ class TestSmokingChangeForm(TestCase):
             normal=True,
             complete=True
         )
+        self.smoking_current_response = self.normal_smoking_history.smoking_current_response
 
 
     def test_is_valid_a_valid_value(self):
@@ -40,7 +41,27 @@ class TestSmokingChangeForm(TestCase):
         )
 
 
-    def test_is_invalid_when_no_option_is_selected(self):
+    def test_has_a_required_validation_error_for_current_smoker(self):
+        self.smoking_current_response.value = True
+        self.smoking_current_response.save()
+
+        form = SmokingChangeForm(
+            response_set=self.response_set,
+            tobacco_smoking_history_item=self.normal_smoking_history,
+            data={"value": []}
+        )
+
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["value"],
+            ["Select if the number of cigarettes you smoke has changed over time"],
+        )
+
+
+    def test_has_a_required_validation_error_for_previous_smoker(self):
+        self.smoking_current_response.value = False
+        self.smoking_current_response.save()
+
         form = SmokingChangeForm(
             response_set=self.response_set,
             tobacco_smoking_history_item=self.normal_smoking_history,
@@ -49,7 +70,7 @@ class TestSmokingChangeForm(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(
             form.errors["value"],
-            ["Select if the number of cigarettes you smoke has changed over time"],
+            ["Select if the number of cigarettes you smoked has changed over time"],
         )
 
 
@@ -73,6 +94,7 @@ class TestSmokingChangeForm(TestCase):
             item.type == self.normal_smoking_history.type
             for item in items.all()
         ]))
+
 
     def test_does_not_create_a_new_tobacco_smoking_history_if_the_level_already_exists(self):
         existing_item = TobaccoSmokingHistoryFactory(
@@ -133,7 +155,10 @@ class TestSmokingChangeForm(TestCase):
         ).count(), 1)
 
 
-    def test_prevents_both_no_change_and_other_levels_selected(self):
+    def test_prevents_both_no_change_and_other_levels_selected_when_current_smoker(self):
+        self.smoking_current_response.value = True
+        self.smoking_current_response.save()
+
         self.normal_smoking_history.type = TobaccoSmokingHistoryTypes.ROLLING_TOBACCO.value
         self.normal_smoking_history.save()
 
@@ -152,6 +177,31 @@ class TestSmokingChangeForm(TestCase):
         self.assertEqual(
             form.errors["value"],
             ["Select if the number of grams of rolling tobacco you smoke has changed over time, or select 'no, it has not changed'"],
+        )
+
+
+    def test_prevents_both_no_change_and_other_levels_selected_when_previous_smoker(self):
+        self.smoking_current_response.value = False
+        self.smoking_current_response.save()
+
+        self.normal_smoking_history.type = TobaccoSmokingHistoryTypes.ROLLING_TOBACCO.value
+        self.normal_smoking_history.save()
+
+        form = SmokingChangeForm(
+            response_set=self.response_set,
+            tobacco_smoking_history_item=self.normal_smoking_history,
+            data={
+                "value": [
+                    TobaccoSmokingHistory.Levels.NO_CHANGE,
+                    TobaccoSmokingHistory.Levels.INCREASED
+                ]
+            }
+        )
+
+        self.assertFalse(form.is_valid())
+        self.assertEqual(
+            form.errors["value"],
+            ["Select if the number of grams of rolling tobacco you smoked has changed over time, or select 'no, it has not changed'"],
         )
 
 
@@ -177,13 +227,30 @@ class TestSmokingChangeForm(TestCase):
         self.assertIn(TobaccoSmokingHistory.Levels.DECREASED, initial)
 
 
-    def test_label_contains_the_smoking_history_type(self):
-        self.normal_smoking_history.type = TobaccoSmokingHistoryTypes.MEDIUM_CIGARS.value
+    def test_has_a_label_for_current_smoker_with_type(self):
+        self.smoking_current_response.value = True
+        self.smoking_current_response.save()
+
         form = SmokingChangeForm(
             response_set=self.response_set,
             tobacco_smoking_history_item=self.normal_smoking_history,
         )
+
         self.assertEqual(
             form.fields["value"].label,
-            "Has the number of medium cigars you normally smoke changed over time?"
+            "Has the number of cigarettes you normally smoke changed over time?"
+        )
+
+    def test_has_a_label_for_previous_smoker_with_type(self):
+        self.smoking_current_response.value = False
+        self.smoking_current_response.save()
+
+        form = SmokingChangeForm(
+            response_set=self.response_set,
+            tobacco_smoking_history_item=self.normal_smoking_history,
+        )
+
+        self.assertEqual(
+            form.fields["value"].label,
+            "Did the number of cigarettes you normally smoked change over time?"
         )

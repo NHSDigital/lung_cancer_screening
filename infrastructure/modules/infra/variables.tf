@@ -58,6 +58,21 @@ variable "protect_keyvault" {
   default     = true
 }
 
+variable "infra_key_vault_name" {
+  description = "Name of the infra key vault"
+  type        = string
+}
+
+variable "infra_key_vault_rg" {
+  description = "Name of the infra key vault resource group"
+  type        = string
+}
+
+variable "enable_alerting" {
+  description = "Whether monitoring and alerting is enabled."
+  type        = bool
+}
+
 locals {
   hub_vnet_rg_name = "rg-hub-${var.hub}-uks-bootstrap"
   hub_vnet_name    = "vnet-hub-${var.hub}-uks"
