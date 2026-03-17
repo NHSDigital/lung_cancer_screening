@@ -34,10 +34,11 @@ class SmokedAmountForm(SmokingFormPresenter, forms.ModelForm):
 
 
     def normal_label(self):
+        is_current = self.tobacco_smoking_history.is_current()
+        middle = "currently smoke in a normal " if is_current else "normally smoke a "
         return (
             f"Roughly how many {self.presenter.unit()} "
-            f"{self.presenter.do_or_did()} you "
-            f"{self.presenter.currently_or_previously()} smoke in a normal "
+            f"{self.presenter.do_or_did()} you {middle}"
             f"{self.presenter.frequency()}?"
         )
 
