@@ -89,7 +89,10 @@ class TestSmokedAmountForm(TestCase):
             form.errors["value"],
         )
 
-    def test_has_a_label_for_the_normal_type(self):
+    def test_has_a_label_for_the_normal_type_for_current_smoking_history(self):
+        self.smoking_current_response.value = True
+        self.smoking_current_response.save()
+
         form = SmokedAmountForm(
             instance=self.response,
             data={"value": 20},
@@ -98,7 +101,22 @@ class TestSmokedAmountForm(TestCase):
 
         self.assertEqual(
             form.fields["value"].label,
-            "Roughly how many full pipe loads did you previously smoke in a normal day?"
+            "Roughly how many full pipe loads do you currently smoke in a normal day?"
+        )
+
+
+    def test_has_a_label_for_the_normal_type_for_non_current_smoking_history(self):
+        self.smoking_current_response.value = False
+        self.smoking_current_response.save()
+
+        form = SmokedAmountForm(
+            instance=self.response,
+            data={"value": 20},
+            tobacco_smoking_history=self.smoking_history
+        )
+        self.assertEqual(
+            form.fields["value"].label,
+            "Roughly how many full pipe loads did you normally smoke a day?"
         )
 
 
