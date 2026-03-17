@@ -109,6 +109,7 @@ class ResponseSet(BaseModel):
     def is_eligible(self):
         if not all(
             hasattr(self, attr) for attr in [
+                "terms_of_use_response",
                 'have_you_ever_smoked_response',
                 'date_of_birth_response',
                 'check_need_appointment_response'
@@ -117,6 +118,7 @@ class ResponseSet(BaseModel):
             return False
 
         return all([
+            self.terms_of_use_response.has_accepted(),
             self.have_you_ever_smoked_response.is_eligible(),
             self.date_of_birth_response.is_eligible(),
             self.check_need_appointment_response.is_eligible()
@@ -144,12 +146,13 @@ class ResponseSet(BaseModel):
 
 
     def previous_smoking_history(self, smoking_history_item):
-        if not self.previous_normal_smoking_history(smoking_history_item):
+        histories = list(self.user_editable_tobacco_smoking_histories())
+        current_history_index = histories.index(smoking_history_item)
+
+        if current_history_index == 0:
             return None
 
-        return self.tobacco_smoking_history.filter(
-            type=self.previous_normal_smoking_history(smoking_history_item).type,
-        ).in_form_order().last()
+        return histories[current_history_index - 1]
 
 
     def next_smoking_history(self, smoking_history_item):

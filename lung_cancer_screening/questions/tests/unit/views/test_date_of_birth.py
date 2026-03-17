@@ -9,6 +9,7 @@ from lung_cancer_screening.questions.models.have_you_ever_smoked_response import
 )
 from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.have_you_ever_smoked_response_factory import HaveYouEverSmokedResponseFactory
+from ...factories.terms_of_use_response_factory import TermsOfUseResponseFactory
 
 
 @tag("DateOfBirth")
@@ -19,6 +20,12 @@ class TestGetDateOfBirth(TestCase):
         self.response_set = ResponseSetFactory.create(
             user=self.user,
         )
+
+        TermsOfUseResponseFactory.create(
+            response_set=self.response_set,
+            value=True
+        )
+
         self.response = HaveYouEverSmokedResponseFactory.create(
             response_set=self.response_set,
             value=HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY,
@@ -83,6 +90,12 @@ class TestPostDateOfBirth(TestCase):
         self.response_set = ResponseSetFactory.create(
             user=self.user,
         )
+
+        TermsOfUseResponseFactory.create(
+            response_set=self.response_set,
+            value=True
+        )
+
         self.response = HaveYouEverSmokedResponseFactory.create(
             response_set=self.response_set,
             value=HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY,

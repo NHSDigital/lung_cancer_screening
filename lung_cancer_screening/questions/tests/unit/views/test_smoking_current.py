@@ -56,7 +56,7 @@ class TestGetSmokingCurrent(TestCase):
             })
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
 
     def test_responds_successfully(self):
@@ -78,7 +78,12 @@ class TestGetSmokingCurrent(TestCase):
         )
 
 
-    def test_has_a_back_link_to_the_previous_tobacco_type_when_on_a_later_type_with_no_changed_level(self):
+    def test_has_a_back_link_to_the_previous_tobacco_type_with_no_changed_level_when_on_a_later_type(self):
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=self.tobacco_smoking_history.type,
+            no_change=True
+        )
         later_smoking_history = TobaccoSmokingHistoryFactory.create(
             response_set=self.response_set,
             small_cigars=True
@@ -169,7 +174,7 @@ class TestPostSmokingCurrent(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
     def test_creates_a_smoking_current_response(self):
         self.client.post(reverse("questions:smoking_current", kwargs = {

@@ -41,4 +41,4 @@ Feature: Asbestos exposure page
   Scenario: Cannot answer when ineligible
     Given I am logged in
     When I go to "/asbestos-exposure"
-    Then I am on "/have-you-ever-smoked"
+    Then I am on "/agree-terms-of-use"

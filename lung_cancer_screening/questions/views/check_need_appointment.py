@@ -2,6 +2,8 @@ from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 
+from lung_cancer_screening.questions.views.mixins.ensure_accepted_terms_of_use import EnsureAcceptedTermsEligible
+
 from .mixins.ensure_response_set import EnsureResponseSet
 from .question_base_view import QuestionBaseView
 from ..forms.check_need_appointment_form import CheckNeedAppointmentForm
@@ -21,7 +23,7 @@ class EnsureAgeEligible:
             return super().dispatch(request, *args, **kwargs)
 
 
-class CheckNeedAppointmentView(LoginRequiredMixin, EnsureResponseSet, EnsureAgeEligible, QuestionBaseView):
+class CheckNeedAppointmentView(LoginRequiredMixin, EnsureResponseSet, EnsureAcceptedTermsEligible, EnsureAgeEligible, QuestionBaseView):
     template_name = "check_need_appointment.jinja"
     form_class = CheckNeedAppointmentForm
     model = CheckNeedAppointmentResponse

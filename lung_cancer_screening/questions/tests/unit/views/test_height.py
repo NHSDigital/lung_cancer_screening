@@ -43,7 +43,7 @@ class TestGetHeight(TestCase):
             reverse("questions:height")
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
     def test_responds_successfully(self):
         ResponseSetFactory.create(user=self.user, eligible=True)
@@ -130,7 +130,7 @@ class TestPostHeight(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:have_you_ever_smoked"))
+        self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
     def test_creates_a_height_response(self):
         response_set = ResponseSetFactory.create(user=self.user, eligible=True)
