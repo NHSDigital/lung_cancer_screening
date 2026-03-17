@@ -1,4 +1,4 @@
-echo Running UI Tests
+echo Running Feature Tests
 
 if [[ -n "${TAG:-}" ]]; then
   TAG="--tags=$TAG"
