@@ -3,10 +3,12 @@
 {% from 'nhsuk/components/back-link/macro.jinja' import backLink %}
 {% from 'nhsuk/components/fieldset/macro.jinja' import fieldset %}
 
+{% block pageTitle %}What is your height?  – Check if you need a lung scan – NHS{% endblock %}
 {% set HEIGHT_UNIT = {
     'imperial': 'feet and inches',
     'metric': 'centimetres'
 } %}
+
 
 {% block beforeContent %}
 <nav>
