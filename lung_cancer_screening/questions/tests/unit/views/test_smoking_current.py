@@ -94,7 +94,7 @@ class TestGetSmokingCurrent(TestCase):
 
         self.assertEqual(
             response.context_data["back_link_url"],
-            reverse("questions:smoked_amount", kwargs = {
+            reverse("questions:smoking_change", kwargs = {
                 "tobacco_type": self.tobacco_smoking_history.url_type()
             })
         )
