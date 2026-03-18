@@ -33,7 +33,7 @@ class SmokingCurrentView(
         if self.previous_smoking_history():
             if self.previous_smoking_history().is_normal():
                 return reverse(
-                    "questions:smoked_amount",
+                    "questions:smoking_change",
                     kwargs={"tobacco_type": self.previous_smoking_history().url_type()},
                     query=self.get_change_query_params(),
                 )

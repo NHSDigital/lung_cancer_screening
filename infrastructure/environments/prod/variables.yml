@@ -1,4 +1,4 @@
 OIDC_RP_CLIENT_ID: lungcs
-OIDC_OP_FQDN: https://auth.aos.signin.nhs.uk
-NHS_LOGIN_SETTINGS_URL: https://settings.aos.signin.nhs.uk
+OIDC_OP_FQDN: https://access.login.nhs.uk
+NHS_LOGIN_SETTINGS_URL: https://settings.login.nhs.uk
 DISABLE_RECENT_SUBMISSION_LIMITATION: false
