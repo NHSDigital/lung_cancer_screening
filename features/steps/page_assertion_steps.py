@@ -24,3 +24,7 @@ def then_i_see_a_phase_header(context, phase):
 def then_i_see_a_link_named(context, link_text):
     link = context.page.locator(f'a:has-text("{link_text}")')
     expect(link).to_have_count(1)
+
+@then(u'I see a page title tag "{title}"')
+def then_i_see_a_page_title_tag(context, title):
+    expect(context.page).to_have_title(title)

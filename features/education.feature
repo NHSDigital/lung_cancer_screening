@@ -4,6 +4,7 @@ Feature: Education page
     Given I am logged in
     And I have answered questions showing I am eligible
     When I go to "/education"
+    Then I see a page title tag "Your education  – Check if you need a lung scan – NHS"
     Then there are no accessibility violations
 
   Scenario: Form errors

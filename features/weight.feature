@@ -4,6 +4,7 @@ Feature: Weight page
     Given I am logged in
     And I have answered questions showing I am eligible
     When I go to "/weight"
+    Then I see a page title tag "What is your weight? – Check if you need a lung scan – NHS"
     Then there are no accessibility violations
     When I click "Switch to stone and pounds"
     Then there are no accessibility violations

@@ -6,6 +6,7 @@ Feature: Types tobacco smoking page
     And I have answered questions showing I am eligible
     And I have answered questions showing I have smoked for "10" years
     When I go to "/types-tobacco-smoking"
+    Then I see a page title tag "What do you or have you smoked? - Check if you need a lung scan - NHS"
     Then there are no accessibility violations
 
   Scenario: Form errors

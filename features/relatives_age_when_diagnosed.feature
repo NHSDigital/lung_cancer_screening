@@ -6,6 +6,7 @@ Feature: Relatives age when diagnosed page
     When I go to "/family-history-lung-cancer"
     And I fill in and submit my family history lung cancer with "Yes"
     Then I am on "/relatives-age-when-diagnosed"
+    Then I see a page title tag "If your relatives were under 60 when diagnosed - NHS"
     And there are no accessibility violations
 
   Scenario: Form errors
