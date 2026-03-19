@@ -11,7 +11,7 @@ resources:
     - repository: dtos-devops-templates
       type: github
       name: NHSDigital/dtos-devops-templates
-      ref: PPHA-417-Create-infra-as-code-for-Hub-resources
+      ref: main
       endpoint: NHSDigital
 
 variables:
