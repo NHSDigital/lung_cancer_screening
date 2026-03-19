@@ -310,7 +310,8 @@ class ResponseSetPresenter:
                 "items": [
                     {
                         "href": reverse(url_lookup_name, kwargs = kwargs, query = self._change_query_params()),
-                        "text": "Change"
+                        "text": "Change",
+                        "visuallyHiddenText": f"answer for {question.lower().rstrip("?")}"
                     }
                 ]
             }
