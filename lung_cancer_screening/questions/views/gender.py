@@ -9,7 +9,7 @@ from ..models.gender_response import GenderResponse
 
 
 class GenderView(LoginRequiredMixin, EnsureResponseSet, EnsureEligibleMixin, QuestionBaseView):
-    template_name = "question_form.jinja"
+    template_name = "gender.jinja"
     form_class = GenderForm
     model = GenderResponse
     success_url = reverse_lazy("questions:ethnicity")
