@@ -172,6 +172,17 @@ class TestGetSmokedTotalYears(TestCase):
             }),
         )
 
+    def test_renders_page_title(self):
+        response = self.client.get(reverse("questions:smoked_total_years", kwargs={
+            "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+        }))
+
+        self.assertContains(
+            response,
+            "<title>Number of years you have smoked cigarettes - NHS</title>",
+            html=True,
+        )
+
 
 @tag("SmokedTotalYears")
 class TestPostSmokedTotalYears(TestCase):

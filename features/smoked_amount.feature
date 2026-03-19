@@ -7,6 +7,7 @@ Feature: Smoked amount page
     And I have answered questions showing I currently smoke "Cigarettes"
     And I have answered questions showing I have smoked "Cigarettes" daily
     When I go to "/cigarettes-smoked-amount"
+    Then I see a page title tag "Number of cigarettes you normally smoke - NHS"
     Then there are no accessibility violations
 
   Scenario: Form errors
@@ -41,6 +42,7 @@ Feature: Smoked amount page
     And I have answered questions showing I have "increased" my frequency of "Cigarettes" smoking to "Weekly"
     When I go to "/cigarettes-smoked-increased-amount"
     Then I see a back link to "/cigarettes-smoking-increased-frequency"
+    Then I see a page title tag "Number of cigarettes you smoked when your smoking increased - NHS"
     When I fill in "When you smoked more than 10 cigarettes a day, roughly how many cigarettes did you normally smoke a week?" with "10"
     And I submit the form
     Then I am on "/cigarettes-smoked-increased-years"

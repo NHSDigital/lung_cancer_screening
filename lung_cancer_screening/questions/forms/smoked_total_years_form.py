@@ -110,6 +110,8 @@ class SmokedTotalYearsForm(SmokingFormPresenter, forms.ModelForm):
         else:
             return self.changed_greater_than_years_smoked_error_message()
 
+    def page_title(self):
+        return self.label()
 
     class Meta:
         model = SmokedTotalYearsResponse

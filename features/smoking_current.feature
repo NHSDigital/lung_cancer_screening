@@ -6,6 +6,7 @@ Feature: Smoking current page
     And I have answered questions showing I am eligible
     And I have answered questions showing I have smoked "Cigarettes"
     When I go to "/cigarettes-smoking-current"
+    Then I see a page title tag "Do you currently smoke cigarettes? – NHS"
     Then there are no accessibility violations
 
   Scenario: Form errors

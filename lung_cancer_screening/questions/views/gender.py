@@ -14,3 +14,4 @@ class GenderView(LoginRequiredMixin, EnsureResponseSet, EnsureEligibleMixin, Que
     model = GenderResponse
     success_url = reverse_lazy("questions:ethnicity")
     back_link_url = reverse_lazy("questions:sex_at_birth")
+    page_title: str = "Your gender identity – Check if you need a lung scan – NHS"

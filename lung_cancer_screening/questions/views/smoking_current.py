@@ -49,7 +49,12 @@ class SmokingCurrentView(
 
         return reverse("questions:types_tobacco_smoking")
 
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        human_type = self.tobacco_smoking_history_item().human_type().lower()
+        context["human_type"] = human_type
+        context["page_title"] = f"Do you currently smoke {human_type}? – NHS"
+        return context
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

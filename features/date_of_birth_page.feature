@@ -2,8 +2,10 @@
 Feature: Date of birth page
   Scenario: The page is accessible
     Given I am logged in
+    And I have answered questions showing I have accepted the terms of use
     And I have answered have you ever smoked with an eligible response
     When I go to "/date-of-birth"
+    Then I see a page title tag "What is your date of birth? – Check if you need a lung scan – NHS"
     Then there are no accessibility violations
 
   Scenario: Form errors
