@@ -459,3 +459,14 @@ class TestResponseSetPresenter(TestCase):
 
         self.assertEqual(type(result[0]), TobaccoSmokingHistoryTypePresenter)
         self.assertEqual(type(result[1]), TobaccoSmokingHistoryTypePresenter)
+
+    @tag("CheckYourAnswers")
+    def test_check_your_answer_item_has_visually_hidden_text(self):
+        presenter = ResponseSetPresenter(self.response_set)
+
+        answers_item = presenter._check_your_answer_item("Have you ever smoked?", "Not answered", "questions:have_you_ever_smoked")
+
+        self.assertEqual(
+            answers_item["actions"]["items"][0]["visuallyHiddenText"],
+            "answer for have you ever smoked"
+        )

@@ -57,7 +57,7 @@
             "questions:smoking_current",
             kwargs={ "tobacco_type": type_history.url_type() },
             query={ "change": "True" },
-          ) }}" class="nhsuk-link">Change</a>
+          ) }}" class="nhsuk-link" >Change<span class="nhsuk-u-visually-hidden"> your answers to {{ type_history.title() }} smoking history</span></a>
 
           {{ summaryList({
             "rows": type_history.summary_items()
