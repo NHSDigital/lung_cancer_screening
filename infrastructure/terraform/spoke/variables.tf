@@ -182,8 +182,8 @@ variable "min_replicas" {
 }
 
 locals {
-  region              = "uksouth"
-  resource_group_name = "rg-${var.app_short_name}-${var.env_config}-uks"
+  region               = "uksouth"
+  resource_group_name  = "rg-${var.app_short_name}-${var.env_config}-uks"
   infra_key_vault_name = "kv-${var.app_short_name}-${var.env_config}-inf"
   infra_key_vault_rg   = "rg-${var.app_short_name}-${var.env_config}-infra"
 }
