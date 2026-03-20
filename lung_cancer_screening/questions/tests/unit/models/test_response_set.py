@@ -12,9 +12,10 @@ from ...factories.have_you_ever_smoked_response_factory import HaveYouEverSmoked
 from ...factories.date_of_birth_response_factory import DateOfBirthResponseFactory
 from ...factories.check_need_appointment_response_factory import CheckNeedAppointmentResponseFactory
 from ....models.user import User
-from ....models.response_set import ResponseSet
 from ....models.family_history_lung_cancer_response import FamilyHistoryLungCancerValues
+from ....models.have_you_ever_smoked_response import HaveYouEverSmokedValues
 
+from ....models.response_set import ResponseSet
 
 @tag("ResponseSet")
 class TestResponseSet(TestCase):
@@ -85,7 +86,7 @@ class TestResponseSet(TestCase):
         )
 
 
-    def test_Saving_a_submitted_response_Set_does_not_included_itself_in_unsubmitted_response_sets_validation(self):
+    def test_saving_a_submitted_response_set_does_not_included_itself_in_unsubmitted_response_sets_validation(self):
         response_set = ResponseSetFactory.create(complete=True)
         response_set.submitted_at = timezone.now()
 
@@ -472,3 +473,22 @@ class TestResponseSet(TestCase):
         self.assertIsNone(
             self.response_set.next_smoking_history(current_smoking_history)
         )
+
+
+    def test_current_smoker_returns_true_when_the_user_is_currently_smoking(self):
+        HaveYouEverSmokedResponseFactory.create(
+            response_set=self.response_set,
+            value=HaveYouEverSmokedValues.YES_I_CURRENTLY_SMOKE.value,
+        )
+        self.assertTrue(self.response_set.current_smoker())
+
+
+    def test_current_smoker_returns_false_when_the_user_is_not_currently_smoking(self):
+        HaveYouEverSmokedResponseFactory.create(
+            response_set=self.response_set,
+            value=HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY.value,
+        )
+        self.assertFalse(self.response_set.current_smoker())
+
+    def test_current_smoker_returns_none_when_the_has_not_answered_the_question(self):
+        self.assertIsNone(self.response_set.current_smoker())

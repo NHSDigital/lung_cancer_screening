@@ -19,3 +19,11 @@ class HaveYouEverSmokedResponseFactory(factory.django.DjangoModelFactory):
         ineligible = factory.Trait(
             value=factory.Iterator(HaveYouEverSmokedResponse.INELIGIBLE_VALUES)
         )
+
+        current_smoker = factory.Trait(
+            value=HaveYouEverSmokedValues.YES_I_CURRENTLY_SMOKE.value
+        )
+
+        former_smoker = factory.Trait(
+            value=HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY.value
+        )
