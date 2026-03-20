@@ -18,10 +18,10 @@ class GenderForm(forms.ModelForm):
             }
         )
 
-        # Add divider before "None of the above"
+        # Add divider before "PREFER_NOT_TO_SAY"
         fields = self["value"]
         fields.add_divider_after(
-             GenderValues.NON_BINARY,
+            GenderValues.NON_BINARY,
             "or"
         )
 
