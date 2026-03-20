@@ -10,6 +10,7 @@ class SmokingFrequencyForm(SmokingFormPresenter, forms.ModelForm):
     def __init__(self, *args, tobacco_smoking_history, normal_tobacco_smoking_history = None, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.response_set = tobacco_smoking_history.response_set
         self.tobacco_smoking_history = tobacco_smoking_history
         self.normal_tobacco_smoking_history = normal_tobacco_smoking_history
 
@@ -29,9 +30,10 @@ class SmokingFrequencyForm(SmokingFormPresenter, forms.ModelForm):
             SmokingFrequencyValues.WEEKLY,
             "For example, on the weekend"
         )
+        smoke_or_smoked = "smoke" if self.response_set.current_smoker() else "smoked"
         value_field.add_hint_for_choice(
             SmokingFrequencyValues.MONTHLY,
-            "Select this option if you smoke at least once a month",
+            f"Select this option if you {smoke_or_smoked} at least once a month",
         )
         value_field.add_hint_for_choice(
             SmokingFrequencyValues.YEARLY,
