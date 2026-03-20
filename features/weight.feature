@@ -50,11 +50,11 @@ Feature: Weight page
     When I go to "/weight"
     Then I see a back link to "/height"
     When I fill in and submit my weight with "70"
-    Then I am on "/sex-at-birth"
+    Then I am on "/gender"
     When I click "Back"
     And I click "Switch to stone and pounds"
     When I fill in and submit my weight with "5" stone and "10" pounds
-    Then I am on "/sex-at-birth"
+    Then I am on "/gender"
     When I click "Back"
     Then I am on "/weight"
 

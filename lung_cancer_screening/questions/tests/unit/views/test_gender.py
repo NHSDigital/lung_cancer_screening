@@ -107,7 +107,7 @@ class TestPostGender(TestCase):
             response_set.gender_response.value, self.valid_params["value"]
         )
 
-    def test_redirects_to_ethnicity(self):
+    def test_redirects_to_sex_at_birth(self):
         ResponseSetFactory.create(user=self.user, eligible=True)
 
         response = self.client.post(
@@ -115,7 +115,7 @@ class TestPostGender(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:ethnicity"))
+        self.assertRedirects(response, reverse("questions:sex_at_birth"))
 
     def test_redirects_to_responses_if_change_query_param_is_true(self):
         ResponseSetFactory.create(user=self.user, eligible=True)
