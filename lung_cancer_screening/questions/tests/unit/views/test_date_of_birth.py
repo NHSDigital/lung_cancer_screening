@@ -81,6 +81,15 @@ class TestGetDateOfBirth(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+    def test_renders_page_title(self):
+        response = self.client.get(reverse("questions:date_of_birth"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response,
+            "<title>What is your date of birth? – Check if you need a lung scan – NHS</title>",
+            html=True,
+        )
 
 @tag("DateOfBirth")
 class TestPostDateOfBirth(TestCase):

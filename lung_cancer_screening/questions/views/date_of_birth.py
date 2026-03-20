@@ -26,6 +26,7 @@ class DateOfBirthView(LoginRequiredMixin, EnsureResponseSet, EnsureAcceptedTerms
     model = DateOfBirthResponse
     success_url = reverse_lazy("questions:check_need_appointment")
     back_link_url = reverse_lazy("questions:have_you_ever_smoked")
+    page_title: str = "What is your date of birth? – Check if you need a lung scan – NHS"
 
     def get_success_url(self):
         if self.object.is_eligible():

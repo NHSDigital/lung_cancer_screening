@@ -4,6 +4,7 @@ from django.views.generic.edit import UpdateView
 
 
 class QuestionBaseView(UpdateView):
+    page_title = "Check if you need a lung scan – NHS"
 
     def should_redirect_to_responses(self, request):
         return bool(request.POST.get("change"))
@@ -20,6 +21,7 @@ class QuestionBaseView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["back_link_url"] = self.get_back_link_url()
+        context["page_title"] = self.page_title
         return context
 
     def get_success_url(self):

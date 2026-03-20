@@ -88,6 +88,14 @@ class SmokedAmountForm(SmokingFormPresenter, forms.ModelForm):
             "must be at least 1"
         )
 
+    def page_title(self) -> str:
+        if self.tobacco_smoking_history.is_normal():
+            return (f"Number of {self.presenter.unit()} you normally {self.presenter.smoke_or_smoked()}")
+        else:
+            return(f"Number of {self.presenter.unit()} you smoked when your smoking {self.presenter.increased_or_decreased()}")
+
+
+
     class Meta:
         model = SmokedAmountResponse
         fields = ['value']

@@ -13,6 +13,7 @@ class AgeWhenStartedSmokingView(LoginRequiredMixin, EnsureResponseSet, EnsureEli
     model = AgeWhenStartedSmokingResponse
     success_url = reverse_lazy("questions:periods_when_you_stopped_smoking")
     back_link_url = reverse_lazy("questions:relatives_age_when_diagnosed")
+    page_title = "How old were you when you started smoking? – NHS"
 
     def get_success_url(self):
         if self.should_redirect_to_responses(self.request):

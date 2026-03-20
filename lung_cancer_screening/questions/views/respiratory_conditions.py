@@ -14,3 +14,4 @@ class RespiratoryConditionsView(LoginRequiredMixin, EnsureResponseSet, EnsureEli
     model = RespiratoryConditionsResponse
     success_url = reverse_lazy("questions:asbestos_exposure")
     back_link_url = reverse_lazy("questions:education")
+    page_title = "Respiratory conditions – Check if you need a lung scan – NHS"
