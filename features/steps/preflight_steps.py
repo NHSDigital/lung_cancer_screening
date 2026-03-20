@@ -68,6 +68,14 @@ def given_i_have_answered_questions_showing_i_am_eligible(context):
         eligible=True,
     )
 
+@given("I have answered questions showing I am a current smoker")
+def given_i_have_answered_questions_showing_i_am_a_current_smoker(context):
+    context.page.goto(f"{context.live_server_url}/have-you-ever-smoked")
+
+    when_i_check_label(context, "Yes, I currently smoke")
+    when_i_submit_the_form(context)
+
+
 @given('I have answered questions showing I have smoked for "{years}" years')
 def given_i_have_answered_questions_showing_i_have_smoked_for_years_years(context, years):
     response_set = get_or_create_response_set(context)

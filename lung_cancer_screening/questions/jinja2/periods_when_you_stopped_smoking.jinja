@@ -16,10 +16,12 @@
           <input type="hidden" name="change" value="True">
         {% endif %}
 
-        <h1 class="nhsuk-heading-l">Periods when you stopped smoking</h1>
+        {% if request.response_set.current_smoker() %}
+          <h1 class="nhsuk-heading-l">Periods when you stopped smoking</h1>
 
-        <p>There may have been periods when you stopped or quit smoking.</p>
-        <p>If you stopped smoking for periods of 1 year or longer, tell us the total number of years you stopped smoking.</p>
+          <p>There may have been periods when you stopped or quit smoking.</p>
+          <p>If you stopped smoking for periods of 1 year or longer, tell us the total number of years you stopped smoking.</p>
+        {% endif %}
 
         {% do form.value.add_conditional_html(
           "True",
