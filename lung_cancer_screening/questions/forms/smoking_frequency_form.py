@@ -86,8 +86,9 @@ class SmokingFrequencyForm(SmokingFormPresenter, forms.ModelForm):
         else:
             return self.changed_required_error_message()
 
+
     def page_title(self):
-        if self.presenter.increased_or_decreased(): #TODO: What's the best condition to use here?
-            return f"How often you {self.presenter.smoke_or_smoked()} {self.presenter.human_type().lower()} when your smoking {self.presenter.increased_or_decreased()}"
-        else:
+        if self.tobacco_smoking_history.is_normal():
             return(f"How often {self.presenter.do_or_did()} you smoke {self.presenter.human_type().lower()}?")
+        else:
+            return f"How often you {self.presenter.smoke_or_smoked()} {self.presenter.human_type().lower()} when your smoking {self.presenter.increased_or_decreased()}"
