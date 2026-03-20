@@ -163,3 +163,10 @@ class ResponseSet(BaseModel):
             return None
 
         return histories[current_history_index + 1]
+
+
+    def current_smoker(self):
+        if not hasattr(self, 'have_you_ever_smoked_response'):
+            return None
+
+        return self.have_you_ever_smoked_response.is_current_smoker()

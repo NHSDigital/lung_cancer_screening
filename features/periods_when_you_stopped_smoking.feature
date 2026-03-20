@@ -12,6 +12,7 @@ Feature: Periods when you stopped smoking page
   Scenario: Form errors
     Given I am logged in
     And I have answered questions showing I am eligible
+    And I have answered questions showing I am a current smoker
     And I have answered questions showing I have smoked for "10" years
     When I go to "/periods-when-you-stopped-smoking"
     When I submit the form
@@ -28,6 +29,7 @@ Feature: Periods when you stopped smoking page
   Scenario: Navigating backwards and forwards
     Given I am logged in
     And I have answered questions showing I am eligible
+    And I have answered questions showing I am a current smoker
     And I have answered questions showing I have smoked for "10" years
     When I go to "/periods-when-you-stopped-smoking"
     Then I see a back link to "/age-when-started-smoking"

@@ -21,7 +21,7 @@ Feature: Questionnaire
     When I check "I agree" and submit
 
     Then I am on "/have-you-ever-smoked"
-    When I fill in and submit my smoking status with "Yes, I used to smoke"
+    When I fill in and submit my smoking status with "Yes, I currently smoke"
 
     Then I am on "/date-of-birth"
     When I fill in and submit my date of birth as 55 years ago
@@ -94,7 +94,7 @@ Feature: Questionnaire
     When I check "No, it has not changed" and submit
 
     Then I am on "/check-your-answers"
-    And I see "Yes, I used to smoke" as a response to "Have you ever smoked tobacco?" under "Eligibility"
+    And I see "Yes, I currently smoke" as a response to "Have you ever smoked tobacco?" under "Eligibility"
     And I see a date 55 years ago as a response to "Date of birth" under "Eligibility"
 
     And I see "5 feet 7 inches" as a response to "Height" under "About you"
