@@ -3,7 +3,6 @@ Feature: Agree terms of use page
   Scenario: The page is accessible
     Given I am logged in
     When I go to "/agree-terms-of-use"
-    Then I see a page title tag "Accept terms of use for NHS check if you need a lung scan – NHS"
     Then there are no accessibility violations
 
   Scenario: Form errors

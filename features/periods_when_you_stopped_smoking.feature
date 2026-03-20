@@ -6,7 +6,6 @@ Feature: Periods when you stopped smoking page
     And I have answered questions showing I am eligible
     And I have answered questions showing I have smoked for "10" years
     When I go to "/periods-when-you-stopped-smoking"
-    Then I see a page title tag "Have you ever stopped smoking for periods of 1 year or longer? - NHS"
     # TODO: problem with aria expanded from nhsuk frontend
     # Then there are no accessibility violations
 

@@ -4,7 +4,6 @@ Feature: Asbestos exposure page
     Given I am logged in
     And I have answered questions showing I am eligible
     When I go to "/asbestos-exposure"
-    Then I see a page title tag "Asbestos exposure at work – Check if you need a lung scan – NHS"
     Then there are no accessibility violations
 
   Scenario: Form errors

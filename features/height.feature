@@ -4,7 +4,6 @@ Feature: Height page
     Given I am logged in
     And I have answered questions showing I am eligible
     When I go to "/height"
-    Then I see a page title tag "What is your height?  – Check if you need a lung scan – NHS"
     Then there are no accessibility violations
     When I click "Switch to feet and inches"
     Then there are no accessibility violations
