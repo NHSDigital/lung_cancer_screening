@@ -7,6 +7,7 @@ def then_there_are_no_accessibility_violations(context):
     axe_results = axe.run(context.page)
     violations_msg = (
         f"Found the following accessibility violations: \n"
+        # Use generate_report for more indepth information about the violations
         f"{axe_results.generate_snapshot()}"
     )
     assert axe_results.violations_count == 0, violations_msg

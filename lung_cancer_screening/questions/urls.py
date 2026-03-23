@@ -49,6 +49,7 @@ from .views.agree_terms_of_use import AgreeTermsOfUseView
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/start'), name='root'),
+    path('accessibility-statement', TemplateView.as_view(template_name='accessibility_statement.jinja'), name='accessibility_statement'),
     path('age-range-exit', AgeRangeExitView.as_view(), name='age_range_exit'),
     path('age-when-started-smoking', AgeWhenStartedSmokingView.as_view(), name='age_when_started_smoking'),
     path('agree-terms-of-use', AgreeTermsOfUseView.as_view(), name='agree_terms_of_use'),
