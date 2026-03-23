@@ -70,6 +70,12 @@ class TobaccoSmokingHistoryPresenter(BasePresenter):
         elif self.tobacco_smoking_history.is_decreased():
             return "fewer"
 
+    def increased_or_decreased(self):
+        if self.tobacco_smoking_history.is_increased():
+            return "increased"
+        elif self.tobacco_smoking_history.is_decreased():
+            return "decreased"
+
 
     def currently_or_previously(self):
         if self.is_present_tense():

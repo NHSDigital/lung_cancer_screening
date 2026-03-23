@@ -1,5 +1,5 @@
 @TermsOfUse
-Feature: Check if you need an appointment page
+Feature: Agree terms of use page
   Scenario: The page is accessible
     Given I am logged in
     When I go to "/agree-terms-of-use"

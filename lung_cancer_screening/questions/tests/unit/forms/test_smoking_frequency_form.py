@@ -188,3 +188,19 @@ class TestSmokingFrequencyForm(TestCase):
             "Select a valid choice. some string is not one of the available choices.",
             form.errors["value"]
         )
+
+    def test_has_correct_page_title_for_changed_level(self):
+        increased_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            type=self.normal_smoking_history.type,
+            increased=True,
+        )
+        form = SmokingFrequencyForm(
+            tobacco_smoking_history=increased_smoking_history,
+            normal_tobacco_smoking_history=self.normal_smoking_history
+        )
+
+        self.assertEqual(
+            form.page_title(),
+            "How often you smoked a pipe when your smoking increased"
+        )

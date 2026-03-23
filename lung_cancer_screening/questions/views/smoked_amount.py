@@ -63,3 +63,9 @@ class SmokedAmountView(
             result.append("smoking_current_response")
 
         return result
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = f"{context['form'].page_title()} - NHS"
+
+        return context

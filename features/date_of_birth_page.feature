@@ -2,6 +2,7 @@
 Feature: Date of birth page
   Scenario: The page is accessible
     Given I am logged in
+    And I have answered questions showing I have accepted the terms of use
     And I have answered have you ever smoked with an eligible response
     When I go to "/date-of-birth"
     Then there are no accessibility violations

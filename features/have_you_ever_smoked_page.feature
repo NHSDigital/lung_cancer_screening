@@ -2,6 +2,7 @@
 Feature: Have you ever smoked page
   Scenario: The page is accessible
     Given I am logged in
+    And I have answered questions showing I have accepted the terms of use
     When I go to "/have-you-ever-smoked"
     Then there are no accessibility violations
 

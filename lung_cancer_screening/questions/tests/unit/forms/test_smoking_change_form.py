@@ -254,3 +254,32 @@ class TestSmokingChangeForm(TestCase):
             form.fields["value"].label,
             "Did the number of cigarettes you normally smoke change over time?"
         )
+
+    def test_has_correct_page_title_for_current_smoking_change(self):
+        self.smoking_current_response.value = True
+        self.smoking_current_response.save()
+
+        form = SmokingChangeForm(
+            response_set=self.response_set,
+            tobacco_smoking_history_item=self.normal_smoking_history,
+        )
+
+        self.assertEqual(
+            form.page_title(),
+            "Has the number of cigarettes you smoke changed over time?"
+        )
+
+    def test_has_correct_page_title_for_previous_smoking_change(self):
+        self.smoking_current_response.value = False
+        self.smoking_current_response.save()
+
+        form = SmokingChangeForm(
+            response_set=self.response_set,
+            tobacco_smoking_history_item=self.normal_smoking_history,
+        )
+
+        self.assertEqual(
+            form.page_title(),
+            "Did the number of cigarettes you smoke change over time?"
+        )
+

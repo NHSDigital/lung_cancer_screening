@@ -4,6 +4,7 @@ Feature: Check if you need an appointment page
     Given I am logged in
     And I have answered have you ever smoked with an eligible response
     And I have answered date of birth with an eligible date of birth
+    And I have answered questions showing I have accepted the terms of use
     When I go to "/check-if-you-need-an-appointment"
     Then there are no accessibility violations
 

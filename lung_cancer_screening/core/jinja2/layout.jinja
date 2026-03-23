@@ -9,7 +9,7 @@
   <script type="module" src="{{ static('js/bundle.js' )}}"></script>
 {% endblock %}
 
-{% block pageTitle %}Check if you need a lung scan{% endblock %}
+{% block pageTitle %}{{ page_title|default("Check if you need a lung scan – NHS") }}{% endblock %}
 
 {% block header %}
   {{ header({

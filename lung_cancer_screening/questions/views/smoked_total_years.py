@@ -39,6 +39,11 @@ class SmokedTotalYearsView(
         kwargs["tobacco_smoking_history"] = self.tobacco_smoking_history_item()
         return kwargs
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = context["form"].page_title()
+        return context
+
 
     def get_success_url(self):
         if self.tobacco_smoking_history_item().is_normal():

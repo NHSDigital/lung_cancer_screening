@@ -96,6 +96,12 @@ class SmokingChangeForm(SmokingFormPresenter, forms.Form):
                 return False
         return True
 
+    def page_title(self):
+        if self.tobacco_smoking_history.is_current():
+            return f"Has the number of {self.tobacco_smoking_history.unit()} you smoke changed over time?"
+        else:
+            return f"Did the number of {self.tobacco_smoking_history.unit()} you smoke change over time?"
+
 
     def _delete_levels_not_selected(self):
         for level in self._existing_levels():

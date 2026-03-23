@@ -259,3 +259,47 @@ class TestSmokedTotalYearsForm(TestCase):
             "The number of years you smoked 200 cigarettes a week must be equal to, or fewer than, the total number of years you have been smoking",
             form.errors["value"]
         )
+
+    def test_page_title_for_a_normal_type(self):
+        self.smoking_history.smoking_current_response.value = True
+        self.smoking_history.smoking_current_response.save()
+
+        form = SmokedTotalYearsForm(
+            instance=self.response,
+            tobacco_smoking_history=self.smoking_history
+        )
+        self.assertEqual(
+            form.page_title(),
+            "Number of years you have smoked cigarettes - NHS"
+        )
+
+    def test_page_title_for_a_changed_type(self):
+        increased_smoking_history = TobaccoSmokingHistoryFactory.create(
+            type=self.smoking_history.type,
+            increased=True
+        )
+
+        form = SmokedTotalYearsForm(
+            instance=self.response,
+            tobacco_smoking_history=increased_smoking_history
+        )
+        self.assertEqual(
+            form.page_title(),
+            "Number of years you smoked cigarettes when your smoking increased - NHS"
+        )
+
+    def test_page_title_for_past_tense(self):
+        self.smoking_history.smoking_current_response.value = False
+        self.smoking_history.smoking_current_response.save()
+
+        form = SmokedTotalYearsForm(
+            instance=self.response,
+            tobacco_smoking_history=self.smoking_history,
+            data={
+                "value": None
+            }
+        )
+        self.assertEqual(
+            form.page_title(),
+            "Number of years you smoked cigarettes - NHS"
+        )
