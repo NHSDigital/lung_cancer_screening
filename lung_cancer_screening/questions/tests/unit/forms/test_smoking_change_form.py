@@ -252,7 +252,7 @@ class TestSmokingChangeForm(TestCase):
 
         self.assertEqual(
             form.fields["value"].label,
-            "Did the number of cigarettes you normally smoked change over time?"
+            "Did the number of cigarettes you normally smoke change over time?"
         )
 
     def test_has_correct_page_title_for_current_smoking_change(self):
