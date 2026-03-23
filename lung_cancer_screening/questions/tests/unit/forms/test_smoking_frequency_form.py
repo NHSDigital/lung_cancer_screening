@@ -3,6 +3,7 @@ from django.test import TestCase, tag
 from lung_cancer_screening.questions.forms.smoking_frequency_form import SmokingFrequencyForm
 from lung_cancer_screening.questions.models.smoking_frequency_response import SmokingFrequencyValues
 from lung_cancer_screening.questions.tests.factories.response_set_factory import ResponseSetFactory
+from lung_cancer_screening.questions.tests.factories.have_you_ever_smoked_response_factory import HaveYouEverSmokedResponseFactory
 
 from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
 
@@ -63,6 +64,38 @@ class TestSmokingFrequencyForm(TestCase):
         self.assertEqual(
             form.fields["value"].label,
             "When you smoked more than 10 full pipe loads a week, how often did you smoke a pipe?"
+        )
+
+
+    def test_has_a_hint_for_current_smoker(self):
+        self.response_set.have_you_ever_smoked_response.delete()
+        HaveYouEverSmokedResponseFactory.create(
+            response_set=self.response_set,
+            current_smoker=True,
+        )
+
+        form = SmokingFrequencyForm(
+            tobacco_smoking_history=self.normal_smoking_history
+        )
+        self.assertEqual(
+            form["value"].get_hint_for_choice(SmokingFrequencyValues.MONTHLY),
+            "Select this option if you smoke at least once a month",
+        )
+
+
+    def test_has_a_hint_for_former_smoker(self):
+        self.response_set.have_you_ever_smoked_response.delete()
+        HaveYouEverSmokedResponseFactory.create(
+            response_set=self.response_set,
+            former_smoker=True,
+        )
+
+        form = SmokingFrequencyForm(
+            tobacco_smoking_history=self.normal_smoking_history
+        )
+        self.assertEqual(
+            form["value"].get_hint_for_choice(SmokingFrequencyValues.MONTHLY),
+            "Select this option if you smoked at least once a month",
         )
 
 
