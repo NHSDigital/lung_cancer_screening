@@ -12,5 +12,5 @@ class SexAtBirthView(LoginRequiredMixin, EnsureResponseSet, EnsureEligibleMixin,
     template_name = "sex_at_birth.jinja"
     form_class = SexAtBirthForm
     model = SexAtBirthResponse
-    success_url = reverse_lazy("questions:gender")
-    back_link_url = reverse_lazy("questions:weight")
+    success_url = reverse_lazy("questions:ethnicity")
+    back_link_url = reverse_lazy("questions:gender")
