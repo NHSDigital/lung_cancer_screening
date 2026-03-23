@@ -19,9 +19,9 @@ Feature: Sex at birth page
     Given I am logged in
     And I have answered questions showing I am eligible
     When I go to "/sex-at-birth"
-    Then I see a back link to "/weight"
+    Then I see a back link to "/gender"
     When I fill in and submit my sex at birth with "Male"
-    Then I am on "/gender"
+    Then I am on "/ethnicity"
 
   Scenario: Checking responses and changing them
     Given I am logged in

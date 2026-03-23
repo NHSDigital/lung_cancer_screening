@@ -9,9 +9,9 @@ from ..models.gender_response import GenderResponse
 
 
 class GenderView(LoginRequiredMixin, EnsureResponseSet, EnsureEligibleMixin, QuestionBaseView):
-    template_name = "question_form.jinja"
+    template_name = "gender.jinja"
     form_class = GenderForm
     model = GenderResponse
-    success_url = reverse_lazy("questions:ethnicity")
-    back_link_url = reverse_lazy("questions:sex_at_birth")
+    success_url = reverse_lazy("questions:sex_at_birth")
+    back_link_url = reverse_lazy("questions:weight")
     page_title: str = "Your gender identity – Check if you need a lung scan – NHS"

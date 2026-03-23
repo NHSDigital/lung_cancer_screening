@@ -19,7 +19,7 @@ Feature: Ethnicity page
     Given I am logged in
     And I have answered questions showing I am eligible
     When I go to "/ethnicity"
-    Then I see a back link to "/gender"
+    Then I see a back link to "/sex-at-birth"
     When I fill in and submit my ethnicity with "White"
     Then I am on "/education"
 

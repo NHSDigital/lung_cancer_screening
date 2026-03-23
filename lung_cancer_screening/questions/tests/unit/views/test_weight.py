@@ -141,7 +141,7 @@ class TestPostWeight(TestCase):
             response_set.weight_response.metric, self.valid_weight * 10
         )
 
-    def test_redirects_to_sex_at_birth(self):
+    def test_redirects_to_gender(self):
         ResponseSetFactory.create(user=self.user, eligible=True)
 
         response = self.client.post(
@@ -149,7 +149,7 @@ class TestPostWeight(TestCase):
             self.valid_params
         )
 
-        self.assertRedirects(response, reverse("questions:sex_at_birth"))
+        self.assertRedirects(response, reverse("questions:gender"))
 
     def test_redirects_to_responses_if_change_query_param_is_true(self):
         ResponseSetFactory.create(user=self.user, eligible=True)

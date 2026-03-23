@@ -37,11 +37,11 @@ Feature: Questionnaire
     When I click "Switch to stone and pounds"
     And I fill in and submit my weight with "5" stone and "10" pounds
 
-    Then I am on "/sex-at-birth"
-    When I fill in and submit my sex at birth with "Male"
-
     Then I am on "/gender"
     When I fill in and submit my gender with "Female"
+
+    Then I am on "/sex-at-birth"
+    When I fill in and submit my sex at birth with "Male"
 
     Then I am on "/ethnicity"
     When I fill in and submit my ethnicity with "White"
