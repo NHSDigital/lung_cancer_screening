@@ -94,8 +94,6 @@ class SmokedAmountForm(SmokingFormPresenter, forms.ModelForm):
         else:
             return(f"Number of {self.presenter.unit()} you smoked when your smoking {self.presenter.increased_or_decreased()}")
 
-
-
     class Meta:
         model = SmokedAmountResponse
         fields = ['value']
