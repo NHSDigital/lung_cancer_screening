@@ -115,6 +115,8 @@ class SmokedTotalYearsForm(SmokingFormPresenter, forms.ModelForm):
         if self.tobacco_smoking_history.is_normal():
             smoked_text = "have smoked" if self.presenter.is_present_tense() else "smoked"
             return f"Number of years you {smoked_text} {self.presenter.human_type().lower()} - NHS"
+        if self.tobacco_smoking_history.is_increased() or self.tobacco_smoking_history.is_decreased():
+            return f"Number of years you smoked {self.presenter.human_type().lower()} when your smoking {self.presenter.increased_or_decreased()}  - NHS"
         else:
             return f"Number of years you smoked {self.presenter.human_type().lower()} - NHS"
 

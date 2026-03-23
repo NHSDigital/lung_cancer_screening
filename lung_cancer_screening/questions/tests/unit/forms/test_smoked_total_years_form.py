@@ -268,7 +268,6 @@ class TestSmokedTotalYearsForm(TestCase):
             instance=self.response,
             tobacco_smoking_history=self.smoking_history
         )
-
         self.assertEqual(
             form.page_title(),
             "Number of years you have smoked cigarettes - NHS"
@@ -284,7 +283,22 @@ class TestSmokedTotalYearsForm(TestCase):
             instance=self.response,
             tobacco_smoking_history=increased_smoking_history
         )
+        self.assertEqual(
+            form.page_title(),
+            "Number of years you smoked cigarettes when your smoking increased  - NHS"
+        )
 
+    def test_page_title_for_past_tense(self):
+        self.smoking_history.smoking_current_response.value = False
+        self.smoking_history.smoking_current_response.save()
+
+        form = SmokedTotalYearsForm(
+            instance=self.response,
+            tobacco_smoking_history=self.smoking_history,
+            data={
+                "value": None
+            }
+        )
         self.assertEqual(
             form.page_title(),
             "Number of years you smoked cigarettes - NHS"
