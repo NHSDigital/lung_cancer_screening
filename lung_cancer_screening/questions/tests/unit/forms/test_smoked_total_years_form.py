@@ -285,7 +285,7 @@ class TestSmokedTotalYearsForm(TestCase):
         )
         self.assertEqual(
             form.page_title(),
-            "Number of years you smoked cigarettes when your smoking increased  - NHS"
+            "Number of years you smoked cigarettes when your smoking increased - NHS"
         )
 
     def test_page_title_for_past_tense(self):
