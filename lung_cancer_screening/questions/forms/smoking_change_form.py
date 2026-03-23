@@ -42,7 +42,7 @@ class SmokingChangeForm(SmokingFormPresenter, forms.Form):
     def previous_label(self):
         return (
             f"Did the number of {self.tobacco_smoking_history.unit()} "
-            "you normally smoked change over time?"
+            "you normally smoke change over time?"
         )
 
 
