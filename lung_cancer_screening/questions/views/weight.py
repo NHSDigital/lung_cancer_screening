@@ -16,7 +16,7 @@ from ..models.weight_response import WeightResponse
 class WeightView(LoginRequiredMixin, EnsureResponseSet, EnsureEligibleMixin, QuestionBaseView):
     template_name = "weight.jinja"
     model = WeightResponse
-    success_url = reverse_lazy("questions:sex_at_birth")
+    success_url = reverse_lazy("questions:gender")
     back_link_url = reverse_lazy("questions:height")
 
     def get_form_class(self):

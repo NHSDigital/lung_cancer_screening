@@ -9,7 +9,6 @@ class GenderValues(models.TextChoices):
     MALE = "M", 'Male'
     NON_BINARY = "N", 'Non-binary'
     PREFER_NOT_TO_SAY = "P", 'Prefer not to say'
-    GP = "G", 'How I describe myself may not match my GP record'
 
 
 class GenderResponse(BaseModel):
