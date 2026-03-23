@@ -29,6 +29,5 @@ Feature: Static Pages
     When I go to "/contact-us"
     Then there are no accessibility violations
     And I see a page title "Contact us"
-    And there are no accessibility violations
     When I go to "/terms-of-use"
     Then I see a page title "NHS check if you need a lung scan terms of use"

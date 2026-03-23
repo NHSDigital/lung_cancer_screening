@@ -228,7 +228,19 @@ class TestSmokedAmountForm(TestCase):
             form.errors["value"],
         )
 
-def test_has_correct_page_title_for_changed_level(self):
+    def test_has_correct_page_title_for_normal_history(self):
+        form = SmokedAmountForm(
+            instance=self.response,
+            data={"value": None},
+            tobacco_smoking_history=self.smoking_history
+        )
+
+        self.assertEqual(
+            form.page_title(),
+            "Number of full pipe loads you normally smoked"
+        )
+
+    def test_has_correct_page_title_for_changed_level(self):
         increased_smoking_history = TobaccoSmokingHistoryFactory.create(
             type=self.smoking_history.type,
             increased=True,
@@ -241,5 +253,5 @@ def test_has_correct_page_title_for_changed_level(self):
 
         self.assertEqual(
             form.page_title(),
-            "Number of full pipe loads you normally smoked when your smoking increased"
+            "Number of full pipe loads you smoked when your smoking increased"
         )

@@ -41,7 +41,7 @@ class SmokedTotalYearsView(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["page_title"] = self.get_form().page_title()
+        context["page_title"] = context["form"].page_title()
         return context
 
 
