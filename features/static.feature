@@ -11,7 +11,7 @@ Feature: Static Pages
     And I see a page title "NHS check if you need a lung scan privacy policy"
     When I go to "/contact-us"
     Then I see a page title "Contact us"
-    when I go to "/terms-of-use"
+    When I go to "/terms-of-use"
     Then I see a page title "NHS check if you need a lung scan terms of use"
 
   Scenario: The static pages are available when logged in and accessible
