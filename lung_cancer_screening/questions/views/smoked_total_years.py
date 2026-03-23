@@ -41,9 +41,7 @@ class SmokedTotalYearsView(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        human_type = self.tobacco_smoking_history_item().human_type().lower()
-        context["human_type"] = human_type
-        context["page_title"] = f"Number of years you have smoked {human_type} - NHS"
+        context["page_title"] = self.get_form().page_title()
         return context
 
 

@@ -110,8 +110,13 @@ class SmokedTotalYearsForm(SmokingFormPresenter, forms.ModelForm):
         else:
             return self.changed_greater_than_years_smoked_error_message()
 
+
     def page_title(self):
-        return self.label()
+        if self.tobacco_smoking_history.is_normal():
+            return f"Number of years you have smoked {self.presenter.human_type().lower()} - NHS"
+        else:
+            return f"Number of years you smoked {self.presenter.human_type().lower()} - NHS"
+
 
     class Meta:
         model = SmokedTotalYearsResponse
