@@ -12,7 +12,7 @@ Feature: Have you ever smoked page
     When I go to "/have-you-ever-smoked"
     And I submit the form
     Then I am on "/have-you-ever-smoked"
-    And I see a form error "Select if you have ever smoked"
+    And I see a form error "Select if you have ever smoked tobacco"
     And there are no accessibility violations
 
   Scenario: Eligibility of non smokers

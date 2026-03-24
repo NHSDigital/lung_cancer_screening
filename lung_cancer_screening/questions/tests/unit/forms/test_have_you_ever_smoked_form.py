@@ -48,7 +48,7 @@ class TestHaveYouEverSmokedForm(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(
             form.errors["value"],
-            ["Select if you have ever smoked"]
+            ["Select if you have ever smoked tobacco"]
         )
 
     def test_returns_a_boolean_type(self):

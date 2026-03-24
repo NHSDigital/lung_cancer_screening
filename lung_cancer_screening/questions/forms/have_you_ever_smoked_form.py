@@ -11,12 +11,12 @@ class HaveYouEverSmokedForm(forms.ModelForm):
         self.fields["value"] = TypedChoiceField(
             choices=HaveYouEverSmokedValues.choices,
             widget=forms.RadioSelect,
-            label="Have you ever smoked?",
+            label="Have you ever smoked tobacco?",
             label_classes="nhsuk-fieldset__legend--m",
             hint="This includes social smoking",
             coerce=int,
             error_messages={
-                'required': 'Select if you have ever smoked'
+                'required': 'Select if you have ever smoked tobacco'
             }
         )
 
