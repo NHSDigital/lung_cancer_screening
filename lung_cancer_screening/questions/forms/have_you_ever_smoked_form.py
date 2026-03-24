@@ -16,7 +16,7 @@ class HaveYouEverSmokedForm(forms.ModelForm):
             hint="This includes social smoking",
             coerce=int,
             error_messages={
-                'required': 'Select if you have ever smoked'
+                'required': 'Select if you have ever smoked tobacco'
             }
         )
 
