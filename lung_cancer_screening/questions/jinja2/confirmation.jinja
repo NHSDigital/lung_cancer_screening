@@ -1,5 +1,6 @@
 {% extends 'layout.jinja' %}
 {% from "nhsuk/components/panel/macro.jinja" import panel %}
+{% from "nhsuk/components/button/macro.jinja" import button %}
 
 {% block pageTitle %}Thank you for testing the online service - NHS{% endblock %}
 
@@ -7,23 +8,29 @@
   <div class="nhsuk-grid-row">
     <div class="nhsuk-grid-column-two-thirds">
       {{ panel({
-        "titleText": "Thank you for testing the online service"
+        "titleText": "Thank you for testing the online service",
+        "classes": "nhsuk-panel__title--l",
       }) }}
 
       <section>
-        <h2>What happens next</h2>
-        <p>The online service cannot currently recommend if you need a lung scan.</p>
-        <p>You will need to complete your questionnaire for NHS lung cancer screening by phone.</p>
+        <h2 class="nhsuk-heading-m">What happens next</h2>
+
+        <p>You will need to complete your NHS lung cancer screening by phone.</p>
 
         <p>Call us on {% include '_phone_number.jinja' %}.</p>
 
+        <p>An advisor will ask you similar questions about your medical history and lifestyle.
+        They will not have access to the answers you have submitted online.
+        This is because we are testing the online service.</p>
+
         <p>
-          <strong>Opening hours:</strong><br/>
+          <strong>Phone lines are open:</strong><br/>
           Monday to Friday 8am to 8pm<br/>
           Saturdays 8am to 1pm
         </p>
 
-        <p>If we do not hear from you in 14 days we will call you to complete the questionnaire by phone. If you are unable to answer the phone we will call you back.</p>
+        <p>If we do not hear from you in 14 days we will call you to complete the questionnaire by phone.
+        If you are unable to answer the phone we will call you back.</p>
 
         <p>As a thank you for testing the online service we will offer you a £10 voucher after you have completed your phone appointment.</p>
       </section>
@@ -31,19 +38,19 @@
       {% include "_speak_to_a_gp_if.jinja" %}
 
       <section>
-        <h2>Find your local Stop Smoking Service</h2>
+        <h2 class="nhsuk-heading-m">Find your local Stop Smoking Service</h2>
         <p>Stopping smoking is the single biggest change you can make for your health. <a href="https://www.nhs.uk/better-health/quit-smoking/ready-to-quit-smoking/find-your-local-stop-smoking-service/" target="_blank">Find local services to help you stop smoking.</a></p>
       </section>
 
       <section>
-        <h2>Benefits of stopping smoking</h2>
+        <h2 class="nhsuk-heading-m">Benefits of stopping smoking</h2>
         <p>Stopping smoking is a great way to stay healthy, protect the health of those around you, and enjoy a better quality of life.</p>
       </section>
 
       {% include "_when_you_quit_you.jinja" %}
 
       <section>
-        <h2>It's never too late to stop</h2>
+        <h2 class="nhsuk-heading-m">It's never too late to stop</h2>
         <p>When you stop smoking, your body can repair itself sooner than you might think. It does not matter how old you are, or how long you have smoked.</p>
       </section>
 
@@ -51,6 +58,15 @@
       {% include "_to_help_stop_smoking.jinja" %}
       {% include "_smoking_anxiety_and_mood.jinja" %}
       {% include "_for_free_help_and_support.jinja" %}
+
+      <section>
+        <h2 class="nhsuk-heading-m">Help us improve this service</h2>
+        <p>Tell us about your experience using this service today.</p>
+        {{ button({
+        "text": "Give feedback",
+        "href": "https://feedback.digital.nhs.uk/jfe/form/SV_6V8dAlFT0sxJnzo"
+      }) }}
+      </section>
     </div>
   </div>
 {% endblock %}
