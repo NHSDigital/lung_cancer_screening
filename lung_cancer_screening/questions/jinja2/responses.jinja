@@ -34,7 +34,7 @@
       </section>
 
       <section>
-      <h2 class="nhsuk-heading-m">Family history</h2>
+        <h2 class="nhsuk-heading-m">Family history</h2>
 
         {{ summaryList({
           "rows": response_set.family_history_responses_items()
@@ -49,15 +49,25 @@
         }) }}
       </section>
 
-      {% for type_history in response_set.tobacco_smoking_history_by_type() %}
-        <section class="smoking-history-section">
-          <h3 class="nhsuk-heading-s">{{ type_history.title() }} smoking history</h3>
 
-          <a href="{{ url(
-            "questions:smoking_current",
-            kwargs={ "tobacco_type": type_history.url_type() },
-            query={ "change": "True" },
-          ) }}" class="nhsuk-link" >Change<span class="nhsuk-u-visually-hidden"> your answers to {{ type_history.title() }} smoking history</span></a>
+      {% for type_history in response_set.tobacco_smoking_history_by_type() %}
+
+        <section class="smoking-history-section">
+          <div class="nhsuk-card__heading-container nhsuk-u-padding-0">
+            <h3 class="nhsuk-heading-s">{{ type_history.title() }} smoking history</h3>
+            <ul class="nhsuk-card__actions">
+              <li class="nhsuk-card__action">
+                <a href="{{ url(
+                  "questions:smoking_current",
+                  kwargs={ "tobacco_type" : type_history.url_type() },
+                  query={ "change": "True" },
+                ) }}"
+                  class="nhsuk-link nhsuk-u-font-weight-normal">
+                  Change<span class="nhsuk-u-visually-hidden"> your answers to {{
+                    type_history.title() }} smoking history</span></a>
+              </li>
+            </ul>
+          </div>
 
           {{ summaryList({
             "rows": type_history.summary_items()
