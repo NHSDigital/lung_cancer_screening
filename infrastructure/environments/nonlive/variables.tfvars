@@ -24,6 +24,9 @@ projects = {
   }
 }
 
+infra_key_vault_name = "kv-lungcs-nonlive-inf"
+infra_key_vault_rg = "rg-hub-nonlive-uks-bootstrap"
+
 diagnostic_settings = {
   metric_enabled = true
 }
