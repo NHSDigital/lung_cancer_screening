@@ -41,6 +41,7 @@ Feature: Periods when you stopped smoking page
   Scenario: Checking responses and changing them
     Given I am logged in
     And I have answered questions showing I am eligible
+    And I have answered questions showing I am a current smoker
     And I have answered questions showing I have smoked for "10" years
     When I go to "/periods-when-you-stopped-smoking"
     And I check "Yes"
