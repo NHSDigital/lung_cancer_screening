@@ -99,6 +99,7 @@ Feature: Smoking history pages
 
     And I see "40 cigarettes a day for 5 years" as a response to "When you smoked more than 25 cigarettes a month" under "Cigarette smoking history"
 
+  @wip
   Scenario: Multiple smoking histories
     Given I am logged in
     And I have answered questions showing I am eligible
@@ -386,7 +387,7 @@ Feature: Smoking history pages
     And I see "2 cigarillos a month" as a response to "Current cigarillo smoking" under "Cigarillo smoking history"
     And I see "4 cigarillos a week for 3 years" as a response to "When you smoked more than 2 cigarillos a month" under "Cigarillo smoking history"
 
-  # Change cigarette smoking history
+  # Change cigarette smoking history with increased and decreased
     When I click the link to change "Cigarette" smoking history
 
     Then I am on "/cigarettes-smoking-current?change=True"
@@ -419,9 +420,78 @@ Feature: Smoking history pages
     And I submit the form
 
     Then I am on "/cigarettes-smoked-increased-years?change=True"
+    When I submit the form
 
-    When I go to "/check-your-answers"
+    Then I am on "/cigarettes-smoking-decreased-frequency?change=True"
+    When I submit the form
+
+    Then I am on "/cigarettes-smoked-decreased-amount?change=True"
+    When I submit the form
+
+    Then I am on "/cigarettes-smoked-decreased-years?change=True"
+    When I submit the form
+
+    Then I am on "/check-your-answers"
     Then I see "17 years" as a response to "Total number of years you smoked cigarettes" under "Cigarette smoking history"
     And I see "25 cigarettes a month" as a response to "Current cigarette smoking" under "Cigarette smoking history"
 
     And I see "40 cigarettes a day for 5 years" as a response to "When you smoked more than 25 cigarettes a month" under "Cigarette smoking history"
+
+  # Change medium cigars with decreased
+    When I click the link to change "Medium cigar" smoking history
+
+    Then I am on "/medium-cigars-smoking-current?change=True"
+    When I submit the form
+
+    Then I am on "/medium-cigars-smoked-total-years?change=True"
+    When I submit the form
+
+    Then I am on "/medium-cigars-smoking-frequency?change=True"
+    When I submit the form
+
+    Then I am on "/medium-cigars-smoked-amount?change=True"
+    When I submit the form
+
+    Then I am on "/medium-cigars-smoking-change?change=True"
+    When I submit the form
+
+    Then I am on "/medium-cigars-smoking-decreased-frequency?change=True"
+    When I submit the form
+
+    Then I am on "/medium-cigars-smoked-decreased-amount?change=True"
+    When I submit the form
+
+    Then I am on "/medium-cigars-smoked-decreased-years?change=True"
+    When I submit the form
+
+    Then I am on "/check-your-answers"
+
+  # Change cigarillos with increased
+    When I click the link to change "Cigarillo" smoking history
+
+    Then I am on "/cigarillos-smoking-current?change=True"
+    When I submit the form
+
+    Then I am on "/cigarillos-smoked-total-years?change=True"
+    When I submit the form
+
+    Then I am on "/cigarillos-smoking-frequency?change=True"
+    When I submit the form
+
+    Then I am on "/cigarillos-smoked-amount?change=True"
+    When I submit the form
+
+    Then I am on "/cigarillos-smoking-change?change=True"
+    When I submit the form
+
+    Then I am on "/cigarillos-smoking-increased-frequency?change=True"
+    When I submit the form
+
+    Then I am on "/cigarillos-smoked-increased-amount?change=True"
+    When I submit the form
+
+    Then I am on "/cigarillos-smoked-increased-years?change=True"
+    When I submit the form
+
+    Then I am on "/check-your-answers"
+

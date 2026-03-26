@@ -45,7 +45,14 @@ class SmokedTotalYearsView(
         return context
 
 
+    def has_decreased_level(self):
+        return self.request.response_set.tobacco_smoking_history.filter(
+            type=self.tobacco_smoking_history_item().type,
+        ).decreased().exists()
+
+
     def get_success_url(self):
+        # Total years is the first question of a normal smoking hitory
         if self.tobacco_smoking_history_item().is_normal():
             return reverse(
                 "questions:smoking_frequency",
@@ -66,7 +73,7 @@ class SmokedTotalYearsView(
                 query=self.get_change_query_params(),
             )
 
-        if self.next_unanswered_history():
+        if self.next_unanswered_history() and not self.should_redirect_to_responses(self.request):
             return reverse(
                 "questions:smoking_current",
                 kwargs={
@@ -91,12 +98,6 @@ class SmokedTotalYearsView(
             kwargs=self.kwargs,
             query=self.get_change_query_params(),
         )
-
-
-    def has_decreased_level(self):
-        return self.request.response_set.tobacco_smoking_history.filter(
-            type=self.tobacco_smoking_history_item().type,
-        ).decreased().exists()
 
 
     def prerequisite_responses(self):
