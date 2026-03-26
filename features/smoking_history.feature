@@ -495,3 +495,27 @@ Feature: Smoking history pages
 
     Then I am on "/check-your-answers"
 
+  # Change cigarettes change to no change
+    When I click the link to change "Cigarette" smoking history
+
+    Then I am on "/cigarettes-smoking-current?change=True"
+    When I submit the form
+
+    Then I am on "/cigarettes-smoked-total-years?change=True"
+    When I submit the form
+
+    Then I am on "/cigarettes-smoking-frequency?change=True"
+    When I submit the form
+
+    Then I am on "/cigarettes-smoked-amount?change=True"
+    When I submit the form
+
+    Then I am on "/cigarettes-smoking-change?change=True"
+    When I uncheck "Yes, I used to smoke more than 25 cigarettes a month"
+    And I uncheck "Yes, I used to smoke fewer than 25 cigarettes a month"
+    And I check "No, it has not changed"
+    When I submit the form
+
+    Then I am on "/check-your-answers"
+
+

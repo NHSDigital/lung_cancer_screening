@@ -259,6 +259,31 @@ class TestPostSmokingChange(TestCase):
             "level": TobaccoSmokingHistory.Levels.DECREASED.value.lower()
         }))
 
+    @tag("wip")
+    def test_redirects_to_responses_if_change_true_and_no_change_is_selected_and_another_type_exists(self):
+        self.tobacco_smoking_history.delete()
+        TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            small_cigars=True,
+            complete=True,
+            normal=True,
+        )
+        normal = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            cigarettes=True,
+            complete=True,
+            normal=True,
+        )
+
+        response = self.client.post(
+            reverse("questions:smoking_change", kwargs = {
+                "tobacco_type": normal.url_type()
+            }),
+            {"value": [TobaccoSmokingHistory.Levels.NO_CHANGE], "change": "True"}
+        )
+
+        self.assertRedirects(response, reverse("questions:responses"))
+
 
     def test_creates_a_smoking_change_response(self):
         self.client.post(
