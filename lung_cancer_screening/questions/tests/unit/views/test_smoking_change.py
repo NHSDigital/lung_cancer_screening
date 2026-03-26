@@ -259,7 +259,7 @@ class TestPostSmokingChange(TestCase):
             "level": TobaccoSmokingHistory.Levels.DECREASED.value.lower()
         }))
 
-    @tag("wip")
+
     def test_redirects_to_responses_if_change_true_and_no_change_is_selected_and_another_type_exists(self):
         self.tobacco_smoking_history.delete()
         TobaccoSmokingHistoryFactory.create(

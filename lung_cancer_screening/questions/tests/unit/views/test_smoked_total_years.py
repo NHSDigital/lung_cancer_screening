@@ -316,21 +316,6 @@ class TestPostSmokedTotalYears(TestCase):
         )
 
 
-    # Normal level - frequency
-    # Increased level - no decreased level - responses
-    # Increased level - decreased level - decreased frequency
-    # increased level - no decreased level and change true - responses
-    # increased level - decreased level and change true - decreased frequency
-    # decreased level - no other type - responses
-    # decreased level - other type - total years next type
-    # decreased level - no other type and change true - responses
-    # decreased level - other type and change true - responses
-
-
-
-
-
-
     def test_redirects_to_frequency_if_level_is_normal(self):
         response = self.client.post(
             reverse("questions:smoked_total_years", kwargs = {
@@ -511,7 +496,7 @@ class TestPostSmokedTotalYears(TestCase):
             fetch_redirect_response=False,
         )
 
-    @tag("wip")
+
     def test_redirects_to_responses_if_increased_level_and_change_true_and_no_decreased_and_another_type_exists(self):
         self.tobacco_smoking_history.delete()
         TobaccoSmokingHistoryFactory.create(
