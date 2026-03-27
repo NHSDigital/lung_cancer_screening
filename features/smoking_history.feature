@@ -99,7 +99,6 @@ Feature: Smoking history pages
 
     And I see "40 cigarettes a day for 5 years" as a response to "When you smoked more than 25 cigarettes a month" under "Cigarette smoking history"
 
-  @wip
   Scenario: Multiple smoking histories
     Given I am logged in
     And I have answered questions showing I am eligible
