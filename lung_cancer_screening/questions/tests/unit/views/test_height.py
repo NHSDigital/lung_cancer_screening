@@ -85,6 +85,25 @@ class TestGetHeight(TestCase):
         self.assertContains(response, "Feet")
         self.assertContains(response, "Inches")
 
+    def test_back_link_url_is_check_your_answers_if_changing_responses(self):
+        ResponseSetFactory.create(user=self.user, eligible=True)
+
+        response = self.client.get(
+            reverse("questions:height"), {"change": "True"}
+        )
+
+        self.assertEqual(response.context_data["back_link_url"], reverse("questions:responses"))
+
+    def test_back_link_url_is_check_need_appointment_if_not_changing_responses(self):
+        ResponseSetFactory.create(user=self.user, eligible=True)
+
+        response = self.client.get(
+            reverse("questions:height")
+        )
+
+        self.assertEqual(response.context_data["back_link_url"], reverse("questions:check_need_appointment"))
+
+
 
 @tag("Height")
 class TestPostHeight(TestCase):
@@ -174,21 +193,3 @@ class TestPostHeight(TestCase):
         )
 
         self.assertEqual(response.status_code, 422)
-
-    def test_back_link_url_is_check_your_answers_if_changing_responses(self):
-        ResponseSetFactory.create(user=self.user, eligible=True)
-
-        response = self.client.get(
-            reverse("questions:height"), {"change": "True"}
-        )
-
-        self.assertContains(response, reverse("questions:responses"))
-
-    def test_back_link_url_is_check_need_appointment_if_not_changing_responses(self):
-        ResponseSetFactory.create(user=self.user, eligible=True)
-
-        response = self.client.get(
-            reverse("questions:height")
-        )
-
-        self.assertContains(response, reverse("questions:check_need_appointment"))

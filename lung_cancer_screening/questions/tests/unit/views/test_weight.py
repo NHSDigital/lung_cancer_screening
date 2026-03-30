@@ -85,6 +85,25 @@ class TestGetWeight(TestCase):
         self.assertContains(response, "Stone")
         self.assertContains(response, "Pounds")
 
+    def test_back_link_url_is_responses_if_change_query_param_is_true(self):
+        ResponseSetFactory.create(user=self.user, eligible=True)
+
+        response = self.client.get(
+            reverse("questions:weight"),
+            {"change": "True"}
+        )
+
+        self.assertEqual(response.context_data["back_link_url"], reverse("questions:responses"))
+
+    def test_back_link_url_is_height_if_change_query_param_is_not_true(self):
+        ResponseSetFactory.create(user=self.user, eligible=True)
+
+        response = self.client.get(
+            reverse("questions:weight")
+        )
+
+        self.assertEqual(response.context_data["back_link_url"], reverse("questions:height"))
+
 
 @tag("Weight")
 class TestPostWeight(TestCase):
@@ -175,21 +194,3 @@ class TestPostWeight(TestCase):
 
         self.assertEqual(response.status_code, 422)
 
-    def test_back_link_url_is_responses_if_change_query_param_is_true(self):
-        ResponseSetFactory.create(user=self.user, eligible=True)
-
-        response = self.client.get(
-            reverse("questions:weight"),
-            {"change": "True"}
-        )
-
-        self.assertContains(response, reverse("questions:responses"))
-
-    def test_back_link_url_is_height_if_change_query_param_is_not_true(self):
-        ResponseSetFactory.create(user=self.user, eligible=True)
-
-        response = self.client.get(
-            reverse("questions:weight")
-        )
-
-        self.assertContains(response, reverse("questions:height"))
