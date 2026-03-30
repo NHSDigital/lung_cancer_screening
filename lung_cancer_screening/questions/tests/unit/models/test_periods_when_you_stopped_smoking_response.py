@@ -7,6 +7,8 @@ from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.periods_when_you_stopped_smoking_response_factory import PeriodsWhenYouStoppedSmokingResponseFactory
 from ...factories.date_of_birth_response_factory import DateOfBirthResponseFactory
 from ...factories.age_when_started_smoking_response_factory import AgeWhenStartedSmokingResponseFactory
+from ...factories.have_you_ever_smoked_response_factory import HaveYouEverSmokedResponseFactory
+
 from ....models.periods_when_you_stopped_smoking_response import PeriodsWhenYouStoppedSmokingResponse
 
 
@@ -135,11 +137,16 @@ class TestPeriodsWhenYouStoppedSmokingResponse(TestCase):
         )
 
 
-    def test_is_invalid_if_duration_years_is_longer_than_time_they_have_smoked(self):
+    def test_is_invalid_if_duration_years_is_longer_than_time_they_have_smoked_and_they_are_a_current_smoker(self):
         self.date_of_birth_response.value = datetime.today() - relativedelta(years=55)
         self.date_of_birth_response.save()
         self.age_when_started_smoking_response.value = 18
         self.age_when_started_smoking_response.save()
+
+        HaveYouEverSmokedResponseFactory.create(
+            response_set=self.response_set,
+            current_smoker=True,
+        )
 
         response = PeriodsWhenYouStoppedSmokingResponseFactory.build(
             response_set=self.response_set,
@@ -152,4 +159,29 @@ class TestPeriodsWhenYouStoppedSmokingResponse(TestCase):
         self.assertEqual(
             context.exception.messages[0],
             "The number of years you stopped smoking must be fewer than the total number of years you have been smoking",
+        )
+
+    @tag("wip")
+    def test_is_invalid_if_duration_years_is_longer_than_time_they_have_smoked_and_they_are_a_former_smoker(self):
+        self.date_of_birth_response.value = datetime.today() - relativedelta(years=55)
+        self.date_of_birth_response.save()
+        self.age_when_started_smoking_response.value = 18
+        self.age_when_started_smoking_response.save()
+
+        HaveYouEverSmokedResponseFactory.create(
+            response_set=self.response_set,
+            former_smoker=True,
+        )
+
+        response = PeriodsWhenYouStoppedSmokingResponseFactory.build(
+            response_set=self.response_set,
+            value=True,
+            duration_years=self.date_of_birth_response.age_in_years() - self.age_when_started_smoking_response.value + 1
+        )
+        with self.assertRaises(ValidationError) as context:
+            response.full_clean()
+
+        self.assertEqual(
+            context.exception.messages[0],
+            "The number of years you stopped or quit smoking must be fewer than the total number of years you smoked",
         )

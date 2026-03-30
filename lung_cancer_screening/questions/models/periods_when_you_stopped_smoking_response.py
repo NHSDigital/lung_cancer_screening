@@ -56,8 +56,11 @@ class PeriodsWhenYouStoppedSmokingResponse(BaseModel):
             return None
 
         if self.duration_years > self.response_set.age_when_started_smoking_response.years_smoked_including_stopped():
-            raise ValidationError(
-                {
-                    "duration_years": "The number of years you stopped smoking must be fewer than the total number of years you have been smoking"
-                }
-            )
+            if self.response_set.current_smoker():
+                message = "The number of years you stopped smoking must be fewer than the total number of years you have been smoking"
+            else:
+                message = "The number of years you stopped or quit smoking must be fewer than the total number of years you smoked"
+
+            raise ValidationError({
+                "duration_years": message
+            })
