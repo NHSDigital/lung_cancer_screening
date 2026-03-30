@@ -33,3 +33,8 @@ class DateOfBirthView(LoginRequiredMixin, EnsureResponseSet, EnsureAcceptedTerms
             return super().get_success_url()
         else:
             return reverse("questions:age_range_exit")
+
+    def get_back_link_url(self):
+        if self.is_changing_responses():
+            return reverse("questions:responses")
+        return reverse("questions:have_you_ever_smoked")
