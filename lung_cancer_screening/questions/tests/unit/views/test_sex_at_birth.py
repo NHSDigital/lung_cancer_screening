@@ -53,7 +53,7 @@ class TestGetSexAtBirth(TestCase):
 
         self.assertEqual(response.context_data["back_link_url"], reverse("questions:responses"))
 
-    def test_back_link_url_points_to_agree_terms_of_use_if_change_query_param_is_not_true(self):
+    def test_back_link_url_points_to_gender_if_change_query_param_is_not_true(self):
         ResponseSetFactory.create(user=self.user, eligible=True)
         response = self.client.get(
             reverse("questions:sex_at_birth")
