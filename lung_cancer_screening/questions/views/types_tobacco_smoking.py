@@ -42,7 +42,7 @@ class TypesTobaccoSmokingView(
         )
 
     def is_changing_responses(self):
-        return bool(self.request.GET.get("change")) or bool(self.request.POST.get("change"))
+        return self.request.GET.get("change") == "True" or self.request.POST.get("change") == "True"
 
     def get_back_link_url(self):
         if self.is_changing_responses():
