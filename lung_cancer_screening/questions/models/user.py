@@ -20,7 +20,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser):
     sub = models.CharField(max_length=255, unique=True)
-    nhs_number = models.CharField(max_length=10, unique=True)
+    nhs_number = models.CharField(max_length=10)
     given_name = models.CharField(max_length=255)
     family_name = models.CharField(max_length=255)
     email = models.EmailField()

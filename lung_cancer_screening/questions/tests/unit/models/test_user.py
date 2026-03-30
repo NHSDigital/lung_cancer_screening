@@ -86,16 +86,6 @@ class TestUser(TestCase):
         )
 
 
-    def test_raises_a_validation_error_if_nhs_number_is_duplicate(self):
-        with self.assertRaises(ValidationError) as context:
-            UserFactory(nhs_number=self.user.nhs_number)
-
-        self.assertIn(
-            "User with this Nhs number already exists.",
-            context.exception.messages
-        )
-
-
     def test_nhs_number_has_a_max_length_of_10(self):
         self.user.nhs_number = "1"*11
 
