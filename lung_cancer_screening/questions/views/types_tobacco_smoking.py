@@ -20,7 +20,7 @@ class TypesTobaccoSmokingView(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["back_link_url"] = reverse("questions:periods_when_you_stopped_smoking")
+        context["back_link_url"] = self.get_back_link_url()
         return context
 
     def form_valid(self, form):
@@ -40,3 +40,11 @@ class TypesTobaccoSmokingView(
                 "tobacco_type": next_tobacco_smoking_history.url_type()
             },
         )
+
+    def is_changing_responses(self):
+        return bool(self.request.GET.get("change")) or bool(self.request.POST.get("change"))
+
+    def get_back_link_url(self):
+        if self.is_changing_responses():
+            return reverse("questions:responses")
+        return reverse("questions:periods_when_you_stopped_smoking")

@@ -59,6 +59,30 @@ class TestGetTypesTobaccoSmoking(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+    def test_get_back_link_url_returns_responses_url_if_changing_responses(self):
+        ResponseSetFactory.create(user=self.user, eligible=True)
+
+        response = self.client.get(
+            reverse("questions:types_tobacco_smoking") + "?change=True"
+        )
+
+        self.assertEqual(
+            response.context_data["back_link_url"],
+            reverse("questions:responses")
+        )
+
+    def test_get_back_link_url_returns_periods_when_you_stopped_smoking_url_if_not_changing_responses(self):
+            ResponseSetFactory.create(user=self.user, eligible=True)
+
+            response = self.client.get(
+                reverse("questions:types_tobacco_smoking")
+            )
+
+            self.assertEqual(
+                response.context_data["back_link_url"],
+                reverse("questions:periods_when_you_stopped_smoking")
+            )
+
 
 @tag("TypesTobaccoSmoking")
 class TestPostTypesTobaccoSmoking(TestCase):
