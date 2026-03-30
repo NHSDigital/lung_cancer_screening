@@ -51,6 +51,7 @@ class TestGetAsbestosExposure(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+
     def test_back_link_url_is_responses_if_change_query_param_is_true(self):
         ResponseSetFactory.create(user=self.user, eligible=True)
 
@@ -60,7 +61,8 @@ class TestGetAsbestosExposure(TestCase):
 
         self.assertEqual(response.context_data["back_link_url"], reverse("questions:responses"))
 
-    def test_back_link_url_is_weight_if_change_query_param_is_not_true(self):
+
+    def test_back_link_url_is_respiratory_conditions_if_change_query_param_is_not_true(self):
         ResponseSetFactory.create(user=self.user, eligible=True)
 
         response = self.client.get(reverse("questions:asbestos_exposure"))

@@ -75,6 +75,29 @@ class TestGetRelativesAgeWhenDiagnosed(TestCase):
             fetch_redirect_response=False
         )
 
+    def test_back_link_url_points_to_responses_if_change_query_param_is_true(self):
+        FamilyHistoryLungCancerResponseFactory(
+            response_set=ResponseSetFactory.create(user=self.user, eligible=True),
+            value=FamilyHistoryLungCancerValues.YES
+        )
+
+        response = self.client.get(
+            reverse("questions:relatives_age_when_diagnosed") + "?change=True"
+        )
+
+        self.assertEqual(response.context_data["back_link_url"], reverse("questions:responses"))
+
+    def test_back_link_url_points_to_family_history_lung_cancer_if_change_query_param_is_not_true(self):
+        FamilyHistoryLungCancerResponseFactory(
+            response_set=ResponseSetFactory.create(user=self.user, eligible=True),
+            value=FamilyHistoryLungCancerValues.YES
+        )
+
+        response = self.client.get(
+            reverse("questions:relatives_age_when_diagnosed")
+        )
+
+        self.assertEqual(response.context_data["back_link_url"], reverse("questions:family_history_lung_cancer"))
 
 @tag("RelativesAgeWhenDiagnosed")
 class TestPostRelativesAgeWhenDiagnosed(TestCase):

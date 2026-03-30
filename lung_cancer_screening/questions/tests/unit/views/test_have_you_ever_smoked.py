@@ -56,7 +56,7 @@ class TestGetHaveYouEverSmoked(TestCase):
             reverse("questions:have_you_ever_smoked") + "?change=True"
         )
 
-        self.assertContains(response, reverse("questions:responses"))
+        self.assertEqual(response.context_data["back_link_url"], reverse("questions:responses"))
 
     def test_get_back_link_url_points_to_agree_terms_of_use_if_change_query_param_is_not_true(self):
         TermsOfUseResponseFactory.create(
@@ -68,7 +68,7 @@ class TestGetHaveYouEverSmoked(TestCase):
             reverse("questions:have_you_ever_smoked")
         )
 
-        self.assertContains(response, reverse("questions:agree_terms_of_use"))
+        self.assertEqual(response.context_data["back_link_url"], reverse("questions:agree_terms_of_use"))
 
 
 @tag("HaveYouEverSmoked")

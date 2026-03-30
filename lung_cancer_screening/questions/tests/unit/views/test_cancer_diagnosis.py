@@ -43,6 +43,24 @@ class TestGetCancerDiagnosis(TestCase):
 
         self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
+    def test_back_link_url_is_responses_if_change_query_param_is_true(self):
+        ResponseSetFactory.create(user=self.user, eligible=True)
+
+        response = self.client.get(
+            reverse("questions:cancer_diagnosis", query={"change": "True"})
+        )
+
+        self.assertEqual(response.context_data["back_link_url"], reverse("questions:responses"))
+
+    def test_back_link_url_is_asbestos_exposure_if_change_query_param_is_not_true(self):
+        ResponseSetFactory.create(user=self.user, eligible=True)
+
+        response = self.client.get(
+            reverse("questions:cancer_diagnosis")
+        )
+
+        self.assertEqual(response.context_data["back_link_url"], reverse("questions:asbestos_exposure"))
+
     def test_responds_successfully(self):
         ResponseSetFactory.create(user=self.user, eligible=True)
 

@@ -1,4 +1,4 @@
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .mixins.ensure_response_set import EnsureResponseSet
@@ -20,4 +20,3 @@ class PeriodsWhenYouStoppedSmokingView(LoginRequiredMixin, EnsureResponseSet, En
         form = context.get("form") or self.get_form()
         context["page_title"] = form.page_title()
         return context
-

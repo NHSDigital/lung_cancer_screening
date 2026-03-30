@@ -15,7 +15,6 @@ class RelativesAgeWhenDiagnosedView(LoginRequiredMixin, EnsureResponseSet, Ensur
     form_class = RelativesAgeWhenDiagnosedForm
     model = RelativesAgeWhenDiagnosedResponse
     success_url = reverse_lazy("questions:age_when_started_smoking")
-    back_link_url = reverse_lazy("questions:family_history_lung_cancer")
 
     def get(self, request, *args, **kwargs):
         if not (
@@ -25,3 +24,8 @@ class RelativesAgeWhenDiagnosedView(LoginRequiredMixin, EnsureResponseSet, Ensur
         ):
             return redirect(reverse("questions:family_history_lung_cancer"))
         return super().get(request, *args, **kwargs)
+
+    def get_back_link_url(self):
+        if self.is_changing_responses():
+            return reverse("questions:responses")
+        return reverse("questions:family_history_lung_cancer")
