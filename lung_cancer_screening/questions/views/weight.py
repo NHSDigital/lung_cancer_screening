@@ -1,4 +1,4 @@
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .mixins.ensure_response_set import EnsureResponseSet
@@ -17,7 +17,6 @@ class WeightView(LoginRequiredMixin, EnsureResponseSet, EnsureEligibleMixin, Que
     template_name = "weight.jinja"
     model = WeightResponse
     success_url = reverse_lazy("questions:gender")
-    back_link_url = reverse_lazy("questions:height")
 
     def get_form_class(self):
         unit = self.get_unit()
@@ -38,3 +37,8 @@ class WeightView(LoginRequiredMixin, EnsureResponseSet, EnsureEligibleMixin, Que
         if response.imperial and unit != "metric":
             unit = "imperial"
         return unit
+
+    def get_back_link_url(self):
+        if self.is_changing_responses():
+            return reverse("questions:responses")
+        return reverse("questions:height")
