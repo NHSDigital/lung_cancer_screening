@@ -59,13 +59,16 @@ class SmokingChangeView(
     def get_success_url(self):
         if self.next_smoking_history():
             if self.next_smoking_history().is_normal():
-                return reverse(
-                    "questions:smoking_current",
-                    kwargs={
-                        "tobacco_type": self.next_smoking_history().url_type(),
-                    },
-                    query=self.get_change_query_params(),
-                )
+                if self.should_redirect_to_responses(self.request):
+                    return reverse("questions:responses")
+                else:
+                    return reverse(
+                        "questions:smoking_current",
+                        kwargs={
+                            "tobacco_type": self.next_smoking_history().url_type(),
+                        },
+                        query=self.get_change_query_params(),
+                    )
             else:
                 return reverse(
                     "questions:smoking_frequency",
