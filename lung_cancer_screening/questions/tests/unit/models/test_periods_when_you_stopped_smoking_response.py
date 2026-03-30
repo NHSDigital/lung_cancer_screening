@@ -161,7 +161,7 @@ class TestPeriodsWhenYouStoppedSmokingResponse(TestCase):
             "The number of years you stopped smoking must be fewer than the total number of years you have been smoking",
         )
 
-    @tag("wip")
+
     def test_is_invalid_if_duration_years_is_longer_than_time_they_have_smoked_and_they_are_a_former_smoker(self):
         self.date_of_birth_response.value = datetime.today() - relativedelta(years=55)
         self.date_of_birth_response.save()
