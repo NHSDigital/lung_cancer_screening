@@ -7,7 +7,7 @@ class QuestionBaseView(UpdateView):
     page_title = "Check if you need a lung scan – NHS"
 
     def is_changing_responses(self):
-        return bool(self.request.GET.get("change")) or bool(self.request.POST.get("change"))
+        return self.request.GET.get("change") == "True" or self.request.POST.get("change") == "True"
 
     def get_change_query_params(self):
         if not self.is_changing_responses():
