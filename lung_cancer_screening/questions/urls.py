@@ -46,6 +46,7 @@ from .views.start import StartView
 from .views.weight import WeightView
 from .views.confirmation import ConfirmationView
 from .views.agree_terms_of_use import AgreeTermsOfUseView
+from .views.when_you_quit_smoking import WhenYouQuitSmokingView
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/start'), name='root'),
@@ -87,4 +88,5 @@ urlpatterns = [
     path('confirmation', ConfirmationView.as_view(), name='confirmation'),
     path('privacy-policy', TemplateView.as_view(template_name='privacy_policy.jinja'), name='privacy_policy'),
     path('cookies', TemplateView.as_view(template_name='cookies.jinja'), name='cookies'),
+    path('when-you-quit-smoking', WhenYouQuitSmokingView.as_view(), name='when_you_quit_smoking'),
 ]
