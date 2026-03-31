@@ -73,7 +73,8 @@ class SmokedTotalYearsView(
                 query=self.get_change_query_params(),
             )
 
-        if self.next_unanswered_history() and not self.should_redirect_to_responses(self.request):
+
+        if self.next_unanswered_history() and not self.is_changing_responses():
             return reverse(
                 "questions:smoking_current",
                 kwargs={

@@ -14,3 +14,4 @@ class AsbestosExposureView(LoginRequiredMixin, EnsureResponseSet, EnsureEligible
     model = AsbestosExposureResponse
     success_url = reverse_lazy("questions:cancer_diagnosis")
     back_link_url = reverse_lazy("questions:respiratory_conditions")
+

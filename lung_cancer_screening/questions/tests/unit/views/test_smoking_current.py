@@ -122,6 +122,18 @@ class TestGetSmokingCurrent(TestCase):
             })
         )
 
+    def test_has_a_back_link_to_responses_when_on_current_smoking_change_responses(self):
+        response = self.client.get(
+            reverse("questions:smoking_current", kwargs = {
+                "tobacco_type": self.tobacco_smoking_history.url_type()
+            }, query={"change": "True"})
+        )
+
+        self.assertEqual(
+            response.context_data["back_link_url"],
+            reverse("questions:responses")
+        )
+
 @tag("SmokingCurrent")
 class TestPostSmokingCurrent(TestCase):
     def setUp(self):

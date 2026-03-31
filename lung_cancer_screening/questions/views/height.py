@@ -19,6 +19,7 @@ class HeightView(LoginRequiredMixin, EnsureResponseSet, EnsureEligibleMixin, Que
     success_url = reverse_lazy("questions:weight")
     back_link_url = reverse_lazy("questions:check_need_appointment")
 
+
     def get_form_class(self):
         unit = self.get_unit()
         return ImperialHeightForm if unit == "imperial" else MetricHeightForm

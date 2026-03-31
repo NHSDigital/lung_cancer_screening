@@ -24,3 +24,4 @@ class HaveYouEverSmokedView(LoginRequiredMixin, EnsureResponseSet, EnsureAccepte
             return super().get_success_url()
         else:
             return reverse("questions:non_smoker_exit")
+

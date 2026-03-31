@@ -81,6 +81,19 @@ class TestGetDateOfBirth(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+    def test_get_back_link_url_points_to_responses_if_change_query_param_is_true(self):
+        response = self.client.get(
+            reverse("questions:date_of_birth") + "?change=True"
+        )
+
+        self.assertEqual(response.context_data["back_link_url"], reverse("questions:responses"))
+
+    def test_get_back_link_url_points_to_have_you_ever_smoked_if_change_query_param_is_not_true(self):
+        response = self.client.get(
+            reverse("questions:date_of_birth")
+        )
+
+        self.assertEqual(response.context_data["back_link_url"], reverse("questions:have_you_ever_smoked"))
 
 @tag("DateOfBirth")
 class TestPostDateOfBirth(TestCase):

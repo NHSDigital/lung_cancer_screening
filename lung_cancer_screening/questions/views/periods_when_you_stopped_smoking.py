@@ -20,4 +20,3 @@ class PeriodsWhenYouStoppedSmokingView(LoginRequiredMixin, EnsureResponseSet, En
         form = context.get("form") or self.get_form()
         context["page_title"] = form.page_title()
         return context
-

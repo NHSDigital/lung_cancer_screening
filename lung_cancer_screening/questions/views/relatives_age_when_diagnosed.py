@@ -25,3 +25,16 @@ class RelativesAgeWhenDiagnosedView(LoginRequiredMixin, EnsureResponseSet, Ensur
         ):
             return redirect(reverse("questions:family_history_lung_cancer"))
         return super().get(request, *args, **kwargs)
+
+
+    def came_from_family_history_lung_cancer(self):
+        return self.request.headers.get("Referer", "").endswith(
+            reverse("questions:family_history_lung_cancer", query={"change": "True"})
+        )
+
+
+    def get_back_link_url(self):
+        if self.came_from_family_history_lung_cancer():
+            return reverse("questions:family_history_lung_cancer", query={"change": "True"})
+
+        return super().get_back_link_url()

@@ -33,3 +33,4 @@ class DateOfBirthView(LoginRequiredMixin, EnsureResponseSet, EnsureAcceptedTerms
             return super().get_success_url()
         else:
             return reverse("questions:age_range_exit")
+

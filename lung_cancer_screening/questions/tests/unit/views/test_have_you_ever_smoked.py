@@ -46,6 +46,30 @@ class TestGetHaveYouEverSmoked(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+    def test_get_back_link_url_points_to_responses_if_change_query_param_is_true(self):
+        TermsOfUseResponseFactory.create(
+            response_set=ResponseSetFactory.create(user=self.user),
+            value=True
+        )
+
+        response = self.client.get(
+            reverse("questions:have_you_ever_smoked") + "?change=True"
+        )
+
+        self.assertEqual(response.context_data["back_link_url"], reverse("questions:responses"))
+
+    def test_get_back_link_url_points_to_agree_terms_of_use_if_change_query_param_is_not_true(self):
+        TermsOfUseResponseFactory.create(
+            response_set=ResponseSetFactory.create(user=self.user),
+            value=True
+        )
+
+        response = self.client.get(
+            reverse("questions:have_you_ever_smoked")
+        )
+
+        self.assertEqual(response.context_data["back_link_url"], reverse("questions:agree_terms_of_use"))
+
 
 @tag("HaveYouEverSmoked")
 class TestPostHaveYouEverSmoked(TestCase):

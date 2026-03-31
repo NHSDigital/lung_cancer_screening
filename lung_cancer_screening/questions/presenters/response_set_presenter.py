@@ -197,14 +197,14 @@ class ResponseSetPresenter:
                 "questions:weight",
             ),
             self._check_your_answer_item(
-                "Sex at birth",
-                self.sex_at_birth,
-                "questions:sex_at_birth",
-            ),
-            self._check_your_answer_item(
                 "Gender identity",
                 self.gender,
                 "questions:gender",
+            ),
+            self._check_your_answer_item(
+                "Sex at birth",
+                self.sex_at_birth,
+                "questions:sex_at_birth",
             ),
             self._check_your_answer_item(
                 "Ethnic background",

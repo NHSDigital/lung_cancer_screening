@@ -30,6 +30,9 @@ class SmokingCurrentView(
 
 
     def get_back_link_url(self):
+        if self.is_changing_responses():
+            return reverse("questions:responses")
+
         if self.previous_smoking_history():
             if self.previous_smoking_history().is_normal():
                 return reverse(
@@ -47,7 +50,7 @@ class SmokingCurrentView(
                 query=self.get_change_query_params(),
             )
 
-        return reverse("questions:types_tobacco_smoking")
+        return reverse("questions:types_tobacco_smoking", query=self.get_change_query_params())
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

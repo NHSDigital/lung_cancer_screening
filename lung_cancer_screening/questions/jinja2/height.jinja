@@ -10,17 +10,6 @@
     'metric': 'centimetres'
 } %}
 
-{% block beforeContent %}
-<nav>
-  {{
-    backLink({
-    "href": url("questions:check_need_appointment"),
-    "text": "Back"
-    })
-  }}
-</nav>
-{% endblock beforeContent %}
-
 {% block page_content %}
 <div class="nhsuk-grid-row">
   <div class="nhsuk-grid-column-two-thirds">
