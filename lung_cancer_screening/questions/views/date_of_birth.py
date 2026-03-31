@@ -25,6 +25,7 @@ class DateOfBirthView(LoginRequiredMixin, EnsureResponseSet, EnsureAcceptedTerms
     form_class = DateOfBirthForm
     model = DateOfBirthResponse
     success_url = reverse_lazy("questions:check_need_appointment")
+    back_link_url = reverse_lazy("questions:have_you_ever_smoked")
     page_title: str = "What is your date of birth? – Check if you need a lung scan – NHS"
 
     def get_success_url(self):
@@ -33,7 +34,3 @@ class DateOfBirthView(LoginRequiredMixin, EnsureResponseSet, EnsureAcceptedTerms
         else:
             return reverse("questions:age_range_exit")
 
-    def get_back_link_url(self):
-        if self.is_changing_responses():
-            return reverse("questions:responses")
-        return reverse("questions:have_you_ever_smoked")

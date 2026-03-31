@@ -1,4 +1,4 @@
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .mixins.ensure_response_set import EnsureResponseSet
@@ -13,9 +13,5 @@ class AsbestosExposureView(LoginRequiredMixin, EnsureResponseSet, EnsureEligible
     form_class = AsbestosExposureForm
     model = AsbestosExposureResponse
     success_url = reverse_lazy("questions:cancer_diagnosis")
+    back_link_url = reverse_lazy("questions:respiratory_conditions")
 
-
-    def get_back_link_url(self):
-        if self.is_changing_responses():
-            return reverse("questions:responses")
-        return reverse("questions:respiratory_conditions")

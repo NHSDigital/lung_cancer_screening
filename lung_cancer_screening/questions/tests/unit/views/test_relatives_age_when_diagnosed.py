@@ -99,6 +99,25 @@ class TestGetRelativesAgeWhenDiagnosed(TestCase):
 
         self.assertEqual(response.context_data["back_link_url"], reverse("questions:family_history_lung_cancer"))
 
+    @tag("wip")
+    def test_back_link_url_points_to_family_history_lung_cancer_if_change_query_param_is_true_and_they_came_from_family_history(self):
+        FamilyHistoryLungCancerResponseFactory(
+            response_set=ResponseSetFactory.create(user=self.user, eligible=True),
+            value=FamilyHistoryLungCancerValues.YES
+        )
+
+        response = self.client.post(
+            reverse("questions:relatives_age_when_diagnosed"),
+            {"change": "True"},
+            headers={"Referer": reverse("questions:family_history_lung_cancer", query={"change": "True"})},
+        )
+
+        self.assertEqual(
+            response.context_data["back_link_url"],
+            reverse("questions:family_history_lung_cancer", query={"change": "True"})
+        )
+
+
 @tag("RelativesAgeWhenDiagnosed")
 class TestPostRelativesAgeWhenDiagnosed(TestCase):
     def setUp(self):

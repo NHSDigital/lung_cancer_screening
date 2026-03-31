@@ -1,4 +1,4 @@
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .mixins.ensure_response_set import EnsureResponseSet
@@ -13,8 +13,4 @@ class SexAtBirthView(LoginRequiredMixin, EnsureResponseSet, EnsureEligibleMixin,
     form_class = SexAtBirthForm
     model = SexAtBirthResponse
     success_url = reverse_lazy("questions:ethnicity")
-
-    def get_back_link_url(self):
-        if self.is_changing_responses():
-            return reverse("questions:responses")
-        return reverse("questions:gender")
+    back_link_url = reverse_lazy("questions:gender")

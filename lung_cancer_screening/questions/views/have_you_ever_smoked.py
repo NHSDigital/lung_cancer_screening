@@ -17,6 +17,7 @@ class HaveYouEverSmokedView(LoginRequiredMixin, EnsureResponseSet, EnsureAccepte
     form_class = HaveYouEverSmokedForm
     model = HaveYouEverSmokedResponse
     success_url = reverse_lazy("questions:date_of_birth")
+    back_link_url = reverse_lazy("questions:agree_terms_of_use")
 
     def get_success_url(self):
         if self.object.is_eligible():
@@ -24,7 +25,3 @@ class HaveYouEverSmokedView(LoginRequiredMixin, EnsureResponseSet, EnsureAccepte
         else:
             return reverse("questions:non_smoker_exit")
 
-    def get_back_link_url(self):
-        if self.is_changing_responses():
-            return reverse("questions:responses")
-        return reverse("questions:agree_terms_of_use")
