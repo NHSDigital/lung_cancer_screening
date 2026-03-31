@@ -14,3 +14,10 @@ class PeriodsWhenYouStoppedSmokingView(LoginRequiredMixin, EnsureResponseSet, En
     model = PeriodsWhenYouStoppedSmokingResponse
     success_url = reverse_lazy("questions:types_tobacco_smoking")
     back_link_url = reverse_lazy("questions:age_when_started_smoking")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form = context.get("form") or self.get_form()
+        context["page_title"] = form.page_title()
+        return context
+

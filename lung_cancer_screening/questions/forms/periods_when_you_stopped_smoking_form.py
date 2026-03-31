@@ -72,6 +72,9 @@ class PeriodsWhenYouStoppedSmokingForm(forms.ModelForm):
         else:
             return "nhsuk-fieldset__legend--m"
 
+    def page_title(self):
+        return f"{self.label()} – NHS"
+
 
     def stopped_or_quit(self):
         if self.response_set().current_smoker():
