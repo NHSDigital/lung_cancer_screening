@@ -64,11 +64,14 @@ class TobaccoSmokingHistoryPresenter(BasePresenter):
         return "did you smoke"
 
 
-    def more_or_fewer(self):
+    def more_or_fewer_or_less(self):
         if self.tobacco_smoking_history.is_increased():
             return "more"
         elif self.tobacco_smoking_history.is_decreased():
+            if(self.tobacco_smoking_history.is_rolling_tobacco()):
+                return "less"
             return "fewer"
+
 
     def increased_or_decreased(self):
         if self.tobacco_smoking_history.is_increased():

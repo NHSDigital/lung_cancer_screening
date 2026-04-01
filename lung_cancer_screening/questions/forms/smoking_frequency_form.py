@@ -54,7 +54,7 @@ class SmokingFrequencyForm(SmokingFormPresenter, forms.ModelForm):
 
     def changed_label(self):
         return (
-            f"When you smoked {self.presenter.more_or_fewer()} "
+            f"When you smoked {self.presenter.more_or_fewer_or_less()} "
             f"than {self.normal_presenter.to_sentence()}, how often did "
             f"you smoke {self.presenter.human_type().lower()}?"
         )
@@ -77,7 +77,7 @@ class SmokingFrequencyForm(SmokingFormPresenter, forms.ModelForm):
     def changed_required_error_message(self):
         return (
             f"Select how often you smoked {self.presenter.human_type().lower()} "
-            f"when you smoked {self.presenter.more_or_fewer()} "
+            f"when you smoked {self.presenter.more_or_fewer_or_less()} "
             f"than {self.normal_presenter.to_sentence()}"
         )
 

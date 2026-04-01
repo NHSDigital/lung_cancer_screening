@@ -129,26 +129,26 @@ class TestTobaccoSmokingHistoryPresenter(TestCase):
         )
 
 
-    def test_more_or_fewer_text_returns_more_if_increased_level(self):
+    def test_more_or_fewer_or_less_text_returns_more_if_increased_level(self):
         self.tobacco_smoking_history.level = TobaccoSmokingHistory.Levels.INCREASED
         self.tobacco_smoking_history.save()
 
         presenter = TobaccoSmokingHistoryPresenter(self.tobacco_smoking_history)
 
         self.assertEqual(
-            presenter.more_or_fewer(),
+            presenter.more_or_fewer_or_less(),
             "more"
         )
 
-    def test_more_or_fewer_text_returns_fewer_if_decreased_level(self):
+    def test_more_or_fewer_or_less_text_returns_fewer_if_decreased_level(self):
         self.tobacco_smoking_history.level = TobaccoSmokingHistory.Levels.DECREASED
         self.tobacco_smoking_history.save()
 
         presenter = TobaccoSmokingHistoryPresenter(self.tobacco_smoking_history)
 
         self.assertEqual(
-            presenter.more_or_fewer(),
-            "fewer"
+            presenter.more_or_fewer_or_less(),
+            "less"
         )
 
     def test_do_or_did_returns_do_if_current_normal_level(self):
