@@ -140,7 +140,7 @@ class TestTobaccoSmokingHistoryPresenter(TestCase):
             "more"
         )
 
-    def test_more_or_fewer_or_less_text_returns_fewer_if_decreased_level(self):
+    def test_more_or_fewer_or_less_text_returns_less_if_decreased_level(self):
         self.tobacco_smoking_history.level = TobaccoSmokingHistory.Levels.DECREASED
         self.tobacco_smoking_history.save()
 
