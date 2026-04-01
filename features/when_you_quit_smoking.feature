@@ -4,6 +4,8 @@ Feature: Age quit smoking
   Scenario: The page is accessible
     Given I am logged in
     And I have answered questions showing I am eligible
+    And I am 60 years old
+    And I have answered questions showing I started smoking "30" years ago
     When I go to "/age-when-started-smoking"
     Then there are no accessibility violations
 
@@ -18,13 +20,15 @@ Feature: Age quit smoking
     And I see a form error "Enter your age when you quit smoking"
     And there are no accessibility violations
 
-  # Scenario: Navigating backwards and forwards
-  #   Given I am logged in
-  #   And I have answered questions showing I am eligible
-  #   When I go to "/age-when-started-smoking"
-  #   Then I see a back link to "/relatives-age-when-diagnosed"
-  #   When I fill in "How old were you when you started smoking?" as "18" and submit
-  #   Then I am on "/periods-when-you-stopped-smoking"
+  Scenario: Navigating backwards and forwards
+    Given I am logged in
+    And I have answered questions showing I am eligible
+    And I am 60 years old
+    And I have answered questions showing I started smoking "30" years ago
+    When I go to "/when-you-quit-smoking"
+    Then I see a back link to "/age-when-started-smoking"
+    When I fill in "How old were you when you quit smoking?" as "30" and submit
+    Then I am on "/periods-when-you-stopped-smoking"
 
   # Scenario: Checking responses and changing them
   #   Given I am logged in
