@@ -8,16 +8,19 @@ from ....factories.response_set_factory import ResponseSetFactory
 from ....factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
 from ....factories.smoking_current_response_factory import SmokingCurrentResponseFactory
 
-from .....views.mixins.ensure_prerequisite_responses import EnsurePrerequisiteResponsesMixin
+from .....views.mixins.ensure_smoking_history_prerequisite_responses import EnsureSmokingHistoryPrerequisiteResponsesMixin
 from .....views.mixins.ensure_smoking_history_for_type import EnsureSmokingHistoryForTypeMixin
 
 
-class BaseFakeView(EnsureSmokingHistoryForTypeMixin, EnsurePrerequisiteResponsesMixin, View):
+class BaseFakeView(
+    EnsureSmokingHistoryForTypeMixin, EnsureSmokingHistoryPrerequisiteResponsesMixin,
+    View
+):
     def get(self, request, *args, **kwargs):
         return HttpResponse(status=200)
 
 @tag("mixins")
-class EnsurePrerequisiteResponsesMixinTest(TestCase):
+class EnsureSmokingHistoryPrerequisiteResponsesMixinTest(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.request = self.factory.get("/")

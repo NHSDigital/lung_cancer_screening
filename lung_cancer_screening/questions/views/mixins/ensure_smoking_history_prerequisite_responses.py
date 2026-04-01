@@ -2,7 +2,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 
 
-class EnsurePrerequisiteResponsesMixin:
+class EnsureSmokingHistoryPrerequisiteResponsesMixin:
 
     RESPONSE_URL_MAPPING = {
         "smoking_current_response": "questions:smoking_current",
