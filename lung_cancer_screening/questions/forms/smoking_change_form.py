@@ -65,8 +65,7 @@ class SmokingChangeForm(SmokingFormPresenter, forms.Form):
             return label
 
         if (value == TobaccoSmokingHistory.Levels.DECREASED.value and
-           self.tobacco_type == TobaccoSmokingHistoryTypes.ROLLING_TOBACCO
-        ):
+            self.tobacco_type == TobaccoSmokingHistoryTypes.ROLLING_TOBACCO):
             prefix = "Yes, I used to smoke less"
         else:
             prefix = TobaccoSmokingHistory.Levels(value).label
