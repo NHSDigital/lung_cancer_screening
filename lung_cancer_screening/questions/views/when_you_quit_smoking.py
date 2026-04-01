@@ -14,7 +14,7 @@ class WhenYouQuitSmokingView(
     EnsureEligibleMixin,
     QuestionBaseView
 ):
-    template_name = "question_form.jinja"
+    template_name = "when_you_quit_smoking.jinja"
     form_class = WhenYouQuitSmokingForm
     model = WhenYouQuitSmokingResponse
     success_url = reverse_lazy("questions:periods_when_you_stopped_smoking")

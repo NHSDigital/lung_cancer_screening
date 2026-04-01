@@ -1,11 +1,11 @@
 @SmokingHistory
 @WhenYouQuitSmoking
 Feature: Age quit smoking
-  # Scenario: The page is accessible
-  #   Given I am logged in
-  #   And I have answered questions showing I am eligible
-  #   When I go to "/age-when-started-smoking"
-  #   Then there are no accessibility violations
+  Scenario: The page is accessible
+    Given I am logged in
+    And I have answered questions showing I am eligible
+    When I go to "/age-when-started-smoking"
+    Then there are no accessibility violations
 
   Scenario: Form errors
     Given I am logged in
