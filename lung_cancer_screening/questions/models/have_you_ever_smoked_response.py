@@ -33,3 +33,7 @@ class HaveYouEverSmokedResponse(BaseModel):
 
     def is_current_smoker(self):
         return self.value == HaveYouEverSmokedValues.YES_I_CURRENTLY_SMOKE.value
+
+
+    def is_former_smoker(self):
+        return self.value == HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY.value

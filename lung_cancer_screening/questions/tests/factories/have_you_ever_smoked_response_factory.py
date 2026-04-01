@@ -13,7 +13,7 @@ class HaveYouEverSmokedResponseFactory(factory.django.DjangoModelFactory):
 
     class Params:
         eligible = factory.Trait(
-            value=factory.Iterator(HaveYouEverSmokedResponse.ELIGIBLE_VALUES)
+            value=HaveYouEverSmokedResponse.Values.YES_I_CURRENTLY_SMOKE.value
         )
 
         ineligible = factory.Trait(

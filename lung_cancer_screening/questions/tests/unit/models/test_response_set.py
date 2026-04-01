@@ -11,6 +11,8 @@ from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFa
 from ...factories.have_you_ever_smoked_response_factory import HaveYouEverSmokedResponseFactory
 from ...factories.date_of_birth_response_factory import DateOfBirthResponseFactory
 from ...factories.check_need_appointment_response_factory import CheckNeedAppointmentResponseFactory
+from ...factories.when_you_quit_smoking_response_factory import WhenYouQuitSmokingResponseFactory
+
 from ....models.user import User
 from ....models.family_history_lung_cancer_response import FamilyHistoryLungCancerValues
 from ....models.have_you_ever_smoked_response import HaveYouEverSmokedValues
@@ -195,18 +197,40 @@ class TestResponseSet(TestCase):
         self.assertTrue(response_set.is_complete())
 
 
-    def test_is_complete_returns_false_if_any_tobacco_smoking_history_is_not_complete(self):
+    def test_is_complete_returns_true_if_current_smoker_and_when_you_quit_smoking_is_incomplete(self):
         response_set = ResponseSetFactory.create(complete=True)
-        response_set.tobacco_smoking_history.first().smoking_current_response.delete()
-        response_set.refresh_from_db()
+        response_set.have_you_ever_smoked_response.delete()
+        HaveYouEverSmokedResponseFactory.create(
+            response_set=response_set,
+            current_smoker=True
+        )
 
-        self.assertFalse(response_set.is_complete())
+        self.assertTrue(response_set.is_complete())
 
 
-    def test_is_complete_returns_false_if_there_are_no_smoking_histories(self):
+    def test_is_complete_returns_true_if_former_smoker_and_when_you_quit_smoking_is_complete(self):
         response_set = ResponseSetFactory.create(complete=True)
-        response_set.tobacco_smoking_history.all().delete()
-        response_set.refresh_from_db()
+        response_set.have_you_ever_smoked_response.delete()
+        HaveYouEverSmokedResponseFactory.create(
+            response_set=response_set,
+            former_smoker=True
+        )
+        WhenYouQuitSmokingResponseFactory.create(
+            response_set=response_set,
+            value=response_set.age_when_started_smoking_response.value + 1,
+        )
+
+        self.assertTrue(response_set.is_complete())
+
+
+    def test_is_complete_returns_false_if_former_smoker_and_when_you_quit_smoking_is_incomplete(self):
+        response_set = ResponseSetFactory.create(complete=True)
+        response_set.have_you_ever_smoked_response.delete()
+        HaveYouEverSmokedResponseFactory.create(
+            response_set=response_set,
+            former_smoker=True
+        )
+
         self.assertFalse(response_set.is_complete())
 
 
@@ -490,5 +514,26 @@ class TestResponseSet(TestCase):
         )
         self.assertFalse(self.response_set.current_smoker())
 
+
     def test_current_smoker_returns_none_when_the_has_not_answered_the_question(self):
         self.assertIsNone(self.response_set.current_smoker())
+
+
+    def test_former_smoker_returns_true_when_the_user_is_a_former_smoker(self):
+        HaveYouEverSmokedResponseFactory.create(
+            response_set=self.response_set,
+            value=HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY.value,
+        )
+        self.assertTrue(self.response_set.former_smoker())
+
+
+    def test_former_smoker_returns_false_when_the_user_is_not_a_former_smoker(self):
+        HaveYouEverSmokedResponseFactory.create(
+            response_set=self.response_set,
+            value=HaveYouEverSmokedValues.YES_I_CURRENTLY_SMOKE.value,
+        )
+        self.assertFalse(self.response_set.former_smoker())
+
+
+    def test_former_smoker_returns_none_when_the_has_not_answered_the_question(self):
+        self.assertIsNone(self.response_set.former_smoker())
