@@ -68,11 +68,17 @@ def given_i_have_answered_questions_showing_i_am_eligible(context):
         eligible=True,
     )
 
-@given("I have answered questions showing I am a current smoker")
-def given_i_have_answered_questions_showing_i_am_a_current_smoker(context):
+@given("I have answered questions showing I am a {current_or_former} smoker")
+def given_i_have_answered_questions_showing_i_am_a_current_smoker(context, current_or_former):
     context.page.goto(f"{context.live_server_url}/have-you-ever-smoked")
 
-    when_i_check_label(context, "Yes, I currently smoke")
+    if current_or_former == "current":
+        when_i_check_label(context, "Yes, I currently smoke")
+    elif current_or_former == "former":
+        when_i_check_label(context, "Yes, I used to smoke")
+    else:
+        raise ValueError(f"Invalid current_or_former: {current_or_former}")
+
     when_i_submit_the_form(context)
 
 @given('I have answered questions showing I started smoking "{years}" years ago')

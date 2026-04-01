@@ -99,7 +99,7 @@ class TestGetRelativesAgeWhenDiagnosed(TestCase):
 
         self.assertEqual(response.context_data["back_link_url"], reverse("questions:family_history_lung_cancer"))
 
-    @tag("wip")
+
     def test_back_link_url_points_to_family_history_lung_cancer_if_change_query_param_is_true_and_they_came_from_family_history(self):
         FamilyHistoryLungCancerResponseFactory(
             response_set=ResponseSetFactory.create(user=self.user, eligible=True),

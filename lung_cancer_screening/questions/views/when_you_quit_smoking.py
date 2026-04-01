@@ -19,15 +19,11 @@ class WhenYouQuitSmokingView(
     template_name = "when_you_quit_smoking.jinja"
     form_class = WhenYouQuitSmokingForm
     model = WhenYouQuitSmokingResponse
-    success_url = reverse_lazy("questions:periods_when_you_stopped_smoking")
     back_link_url = reverse_lazy("questions:age_when_started_smoking")
     prerequisite_responses = ["age_when_started_smoking_response"]
 
     def get_success_url(self):
-        if self.is_changing_responses():
-            return reverse(
-                "questions:periods_when_you_stopped_smoking",
-                query={"change": "True"}
-            )
-        else:
-            return super().get_success_url()
+        return reverse(
+            "questions:periods_when_you_stopped_smoking",
+            query=self.get_change_query_params()
+        )

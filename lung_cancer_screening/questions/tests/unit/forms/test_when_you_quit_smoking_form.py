@@ -1,9 +1,6 @@
 from django.test import TestCase, tag
 
-from django.utils import timezone
-from dateutil.relativedelta import relativedelta
 
-from ....models.age_when_started_smoking_response import AgeWhenStartedSmokingResponse
 
 from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.date_of_birth_response_factory import DateOfBirthResponseFactory
