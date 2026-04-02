@@ -4,6 +4,7 @@ from django.urls import reverse
 from .helpers.authentication import login_user
 from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.age_when_started_smoking_response_factory import AgeWhenStartedSmokingResponseFactory
+from ...factories.have_you_ever_smoked_response_factory import HaveYouEverSmokedResponseFactory
 
 
 @tag("PeriodsWhenYouStoppedSmoking")
@@ -47,17 +48,72 @@ class TestGetPeriodsWhenYouStoppedSmoking(TestCase):
 
         self.assertRedirects(response, reverse("questions:agree_terms_of_use"))
 
-    def test_back_link_url_is_responses_if_change_query_param_is_true(self):
-        response = self.client.get(
-            reverse("questions:periods_when_you_stopped_smoking", query={"change": "True"})
-        )
-        self.assertEqual(response.context_data["back_link_url"], reverse("questions:responses"))
 
-    def test_back_link_url_is_age_when_started_smoking_if_change_query_param_is_not_true(self):
+    def test_back_link_url_is_age_when_started_smoking_if_user_is_current_smoker(self):
+        self.response_set.have_you_ever_smoked_response.delete()
+        HaveYouEverSmokedResponseFactory.create(
+            response_set=self.response_set,
+            current_smoker=True
+        )
         response = self.client.get(
             reverse("questions:periods_when_you_stopped_smoking")
         )
         self.assertEqual(response.context_data["back_link_url"], reverse("questions:age_when_started_smoking"))
+
+
+    def test_back_link_url_is_when_you_quit_smoking_if_user_is_former_smoker(self):
+        self.response_set.have_you_ever_smoked_response.delete()
+        HaveYouEverSmokedResponseFactory.create(
+            response_set=self.response_set,
+            former_smoker=True
+        )
+        response = self.client.post(reverse("questions:periods_when_you_stopped_smoking"))
+        self.assertEqual(response.context_data["back_link_url"], reverse("questions:when_you_quit_smoking"))
+
+
+    def test_back_link_url_is_responses_if_change_query_param_is_true_and_they_came_from_responses(self):
+        response = self.client.get(
+            reverse("questions:periods_when_you_stopped_smoking", query={"change": "True"}),
+            headers={"Referer": reverse("questions:responses")}
+        )
+        self.assertEqual(response.context_data["back_link_url"], reverse("questions:responses"))
+
+
+    def test_back_link_url_is_age_started_smoking_if_change_query_param_is_true_and_user_is_current_smoker_and_they_did_not_come_directly_from_responses(self):
+        self.response_set.have_you_ever_smoked_response.delete()
+        HaveYouEverSmokedResponseFactory.create(
+            response_set=self.response_set,
+            current_smoker=True
+        )
+        response = self.client.get(
+            reverse("questions:periods_when_you_stopped_smoking", query={"change": "True"})
+        )
+
+        self.assertEqual(
+            response.context_data["back_link_url"],
+            reverse("questions:age_when_started_smoking", query={"change": "True"})
+        )
+
+
+    def test_back_link_url_is_when_you_quit_if_change_query_param_is_true_and_user_is_former_smoker_and_they_did_not_come_directly_from_responses(
+        self,
+    ):
+        self.response_set.have_you_ever_smoked_response.delete()
+        HaveYouEverSmokedResponseFactory.create(
+            response_set=self.response_set, former_smoker=True
+        )
+        response = self.client.get(
+            reverse(
+                "questions:periods_when_you_stopped_smoking", query={"change": "True"}
+            ),
+            headers={"Referer": reverse("questions:age_when_started_smoking")},
+        )
+
+        self.assertEqual(
+            response.context_data["back_link_url"],
+            reverse("questions:when_you_quit_smoking", query={"change": "True"}),
+        )
+
 
     def test_responds_successfully(self):
         response = self.client.get(reverse("questions:periods_when_you_stopped_smoking"))

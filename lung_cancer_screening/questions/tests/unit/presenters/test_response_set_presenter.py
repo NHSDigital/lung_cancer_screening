@@ -33,6 +33,7 @@ from ....models.respiratory_conditions_response import RespiratoryConditionValue
 from ....presenters.response_set_presenter import ResponseSetPresenter
 
 
+@tag("ResponseSetPresenter", "presenters")
 class TestResponseSetPresenter(TestCase):
     def setUp(self):
         self.response_set = ResponseSetFactory.create()
@@ -469,4 +470,46 @@ class TestResponseSetPresenter(TestCase):
         self.assertEqual(
             answers_item["actions"]["items"][0]["visuallyHiddenText"],
             "answer for have you ever smoked"
+        )
+
+
+    def test_smoking_history_responses_items_returns_the_correct_items_when_current_smoker(self):
+        HaveYouEverSmokedResponseFactory(
+            response_set=self.response_set,
+            current_smoker=True
+        )
+
+        presenter = ResponseSetPresenter(self.response_set)
+
+        self.assertEqual(
+            [
+                item.get("key").get("text")
+                for item in presenter.smoking_history_responses_items()
+            ],
+            [
+                "Age you started smoking",
+                "Have you ever stopped smoking for periods of 1 year or longer?",
+                "Types of tobacco smoked",
+            ]
+        )
+
+
+    def test_smoking_history_responses_items_returns_the_correct_items_when_former_smoker(self):
+        HaveYouEverSmokedResponseFactory(
+            response_set=self.response_set,
+            former_smoker=True
+        )
+        presenter = ResponseSetPresenter(self.response_set)
+
+        self.assertEqual(
+            [
+                item.get("key").get("text")
+                for item in presenter.smoking_history_responses_items()
+            ],
+            [
+                "Age you started smoking",
+                "Age you quit smoking",
+                "Have you ever stopped smoking for periods of 1 year or longer?",
+                "Types of tobacco smoked",
+            ],
         )

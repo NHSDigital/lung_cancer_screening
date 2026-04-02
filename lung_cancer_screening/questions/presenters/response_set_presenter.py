@@ -265,7 +265,7 @@ class ResponseSetPresenter:
         return items
 
     def smoking_history_responses_items(self):
-        return [
+        return list(filter(None, [
             self._check_your_answer_item(
                 "Age you started smoking",
                 self.age_when_started_smoking,
@@ -275,7 +275,7 @@ class ResponseSetPresenter:
                 "Age you quit smoking",
                 self.age_when_quit_smoking,
                 "questions:when_you_quit_smoking",
-            ),
+            ) if self.response_set.former_smoker() else None,
             self._check_your_answer_item(
                 "Have you ever stopped smoking for periods of 1 year or longer?",
                 self.periods_when_you_stopped_smoking,
@@ -286,7 +286,7 @@ class ResponseSetPresenter:
                 self.types_tobacco_smoking,
                 "questions:types_tobacco_smoking",
             ),
-        ]
+        ]))
 
 
     def is_complete(self):

@@ -68,7 +68,17 @@ class TestGetWhenYouQuitSmoking(TestCase):
             reverse("questions:age_when_started_smoking"),
         )
 
-    def test_has_a_back_link_when_change_is_true(self):
+
+    def test_has_a_back_link_to_responses_if_change_is_true_and_they_came_from_responses(self):
+        response = self.client.get(
+            reverse("questions:when_you_quit_smoking"),
+            {"change": "True"},
+            headers={"Referer": reverse("questions:responses")}
+        )
+        self.assertEqual(response.context_data["back_link_url"], reverse("questions:responses"))
+
+
+    def test_has_a_back_link_to_age_started_smoking_if_change_is_true_and_they_did_not_come_directly_from_responses(self):
         response = self.client.get(
             reverse("questions:when_you_quit_smoking"),
             {"change": "True"}
