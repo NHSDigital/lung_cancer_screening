@@ -2,8 +2,7 @@
 
 {% block prelude %}
   {% if form.tobacco_smoking_history.is_normal() %}
-      <h1 class="nhsuk-heading-l">{{ form.tobacco_smoking_history.get_type_display() | title | singularize }} smoking</h1>
-
+      <h1 class="nhsuk-heading-l">{{ form.tobacco_smoking_history.get_type_display() | singularize }} smoking</h1>
       <p>The question on the next page will ask if the number of {{ form.tobacco_smoking_history.unit() }} you smoke has changed over time.</p>
   {% endif %}
 {% endblock prelude %}

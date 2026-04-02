@@ -6,16 +6,19 @@ from django.views.generic.edit import UpdateView
 class QuestionBaseView(UpdateView):
     page_title = "Check if you need a lung scan – NHS"
 
-    def should_redirect_to_responses(self, request):
-        return bool(request.POST.get("change"))
+    def is_changing_responses(self):
+        return self.request.GET.get("change") == "True" or self.request.POST.get("change") == "True"
 
     def get_change_query_params(self):
-        if not self.should_redirect_to_responses(self.request):
+        if not self.is_changing_responses():
             return {}
 
         return {"change": "True"}
 
     def get_back_link_url(self):
+        if self.is_changing_responses():
+            return reverse("questions:responses")
+
         return self.back_link_url
 
     def get_context_data(self, **kwargs):
@@ -25,7 +28,7 @@ class QuestionBaseView(UpdateView):
         return context
 
     def get_success_url(self):
-        if self.should_redirect_to_responses(self.request):
+        if self.is_changing_responses():
             return reverse("questions:responses")
         else:
             return super().get_success_url()

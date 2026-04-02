@@ -59,13 +59,16 @@ class SmokingChangeView(
     def get_success_url(self):
         if self.next_smoking_history():
             if self.next_smoking_history().is_normal():
-                return reverse(
-                    "questions:smoking_current",
-                    kwargs={
-                        "tobacco_type": self.next_smoking_history().url_type(),
-                    },
-                    query=self.get_change_query_params(),
-                )
+                if self.is_changing_responses():
+                    return reverse("questions:responses")
+                else:
+                    return reverse(
+                        "questions:smoking_current",
+                        kwargs={
+                            "tobacco_type": self.next_smoking_history().url_type(),
+                        },
+                        query=self.get_change_query_params(),
+                    )
             else:
                 return reverse(
                     "questions:smoking_frequency",
@@ -79,12 +82,12 @@ class SmokingChangeView(
             return reverse("questions:responses")
 
 
-    def should_redirect_to_responses(self, request):
-        return bool(request.POST.get("change"))
+    def is_changing_responses(self):
+        return bool(self.request.POST.get("change"))
 
 
     def get_change_query_params(self):
-        if not self.should_redirect_to_responses(self.request):
+        if not self.is_changing_responses():
             return {}
 
         return {"change": "True"}

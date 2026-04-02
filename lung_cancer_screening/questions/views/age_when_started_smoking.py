@@ -16,10 +16,11 @@ class AgeWhenStartedSmokingView(LoginRequiredMixin, EnsureResponseSet, EnsureEli
     page_title = "How old were you when you started smoking? – NHS"
 
     def get_success_url(self):
-        if self.should_redirect_to_responses(self.request):
+        if self.is_changing_responses():
             return reverse(
                 "questions:periods_when_you_stopped_smoking",
                 query={"change": "True"}
             )
         else:
             return super().get_success_url()
+

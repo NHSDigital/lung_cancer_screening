@@ -19,7 +19,7 @@ class FamilyHistoryLungCancerView(LoginRequiredMixin, EnsureResponseSet, EnsureE
 
     def get_success_url(self):
         if self.object.is_truthy():
-            if self.should_redirect_to_responses(self.request):
+            if self.is_changing_responses():
                 return reverse(
                     "questions:relatives_age_when_diagnosed",
                     query={"change": "True"}
@@ -28,3 +28,4 @@ class FamilyHistoryLungCancerView(LoginRequiredMixin, EnsureResponseSet, EnsureE
                 return reverse("questions:relatives_age_when_diagnosed")
         else:
             return super().get_success_url()
+
