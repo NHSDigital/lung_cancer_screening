@@ -1,4 +1,5 @@
 from django.urls import reverse, reverse_lazy
+from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .mixins.ensure_response_set import EnsureResponseSet
@@ -9,11 +10,20 @@ from ..forms.when_you_quit_smoking_form import WhenYouQuitSmokingForm
 from ..models.when_you_quit_smoking_response import WhenYouQuitSmokingResponse
 
 
+class EnsureFormerSmokerMixin():
+    def get(self, request, *args, **kwargs):
+        if not request.response_set.former_smoker():
+            return redirect(reverse("questions:periods_when_you_stopped_smoking"))
+
+        return super().get(request, *args, **kwargs)
+
+
 class WhenYouQuitSmokingView(
     LoginRequiredMixin,
     EnsureResponseSet,
     EnsureEligibleMixin,
     EnsurePrerequisiteResponsesMixin,
+    EnsureFormerSmokerMixin,
     QuestionBaseView
 ):
     template_name = "when_you_quit_smoking.jinja"

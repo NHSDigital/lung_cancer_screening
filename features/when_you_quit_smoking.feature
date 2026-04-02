@@ -4,6 +4,7 @@ Feature: Age quit smoking
   Scenario: The page is accessible
     Given I am logged in
     And I have answered questions showing I am eligible
+    And I have answered questions showing I am a former smoker
     And I am 60 years old
     And I have answered questions showing I started smoking "30" years ago
     When I go to "/age-when-started-smoking"
@@ -12,6 +13,7 @@ Feature: Age quit smoking
   Scenario: Form errors
     Given I am logged in
     And I have answered questions showing I am eligible
+    And I have answered questions showing I am a former smoker
     And I am 60 years old
     And I have answered questions showing I started smoking "30" years ago
     When I go to "/when-you-quit-smoking"
@@ -23,6 +25,7 @@ Feature: Age quit smoking
   Scenario: Navigating backwards and forwards
     Given I am logged in
     And I have answered questions showing I am eligible
+    And I have answered questions showing I am a former smoker
     And I am 60 years old
     And I have answered questions showing I started smoking "30" years ago
     When I go to "/when-you-quit-smoking"

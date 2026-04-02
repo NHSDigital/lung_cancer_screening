@@ -3,6 +3,7 @@ from django.urls import reverse
 
 from .helpers.authentication import login_user
 from ...factories.response_set_factory import ResponseSetFactory
+from ...factories.have_you_ever_smoked_response_factory import HaveYouEverSmokedResponseFactory
 from ...factories.age_when_started_smoking_response_factory import AgeWhenStartedSmokingResponseFactory
 
 
@@ -11,6 +12,11 @@ class TestGetWhenYouQuitSmoking(TestCase):
     def setUp(self):
         self.user = login_user(self.client)
         self.response_set = ResponseSetFactory.create(user=self.user, eligible=True)
+        self.response_set.have_you_ever_smoked_response.delete()
+        self.have_you_ever_smoked_response = HaveYouEverSmokedResponseFactory(
+            response_set=self.response_set,
+            former_smoker=True
+        )
         self.age_when_started_smoking_response = AgeWhenStartedSmokingResponseFactory(
             response_set=self.response_set,
             value=self.response_set.date_of_birth_response.age_in_years() - 20,
@@ -53,6 +59,15 @@ class TestGetWhenYouQuitSmoking(TestCase):
 
         self.assertRedirects(response, reverse("questions:age_when_started_smoking"))
 
+
+    def test_redirects_to_periods_you_stopped_smoking_if_user_is_current_smoker(self):
+        self.response_set.have_you_ever_smoked_response.delete()
+        HaveYouEverSmokedResponseFactory(
+            response_set=self.response_set,
+            current_smoker=True
+        )
+        response = self.client.get(reverse("questions:when_you_quit_smoking"))
+        self.assertRedirects(response, reverse("questions:periods_when_you_stopped_smoking"))
 
     def test_responds_successfully(self):
         response = self.client.get(reverse("questions:when_you_quit_smoking"))
