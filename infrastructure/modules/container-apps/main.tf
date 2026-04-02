@@ -11,8 +11,8 @@ module "webapp" {
     azurerm.hub = azurerm.hub
   }
 
-  name                             = "${var.app_short_name}-web-${var.environment}"
-  container_app_environment_id     = var.container_app_environment_id
+  name                         = "${var.app_short_name}-web-${var.environment}"
+  container_app_environment_id = var.container_app_environment_id
 
   # alerts
   action_group_id        = var.action_group_id
