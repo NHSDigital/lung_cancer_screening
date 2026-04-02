@@ -31,7 +31,7 @@ class PeriodsWhenYouStoppedSmokingForm(forms.ModelForm):
 
         self.fields["duration_years"] = IntegerField(
             label=self.duration_years_label(),
-            label_classes="nhsuk-fieldset__legend--s",
+            label_classes="nhsuk-label--s",
             classes="nhsuk-input--width-4",
             hint=self.duration_years_hint(),
             required=False,
