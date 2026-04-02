@@ -1,10 +1,9 @@
 from django.shortcuts import render
 from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .mixins.ensure_response_set import EnsureResponseSet
 
-
-class BookAnAppointmentExitView(EnsureResponseSet, View):
+class BookAnAppointmentExitView(LoginRequiredMixin, View):
     def get(self, request):
         return render(
             request,
