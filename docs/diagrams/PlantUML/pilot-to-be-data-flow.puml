@@ -1,0 +1,51 @@
+@startuml
+' activity diagram showing the pilot-to-be interactions
+|In Health|
+start
+:Retrieve cohort;
+floating note left
+Query GP IT for participant
+details (NHS Number, suspected
+smoking history, contact details)
+end note
+|#AntiqueWhite|GP IT|
+:Generate cohort;
+|In Health|
+repeat :for each participant;
+    fork
+        :Phone participant;
+        :Evaluate participant's risk of
+        lung cancer via questionnaire;
+        :Inform participant of their risk
+        level and recommend next steps
+        e.g. screening;
+    fork again
+        :Invite to digital service;
+        |#lightgray|Lung Cancer Service|
+        :Access digital service;
+        |#LightPink|NHS login|
+        :login;
+        |Lung Cancer Service|
+        :answer questionnaire;
+        |In Health|
+    end fork
+repeatwhile (participants in cohort?) is (yes) not (no)
+|Lung Cancer Service|
+:Share completed digital
+participant NHS Numbers with
+InHealth;
+|#lightgreen|NHS Secure Mail|
+:Transport data;
+|In Health|
+:Share completed telephone
+responses corresponding to
+digital NHS number responses;
+|NHS Secure Mail|
+:Transport data;
+|Lung Cancer Service|
+:NHS Staff performs comparison of
+responses to understand
+comprehension of question set;
+stop
+
+@enduml

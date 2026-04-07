@@ -1,0 +1,25 @@
+@startuml
+' activity diagram showing the as-is interactions
+|In Health|
+start
+:Retrieve cohort;
+floating note left
+Query GP IT for participant
+details (NHS Number, suspected
+smoking history, contact details)
+end note
+|#AntiqueWhite|GP IT|
+:Generate cohort;
+|In Health|
+repeat :for each participant;
+    :Phone participant;
+    :Evaluate participant's risk of
+    lung cancer via questionnaire;
+    :Inform participant of their risk
+    level and recommend next steps
+    e.g. screening;
+repeatwhile (more participants in cohort?) is (yes) not (no)
+
+stop
+
+@enduml

@@ -1,0 +1,39 @@
+@startuml
+' activity diagram showing the MVP-to-be interactions
+|In Health|
+start
+:Retrieve cohort;
+floating note left
+Query GP IT for participant
+details (NHS Number, suspected
+smoking history, contact details)
+end note
+|#AntiqueWhite|GP IT|
+:Generate cohort;
+|In Health|
+repeat :for each participant;
+' decision point to determine whether to phone participant or invite to digital service
+if (channel?) is (phone) then
+        :Phone participant;
+        :Evaluate participant's risk of
+        lung cancer via questionnaire;
+        :Inform participant of their risk
+        level and recommend next steps
+        e.g. screening;
+    else (digital)
+        :Invite to digital service;
+        |#lightgray|Lung Cancer Service|
+        :Access digital service;
+        |#LightPink|NHS login|
+        :login;
+        |Lung Cancer Service|
+        :answer questionnaire;
+        :Inform participant of their risk
+        level and recommend next steps
+        e.g. screening;
+        |In Health|
+    endif
+repeatwhile (participants in cohort?) is (yes) not (no)
+stop
+
+@enduml
