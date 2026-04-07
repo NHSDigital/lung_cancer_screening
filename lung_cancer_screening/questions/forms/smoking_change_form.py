@@ -1,7 +1,7 @@
 from django import forms
 
 from ...nhsuk_forms.choice_field import MultipleChoiceField
-from ..models.tobacco_smoking_history import TobaccoSmokingHistory
+from ..models.tobacco_smoking_history import TobaccoSmokingHistory, TobaccoSmokingHistoryTypes
 from .mixins.smoking_form_presenter import SmokingFormPresenter
 
 
@@ -64,10 +64,13 @@ class SmokingChangeForm(SmokingFormPresenter, forms.Form):
         if value == TobaccoSmokingHistory.Levels.NO_CHANGE:
             return label
 
-        return (
-            f"{TobaccoSmokingHistory.Levels(value).label} "
-            f" than {self.presenter.to_sentence()}"
-        )
+        if (value == TobaccoSmokingHistory.Levels.DECREASED.value and
+            self.tobacco_type == TobaccoSmokingHistoryTypes.ROLLING_TOBACCO):
+            prefix = "Yes, I used to smoke less"
+        else:
+            prefix = TobaccoSmokingHistory.Levels(value).label
+
+        return f"{prefix} than {self.presenter.to_sentence()}"
 
     def required_error_message(self):
         return (

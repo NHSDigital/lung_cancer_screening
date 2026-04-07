@@ -184,7 +184,7 @@ Feature: Smoking history pages
 
     Then I am on "/rolling-tobacco-smoking-change"
     When I check "Yes, I used to smoke more than 25 grams of rolling tobacco a week"
-    And I check "Yes, I used to smoke fewer than 25 grams of rolling tobacco a week"
+    And I check "Yes, I used to smoke less than 25 grams of rolling tobacco a week"
     And I submit the form
 
     Then I am on "/rolling-tobacco-smoking-increased-frequency"
@@ -205,7 +205,7 @@ Feature: Smoking history pages
     And I submit the form
 
     Then I am on "/rolling-tobacco-smoked-decreased-amount"
-    When I fill in "When you smoked fewer than 25 grams of rolling tobacco a week, roughly how many grams of rolling tobacco did you normally smoke a month?" with "5"
+    When I fill in "When you smoked less than 25 grams of rolling tobacco a week, roughly how many grams of rolling tobacco did you normally smoke a month?" with "5"
     And I submit the form
 
     Then I am on "/rolling-tobacco-smoked-decreased-years"

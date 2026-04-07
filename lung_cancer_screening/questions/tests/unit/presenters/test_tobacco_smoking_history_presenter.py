@@ -11,33 +11,15 @@ from lung_cancer_screening.questions.presenters.tobacco_smoking_history_presente
 )
 from lung_cancer_screening.questions.models.tobacco_smoking_history import TobaccoSmokingHistory
 
-
-class TestTobaccoSmokingHistoryPresenter(TestCase):
+class TestTobaccoSmokingHistoryPresenterAllTobaccoTypes(TestCase):
     def setUp(self):
         self.response_set = ResponseSetFactory.create()
         self.age_when_started_smoking_response = AgeWhenStartedSmokingResponseFactory.create(
             response_set=self.response_set
         )
         self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
-            rolling_tobacco=True,
             complete=True,
             response_set=self.response_set
-        )
-
-    def test_delegates_human_type_to_tobacco_smoking_history(self):
-        presenter = TobaccoSmokingHistoryPresenter(self.tobacco_smoking_history)
-
-        self.assertEqual(
-            presenter.human_type(),
-            "Rolling tobacco"
-        )
-
-    def test_url_type_returns_the_url_type_of_the_tobacco_smoking_history(self):
-        presenter = TobaccoSmokingHistoryPresenter(self.tobacco_smoking_history)
-
-        self.assertEqual(
-            presenter.url_type(),
-            "rolling-tobacco"
         )
 
     def test_duration_years_returns_not_answered_text_if_duration_years_is_not_set(self):
@@ -64,26 +46,6 @@ class TestTobaccoSmokingHistoryPresenter(TestCase):
         self.assertEqual(
             presenter.is_current(),
             self.tobacco_smoking_history.is_current()
-        )
-
-
-    def test_to_sentence_returns_the_amount_of_type_per_frequency(self):
-        self.tobacco_smoking_history.smoked_amount_response.value = 7
-        self.tobacco_smoking_history.smoking_frequency_response.value = SmokingFrequencyValues.WEEKLY
-
-        presenter = TobaccoSmokingHistoryPresenter(self.tobacco_smoking_history)
-
-        self.assertEqual(
-            presenter.to_sentence(),
-            "7 grams of rolling tobacco a week"
-        )
-
-    def test_unit_returns_the_unit_of_the_tobacco_smoking_history(self):
-        presenter = TobaccoSmokingHistoryPresenter(self.tobacco_smoking_history)
-
-        self.assertEqual(
-            presenter.unit(),
-            "grams of rolling tobacco"
         )
 
 
@@ -129,26 +91,15 @@ class TestTobaccoSmokingHistoryPresenter(TestCase):
         )
 
 
-    def test_more_or_fewer_text_returns_more_if_increased_level(self):
+    def test_more_or_fewer_or_less_text_returns_more_if_increased_level(self):
         self.tobacco_smoking_history.level = TobaccoSmokingHistory.Levels.INCREASED
         self.tobacco_smoking_history.save()
 
         presenter = TobaccoSmokingHistoryPresenter(self.tobacco_smoking_history)
 
         self.assertEqual(
-            presenter.more_or_fewer(),
+            presenter.more_or_fewer_or_less(),
             "more"
-        )
-
-    def test_more_or_fewer_text_returns_fewer_if_decreased_level(self):
-        self.tobacco_smoking_history.level = TobaccoSmokingHistory.Levels.DECREASED
-        self.tobacco_smoking_history.save()
-
-        presenter = TobaccoSmokingHistoryPresenter(self.tobacco_smoking_history)
-
-        self.assertEqual(
-            presenter.more_or_fewer(),
-            "fewer"
         )
 
     def test_do_or_did_returns_do_if_current_normal_level(self):
@@ -207,7 +158,7 @@ class TestTobaccoSmokingHistoryPresenter(TestCase):
         )
 
 
-    def currently_or_previously_returns_currently_if_current_normal_level(self):
+    def test_currently_or_previously_returns_currently_if_current_normal_level(self):
         self.tobacco_smoking_history.smoking_current_response.value = True
         self.tobacco_smoking_history.smoking_current_response.save()
 
@@ -218,7 +169,7 @@ class TestTobaccoSmokingHistoryPresenter(TestCase):
             "currently"
         )
 
-    def currently_or_previously_returns_previously_if_not_current_normal_level(self):
+    def test_currently_or_previously_returns_previously_if_not_current_normal_level(self):
         self.tobacco_smoking_history.smoking_current_response.value = False
         self.tobacco_smoking_history.smoking_current_response.save()
 
@@ -229,7 +180,7 @@ class TestTobaccoSmokingHistoryPresenter(TestCase):
             "previously"
         )
 
-    def currently_or_previously_returns_previously_if_changed_level(self):
+    def test_currently_or_previously_returns_previously_if_changed_level(self):
         self.tobacco_smoking_history.level = TobaccoSmokingHistory.Levels.INCREASED
         self.tobacco_smoking_history.save()
 
@@ -240,7 +191,38 @@ class TestTobaccoSmokingHistoryPresenter(TestCase):
             "previously"
         )
 
+class TestTobaccoSmokingHistoryPresenterRollingTobaccoAndPipe(TestCase):
+    def setUp(self):
+        self.response_set = ResponseSetFactory.create()
+        self.age_when_started_smoking_response = AgeWhenStartedSmokingResponseFactory.create(
+            response_set=self.response_set
+        )
+        self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
+            complete=True,
+            response_set=self.response_set
+        )
+
+    # Tests for Rolling Tobacco
+    def test_delegates_human_type_to_tobacco_smoking_history_rolling_tobacco(self):
+        self.tobacco_smoking_history.type = TobaccoSmokingHistoryTypes.ROLLING_TOBACCO
+        presenter = TobaccoSmokingHistoryPresenter(self.tobacco_smoking_history)
+
+        self.assertEqual(
+            presenter.human_type(),
+            "Rolling tobacco"
+        )
+
+    def test_url_type_returns_the_url_type_of_the_tobacco_smoking_history_rolling_tobacco(self):
+        self.tobacco_smoking_history.type = TobaccoSmokingHistoryTypes.ROLLING_TOBACCO
+        presenter = TobaccoSmokingHistoryPresenter(self.tobacco_smoking_history)
+
+        self.assertEqual(
+            presenter.url_type(),
+            "rolling-tobacco"
+        )
+
     def test_amount_prefix_when_rolling_tobacco(self):
+        self.tobacco_smoking_history.type = TobaccoSmokingHistoryTypes.ROLLING_TOBACCO
         self.tobacco_smoking_history.rolling_tobacco = True
         self.tobacco_smoking_history.save()
 
@@ -251,13 +233,60 @@ class TestTobaccoSmokingHistoryPresenter(TestCase):
             "grams of "
         )
 
-    def test_amount_prefix_defaults_to_empty_string(self):
-        self.tobacco_smoking_history.type = TobaccoSmokingHistoryTypes.PIPE
+    def test_to_sentence_returns_the_amount_of_type_per_frequency_rolling_tobacco(self):
+        self.tobacco_smoking_history.type = TobaccoSmokingHistoryTypes.ROLLING_TOBACCO
+        self.tobacco_smoking_history.smoked_amount_response.value = 7
+        self.tobacco_smoking_history.smoking_frequency_response.value = SmokingFrequencyValues.WEEKLY
+
+        presenter = TobaccoSmokingHistoryPresenter(self.tobacco_smoking_history)
+
+        self.assertEqual(
+            presenter.to_sentence(),
+            "7 grams of rolling tobacco a week"
+        )
+
+    def test_unit_returns_the_unit_of_the_tobacco_smoking_history_rolling_tobacco(self):
+        self.tobacco_smoking_history.type = TobaccoSmokingHistoryTypes.ROLLING_TOBACCO
+        presenter = TobaccoSmokingHistoryPresenter(self.tobacco_smoking_history)
+
+        self.assertEqual(
+            presenter.unit(),
+            "grams of rolling tobacco"
+        )
+
+    def test_more_or_fewer_or_less_text_returns_less_if_decreased_level_rolling_tobacco(self):
+        self.tobacco_smoking_history.type = TobaccoSmokingHistoryTypes.ROLLING_TOBACCO
+        self.tobacco_smoking_history.level = TobaccoSmokingHistory.Levels.DECREASED
         self.tobacco_smoking_history.save()
 
         presenter = TobaccoSmokingHistoryPresenter(self.tobacco_smoking_history)
 
         self.assertEqual(
-            presenter.amount_prefix(),
-            ""
+            presenter.more_or_fewer_or_less(),
+            "less"
+        )
+
+    # Tests for Pipe
+    def test_more_or_fewer_or_less_text_returns_fewer_if_decreased_level_cigarettes(self):
+        self.tobacco_smoking_history.type = TobaccoSmokingHistoryTypes.PIPE
+        self.tobacco_smoking_history.level = TobaccoSmokingHistory.Levels.DECREASED
+        self.tobacco_smoking_history.save()
+
+        presenter = TobaccoSmokingHistoryPresenter(self.tobacco_smoking_history)
+
+        self.assertEqual(
+            presenter.more_or_fewer_or_less(),
+            "fewer"
+        )
+
+    def test_to_sentence_returns_the_amount_of_type_per_frequency_pipe(self):
+        self.tobacco_smoking_history.type = TobaccoSmokingHistoryTypes.PIPE
+        self.tobacco_smoking_history.smoked_amount_response.value = 7
+        self.tobacco_smoking_history.smoking_frequency_response.value = SmokingFrequencyValues.WEEKLY
+
+        presenter = TobaccoSmokingHistoryPresenter(self.tobacco_smoking_history)
+
+        self.assertEqual(
+            presenter.to_sentence(),
+            "7 full pipe loads a week"
         )
