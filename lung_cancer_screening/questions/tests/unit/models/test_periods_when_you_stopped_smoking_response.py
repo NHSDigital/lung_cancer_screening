@@ -158,7 +158,7 @@ class TestPeriodsWhenYouStoppedSmokingResponse(TestCase):
 
         self.assertEqual(
             context.exception.messages[0],
-            "The number of years you stopped smoking must be fewer than the total number of years you have been smoking",
+            "duration years stopped smoking must be less than total years smoked",
         )
 
 

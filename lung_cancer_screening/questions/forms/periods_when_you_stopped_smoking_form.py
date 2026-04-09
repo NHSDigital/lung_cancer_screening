@@ -25,7 +25,8 @@ class PeriodsWhenYouStoppedSmokingForm(forms.ModelForm):
 
             coerce=lambda x: x == "True",
             error_messages={
-                "required": self.required_error_message()
+                "required": self.required_error_message(),
+                "duration_years": self.duration_years_error_message()
             },
         )
 
@@ -82,9 +83,18 @@ class PeriodsWhenYouStoppedSmokingForm(forms.ModelForm):
         else:
             return "stopped or quit "
 
+    def smoked_or_smoke(self):
+        if self.response_set().current_smoker():
+            return "smoked"
+        else:
+            return "have been smoking"
 
     def required_error_message(self):
         return f"Select if you ever {self.stopped_or_quit()}smoking for periods of 1 year or longer"
+
+
+    def duration_years_error_message(self):
+        return f"The number of years you stopped smoking must be fewer than the total number of years you {self.smoked_or_smoke()}"
 
 
     def duration_years_required_error_message(self):
