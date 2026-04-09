@@ -22,12 +22,16 @@ class TestWhenYouQuitSmokingForm(TestCase):
             response_set=self.response_set,
             value=self.date_of_birth_response.age_in_years() - 20,
         )
-        self.response = WhenYouQuitSmokingResponseFactory(response_set=self.response_set)
+        self.response = WhenYouQuitSmokingResponseFactory(
+            response_set=self.response_set,
+            value=self.age_when_started_smoking_response.value + 1
+        )
 
     def test_is_valid_with_valid_input(self):
-        form = WhenYouQuitSmokingForm(instance=self.response, data={"value": 18})
+        age_when_quit = self.age_when_started_smoking_response.value + 1
+        form = WhenYouQuitSmokingForm(instance=self.response, data={"value": age_when_quit})
         self.assertTrue(form.is_valid())
-        self.assertEqual(form.cleaned_data["value"], 18)
+        self.assertEqual(form.cleaned_data["value"], age_when_quit)
 
 
     def test_has_a_required_error_message(self):

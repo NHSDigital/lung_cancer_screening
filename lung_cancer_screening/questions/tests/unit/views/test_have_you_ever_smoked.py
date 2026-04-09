@@ -1,6 +1,9 @@
 from django.test import TestCase, tag
 from django.urls import reverse
 
+from lung_cancer_screening.questions.tests.factories.age_when_started_smoking_response_factory import AgeWhenStartedSmokingResponseFactory
+from lung_cancer_screening.questions.tests.factories.when_you_quit_smoking_response_factory import WhenYouQuitSmokingResponseFactory
+
 from ...factories.terms_of_use_response_factory import TermsOfUseResponseFactory
 
 from .helpers.authentication import login_user
@@ -199,3 +202,32 @@ class TestPostHaveYouEverSmoked(TestCase):
         )
 
         self.assertRedirects(response, reverse("questions:non_smoker_exit"))
+
+
+    def test_post_resets_when_you_quit_smoking_response_if_the_user_changes_from_a_former_smoker_to_a_non_smoker(self):
+        response_set = ResponseSetFactory.create(
+            user=self.user,
+            eligible=True
+        )
+
+        AgeWhenStartedSmokingResponseFactory.create(
+            response_set=response_set,
+            value=15
+        )
+
+        WhenYouQuitSmokingResponseFactory.create(
+            response_set=response_set,
+            value=20
+        )
+
+        response_set.save()
+        response_set.refresh_from_db()
+
+        self.client.post(
+            reverse("questions:have_you_ever_smoked"),
+            {"value": HaveYouEverSmokedValues.NO_I_HAVE_NEVER_SMOKED.value }
+        )
+
+        response_set.refresh_from_db()
+
+        self.assertFalse(hasattr(response_set, 'when_you_quit_smoking_response'))

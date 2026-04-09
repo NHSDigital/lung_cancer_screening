@@ -59,7 +59,7 @@ class PeriodsWhenYouStoppedSmokingForm(forms.ModelForm):
         if self.response_set().current_smoker():
             return "Have you ever stopped smoking for periods of 1 year or longer?"
         else:
-            return "Did you ever stop or quit smoking for periods of 1 year or longer?"
+            return "Before you quit smoking, did you ever stop for periods of 1 year or longer?"
 
 
     def label_is_page_heading(self):
@@ -92,14 +92,8 @@ class PeriodsWhenYouStoppedSmokingForm(forms.ModelForm):
 
 
     def duration_years_label(self):
-        if self.response_set().current_smoker():
-            return "Enter the total number of years you stopped smoking"
-        else:
-            return "Roughly how many years did you stop or quit smoking in total?"
+        return "Enter the total number of years you stopped smoking"
 
 
     def duration_years_hint(self):
-        if self.response_set().current_smoker():
-            return "Give an estimate if you are not sure"
-        else:
-            return "Add together the periods when you stopped smoking and the number of years since you quit. Give an estimate if you are not sure."
+        return "Give an estimate if you are not sure"

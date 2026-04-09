@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from .base import BaseModel
 from .response_set import ResponseSet
@@ -37,3 +39,13 @@ class HaveYouEverSmokedResponse(BaseModel):
 
     def is_former_smoker(self):
         return self.value == HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY.value
+
+
+@receiver(post_save, sender=HaveYouEverSmokedResponse)
+def remove_when_you_quit_smoking_if_not_current(sender, instance, **kwargs):
+    if (
+        not instance.is_current_smoker()
+        and instance.response_set
+        and hasattr(instance.response_set, "when_you_quit_smoking_response")
+    ):
+        instance.response_set.when_you_quit_smoking_response.delete()

@@ -21,6 +21,7 @@ class WhenYouQuitSmokingResponse(BaseModel):
         super().clean()
         self.validates_date_of_birth_response()
         self.validates_age_started_smoking_response()
+        self.validates_age_when_quit_smoking_greater_than_age_started()
 
 
     def validates_date_of_birth_response(self):
@@ -39,5 +40,15 @@ class WhenYouQuitSmokingResponse(BaseModel):
                 "value": ValidationError(
                     "age started smoking not set",
                     code="no_age_started_smoking"
+                )
+            })
+
+    def validates_age_when_quit_smoking_greater_than_age_started(self):
+        if self.value and self.response_set.age_when_started_smoking_response.value > self.value:
+            raise ValidationError({
+                "value": ValidationError(
+                    "age when you quit smoking cannot be lower than age started smoking",
+                    code="age_when_quit_smoking_greater_than_age_started"
+
                 )
             })

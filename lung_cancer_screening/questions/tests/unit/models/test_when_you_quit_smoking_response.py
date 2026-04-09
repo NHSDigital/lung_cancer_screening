@@ -24,14 +24,17 @@ class TestWhenYouQuitSmokingResponse(TestCase):
 
 
     def test_has_a_valid_factory(self):
-        model = WhenYouQuitSmokingResponseFactory.build(response_set=self.response_set)
+        model = WhenYouQuitSmokingResponseFactory.build(
+            response_set=self.response_set,
+            value=self.age_when_started_smoking_response.value + 1
+        )
         model.full_clean()
 
 
     def test_has_response_set_as_foreign_key(self):
         response = WhenYouQuitSmokingResponse.objects.create(
             response_set=self.response_set,
-            value=18
+            value=self.age_when_started_smoking_response.value + 1
         )
 
         self.assertEqual(response.response_set, self.response_set)
@@ -52,6 +55,42 @@ class TestWhenYouQuitSmokingResponse(TestCase):
             context.exception.message_dict["value"],
             ["date of birth not set"]
         )
+
+
+    def test_is_invalid_if_no_date_of_birth_response(self):
+        self.response_set.date_of_birth_response.delete()
+        self.response_set.refresh_from_db()
+
+        response = WhenYouQuitSmokingResponseFactory.build(
+            response_set=self.response_set,
+            value=18
+        )
+
+        with self.assertRaises(ValidationError) as context:
+            response.full_clean()
+
+        self.assertEqual(
+            context.exception.message_dict["value"],
+            ["date of birth not set"]
+        )
+
+
+    def test_is_invalid_if_age_when_you_quit_smoking_is_lower_that_age_started_smoking(self):
+        age_started = self.age_when_started_smoking_response.value
+
+        response = WhenYouQuitSmokingResponseFactory.build(
+            response_set=self.response_set,
+            value=age_started - 2
+        )
+
+        with self.assertRaises(ValidationError) as context:
+            response.full_clean()
+
+        self.assertEqual(
+            context.exception.message_dict["value"],
+            ["age when you quit smoking cannot be lower than age started smoking"]
+        )
+
 
 
     def test_is_invalid_if_age_started_smoking_is_unanswered(self):

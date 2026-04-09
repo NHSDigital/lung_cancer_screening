@@ -115,7 +115,7 @@ class TestPostWhenYouQuitSmoking(TestCase):
             value=self.response_set.date_of_birth_response.age_in_years() - 20,
         )
 
-        self.valid_params = {"value": 18}
+        self.valid_params = {"value": self.age_when_started_smoking_response.value + 1}
 
     def test_redirects_if_the_user_is_not_logged_in(self):
         self.client.logout()
@@ -155,7 +155,8 @@ class TestPostWhenYouQuitSmoking(TestCase):
 
     def test_creates_an_when_you_quit_smoking_response(self):
         self.client.post(
-            reverse("questions:when_you_quit_smoking"), self.valid_params
+            reverse("questions:when_you_quit_smoking"),
+            self.valid_params
         )
 
         self.response_set.refresh_from_db()
@@ -163,6 +164,7 @@ class TestPostWhenYouQuitSmoking(TestCase):
             self.response_set.when_you_quit_smoking_response.value,
             self.valid_params["value"],
         )
+
 
     def test_redirects_to_periods_when_you_stopped_smoking(self):
         response = self.client.post(

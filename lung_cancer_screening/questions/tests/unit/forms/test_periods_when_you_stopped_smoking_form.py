@@ -72,7 +72,7 @@ class TestPeriodsWhenYouStoppedSmokingForm(TestCase):
 
         self.assertEqual(
             form.fields["value"].label,
-            "Did you ever stop or quit smoking for periods of 1 year or longer?",
+            "Before you quit smoking, did you ever stop for periods of 1 year or longer?",
         )
 
 
@@ -106,7 +106,7 @@ class TestPeriodsWhenYouStoppedSmokingForm(TestCase):
 
         self.assertEqual(
             form.fields["duration_years"].label,
-            "Roughly how many years did you stop or quit smoking in total?",
+            "Enter the total number of years you stopped smoking",
         )
 
 
