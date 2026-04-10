@@ -204,7 +204,7 @@ class TestPostHaveYouEverSmoked(TestCase):
 
         self.assertRedirects(response, reverse("questions:non_smoker_exit"))
 
-    @tag("wip")
+
     def test_post_resets_when_you_quit_smoking_response_if_the_user_changes_from_a_former_smoker_to_a_smoker(self):
         response_set = ResponseSetFactory.create(
             user=self.user,
