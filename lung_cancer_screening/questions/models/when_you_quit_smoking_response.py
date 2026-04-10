@@ -1,5 +1,5 @@
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
 
 from .base import BaseModel
@@ -20,6 +20,7 @@ class WhenYouQuitSmokingResponse(BaseModel):
     def clean(self):
         super().clean()
         self.validates_date_of_birth_response()
+        self.validate_age_when_quit_smoking_greater_than_current_age()
         self.validates_age_started_smoking_response()
         self.validates_age_when_quit_smoking_greater_than_age_started()
 
@@ -33,6 +34,15 @@ class WhenYouQuitSmokingResponse(BaseModel):
                 )
             })
 
+    def validate_age_when_quit_smoking_greater_than_current_age(self):
+        if self.value and self.response_set.date_of_birth_response.age_in_years() < self.value:
+            raise ValidationError({
+                "value": ValidationError(
+                    "age when you quit smoking cannot be greater than current age",
+                    code="age_when_quit_smoking_greater_than_current_age"
+
+                )
+            })
 
     def validates_age_started_smoking_response(self):
         if not hasattr(self.response_set, "age_when_started_smoking_response"):

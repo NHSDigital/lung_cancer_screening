@@ -30,7 +30,19 @@ class AgeWhenStartedSmokingResponse(BaseModel):
             })
 
     def years_smoked_including_stopped(self):
-        return (
-            self.response_set.date_of_birth_response.age_in_years() -
-            self.value
-        )
+        if self.response_set.current_smoker():
+            return (
+                self.response_set.date_of_birth_response.age_in_years() -
+                self.value
+            )
+
+        if self.response_set.former_smoker():
+            if not hasattr(self.response_set, "when_you_quit_smoking_response"):
+                raise ValidationError({
+                    "duration_years": ValidationError(
+                        "when you quit smoking not set",
+                        code="no_when_you_quit_smoking"
+                    )
+                })
+            else:
+                return self.response_set.when_you_quit_smoking_response.value - self.value

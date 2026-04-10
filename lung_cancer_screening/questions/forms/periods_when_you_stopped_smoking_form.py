@@ -1,4 +1,6 @@
 from django import forms
+from django.urls import reverse_lazy
+from django.utils.html import format_html
 
 from ...nhsuk_forms.integer_field import IntegerField
 from ...nhsuk_forms.typed_choice_field import TypedChoiceField
@@ -27,7 +29,7 @@ class PeriodsWhenYouStoppedSmokingForm(forms.ModelForm):
             error_messages={
                 "required": self.required_error_message(),
                 "duration_years": self.duration_years_error_message()
-            },
+            }
         )
 
         self.fields["duration_years"] = IntegerField(
@@ -37,6 +39,9 @@ class PeriodsWhenYouStoppedSmokingForm(forms.ModelForm):
             hint=self.duration_years_hint(),
             required=False,
             suffix="years",
+            error_messages={
+                "no_when_you_quit_smoking": format_html("<a href=\"{}\">Provide when you quit smoking</a> before answering the total number of years you stopped smoking", reverse_lazy("questions:when_you_quit_smoking"))
+            }
         )
 
     def clean_duration_years(self):
@@ -84,7 +89,7 @@ class PeriodsWhenYouStoppedSmokingForm(forms.ModelForm):
             return "stopped or quit "
 
     def smoked_or_smoke(self):
-        if self.response_set().current_smoker():
+        if self.response_set().former_smoker():
             return "smoked"
         else:
             return "have been smoking"
