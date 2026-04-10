@@ -11,7 +11,7 @@ class BaseQuerySet(models.QuerySet):
         Returns a tuple of (object, created) where created is True if a new instance was built.
         """
         # Check if any kwargs are unsaved model instances
-        for _, value in kwargs.items():
+        for key, value in kwargs.items():
             if isinstance(value, models.Model) and value.pk is None:
                 # If we have an unsaved instance, just build a new one
                 return (self.model(**kwargs), True)
