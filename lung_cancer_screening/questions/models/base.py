@@ -1,5 +1,5 @@
 from django.db import models
-from .metrics import Metrics
+from services.metrics import Metrics
 import logging
 
 logger = logging.getLogger(__name__)
