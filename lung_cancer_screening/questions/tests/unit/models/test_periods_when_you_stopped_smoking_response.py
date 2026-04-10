@@ -3,6 +3,8 @@ from django.core.exceptions import ValidationError
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+from ...factories.have_you_ever_smoked_response_factory import HaveYouEverSmokedResponseFactory
+
 from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.periods_when_you_stopped_smoking_response_factory import PeriodsWhenYouStoppedSmokingResponseFactory
 from ...factories.date_of_birth_response_factory import DateOfBirthResponseFactory
@@ -18,6 +20,7 @@ class TestPeriodsWhenYouStoppedSmokingResponse(TestCase):
     def setUp(self):
         self.response_set = ResponseSetFactory()
 
+        HaveYouEverSmokedResponseFactory(response_set=self.response_set, current_smoker=True)
         # Following responses required by validator
         self.date_of_birth_response = DateOfBirthResponseFactory.create(response_set=self.response_set)
         self.age_when_started_smoking_response = AgeWhenStartedSmokingResponseFactory.create(response_set=self.response_set)

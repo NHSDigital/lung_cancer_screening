@@ -15,6 +15,7 @@ class TestPeriodsWhenYouStoppedSmokingForm(TestCase):
         self.age_when_started_smoking_response = AgeWhenStartedSmokingResponseFactory.create(
             response_set=self.response_set
         )
+        HaveYouEverSmokedResponseFactory(response_set=self.response_set, current_smoker=True)
         self.response = PeriodsWhenYouStoppedSmokingResponseFactory.create(
             response_set=self.response_set,
             value=True,
@@ -43,11 +44,6 @@ class TestPeriodsWhenYouStoppedSmokingForm(TestCase):
 
 
     def test_has_a_label_for_current_smoker(self):
-        HaveYouEverSmokedResponseFactory.create(
-            response_set=self.response_set,
-            current_smoker=True,
-        )
-
         form = PeriodsWhenYouStoppedSmokingForm(
             instance=self.response,
             data=self.valid_params
@@ -60,6 +56,7 @@ class TestPeriodsWhenYouStoppedSmokingForm(TestCase):
 
 
     def test_has_a_label_for_former_smoker(self):
+        self.response_set.have_you_ever_smoked_response.delete()
         HaveYouEverSmokedResponseFactory.create(
             response_set=self.response_set,
             former_smoker=True,
@@ -77,11 +74,6 @@ class TestPeriodsWhenYouStoppedSmokingForm(TestCase):
 
 
     def test_has_a_duration_years_label_for_current_smoker(self):
-        HaveYouEverSmokedResponseFactory.create(
-            response_set=self.response_set,
-            current_smoker=True,
-        )
-
         form = PeriodsWhenYouStoppedSmokingForm(
             instance=self.response,
             data=self.valid_params,
@@ -94,11 +86,6 @@ class TestPeriodsWhenYouStoppedSmokingForm(TestCase):
 
 
     def test_has_a_duration_years_label_for_former_smoker(self):
-        HaveYouEverSmokedResponseFactory.create(
-            response_set=self.response_set,
-            former_smoker=True,
-        )
-
         form = PeriodsWhenYouStoppedSmokingForm(
             instance=self.response,
             data=self.valid_params,
@@ -111,11 +98,6 @@ class TestPeriodsWhenYouStoppedSmokingForm(TestCase):
 
 
     def test_has_a_required_error_for_current_smoker(self):
-        HaveYouEverSmokedResponseFactory.create(
-            response_set=self.response_set,
-            current_smoker=True,
-        )
-
         form = PeriodsWhenYouStoppedSmokingForm(
             instance=self.response,
             data={
@@ -130,6 +112,7 @@ class TestPeriodsWhenYouStoppedSmokingForm(TestCase):
 
 
     def test_has_a_required_error_for_former_smoker(self):
+        self.response_set.have_you_ever_smoked_response.delete()
         HaveYouEverSmokedResponseFactory.create(
             response_set=self.response_set,
             former_smoker=True,
@@ -148,11 +131,6 @@ class TestPeriodsWhenYouStoppedSmokingForm(TestCase):
 
 
     def test_has_a_duration_years_required_error_for_current_smoker(self):
-        HaveYouEverSmokedResponseFactory.create(
-            response_set=self.response_set,
-            current_smoker=True,
-        )
-
         form = PeriodsWhenYouStoppedSmokingForm(
             instance=self.response,
             data={
@@ -168,6 +146,7 @@ class TestPeriodsWhenYouStoppedSmokingForm(TestCase):
 
 
     def test_has_a_duration_years_required_error_for_former_smoker(self):
+        self.response_set.have_you_ever_smoked_response.delete()
         HaveYouEverSmokedResponseFactory.create(
             response_set=self.response_set,
             former_smoker=True,

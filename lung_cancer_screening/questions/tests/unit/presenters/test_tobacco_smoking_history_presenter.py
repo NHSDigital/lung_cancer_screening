@@ -1,5 +1,6 @@
 from django.test import TestCase
 
+from lung_cancer_screening.questions.tests.factories.have_you_ever_smoked_response_factory import HaveYouEverSmokedResponseFactory
 from lung_cancer_screening.questions.tests.factories.response_set_factory import ResponseSetFactory
 from lung_cancer_screening.questions.tests.factories.age_when_started_smoking_response_factory import AgeWhenStartedSmokingResponseFactory
 from lung_cancer_screening.questions.tests.factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
@@ -14,6 +15,7 @@ from lung_cancer_screening.questions.models.tobacco_smoking_history import Tobac
 class TestTobaccoSmokingHistoryPresenterAllTobaccoTypes(TestCase):
     def setUp(self):
         self.response_set = ResponseSetFactory.create()
+        HaveYouEverSmokedResponseFactory(response_set=self.response_set, current_smoker=True)
         self.age_when_started_smoking_response = AgeWhenStartedSmokingResponseFactory.create(
             response_set=self.response_set
         )

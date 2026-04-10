@@ -4,6 +4,8 @@ from django.core.exceptions import ValidationError
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+from ...factories.have_you_ever_smoked_response_factory import HaveYouEverSmokedResponseFactory
+
 from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.age_when_started_smoking_response_factory import AgeWhenStartedSmokingResponseFactory
 from ...factories.date_of_birth_response_factory import DateOfBirthResponseFactory
@@ -18,6 +20,7 @@ class TestAgeWhenStartedSmokingResponse(TestCase):
             response_set=self.response_set,
             value=datetime.now() - relativedelta(years=60)
         )
+        HaveYouEverSmokedResponseFactory(response_set=self.response_set, current_smoker=True)
 
     def test_has_a_valid_factory(self):
         model = AgeWhenStartedSmokingResponseFactory.build(response_set=self.response_set)

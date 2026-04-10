@@ -3,6 +3,8 @@ from django.test import TestCase, tag
 from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 
+from lung_cancer_screening.questions.tests.factories.have_you_ever_smoked_response_factory import HaveYouEverSmokedResponseFactory
+
 from ....models.age_when_started_smoking_response import AgeWhenStartedSmokingResponse
 
 from ...factories.response_set_factory import ResponseSetFactory
@@ -20,6 +22,9 @@ class TestAgeWhenStartedSmokingForm(TestCase):
             response_set=self.response_set,
             value=timezone.now() - relativedelta(years=int(60))
         )
+
+        HaveYouEverSmokedResponseFactory(response_set=self.response_set, current_smoker=True)
+
         self.response = AgeWhenStartedSmokingResponse(
             response_set=self.response_set
         )
@@ -91,7 +96,7 @@ class TestAgeWhenStartedSmokingForm(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(
             form.errors["value"],
-            ["<a href=\"/date-of-birth\">Provide your date of birth</a> before answering this question"]
+            ["<a href=\"/date-of-birth\">Provide your date of birth</a> before answering age when you started smoking"]
         )
 
     def test_is_invalid_when_age_entered_greater_than_current_age(self):

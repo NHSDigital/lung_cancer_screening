@@ -25,6 +25,6 @@ class WhenYouQuitSmokingForm(forms.ModelForm):
                 "min_value":"The age you quit smoking must be between 1 and your current age",
                 "age_when_quit_smoking_greater_than_age_started":"The age you quit smoking cannot be lower than the age you started smoking",
                 "age_when_quit_smoking_greater_than_current_age" : "The age you quit smoking must be the same as, or less than, your current age",
-                "no_date_of_birth" : format_html("<a href=\"{}\">Provide your date of birth</a> before answering this question", reverse_lazy("questions:date_of_birth"))
+                "no_date_of_birth" : format_html("<a href=\"{}\">Provide your date of birth</a> before answering when you quit smoking", reverse_lazy("questions:date_of_birth"))
             }
         )

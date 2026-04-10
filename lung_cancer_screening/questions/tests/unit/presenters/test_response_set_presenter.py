@@ -73,7 +73,7 @@ class TestResponseSetPresenter(TestCase):
     def test_periods_when_you_stopped_smoking_with_value(self):
         DateOfBirthResponseFactory(response_set=self.response_set)
         age_when_started_smoking_response = AgeWhenStartedSmokingResponseFactory(response_set=self.response_set)
-
+        HaveYouEverSmokedResponseFactory(response_set=self.response_set, current_smoker=True)
         periods_when_you_stopped_smoking_response = PeriodsWhenYouStoppedSmokingResponseFactory(
             response_set=self.response_set,
             value=True,
