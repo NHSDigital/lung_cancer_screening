@@ -1,5 +1,5 @@
 from django.db import models
-from services.metrics import Metrics
+from lung_cancer_screening.services.metrics import Metrics
 import logging
 
 logger = logging.getLogger(__name__)
