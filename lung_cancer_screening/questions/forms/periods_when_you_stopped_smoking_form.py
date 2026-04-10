@@ -1,4 +1,6 @@
 from django import forms
+from django.urls import reverse_lazy
+from django.utils.html import format_html
 
 from ...nhsuk_forms.integer_field import IntegerField
 from ...nhsuk_forms.typed_choice_field import TypedChoiceField
@@ -25,8 +27,9 @@ class PeriodsWhenYouStoppedSmokingForm(forms.ModelForm):
 
             coerce=lambda x: x == "True",
             error_messages={
-                "required": self.required_error_message()
-            },
+                "required": self.required_error_message(),
+                "duration_years": self.duration_years_error_message()
+            }
         )
 
         self.fields["duration_years"] = IntegerField(
@@ -36,6 +39,9 @@ class PeriodsWhenYouStoppedSmokingForm(forms.ModelForm):
             hint=self.duration_years_hint(),
             required=False,
             suffix="years",
+            error_messages={
+                "no_when_you_quit_smoking": format_html("<a href=\"{}\">Provide when you quit smoking</a> before answering the total number of years you stopped smoking", reverse_lazy("questions:when_you_quit_smoking"))
+            }
         )
 
     def clean_duration_years(self):
@@ -59,7 +65,7 @@ class PeriodsWhenYouStoppedSmokingForm(forms.ModelForm):
         if self.response_set().current_smoker():
             return "Have you ever stopped smoking for periods of 1 year or longer?"
         else:
-            return "Did you ever stop or quit smoking for periods of 1 year or longer?"
+            return "Before you quit smoking, did you ever stop for periods of 1 year or longer?"
 
 
     def label_is_page_heading(self):
@@ -82,9 +88,18 @@ class PeriodsWhenYouStoppedSmokingForm(forms.ModelForm):
         else:
             return "stopped or quit "
 
+    def smoked_or_smoke(self):
+        if self.response_set().former_smoker():
+            return "smoked"
+        else:
+            return "have been smoking"
 
     def required_error_message(self):
         return f"Select if you ever {self.stopped_or_quit()}smoking for periods of 1 year or longer"
+
+
+    def duration_years_error_message(self):
+        return f"The number of years you stopped smoking must be fewer than the total number of years you {self.smoked_or_smoke()}"
 
 
     def duration_years_required_error_message(self):
@@ -92,14 +107,8 @@ class PeriodsWhenYouStoppedSmokingForm(forms.ModelForm):
 
 
     def duration_years_label(self):
-        if self.response_set().current_smoker():
-            return "Enter the total number of years you stopped smoking"
-        else:
-            return "Roughly how many years did you stop or quit smoking in total?"
+        return "Enter the total number of years you stopped smoking"
 
 
     def duration_years_hint(self):
-        if self.response_set().current_smoker():
-            return "Give an estimate if you are not sure"
-        else:
-            return "Add together the periods when you stopped smoking and the number of years since you quit. Give an estimate if you are not sure."
+        return "Give an estimate if you are not sure"

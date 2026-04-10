@@ -85,6 +85,9 @@ class ResponseSet(BaseModel):
         if hasattr(self, 'family_history_lung_cancer') and self.family_history_lung_cancer.is_truthy():
             response_attrs.append('relatives_age_when_diagnosed')
 
+        if self.former_smoker():
+            response_attrs.append('when_you_quit_smoking_response')
+
         return response_attrs
 
 
@@ -170,3 +173,10 @@ class ResponseSet(BaseModel):
             return None
 
         return self.have_you_ever_smoked_response.is_current_smoker()
+
+
+    def former_smoker(self):
+        if not hasattr(self, 'have_you_ever_smoked_response'):
+            return None
+
+        return self.have_you_ever_smoked_response.is_former_smoker()

@@ -85,3 +85,21 @@ class TestHaveYouEverSmokedResponse(TestCase):
         )
 
         self.assertFalse(response.is_current_smoker())
+
+
+    def test_is_former_smoker_returns_true_when_they_are_a_former_smoker(self):
+        response = HaveYouEverSmokedResponse.objects.create(
+            response_set=self.response_set,
+            value=HaveYouEverSmokedValues.YES_I_USED_TO_SMOKE_REGULARLY
+        )
+
+        self.assertTrue(response.is_former_smoker())
+
+
+    def test_is_former_smoker_returns_false_when_they_are_not_a_former_smoker(self):
+        response = HaveYouEverSmokedResponse.objects.create(
+            response_set=self.response_set,
+            value=HaveYouEverSmokedValues.YES_I_CURRENTLY_SMOKE
+        )
+
+        self.assertFalse(response.is_former_smoker())

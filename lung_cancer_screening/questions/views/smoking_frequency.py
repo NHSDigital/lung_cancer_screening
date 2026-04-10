@@ -6,7 +6,7 @@ from lung_cancer_screening.questions.models.tobacco_smoking_history import Tobac
 from .mixins.ensure_response_set import EnsureResponseSet
 from .mixins.ensure_eligible import EnsureEligibleMixin
 from .mixins.ensure_smoking_history_for_type import EnsureSmokingHistoryForTypeMixin
-from .mixins.ensure_prerequisite_responses import EnsurePrerequisiteResponsesMixin
+from .mixins.ensure_smoking_history_prerequisite_responses import EnsureSmokingHistoryPrerequisiteResponsesMixin
 from .smoking_history_question_base_view import SmokingHistoryQuestionBaseView
 from ..forms.smoking_frequency_form import SmokingFrequencyForm
 from ..models.smoking_frequency_response import SmokingFrequencyResponse
@@ -17,7 +17,7 @@ class SmokingFrequencyView(
     EnsureResponseSet,
     EnsureEligibleMixin,
     EnsureSmokingHistoryForTypeMixin,
-    EnsurePrerequisiteResponsesMixin,
+    EnsureSmokingHistoryPrerequisiteResponsesMixin,
     SmokingHistoryQuestionBaseView
 ):
     template_name = "question_form.jinja"

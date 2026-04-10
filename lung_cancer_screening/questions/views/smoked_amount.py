@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .mixins.ensure_response_set import EnsureResponseSet
 from .mixins.ensure_eligible import EnsureEligibleMixin
 from .mixins.ensure_smoking_history_for_type import EnsureSmokingHistoryForTypeMixin
-from .mixins.ensure_prerequisite_responses import EnsurePrerequisiteResponsesMixin
+from .mixins.ensure_smoking_history_prerequisite_responses import EnsureSmokingHistoryPrerequisiteResponsesMixin
 from .smoking_history_question_base_view import SmokingHistoryQuestionBaseView
 from ..forms.smoked_amount_form import SmokedAmountForm
 from ..models.smoked_amount_response import SmokedAmountResponse
@@ -15,7 +15,7 @@ class SmokedAmountView(
     EnsureResponseSet,
     EnsureEligibleMixin,
     EnsureSmokingHistoryForTypeMixin,
-    EnsurePrerequisiteResponsesMixin,
+    EnsureSmokingHistoryPrerequisiteResponsesMixin,
     SmokingHistoryQuestionBaseView
 ):
     template_name = "smoked_amount.jinja"

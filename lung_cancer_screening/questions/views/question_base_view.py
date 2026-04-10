@@ -15,6 +15,7 @@ class QuestionBaseView(UpdateView):
 
         return {"change": "True"}
 
+
     def get_back_link_url(self):
         if self.is_changing_responses():
             return reverse("questions:responses")

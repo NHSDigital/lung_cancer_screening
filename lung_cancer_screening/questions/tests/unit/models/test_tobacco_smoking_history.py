@@ -1,6 +1,8 @@
 from django.test import TestCase, tag
 from django.core.exceptions import ValidationError
 
+from ...factories.have_you_ever_smoked_response_factory import HaveYouEverSmokedResponseFactory
+
 from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.age_when_started_smoking_response_factory import AgeWhenStartedSmokingResponseFactory
 from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
@@ -15,6 +17,7 @@ from ....models.tobacco_smoking_history import TobaccoSmokingHistory
 class TestTobaccoSmokingHistory(TestCase):
     def setUp(self):
         self.response_set = ResponseSetFactory()
+        HaveYouEverSmokedResponseFactory(response_set=self.response_set, current_smoker=True)
 
 
     def test_has_a_valid_factory(self):

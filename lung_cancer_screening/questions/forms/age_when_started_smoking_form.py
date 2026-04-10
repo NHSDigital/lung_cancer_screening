@@ -21,7 +21,7 @@ class AgeWhenStartedSmokingForm(forms.ModelForm):
                 "invalid": "Enter your age when you started smoking",
                 "zero_entered":"The age you started smoking must be between 1 and your current age",
                 "age_started_smoking_greater_than_current_age":"The age you started smoking must be the same as, or less than your current age",
-                "no_date_of_birth" : format_html("<a href=\"{}\">Provide your date of birth</a> before answering this question", reverse_lazy("questions:date_of_birth"))
+                "no_date_of_birth" : format_html("<a href=\"{}\">Provide your date of birth</a> before answering age when you started smoking", reverse_lazy("questions:date_of_birth"))
             }
         )
 
