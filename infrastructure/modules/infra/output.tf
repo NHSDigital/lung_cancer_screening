@@ -33,3 +33,7 @@ output "postgres_subnet_id" {
 output "main_subnet_id" {
   value = module.main_subnet.id
 }
+
+output "app_insights_connection_string" {
+  value = module.app_insights_audit.connection_string
+}
