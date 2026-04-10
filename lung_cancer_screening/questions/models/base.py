@@ -4,7 +4,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-class   (models.QuerySet):
+class BaseQuerySet(models.QuerySet):
     def get_or_build(self, **kwargs):
         """
         Get an existing object matching the kwargs, or build a new unsaved instance.
