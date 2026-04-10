@@ -3,13 +3,12 @@ from django.core.exceptions import ValidationError
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from ...factories.have_you_ever_smoked_response_factory import HaveYouEverSmokedResponseFactory
-
 from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.periods_when_you_stopped_smoking_response_factory import PeriodsWhenYouStoppedSmokingResponseFactory
 from ...factories.date_of_birth_response_factory import DateOfBirthResponseFactory
 from ...factories.age_when_started_smoking_response_factory import AgeWhenStartedSmokingResponseFactory
 from ...factories.have_you_ever_smoked_response_factory import HaveYouEverSmokedResponseFactory
+from ...factories.when_you_quit_smoking_response_factory import WhenYouQuitSmokingResponseFactory
 
 from ....models.periods_when_you_stopped_smoking_response import PeriodsWhenYouStoppedSmokingResponse
 
@@ -146,6 +145,8 @@ class TestPeriodsWhenYouStoppedSmokingResponse(TestCase):
         self.age_when_started_smoking_response.value = 18
         self.age_when_started_smoking_response.save()
 
+        self.response_set.have_you_ever_smoked_response.delete()
+
         HaveYouEverSmokedResponseFactory.create(
             response_set=self.response_set,
             current_smoker=True,
@@ -161,7 +162,7 @@ class TestPeriodsWhenYouStoppedSmokingResponse(TestCase):
 
         self.assertEqual(
             context.exception.messages[0],
-            "duration years stopped smoking must be less than total years smoked",
+            "The number of years you stopped smoking must be fewer than the total number of years you have been smoking",
         )
 
 
@@ -171,9 +172,16 @@ class TestPeriodsWhenYouStoppedSmokingResponse(TestCase):
         self.age_when_started_smoking_response.value = 18
         self.age_when_started_smoking_response.save()
 
+        self.response_set.have_you_ever_smoked_response.delete()
+
         HaveYouEverSmokedResponseFactory.create(
             response_set=self.response_set,
             former_smoker=True,
+        )
+
+        WhenYouQuitSmokingResponseFactory.create(
+            response_set=self.response_set,
+            value=30
         )
 
         response = PeriodsWhenYouStoppedSmokingResponseFactory.build(
