@@ -42,9 +42,9 @@ class HaveYouEverSmokedResponse(BaseModel):
 
 
 @receiver(post_save, sender=HaveYouEverSmokedResponse)
-def remove_when_you_quit_smoking_if_not_current(sender, instance, **kwargs):
+def remove_when_you_quit_smoking_if_not_former_smoker(sender, instance, **kwargs):
     if (
-        not instance.is_current_smoker()
+        not instance.is_former_smoker()
         and instance.response_set
         and hasattr(instance.response_set, "when_you_quit_smoking_response")
     ):
