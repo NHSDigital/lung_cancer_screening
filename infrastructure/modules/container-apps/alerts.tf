@@ -1,4 +1,4 @@
-resource "azurerm_monitor_scheduled_query_rules_alert_v2" "500_error_alert" {
+resource "azurerm_monitor_scheduled_query_rules_alert_v2" "five_hundred_error_alert" {
   count = var.enable_alerting ? 1 : 0
 
   auto_mitigation_enabled          = false
