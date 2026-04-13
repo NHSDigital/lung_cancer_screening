@@ -3,5 +3,5 @@
 -- Run script using psql command line tool or pgAdmin query tool
 
 \set ON_ERROR_STOP on
-\copy (SELECT DISTINCT qu.nhs_number FROM questions_user qu JOIN questions_responseset qrs ON qrs.user_id = qu.id JOIN questions_checkneedappointmentresponse qcnar ON qcnar.response_set_id = qrs.id WHERE qcnar.value = TRUE OR qrs.submitted_at IS NOT NULL) TO 'C:/Users/*YourUsername*/Documents/valid_responses.csv' WITH (FORMAT csv, HEADER true);
+\copy (SELECT DISTINCT qu.nhs_number FROM questions_user qu JOIN questions_responseset qrs ON qrs.user_id = qu.id WHERE qrs.submitted_at IS NOT NULL) TO 'C:/Users/*YourUsername*/Documents/valid_responses.csv' WITH (FORMAT csv, HEADER true);
 
