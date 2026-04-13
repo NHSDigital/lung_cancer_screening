@@ -1,4 +1,4 @@
--- SQL script to export a csv file containing NHS numbers of submitted responses to a CSV file on to AVD.
+-- SQL script to export a csv file containing NHS numbers of submitted responses to a folder on an AVD.
 -- A valid response is defined as a response where the user has submitted the questionnaire.
 -- Run script using psql command line tool or pgAdmin query tool on AVD.
 
