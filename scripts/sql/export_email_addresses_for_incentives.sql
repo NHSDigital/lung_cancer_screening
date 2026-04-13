@@ -11,10 +11,7 @@ podman ps --format "{{.Names}}"
 -- Copy partner csv file to server temp directory
 podman cp "/Users/*YourUsername*/Downloads/SampleDataPIDRemoved230126.csv" <db_container_name>:/tmp/partner.csv
 
-podman cp "/Users/*YourUsername*/Downloads/SampleDataPIDRemoved230126.csv" lung_cancer_screening-db-1:/tmp/partner.csv
-
 -- login to psql on local container
-psql -h localhost -p 5432 -U lung_cancer_screening -d lung_cancer_screening
 
 
 -- Create table for partner data import
@@ -45,9 +42,6 @@ CREATE TABLE incentive_partner_import_raw (
   llp_lung_cancer_risk_score TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
-
-
-SELECT * FROM incentive_partner_import_raw;
 
 -- psql command to import data from CSV file into the temp table
 
