@@ -9,9 +9,9 @@
 -- Find container name:
 podman ps --format "{{.Names}}"
 -- Copy partner csv file to server temp directory
-podman cp "/Users/stephhousden/Downloads/SampleDataPIDRemoved230126.csv" <db_container_name>:/tmp/partner.csv
+podman cp "/Users/*YourUsername*/Downloads/SampleDataPIDRemoved230126.csv" <db_container_name>:/tmp/partner.csv
 
-podman cp "/Users/stephhousden/Downloads/SampleDataPIDRemoved230126.csv" lung_cancer_screening-db-1:/tmp/partner.csv
+podman cp "/Users/*YourUsername*/Downloads/SampleDataPIDRemoved230126.csv" lung_cancer_screening-db-1:/tmp/partner.csv
 
 -- login to psql on local container
 psql -h localhost -p 5432 -U lung_cancer_screening -d lung_cancer_screening
@@ -75,10 +75,10 @@ SELECT * FROM incentive_partner_import_raw;
   ethnicity,
   plco_lung_cancer_risk_score,
   llp_lung_cancer_risk_score
-) FROM '/Users/stephhousden/Downloads/SampleDataPIDRemoved230126.csv' WITH (FORMAT csv, HEADER true);
+) FROM '/Users/*YourUsername*/Downloads/SampleDataPIDRemoved230126.csv' WITH (FORMAT csv, HEADER true);
 
 
 -- Select distinct email addresses of eligible participants based on criteria outlined at the top of this file
 
 -- One line command for psql:
-SELECT qu.email FROM questions_user qu JOIN questions_responseset qrs ON qrs.user_id = qu.id JOIN incentive_partner_import_raw ipir ON ipir.nhs_number = qu.nhs_number WHERE (NULLIF(ipir.date_conducted, '')::timestamptz > qrs.submitted_at);
+\copy (SELECT qu.email FROM questions_user qu JOIN questions_responseset qrs ON qrs.user_id = qu.id JOIN incentive_partner_import_raw ipir ON ipir.nhs_number = qu.nhs_number WHERE (NULLIF(ipir.date_conducted, '')::timestamptz > qrs.submitted_at)) TO 'C:/Users/*YourUsername*/Documents/eligible_participants_export.csv' WITH (FORMAT csv, HEADER true);
