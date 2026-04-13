@@ -4,7 +4,9 @@ from django.views.generic.edit import FormView
 
 from .mixins.ensure_response_set import EnsureResponseSet
 from .mixins.ensure_eligible import EnsureEligibleMixin
+
 from ..forms.types_tobacco_smoking_form import TypesTobaccoSmokingForm
+from ..models.smoking_current_response import SmokingCurrentResponse
 
 
 class TypesTobaccoSmokingView(
@@ -30,10 +32,33 @@ class TypesTobaccoSmokingView(
         return super(TypesTobaccoSmokingView, self).form_valid(form)
 
     def get_success_url(self):
+        tobacco_smoking_history = self.request.response_set.tobacco_smoking_history.in_form_order()
+
         next_tobacco_smoking_history = (
-            self.request.response_set.tobacco_smoking_history
-            .in_form_order().first()
+            tobacco_smoking_history.in_form_order().first()
         )
+
+        if (tobacco_smoking_history.count() == 1):
+            print(f"is current smoker: {self.request.response_set.have_you_ever_smoked_response.is_current_smoker()}")
+
+            print(f"smoking current: {hasattr(next_tobacco_smoking_history, 'smoking_current_response')}")
+
+            print(f"next smoking history type: {next_tobacco_smoking_history.type}")
+
+            SmokingCurrentResponse.objects.update_or_create(
+                tobacco_smoking_history=next_tobacco_smoking_history,
+                value=self.request.response_set.have_you_ever_smoked_response.is_current_smoker()
+            )
+
+            print(f"smoking current: {next_tobacco_smoking_history.smoking_current_response}")
+
+            #age_started = self.request.response_set.age_when_started_smoking
+            #age_stopped = self.request.response_set.age_stopped_smoking_responses.first().value
+            #next_tobacco_smoking_history.smoked_total_years_response.value = 5
+            next_tobacco_smoking_history.save()
+            return reverse("questions:smoking_frequency", kwargs={
+                "tobacco_type": next_tobacco_smoking_history.url_type()
+            })
         return reverse(
             "questions:smoking_current",
             kwargs={

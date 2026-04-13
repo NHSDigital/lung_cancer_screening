@@ -2,6 +2,8 @@ from django.test import TestCase, tag
 from django.urls import reverse
 from django.utils.text import slugify
 
+from lung_cancer_screening.questions.tests.factories.smoked_total_years_response_factory import SmokedTotalYearsResponseFactory
+
 from .helpers.authentication import login_user
 from ...factories.response_set_factory import ResponseSetFactory
 from ....models.tobacco_smoking_history import TobaccoSmokingHistoryTypes
@@ -142,13 +144,33 @@ class TestPostTypesTobaccoSmoking(TestCase):
         self.assertEqual(response_set.tobacco_smoking_history.first().type, TobaccoSmokingHistoryTypes.CIGARETTES.value)
 
 
-    def test_post_redirects_to_the_first_type_of_tobacco_smoking_history_question(self):
+    def test_post_redirects_to_the_current_of_first_type_of_tobacco_smoking_history_if_multiple_types_given(self):
         ResponseSetFactory.create(user=self.user, eligible=True)
         response = self.client.post(
             reverse("questions:types_tobacco_smoking"),
-            self.valid_params
+            {"value": [TobaccoSmokingHistoryTypes.CIGARETTES.value, TobaccoSmokingHistoryTypes.PIPE.value]}
         )
 
         self.assertRedirects(response, reverse("questions:smoking_current", kwargs={
             "tobacco_type": slugify(TobaccoSmokingHistoryTypes.CIGARETTES.value)
         }), fetch_redirect_response=False)
+
+    @tag("wip")
+    def test_post_redirects_to_frequency_if_one_type_of_tobacco_smoking_history_given(self):
+        response_set = ResponseSetFactory.create(user=self.user, eligible=True)
+
+        response = self.client.post(
+            reverse("questions:types_tobacco_smoking"),
+             {"value": [TobaccoSmokingHistoryTypes.PIPE.value]}
+        )
+
+        self.assertRedirects(response, reverse("questions:smoking_frequency", kwargs={
+            "tobacco_type": slugify(TobaccoSmokingHistoryTypes.PIPE.value)
+        }), fetch_redirect_response=False)
+
+        response_set.tobacco_smoking_history.first().refresh_from_db()
+        print(response_set.tobacco_smoking_history.first().is_current())
+        self.assertTrue(response_set.tobacco_smoking_history.first().is_pipe())
+        self.assertTrue(response_set.tobacco_smoking_history.first().is_current())
+        print(response_set.tobacco_smoking_history.first().duration_years())
+        #self.assertTrue(response_set.tobacco_smoking_history.first().duration_years() == 5)
