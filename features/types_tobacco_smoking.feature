@@ -26,7 +26,7 @@ Feature: Types tobacco smoking page
     Then I see a back link to "/periods-when-you-stopped-smoking"
     When I check "Cigarettes"
     And I submit the form
-    Then I am on "/cigarettes-smoking-current"
+    Then I am on "/cigarettes-smoking-frequency"
 
   Scenario: Checking responses and changing them
     Given I am logged in

@@ -14,7 +14,7 @@ Feature: Smoked total years page
     Given I am logged in
     And I have answered questions showing I am eligible
     And I have answered questions showing I have smoked for "10" years
-    And I have answered questions showing I have smoked "Cigarettes"
+    And I have answered questions showing I have smoked "Cigarettes, Pipe"
     And I have answered questions showing I currently smoke "Cigarettes"
     When I go to "/cigarettes-smoked-total-years"
     And I click "Continue"

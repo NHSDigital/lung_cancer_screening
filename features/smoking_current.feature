@@ -11,7 +11,7 @@ Feature: Smoking current page
   Scenario: Form errors
     Given I am logged in
     And I have answered questions showing I am eligible
-    And I have answered questions showing I have smoked "Cigarettes"
+    And I have answered questions showing I have smoked "Cigarettes, Pipe"
     When I go to "/cigarettes-smoking-current"
     And I click "Continue"
     Then I am on "/cigarettes-smoking-current"
