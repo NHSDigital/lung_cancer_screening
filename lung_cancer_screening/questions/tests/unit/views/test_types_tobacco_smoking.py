@@ -169,7 +169,7 @@ class TestPostTypesTobaccoSmoking(TestCase):
 
         response = self.client.post(
             reverse("questions:types_tobacco_smoking"),
-             {"value": [TobaccoSmokingHistoryTypes.PIPE.value]}
+            {"value": [TobaccoSmokingHistoryTypes.PIPE.value]}
         )
 
         self.assertRedirects(response, reverse("questions:smoking_frequency", kwargs={
@@ -210,7 +210,7 @@ class TestPostTypesTobaccoSmoking(TestCase):
 
         response = self.client.post(
             reverse("questions:types_tobacco_smoking"),
-             {"value": [TobaccoSmokingHistoryTypes.PIPE.value]}
+            {"value": [TobaccoSmokingHistoryTypes.PIPE.value]}
         )
 
         self.assertRedirects(response, reverse("questions:smoking_frequency", kwargs={
