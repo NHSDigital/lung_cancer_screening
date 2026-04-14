@@ -2,7 +2,9 @@ from django.test import TestCase, tag
 from django.urls import reverse
 from django.utils.text import slugify
 
-from lung_cancer_screening.questions.tests.factories.smoked_total_years_response_factory import SmokedTotalYearsResponseFactory
+from ...factories.age_when_started_smoking_response_factory import AgeWhenStartedSmokingResponseFactory
+from ...factories.have_you_ever_smoked_response_factory import HaveYouEverSmokedResponseFactory
+from ...factories.when_you_quit_smoking_response_factory import WhenYouQuitSmokingResponseFactory
 
 from .helpers.authentication import login_user
 from ...factories.response_set_factory import ResponseSetFactory
@@ -134,6 +136,8 @@ class TestPostTypesTobaccoSmoking(TestCase):
     def test_creates_a_tobacco_smoking_type_parent_model_for_each_type_given(self):
         response_set = ResponseSetFactory.create(user=self.user, eligible=True)
 
+        AgeWhenStartedSmokingResponseFactory(response_set=response_set, value=20)
+
         self.client.post(
             reverse("questions:types_tobacco_smoking"),
             self.valid_params
@@ -155,9 +159,13 @@ class TestPostTypesTobaccoSmoking(TestCase):
             "tobacco_type": slugify(TobaccoSmokingHistoryTypes.CIGARETTES.value)
         }), fetch_redirect_response=False)
 
-    @tag("wip")
     def test_post_redirects_to_frequency_if_one_type_of_tobacco_smoking_history_given(self):
         response_set = ResponseSetFactory.create(user=self.user, eligible=True)
+
+        AgeWhenStartedSmokingResponseFactory.create(
+            response_set=response_set,
+            value=20
+        )
 
         response = self.client.post(
             reverse("questions:types_tobacco_smoking"),
@@ -169,8 +177,49 @@ class TestPostTypesTobaccoSmoking(TestCase):
         }), fetch_redirect_response=False)
 
         response_set.tobacco_smoking_history.first().refresh_from_db()
-        print(response_set.tobacco_smoking_history.first().is_current())
+
         self.assertTrue(response_set.tobacco_smoking_history.first().is_pipe())
         self.assertTrue(response_set.tobacco_smoking_history.first().is_current())
-        print(response_set.tobacco_smoking_history.first().duration_years())
-        #self.assertTrue(response_set.tobacco_smoking_history.first().duration_years() == 5)
+
+        age = response_set.date_of_birth_response.age_in_years()
+        age_started = response_set.age_when_started_smoking_response.value
+
+        self.assertEqual(response_set.tobacco_smoking_history.first().duration_years(), age-age_started)
+
+
+    def test_post_redirects_to_frequency_if_one_type_of_tobacco_smoking_history_given_for_former_smoker(self):
+        response_set = ResponseSetFactory.create(user=self.user, eligible=True)
+
+        AgeWhenStartedSmokingResponseFactory.create(
+            response_set=response_set,
+            value=20
+        )
+
+        response_set.have_you_ever_smoked_response.delete()
+
+        HaveYouEverSmokedResponseFactory.create(
+            response_set=response_set,
+            former_smoker=True,
+        )
+
+        age_when_quit = 30
+        WhenYouQuitSmokingResponseFactory.create(
+            response_set=response_set,
+            value=age_when_quit
+        )
+
+        response = self.client.post(
+            reverse("questions:types_tobacco_smoking"),
+             {"value": [TobaccoSmokingHistoryTypes.PIPE.value]}
+        )
+
+        self.assertRedirects(response, reverse("questions:smoking_frequency", kwargs={
+            "tobacco_type": slugify(TobaccoSmokingHistoryTypes.PIPE.value)
+        }), fetch_redirect_response=False)
+
+        response_set.tobacco_smoking_history.first().refresh_from_db()
+
+        self.assertTrue(response_set.tobacco_smoking_history.first().is_pipe())
+        self.assertFalse(response_set.tobacco_smoking_history.first().is_current())
+
+        self.assertEqual(response_set.tobacco_smoking_history.first().duration_years(), 10)

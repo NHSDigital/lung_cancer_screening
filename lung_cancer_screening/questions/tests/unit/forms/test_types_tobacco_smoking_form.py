@@ -1,7 +1,10 @@
 from django.test import TestCase, tag
 
+from ...factories.age_when_started_smoking_response_factory import AgeWhenStartedSmokingResponseFactory
+
 from ...factories.response_set_factory import ResponseSetFactory
 from ...factories.tobacco_smoking_history_factory import TobaccoSmokingHistoryFactory
+from ...factories.have_you_ever_smoked_response_factory import HaveYouEverSmokedResponseFactory
 from ....models.tobacco_smoking_history import (
     TobaccoSmokingHistoryTypes,
 )
@@ -102,6 +105,9 @@ class TestTypesTobaccoSmokingForm(TestCase):
     def test_does_not_create_a_new_tobacco_smoking_type_if_it_already_exists(self):
         TobaccoSmokingHistoryFactory(response_set=self.response_set, cigarettes=True)
 
+        HaveYouEverSmokedResponseFactory(response_set=self.response_set, current_smoker=True)
+        AgeWhenStartedSmokingResponseFactory(response_set=self.response_set, value=20)
+
         form = TypesTobaccoSmokingForm(
             response_set=self.response_set,
             data={
@@ -115,6 +121,10 @@ class TestTypesTobaccoSmokingForm(TestCase):
 
     def test_deletes_a_tobacco_smoking_type_if_it_is_no_longer_selected(self):
         TobaccoSmokingHistoryFactory(response_set=self.response_set, cigarettes=True)
+
+        HaveYouEverSmokedResponseFactory(response_set=self.response_set, current_smoker=True)
+
+        AgeWhenStartedSmokingResponseFactory(response_set=self.response_set, value=20)
 
         form = TypesTobaccoSmokingForm(
             response_set=self.response_set,
