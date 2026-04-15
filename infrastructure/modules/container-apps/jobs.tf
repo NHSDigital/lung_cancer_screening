@@ -1,3 +1,16 @@
+locals {
+  scheduled_jobs = {
+    collect_metrics = {
+      cron_expression = "*/5 * * * *"
+      environment_variables = {
+        ENVIRONMENT               = var.environment
+      }
+      job_short_name     = "clm"
+      job_container_args = "collect_metrics"
+    }
+  }
+}
+
 module "db_setup" {
   source = "../dtos-devops-templates/infrastructure/modules/container-app-job"
 

@@ -23,12 +23,10 @@ class Metrics:
         return cls._instance
 
     def __init__(self):
-
-        logger.info(
-                "Going into Metrics class."
-            )
         if self.__class__._initialised:
             return
+
+        logger.info("Going into Metrics class.")
 
         connection_string = os.getenv("APPLICATIONINSIGHTS_CONNECTION_STRING")
         environment = os.getenv("ENVIRONMENT", "unknown")
@@ -49,8 +47,8 @@ class Metrics:
             self.meter = metrics.get_meter("lungcs.models")
 
         self.environment = environment
+        self._gauges = {}
 
-        # Create instruments once
         self.requests_created = self.meter.create_counter(
             name="requests.created",
             unit="1",
@@ -84,19 +82,23 @@ class Metrics:
 
     def set_gauge_value(self, metric_name, units, description, value):
         logger.debug(
-            (
-                f"Metrics: set_gauge_value(metric_name: {metric_name} "
-                f"units: {units}, description: {description}, value: {value})"
+            "Metrics: set_gauge_value(metric_name=%s, units=%s, description=%s, value=%s)",
+            metric_name,
+            units,
+            description,
+            value,
+        )
+
+        gauge = self._gauges.get(metric_name)
+        if gauge is None:
+            gauge = self.meter.create_gauge(
+                name=metric_name,
+                unit=units,
+                description=description,
             )
-        )
+            self._gauges[metric_name] = gauge
 
-        # Create gauge metric
-        gauge = self.meter.create_gauge(
-            metric_name, unit=units, description=description
-        )
-
-        # Set metric value
-        gauge.set(
+        gauge.record(
             value,
             {"environment": self.environment},
         )
