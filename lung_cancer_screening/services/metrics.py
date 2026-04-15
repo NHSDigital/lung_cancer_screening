@@ -23,6 +23,10 @@ class Metrics:
         return cls._instance
 
     def __init__(self):
+
+        logger.info(
+                "Going into Metrics class."
+            )
         if self.__class__._initialised:
             return
 
