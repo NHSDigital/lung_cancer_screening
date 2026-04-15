@@ -69,7 +69,6 @@ module "scheduled_jobs" {
     {
       "STORAGE_ACCOUNT_NAME" = module.storage.storage_account_name,
       "BLOB_MI_CLIENT_ID"    = module.azure_blob_storage_identity.client_id,
-      "QUEUE_MI_CLIENT_ID"   = module.azure_queue_storage_identity.client_id
     },
     each.value.environment_variables,
     var.deploy_database_as_container ? local.container_db_env : local.azure_db_env
@@ -82,7 +81,7 @@ module "scheduled_jobs" {
   # alerts
   action_group_id            = var.action_group_id
   enable_alerting            = var.enable_alerting
-  log_analytics_workspace_id = var.log_analytics_workspace_id
+  log_analytics_workspace_id = var.log_analytics_workspace_audit_id
 
   # Ensure RBAC role assignments are created before the job definition finalizes
   depends_on = [
