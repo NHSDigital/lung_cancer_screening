@@ -90,7 +90,7 @@ class TypesTobaccoSmokingForm(forms.Form):
 
     def _create_default_responses_for_single_selection(self):
         response_set = self.response_set
-        instances = response_set.tobacco_smoking_history
+        instances = response_set.tobacco_smoking_history.normal()
         if instances.count() == 1:
             instance = instances.first()
 

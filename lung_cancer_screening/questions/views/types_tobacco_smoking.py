@@ -36,7 +36,7 @@ class TypesTobaccoSmokingView(
             tobacco_smoking_history.in_form_order().first()
         )
 
-        if (tobacco_smoking_history.count() == 1):
+        if (tobacco_smoking_history.normal().count() == 1):
             return reverse("questions:smoking_frequency", kwargs={
                 "tobacco_type": next_tobacco_smoking_history.url_type()
             })

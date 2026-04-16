@@ -46,7 +46,7 @@ class SmokingFrequencyView(
 
     def get_back_link_url(self):
         if not self.kwargs.get("level") :
-            if self.request.response_set.tobacco_smoking_history.count() == 1:
+            if self.request.response_set.tobacco_smoking_history.normal().count() == 1:
                 return reverse(
                     "questions:types_tobacco_smoking",
                 )
