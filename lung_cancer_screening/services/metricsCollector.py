@@ -19,9 +19,13 @@ class ModelMetricsCollector:
     """
 
     def __init__(self):
+        logger.info(
+            "ModelMetricsCollector: Starting collection of model metrics."   )
         self.metrics = Metrics()
 
     def collect(self):
+        logger.info(
+            "ModelMetricsCollector: collect."   )
         for model in apps.get_models():
             if not issubclass(model, BaseModel) or model._meta.abstract:
                 continue
@@ -32,6 +36,14 @@ class ModelMetricsCollector:
         model_name = model._meta.label_lower.replace(".", "_")
 
         total_count = model.objects.count()
+
+        logger.info(
+            "ModelMetricsCollector: _collect_for_model."
+            " model=%s, total_count=%d",
+            model._meta.label_lower,
+            total_count
+        )
+
         self.metrics.set_gauge_value(
             metric_name=f"model_records_{model_name}",
             units="records",

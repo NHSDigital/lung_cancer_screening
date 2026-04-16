@@ -63,6 +63,10 @@ class Metrics:
         self.__class__._initialised = True
 
     def record_request_created(self, model_name: str):
+        logger.info(
+            "Metrics: record_request_created(model_name=%s)",
+            model_name
+        )
         self.requests_created.add(
             1,
             {
@@ -72,6 +76,11 @@ class Metrics:
         )
 
     def record_request_submitted(self, model_name: str):
+        logger.info(
+            "Metrics: record_request_submitted(model_name=%s)",
+            model_name
+        )
+        logger.info("record_request_submitted.")
         self.requests_submitted.add(
             1,
             {
