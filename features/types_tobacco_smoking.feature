@@ -27,6 +27,13 @@ Feature: Types tobacco smoking page
     When I check "Cigarettes"
     And I submit the form
     Then I am on "/cigarettes-smoking-frequency"
+    When I click "Back"
+    Then I am on "/types-tobacco-smoking"
+    And I see "Cigarettes" selected
+    When I check "Pipe"
+    And I click "Continue"
+    Then I am on "/cigarettes-smoking-current"
+    And I see a back link to "/types-tobacco-smoking"
 
   Scenario: Checking responses and changing them
     Given I am logged in
