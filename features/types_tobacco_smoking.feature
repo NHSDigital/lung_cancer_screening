@@ -18,7 +18,7 @@ Feature: Types tobacco smoking page
     And I see a form error "Select the type of tobacco you smoke or have smoked"
     And there are no accessibility violations
 
-  Scenario: Navigating backwards and forwards
+  Scenario: Current smokers navigating backwards and forwards
     Given I am logged in
     And I have answered questions showing I am eligible
     And I have answered questions showing I have smoked for "10" years
@@ -33,6 +33,29 @@ Feature: Types tobacco smoking page
     When I check "Pipe"
     And I click "Continue"
     Then I am on "/cigarettes-smoking-current"
+    And I see a back link to "/types-tobacco-smoking"
+
+  Scenario: Former smokers navigating backwards and forwards
+    Given I am logged in
+    And I have answered questions showing I am eligible
+    And I have answered questions showing I am aged "70" years old
+    And I have answered questions showing I am a former smoker
+    And I have answered questions showing I have smoked for "50" years
+    And I have answered questions showing I quit smoking at "50" years old
+    And I go to "/check-your-answers"
+    And I take a screenshot
+    When I go to "/types-tobacco-smoking"
+    Then I see a back link to "/periods-when-you-stopped-smoking"
+    When I check "Cigarettes"
+    And I take a screenshot
+    And I submit the form
+    Then I am on "/cigarettes-smoking-frequency"
+    When I click "Back"
+    Then I am on "/types-tobacco-smoking"
+    And I see "Cigarettes" selected
+    When I check "Pipe"
+    And I click "Continue"
+    Then I am on "/cigarettes-smoked-total-years"
     And I see a back link to "/types-tobacco-smoking"
 
   Scenario: Checking responses and changing them

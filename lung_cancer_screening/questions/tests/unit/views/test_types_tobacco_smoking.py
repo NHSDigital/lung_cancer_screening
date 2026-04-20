@@ -55,7 +55,12 @@ class TestGetTypesTobaccoSmoking(TestCase):
 
 
     def test_get_responds_successfully(self):
-        ResponseSetFactory.create(user=self.user, eligible=True)
+        response_set = ResponseSetFactory.create(user=self.user, eligible=True)
+
+        AgeWhenStartedSmokingResponseFactory.create(
+            response_set=response_set,
+            value=20
+        )
 
         response = self.client.get(
             reverse("questions:types_tobacco_smoking")
@@ -64,7 +69,12 @@ class TestGetTypesTobaccoSmoking(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_get_back_link_url_returns_responses_url_if_changing_responses(self):
-        ResponseSetFactory.create(user=self.user, eligible=True)
+        response_set = ResponseSetFactory.create(user=self.user, eligible=True)
+
+        AgeWhenStartedSmokingResponseFactory.create(
+            response_set=response_set,
+            value=20
+        )
 
         response = self.client.get(
             reverse("questions:types_tobacco_smoking") + "?change=True"
@@ -76,7 +86,12 @@ class TestGetTypesTobaccoSmoking(TestCase):
         )
 
     def test_get_back_link_url_returns_periods_when_you_stopped_smoking_url_if_not_changing_responses(self):
-        ResponseSetFactory.create(user=self.user, eligible=True)
+        response_set = ResponseSetFactory.create(user=self.user, eligible=True)
+
+        AgeWhenStartedSmokingResponseFactory.create(
+            response_set=response_set,
+            value=20
+        )
 
         response = self.client.get(
             reverse("questions:types_tobacco_smoking")
@@ -147,9 +162,15 @@ class TestPostTypesTobaccoSmoking(TestCase):
         self.assertEqual(response_set.tobacco_smoking_history.count(), 1)
         self.assertEqual(response_set.tobacco_smoking_history.first().type, TobaccoSmokingHistoryTypes.CIGARETTES.value)
 
-
+    @tag("wip")
     def test_post_redirects_to_the_current_of_first_type_of_tobacco_smoking_history_if_multiple_types_given(self):
-        ResponseSetFactory.create(user=self.user, eligible=True)
+        response_set = ResponseSetFactory.create(user=self.user, eligible=True)
+
+        AgeWhenStartedSmokingResponseFactory.create(
+            response_set=response_set,
+            value=20
+        )
+
         response = self.client.post(
             reverse("questions:types_tobacco_smoking"),
             {"value": [TobaccoSmokingHistoryTypes.CIGARETTES.value, TobaccoSmokingHistoryTypes.PIPE.value]}

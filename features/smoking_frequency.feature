@@ -4,6 +4,7 @@ Feature: Smoking frequency page
   Scenario: The page is accessible
     Given I am logged in
     And I have answered questions showing I am eligible
+    And I have answered questions showing I have smoked for "10" years
     And I have answered questions showing I have smoked "Cigarettes"
     And I have answered questions showing I currently smoke "Cigarettes"
     When I go to "/cigarettes-smoking-frequency"
@@ -12,6 +13,7 @@ Feature: Smoking frequency page
   Scenario: Form errors
     Given I am logged in
     And I have answered questions showing I am eligible
+    And I have answered questions showing I have smoked for "10" years
     And I have answered questions showing I have smoked "Cigarettes"
     And I have answered questions showing I currently smoke "Cigarettes"
     When I go to "/cigarettes-smoking-frequency"
@@ -33,6 +35,7 @@ Feature: Smoking frequency page
   Scenario: When I say that I have increased the amount I smoke I am shown the correct page
     Given I am logged in
     And I have answered questions showing I am eligible
+    And I have answered questions showing I have smoked for "10" years
     And I have answered questions showing I currently smoke "Cigarettes"
     And I have answered questions showing I have smoked 10 "Cigarettes" "daily"
     And I have answered questions showing I have "increased" my level of "Cigarettes" smoking from "10 cigarettes a day"

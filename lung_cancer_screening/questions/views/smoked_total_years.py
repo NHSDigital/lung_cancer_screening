@@ -88,6 +88,8 @@ class SmokedTotalYearsView(
 
     def get_back_link_url(self):
         if self.tobacco_smoking_history_item().is_normal():
+            if self.request.response_set.former_smoker():
+                return reverse("questions:types_tobacco_smoking")
             return reverse(
                 "questions:smoking_current",
                 kwargs={"tobacco_type": self.kwargs["tobacco_type"]},
