@@ -2,7 +2,7 @@ import logging
 
 from django.core.management.base import BaseCommand, CommandError
 
-from lung_cancer_screening.services.metricsCollector import ModelMetricsCollector
+from lung_cancer_screening.questions.services.metricsCollector import ModelMetricsCollector
 
 logger = logging.getLogger(__name__)
 
