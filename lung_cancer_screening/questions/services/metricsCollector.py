@@ -4,7 +4,7 @@ from django.apps import apps
 from django.db import models
 
 from lung_cancer_screening.questions.models.base import BaseModel
-from lung_cancer_screening.services.metrics import Metrics
+from lung_cancer_screening.questions.services.metrics import Metrics
 
 logger = logging.getLogger(__name__)
 
