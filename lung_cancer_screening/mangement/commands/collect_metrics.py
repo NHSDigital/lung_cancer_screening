@@ -11,6 +11,7 @@ class Command(BaseCommand):
     help = "Collects current model metrics and exports them via OpenTelemetry."
 
     def handle(self, *args, **options):
+        logger.info("Command: collect_metrics.")
         try:
             ModelMetricsCollector().collect()
         except Exception as e:
