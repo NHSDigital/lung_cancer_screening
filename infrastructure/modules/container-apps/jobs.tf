@@ -3,7 +3,7 @@ locals {
     collect_metrics = {
       cron_expression = "*/5 * * * *"
       environment_variables = {
-        ENVIRONMENT               = var.environment
+        ENVIRONMENT = var.environment
       }
       job_short_name     = "clm"
       job_container_args = "collect_metrics"
