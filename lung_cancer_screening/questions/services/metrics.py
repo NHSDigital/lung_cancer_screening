@@ -1,9 +1,11 @@
 import logging
 import os
 from threading import Lock
+from typing import Iterable
 
 from azure.monitor.opentelemetry.exporter import AzureMonitorMetricExporter
 from opentelemetry import metrics
+from opentelemetry.metrics import Observation, CallbackOptions
 from opentelemetry.sdk.metrics import MeterProvider
 from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
 
@@ -16,9 +18,7 @@ class Metrics:
     _initialised = False
 
     def __new__(cls, *args, **kwargs):
-
         logger.info("Creating a new instance of Metrics class.")
-
         if cls._instance is None:
             with cls._lock:
                 if cls._instance is None:
@@ -50,7 +50,11 @@ class Metrics:
             self.meter = metrics.get_meter("lungcs.models")
 
         self.environment = environment
-        self._gauges = {}
+
+        # store latest gauge values here
+        self._gauge_values = {}
+        self._gauge_lock = Lock()
+        self._registered_observable_gauges = set()
 
         self.requests_created = self.meter.create_counter(
             name="requests.created",
@@ -66,10 +70,7 @@ class Metrics:
         self.__class__._initialised = True
 
     def record_request_created(self, model_name: str):
-        logger.info(
-            "Metrics: record_request_created(model_name=%s)",
-            model_name
-        )
+        logger.info("Metrics: record_request_created(model_name=%s)", model_name)
         self.requests_created.add(
             1,
             {
@@ -79,11 +80,7 @@ class Metrics:
         )
 
     def record_request_submitted(self, model_name: str):
-        logger.info(
-            "Metrics: record_request_submitted(model_name=%s)",
-            model_name
-        )
-        logger.info("record_request_submitted.")
+        logger.info("Metrics: record_request_submitted(model_name=%s)", model_name)
         self.requests_submitted.add(
             1,
             {
@@ -91,6 +88,18 @@ class Metrics:
                 "model": model_name,
             },
         )
+
+    def _make_gauge_callback(self, metric_name: str):
+        def callback(options: CallbackOptions) -> Iterable[Observation]:
+            with self._gauge_lock:
+                value = self._gauge_values.get(metric_name, 0)
+
+            yield Observation(
+                value,
+                {"environment": self.environment},
+            )
+
+        return callback
 
     def set_gauge_value(self, metric_name, units, description, value):
         logger.debug(
@@ -101,16 +110,14 @@ class Metrics:
             value,
         )
 
-        gauge = self._gauges.get(metric_name)
-        if gauge is None:
-            gauge = self.meter.create_gauge(
-                name=metric_name,
-                unit=units,
-                description=description,
-            )
-            self._gauges[metric_name] = gauge
+        with self._gauge_lock:
+            self._gauge_values[metric_name] = value
 
-        gauge.record(
-            value,
-            {"environment": self.environment},
-        )
+            if metric_name not in self._registered_observable_gauges:
+                self.meter.create_observable_gauge(
+                    name=metric_name,
+                    callbacks=[self._make_gauge_callback(metric_name)],
+                    unit=units,
+                    description=description,
+                )
+                self._registered_observable_gauges.add(metric_name)
