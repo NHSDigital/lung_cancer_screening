@@ -135,7 +135,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Post URL to PR comments
-        uses: marocchino/sticky-pull-request-comment@5a61de79c6a3f3f961d6e3ceea2efe7b4cd01f32
+        uses: marocchino/sticky-pull-request-comment@0ea0beb66eb9baf113663a64ec522f60e49231c0
         with:
           message: |
             The review app is available at this URL:
