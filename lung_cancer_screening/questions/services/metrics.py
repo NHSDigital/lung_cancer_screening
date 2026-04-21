@@ -16,6 +16,9 @@ class Metrics:
     _initialised = False
 
     def __new__(cls, *args, **kwargs):
+
+        logger.info("Creating a new instance of Metrics class.")
+
         if cls._instance is None:
             with cls._lock:
                 if cls._instance is None:
