@@ -11,10 +11,10 @@ class Incentivised(BaseModel):
 
     incentivised_at = models.DateTimeField(auto_now_add=True)
 
-class Meta:
-    constraints = [
-        models.UniqueConstraint(
-            fields=["user"],
-            name="unique_incentive_per_user",
-        )
-    ]
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user"],
+                name="unique_incentive_per_user",
+            )
+        ]
