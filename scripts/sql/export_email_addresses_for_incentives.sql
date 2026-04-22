@@ -70,5 +70,5 @@ SELECT count(*) AS rows_exported_and_marked FROM tmp_eligible_incentive_export;
 
 -- TRANSACTION END
 
--- DELETE tempprary export table
+-- DELETE temporary export table
 DROP TABLE IF EXISTS tmp_eligible_incentive_export;
