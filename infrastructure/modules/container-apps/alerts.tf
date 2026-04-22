@@ -22,7 +22,7 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "five_hundred_error_al
     operator                = "GreaterThan"
     query                   = <<-QUERY
       ContainerAppConsoleLogs_CL
-      | where Log_s contains "500"
+      | where Log contains "[ERROR]"
       QUERY
     threshold               = 0
     time_aggregation_method = "Count"
