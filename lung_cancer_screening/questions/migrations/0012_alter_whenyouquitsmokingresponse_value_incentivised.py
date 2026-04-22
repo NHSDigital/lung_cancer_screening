@@ -32,4 +32,8 @@ class Migration(migrations.Migration):
                 'abstract': False,
             },
         ),
+        migrations.AddConstraint(
+            model_name='incentivised',
+            constraint=models.UniqueConstraint(fields=('user',), name='questions_incentivised_unique_user'),
+        ),
     ]
