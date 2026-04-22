@@ -30,3 +30,4 @@ yaml
 jq
 choco
 CLI
+nonlive
