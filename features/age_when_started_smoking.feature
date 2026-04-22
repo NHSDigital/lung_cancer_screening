@@ -1,6 +1,5 @@
 @SmokingHistory
 @AgeWhenStartedSmoking
-@wip
 Feature: Age when started smoking
   Scenario: The page is accessible
     Given I am logged in

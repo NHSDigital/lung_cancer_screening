@@ -162,7 +162,6 @@ class TestPostTypesTobaccoSmoking(TestCase):
         self.assertEqual(response_set.tobacco_smoking_history.count(), 1)
         self.assertEqual(response_set.tobacco_smoking_history.first().type, TobaccoSmokingHistoryTypes.CIGARETTES.value)
 
-    @tag("wip")
     def test_post_redirects_to_the_current_of_first_type_of_tobacco_smoking_history_if_multiple_types_given(self):
         response_set = ResponseSetFactory.create(user=self.user, eligible=True)
 
