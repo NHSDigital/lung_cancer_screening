@@ -1,4 +1,5 @@
 -- Commands are written on one line for psql execution, can be formatted for readability when running in a SQL client.
+
 -- This script performs the following steps:
 -- 1 - imports new data from csv file. The csv file is expected to be a full export of all partner records, but only new records will be inserted into the permanent table.
 -- 2 - creates a list of email addresses of participants eligible for incentives
@@ -47,7 +48,8 @@ CREATE TEMP TABLE tmp_incentive_partner_staging (nhs_number TEXT, date_of_birth 
 
 \copy tmp_incentive_partner_staging (nhs_number, date_of_birth, date_conducted, smoking_status, average_cigarettes_per_day_while_smoking, duration_smoked_years, years_since_quitting_smoking, height_measurement_type, height_measurement_value_metric_cm, weight_measurement_type, weight_measurement_value_metric_kg, previous_respiratory_diagnosis, personal_history_of_previous_cancer, family_history_of_lung_cancer, personal_history_of_asthma, asbestos_exposure_from_job_or_activity, education, ethnicity, plco_lung_cancer_risk_score, llp_lung_cancer_risk_score) FROM 'PATH_TO_FILE' WITH (FORMAT csv, HEADER true);
 
--- Step 2: Insert only new records; skip any (nhs_number, conducted_at) already present
+-- Step 2: Insert all rows from staging. Existing rows with the same (nhs_number, conducted_at)
+--         are skipped.
 INSERT INTO inhealth_partner_data (nhs_number, date_of_birth, date_conducted, conducted_at, smoking_status, average_cigarettes_per_day_while_smoking, duration_smoked_years, years_since_quitting_smoking, height_measurement_type, height_measurement_value_metric_cm, weight_measurement_type, weight_measurement_value_metric_kg, previous_respiratory_diagnosis, personal_history_of_previous_cancer, family_history_of_lung_cancer, personal_history_of_asthma, asbestos_exposure_from_job_or_activity, education, ethnicity, plco_lung_cancer_risk_score, llp_lung_cancer_risk_score) SELECT nhs_number, date_of_birth, date_conducted, to_timestamp(NULLIF(date_conducted, ''), 'DD/MM/YYYY HH24:MI')::timestamptz, smoking_status, average_cigarettes_per_day_while_smoking, duration_smoked_years, years_since_quitting_smoking, height_measurement_type, height_measurement_value_metric_cm, weight_measurement_type, weight_measurement_value_metric_kg, previous_respiratory_diagnosis, personal_history_of_previous_cancer, family_history_of_lung_cancer, personal_history_of_asthma, asbestos_exposure_from_job_or_activity, education, ethnicity, plco_lung_cancer_risk_score, llp_lung_cancer_risk_score FROM tmp_incentive_partner_staging ON CONFLICT (nhs_number, conducted_at) DO NOTHING;
 
 -- Delete temporary staging table
@@ -58,7 +60,7 @@ DROP TABLE IF EXISTS tmp_incentive_partner_staging;
 -- Update PATH_TO_EXPORT_FILE before running.
 \r
 BEGIN;
-CREATE TEMP TABLE tmp_eligible_incentive_export AS WITH canonical_users AS (SELECT DISTINCT ON (nhs_number) id, email, nhs_number FROM questions_user WHERE nhs_number IS NOT NULL ORDER BY nhs_number, created_at DESC) SELECT DISTINCT ON (qrs.id) cu.id AS user_id, qrs.id AS response_set_id, cu.email FROM canonical_users cu JOIN questions_responseset qrs ON qrs.user_id = cu.id JOIN inhealth_partner_data ipd ON ipd.nhs_number = cu.nhs_number LEFT JOIN questions_incentivised qi ON qi.response_set_id = qrs.id WHERE ipd.conducted_at > qrs.submitted_at::timestamptz AND qi.id IS NULL ORDER BY qrs.id, qrs.submitted_at DESC;
+CREATE TEMP TABLE tmp_eligible_incentive_export AS WITH canonical_users AS (SELECT DISTINCT ON (nhs_number) id, email, nhs_number FROM questions_user WHERE nhs_number IS NOT NULL ORDER BY nhs_number ASC, created_at DESC) SELECT DISTINCT ON (cu.nhs_number) cu.id AS user_id, qrs.id AS response_set_id, cu.email FROM canonical_users cu JOIN questions_responseset qrs ON qrs.user_id = cu.id JOIN inhealth_partner_data ipd ON ipd.nhs_number = cu.nhs_number WHERE ipd.conducted_at > qrs.submitted_at::timestamptz AND NOT EXISTS (SELECT 1 FROM questions_incentivised qi JOIN questions_user iu ON iu.id = qi.user_id WHERE iu.nhs_number = cu.nhs_number) ORDER BY cu.nhs_number ASC, qrs.submitted_at DESC, qrs.id DESC;
 \copy (SELECT email FROM tmp_eligible_incentive_export ORDER BY email) TO 'PATH_TO_EXPORT_FILE' WITH (FORMAT csv, HEADER true);
 INSERT INTO questions_incentivised (created_at, updated_at, incentivised_at, user_id, response_set_id) SELECT now(), now(), now(), user_id, response_set_id FROM tmp_eligible_incentive_export;
 SELECT count(*) AS rows_exported_and_marked FROM tmp_eligible_incentive_export;
