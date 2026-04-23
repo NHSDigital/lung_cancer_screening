@@ -17,6 +17,8 @@ class AgeWhenStartedSmokingView(LoginRequiredMixin, EnsureResponseSet, EnsureEli
 
 
     def get_success_url(self):
+        if self.is_changing_responses():
+            return reverse("questions:responses")
         if self.request.response_set.current_smoker():
             url_lookup = "questions:periods_when_you_stopped_smoking"
         else:
