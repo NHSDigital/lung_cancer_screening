@@ -31,17 +31,20 @@ module "webapp" {
   environment_variables = merge(
     local.common_env,
     {
-      ALLOWED_HOSTS        = "${local.hostname},${var.app_short_name}-web-${var.environment}.${var.default_domain},localhost",
+      ALLOWED_HOSTS        = "${local.hostname},${var.app_short_name}-web-${var.environment}.${var.default_domain},localhost,*",
       CSRF_TRUSTED_ORIGINS = "https://${local.hostname}"
     },
     var.deploy_database_as_container ? local.container_db_env : local.azure_db_env
   )
-  secret_variables = var.deploy_database_as_container ? { DATABASE_PASSWORD = resource.random_password.admin_password[0].result } : {}
-  is_web_app       = true
-  port             = 8000
-  probe_path       = "/healthcheck"
-  min_replicas     = var.min_replicas
-  memory           = var.container_memory
+  secret_variables = merge(
+    { APPLICATIONINSIGHTS_CONNECTION_STRING = var.app_insights_connection_string },
+    var.deploy_database_as_container ? { DATABASE_PASSWORD = resource.random_password.admin_password[0].result } : {}
+  )
+  is_web_app   = true
+  port         = 8000
+  probe_path   = "/healthcheck"
+  min_replicas = var.min_replicas
+  memory       = var.container_memory
 }
 
 module "azurerm_application_insights_standard_web_test" {

@@ -144,7 +144,6 @@ variable "app_insights_id" {
   type        = string
 }
 
-
 variable "region" {
   description = "The region to deploy in"
   type        = string
@@ -193,6 +192,11 @@ variable "infra_key_vault_name" {
 
 variable "infra_key_vault_rg" {
   description = "Name of the infra key vault resource group"
+  type        = string
+}
+
+variable "app_insights_connection_string" {
+  description = "The Application Insights connection string."
   type        = string
 }
 
