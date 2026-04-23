@@ -1,8 +1,8 @@
-from behave import when, then
+from behave import when, then, step
 from playwright.sync_api import expect
 
 
-@when('I go to "{path}"')
+@step('I go to "{path}"')
 def given_i_go_to(context, path):
     context.page.goto(f"{context.live_server_url}{path}")
 

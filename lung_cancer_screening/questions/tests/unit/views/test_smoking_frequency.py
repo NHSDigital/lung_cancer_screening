@@ -86,7 +86,14 @@ class TestGetSmokingFrequency(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    def test_back_link_normal_level(self):
+    def test_back_link_normal_level_multiple_types(self):
+        self.tobacco_smoking_history = TobaccoSmokingHistoryFactory.create(
+            response_set=self.response_set,
+            cigarettes=True,
+            pipe=True,
+            complete=True
+        )
+
         response = self.client.get(reverse("questions:smoking_frequency", kwargs = {
                 "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
             }))
@@ -94,6 +101,16 @@ class TestGetSmokingFrequency(TestCase):
         self.assertEqual(
             response.context_data["back_link_url"],
             "/cigarettes-smoked-total-years",
+        )
+
+    def test_back_link_normal_level_single_type(self):
+        response = self.client.get(reverse("questions:smoking_frequency", kwargs = {
+                "tobacco_type": TobaccoSmokingHistoryTypes.CIGARETTES.value.lower()
+            }))
+
+        self.assertEqual(
+            response.context_data["back_link_url"],
+            "/types-tobacco-smoking",
         )
 
     def test_back_link_increased_level(self):

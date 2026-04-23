@@ -46,11 +46,16 @@ class SmokingFrequencyView(
 
     def get_back_link_url(self):
         if not self.kwargs.get("level") :
-            return reverse(
-                "questions:smoked_total_years",
-                kwargs=self.kwargs,
-                query=self.get_change_query_params(),
-            )
+            if self.request.response_set.tobacco_smoking_history.normal().count() == 1:
+                return reverse(
+                    "questions:types_tobacco_smoking",
+                )
+            else:
+                return reverse(
+                    "questions:smoked_total_years",
+                    kwargs=self.kwargs,
+                    query=self.get_change_query_params(),
+                )
 
         elif self.kwargs.get("level") == TobaccoSmokingHistory.Levels.INCREASED:
             return reverse(
