@@ -1,5 +1,8 @@
 from django import forms
 
+from lung_cancer_screening.questions.models.smoked_total_years_response import SmokedTotalYearsResponse
+from lung_cancer_screening.questions.models.smoking_current_response import SmokingCurrentResponse
+
 from ...nhsuk_forms.choice_field import MultipleChoiceField
 from ..models.tobacco_smoking_history import (
     TobaccoSmokingHistory,
@@ -81,4 +84,26 @@ class TypesTobaccoSmokingForm(forms.Form):
 
         TobaccoSmokingHistory.objects.bulk_create(instances)
 
+        self._create_default_responses_for_single_selection()
+
         return instances
+
+    def _create_default_responses_for_single_selection(self):
+        response_set = self.response_set
+        instances = response_set.tobacco_smoking_history.normal()
+        if instances.count() == 1:
+            instance = instances.first()
+
+            SmokingCurrentResponse.objects.update_or_create(
+                tobacco_smoking_history=instance,
+                defaults={
+                    "value": response_set.current_smoker()
+                },
+            )
+
+            SmokedTotalYearsResponse.objects.update_or_create(
+                tobacco_smoking_history=instance,
+                defaults={
+                    "value": response_set.age_when_started_smoking_response.years_smoked_including_stopped()
+                }
+            )

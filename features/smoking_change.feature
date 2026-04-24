@@ -3,6 +3,7 @@ Feature: Smoking change page
   Scenario: The page is accessible
     Given I am logged in
     And I have answered questions showing I am eligible
+    And I have answered questions showing I have smoked for "10" years
     And I have answered questions showing I currently smoke "Cigarettes"
     And I have answered questions showing I have smoked 10 "Cigarettes" "daily"
     When I go to "/cigarettes-smoking-change"
@@ -11,6 +12,7 @@ Feature: Smoking change page
   Scenario: Form errors
     Given I am logged in
     And I have answered questions showing I am eligible
+    And I have answered questions showing I have smoked for "10" years
     And I have answered questions showing I currently smoke "Cigarettes"
     And I have answered questions showing I have smoked 10 "Cigarettes" "daily"
     When I go to "/cigarettes-smoking-change"
@@ -25,6 +27,7 @@ Feature: Smoking change page
   Scenario: Navigating backwards and forwards
     Given I am logged in
     And I have answered questions showing I am eligible
+    And I have answered questions showing I have smoked for "10" years
     And I have answered questions showing I currently smoke "Cigarettes"
     And I have answered questions showing I have smoked 10 "Cigarettes" "daily"
     When I go to "/cigarettes-smoking-change"

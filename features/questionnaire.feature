@@ -76,13 +76,6 @@ Feature: Questionnaire
     When I check "Cigarettes"
     And I submit the form
 
-    Then I am on "/cigarettes-smoking-current"
-    When I check "Yes" and submit
-
-    Then I am on "/cigarettes-smoked-total-years"
-    When I fill in "Roughly how many years have you smoked cigarettes?" with "10"
-    And I submit the form
-
     Then I am on "/cigarettes-smoking-frequency"
     When I check "Daily" and submit
 
@@ -113,7 +106,7 @@ Feature: Questionnaire
     And I see "18" as a response to "Age you started smoking" under "Smoking history"
     And I see "Yes (10 years)" as a response to "Have you ever stopped smoking for periods of 1 year or longer?" under "Smoking history"
 
-    And I see "10" as a response to "Total number of years you smoked cigarettes" under "Smoking history"
+    And I see "37" as a response to "Total number of years you smoked cigarettes" under "Smoking history"
     And I see "15 cigarettes a day" as a response to "Current cigarette smoking" under "Smoking history"
 
     When I click "Submit"

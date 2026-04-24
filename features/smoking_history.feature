@@ -6,15 +6,6 @@ Feature: Smoking history pages
     And I have answered questions showing I have smoked for "30" years
     When I go to "/types-tobacco-smoking"
     And I check "Cigarettes"
-    And I check "Cigarettes"
-    And I submit the form
-
-    Then I am on "/cigarettes-smoking-current"
-    When I check "Yes"
-    And I submit the form
-
-    Then I am on "/cigarettes-smoked-total-years"
-    When I fill in "Roughly how many years have you smoked cigarettes?" with "15"
     And I submit the form
 
     Then I am on "/cigarettes-smoking-frequency"
@@ -55,7 +46,7 @@ Feature: Smoking history pages
     And I submit the form
 
     Then I am on "/check-your-answers"
-    Then I see "15 years" as a response to "Total number of years you smoked cigarettes" under "Cigarette smoking history"
+    Then I see "30 years" as a response to "Total number of years you smoked cigarettes" under "Cigarette smoking history"
     And I see "10 cigarettes a day" as a response to "Current cigarette smoking" under "Cigarette smoking history"
     And I see "200 cigarettes a week for 5 years" as a response to "When you smoked more than 10 cigarettes a day" under "Cigarette smoking history"
     And I see "1 cigarettes a month for 2 years" as a response to "When you smoked fewer than 10 cigarettes a day" under "Cigarette smoking history"

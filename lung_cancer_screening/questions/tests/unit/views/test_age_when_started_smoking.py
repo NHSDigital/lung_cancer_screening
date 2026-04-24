@@ -159,7 +159,7 @@ class TestPostAgeWhenStartedSmoking(TestCase):
 
         self.assertRedirects(
             response,
-            reverse("questions:periods_when_you_stopped_smoking", query={"change": "True"})
+            reverse("questions:responses")
         )
 
 
@@ -195,7 +195,7 @@ class TestPostAgeWhenStartedSmoking(TestCase):
 
         self.assertRedirects(
             response,
-            reverse("questions:when_you_quit_smoking", query={"change": "True"})
+            reverse("questions:responses")
         )
 
 
