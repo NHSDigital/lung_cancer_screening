@@ -28,13 +28,11 @@ from lung_cancer_screening.core.decorators import basic_auth_exempt
 def sha_view(request):
     return HttpResponse(settings.COMMIT_SHA)
 
-
 @require_GET
 @basic_auth_exempt
 @login_not_required
 def health_check(request):
     return HttpResponse("OK")
-
 
 urlpatterns = [
     path('', include(
