@@ -133,3 +133,16 @@ Add the infrastructure secrets to the _inf_ key vault `kv-lungcs-[environment]-i
 
 - assign yourself "Key Vault Secrets User" to application key vault to run the terraform code from the CLI inside the AVD when first trying to deploy the application.
 - assign yourself "Data Blob Reader" to State file storage account to run the terraform code from the CLI inside the AVD when first trying to deploy the application.
+
+## Connect to Postgres Database
+
+- Add your user as a member to the respective Entra ID group:
+  - `postgres_lungcs_[environment]_uks_admin`
+- Log into the correct ADV for your environment type (either nonlive or live)
+- Run the following commands on the CLI to log into the database: -
+  - `export PGPASSWORD="$(az account get-access-token --resource https://ossrdbms-aad.database.windows.net --query accessToken --output tsv)"`
+  - `psql "host=postgres-lungcs-[environment]-uks.postgres.database.azure.com \
+      port=5432 \
+      dbname=[database] \
+      user=postgres_lungcs_[environment]_uks_admin \
+      sslmode=require"`
