@@ -1,14 +1,28 @@
 from django.urls import reverse
+from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormView
 
 from .mixins.ensure_response_set import EnsureResponseSet
 from .mixins.ensure_eligible import EnsureEligibleMixin
+
 from ..forms.types_tobacco_smoking_form import TypesTobaccoSmokingForm
 
+class EnsureReadyForTobaccoTypesMixin:
+    def dispatch(self, request, *args, **kwargs):
+        if (
+            not hasattr(request.response_set, "age_when_started_smoking_response")
+        ):
+            return redirect(reverse("questions:age_when_started_smoking"))
+        if (
+            not hasattr(request.response_set, "when_you_quit_smoking_response")
+            and request.response_set.former_smoker()
+        ):
+            return redirect(reverse("questions:when_you_quit_smoking"))
 
+        return super().dispatch(request, *args, **kwargs)
 class TypesTobaccoSmokingView(
-    LoginRequiredMixin, EnsureResponseSet, EnsureEligibleMixin, FormView
+    LoginRequiredMixin, EnsureResponseSet, EnsureEligibleMixin, EnsureReadyForTobaccoTypesMixin, FormView
 ):
     template_name = "types_tobacco_smoking.jinja"
     form_class = TypesTobaccoSmokingForm
@@ -30,10 +44,25 @@ class TypesTobaccoSmokingView(
         return super(TypesTobaccoSmokingView, self).form_valid(form)
 
     def get_success_url(self):
+        tobacco_smoking_history = self.request.response_set.tobacco_smoking_history.in_form_order()
+
         next_tobacco_smoking_history = (
-            self.request.response_set.tobacco_smoking_history
-            .in_form_order().first()
+            tobacco_smoking_history.in_form_order().first()
         )
+
+        if (tobacco_smoking_history.normal().count() == 1):
+            return reverse("questions:smoking_frequency", kwargs={
+                "tobacco_type": next_tobacco_smoking_history.url_type()
+            })
+
+        if self.request.response_set.former_smoker():
+            return reverse(
+                "questions:smoked_total_years",
+                kwargs={
+                    "tobacco_type": next_tobacco_smoking_history.url_type()
+                }
+            )
+
         return reverse(
             "questions:smoking_current",
             kwargs={

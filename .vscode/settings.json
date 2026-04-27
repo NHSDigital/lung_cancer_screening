@@ -8,6 +8,8 @@
   },
   "cSpell.language": "en-GB",
   "cSpell.words": [
+    "addgroup",
+    "adduser",
     "columnheader",
     "dateutil",
     "DHSC",
@@ -31,12 +33,16 @@
     "qualitygate",
     "relativedelta",
     "responseset",
+    "rollup",
     "rowgroup",
     "sonarsource",
     "stylesheet",
     "toplevel",
     "UKGDPR",
     "unsubmitted",
-    "whitenoise"
+    "userinfo",
+    "venv",
+    "whitenoise",
+    "wsgi"
   ],
 }

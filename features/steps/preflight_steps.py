@@ -96,6 +96,11 @@ def given_i_have_answered_questions_showing_i_am_aged_60_years_old(context, year
     context.page.goto(f"{context.live_server_url}/date-of-birth")
     when_i_fill_in_and_submit_my_date_of_birth_as_x_years_ago(context, years)
 
+@given("I have answered questions showing I quit smoking at \"{years}\" years old")
+def given_i_have_answered_questions_showing_i_quit_smoking_at_years_old(context, years):
+    context.page.goto(f"{context.live_server_url}/when-you-quit-smoking")
+    when_i_fill_in_label_with_value(context, "How old were you when you quit smoking?", years)
+    when_i_submit_the_form(context)
 
 @given('I have answered questions showing I stopped smoking for "{years}" years')
 def given_i_have_answered_questions_showing_i_stopped_smoking_for_years_years(context, years):

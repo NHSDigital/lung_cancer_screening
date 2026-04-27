@@ -52,7 +52,7 @@ Feature: Age when started smoking
     Then I am on "/age-when-started-smoking?change=True"
     And I see "18" filled in for "How old were you when you started smoking?"
     When I fill in "How old were you when you started smoking?" as "22" and submit
-    Then I am on "/periods-when-you-stopped-smoking?change=True"
+    Then I am on "/check-your-answers"
 
   Scenario: Checking responses and changing them as a former smoker
     Given I am logged in
@@ -67,4 +67,4 @@ Feature: Age when started smoking
     Then I am on "/age-when-started-smoking?change=True"
     And I see "18" filled in for "How old were you when you started smoking?"
     When I fill in "How old were you when you started smoking?" as "22" and submit
-    Then I am on "/when-you-quit-smoking?change=True"
+    Then I am on "/check-your-answers"
