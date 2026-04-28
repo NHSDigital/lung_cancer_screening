@@ -18,7 +18,6 @@
 
 targetScope = 'subscription'
 
-// param devopsInfrastructureId string
 param devopsSubnetAddressPrefix string
 param privateEndpointSubnetAddressPrefix string
 param hubType string // live / nonlive
@@ -26,10 +25,6 @@ param region string = 'uksouth'
 param regionShortName string = 'uks'
 param vnetAddressPrefixes array
 param enableSoftDelete bool
-<<<<<<< HEAD
-=======
-
->>>>>>> 93647fb (wip)
 
 // removed when generalised
 var appShortName = 'lungcs'
