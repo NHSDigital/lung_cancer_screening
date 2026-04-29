@@ -73,7 +73,6 @@ module "scheduled_jobs" {
     var.deploy_database_as_container ? local.container_db_env : local.azure_db_env
   )
   secret_variables = merge(
-    # { APPLICATIONINSIGHTS_CONNECTION_STRING = var.app_insights_connection_string },
     { SLACK_WEBHOOK_URL = var.slack_webhook_url },
     var.deploy_database_as_container ? { DATABASE_PASSWORD = resource.random_password.admin_password[0].result } : {}
   )

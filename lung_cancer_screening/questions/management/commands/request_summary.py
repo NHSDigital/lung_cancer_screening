@@ -1,4 +1,3 @@
-import json
 import logging
 import os
 
@@ -27,8 +26,29 @@ class Command(BaseCommand):
                 return
 
             payload = {
-                "text": f"*Request summary*\n```{json.dumps(summary, indent=2, default=str)}```"
-            }
+                "blocks": [
+                    {
+                        "type": "header",
+                        "text": {
+                            "type": "plain_text",
+                            "text": "Request Summary",
+                        }
+                    },
+                    {
+                        "type": "section",
+                        "fields": [
+                                {
+                                    "type": "mrkdwn",
+                                    "text": f"*Requests:*\n{rs.get_count()}"
+                                },
+                                {
+                                    "type": "mrkdwn",
+                                    "text": f"*Submitted:*\n{rs.get_submitted_count()}"
+                                }
+                            ]
+                        }
+                    ]
+                }
 
             response = requests.post(
                 slack_webhook_url,
