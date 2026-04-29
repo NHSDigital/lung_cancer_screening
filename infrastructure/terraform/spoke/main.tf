@@ -22,6 +22,7 @@ module "infra" {
   vnet_address_space               = var.vnet_address_space
   cae_zone_redundancy_enabled      = var.cae_zone_redundancy_enabled
   enable_alerting                  = var.enable_alerting
+  slack_webhook_url                = data.azurerm_key_vault_secret.slack_webhook_url.value
 }
 
 module "container-apps" {
@@ -69,4 +70,5 @@ module "container-apps" {
   use_apex_domain                       = var.use_apex_domain
   container_memory                      = var.container_memory
   min_replicas                          = var.min_replicas
+  slack_webhook_url                     = data.azurerm_key_vault_secret.slack_webhook_url.value
 }

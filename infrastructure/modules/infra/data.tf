@@ -21,8 +21,3 @@ data "azurerm_key_vault_secret" "infra" {
   name         = "monitoring-email-address"
   key_vault_id = data.azurerm_key_vault.infra.id
 }
-
-data "azurerm_key_vault_secret" "slack_webhook_url" {
-  name         = "slack-webhook-url"
-  key_vault_id = data.azurerm_key_vault.infra.id
-}

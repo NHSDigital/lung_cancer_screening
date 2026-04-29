@@ -6,7 +6,7 @@ module "logic_app_slack_alert" {
   name                = "logic-${var.app_short_name}-${var.environment}-slack-alerts"
   resource_group_name = azurerm_resource_group.main.name
   location            = var.region
-  slack_webhook_url   = data.azurerm_key_vault_secret.slack_webhook_url.value
+  slack_webhook_url   = var.slack_webhook_url
 }
 
 resource "azurerm_monitor_action_group" "slack" {
