@@ -49,3 +49,17 @@ data "azurerm_application_insights" "app_insights" {
   name                = "appi-${var.env_config}-uks-${var.app_short_name}"
   resource_group_name = local.resource_group_name
 }
+
+data "azurerm_key_vault" "infra" {
+  provider = azurerm.hub
+
+  name                = local.infra_key_vault_name
+  resource_group_name = local.infra_key_vault_rg
+}
+
+data "azurerm_key_vault_secret" "slack_webhook_url" {
+  name         = "slack-webhook-url"
+  key_vault_id = data.azurerm_key_vault.infra.id
+}
+
+# git-sha-a85180497c23d742b5f92262b3b43069e44a4110
