@@ -196,6 +196,11 @@ variable "infra_key_vault_rg" {
   type        = string
 }
 
+variable "slack_webhook_url" {
+  description = "slack_webhook_url is the URL used to send alerts to Slack. It should be stored as a secret in the infra key vault with the name 'slack-webhook-url'."
+  type        = string
+}
+
 locals {
   resource_group_name = "rg-${var.app_short_name}-${var.environment}-container-app-uks"
 
