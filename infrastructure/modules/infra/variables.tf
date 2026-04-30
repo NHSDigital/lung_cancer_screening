@@ -73,6 +73,11 @@ variable "enable_alerting" {
   type        = bool
 }
 
+variable "slack_webhook_url" {
+  description = "slack_webhook_url is the URL used to send alerts to Slack. It should be stored as a secret in the infra key vault with the name 'slack-webhook-url'."
+  type        = string
+}
+
 locals {
   hub_vnet_rg_name = "rg-hub-${var.hub}-uks-bootstrap"
   hub_vnet_name    = "vnet-hub-${var.hub}-uks"
