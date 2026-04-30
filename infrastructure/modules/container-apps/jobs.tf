@@ -40,12 +40,10 @@ module "db_setup" {
 }
 
 module "scheduled_jobs" {
-  # TODO: This should be on a scheduled job bases and NOT for the entire module
-  count = var.enable_alerting ? 1 : 0
 
   source = "../dtos-devops-templates/infrastructure/modules/container-app-job"
-
-  for_each = local.scheduled_jobs
+  # TODO: This should be on a scheduled job bases and NOT for the entire module
+  for_each = var.enable_alerting ? local.scheduled_jobs : {}
 
   name                         = "${var.app_short_name}-${each.value.job_short_name}-${var.environment}"
   container_app_environment_id = var.container_app_environment_id
